@@ -1,0 +1,9 @@
+a {
+  &:visited,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
+
+  text-decoration: none;
+}
