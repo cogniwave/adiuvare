@@ -1,32 +1,29 @@
 import Joi from "joi";
-import { randomBytes } from "crypto";
 
 import { getUser, addUser } from "~/server/db/users";
 import { sendMail } from "~/server/services/mail";
-import { BaseUser, DbUser, UnverifiedUser } from "~/types/user";
+import type { BaseUser } from "~/types/user";
+import type { InsertUser, SelectUser } from "~/server/db/schemas/users";
 
 const sendVerificationEmail = (email: string, name: string) => {
   sendMail("Confirmação de conta", email, "foo", { name });
 };
 
-const register = async (payload: BaseUser): Promise<UnverifiedUser> => {
-  const user: DbUser = await getUser(payload.email);
+const register = async (payload: BaseUser): Promise<InsertUser> => {
+  const user: SelectUser | undefined = await getUser(payload.email);
 
   if (user) {
     throw createError({ statusCode: 422, message: "Email already exists" });
   }
 
-  const newUser = await addUser({ ...payload, token: generateRandomToken(32) });
+  const newUser = await addUser(payload);
 
-  if (newUser) {
-    sendVerificationEmail(payload.email, payload.name);
+  if (!newUser) {
+    throw Error("Something went wrong");
   }
 
+  sendVerificationEmail(payload.email, payload.name);
   return newUser;
-};
-
-export const generateRandomToken = (length: number) => {
-  return randomBytes(length).toString("hex");
 };
 
 export default defineEventHandler(async (event) => {

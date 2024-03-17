@@ -1,7 +1,9 @@
-import pg from "pg";
+import { sql } from "@vercel/postgres";
+import { drizzle } from "drizzle-orm/vercel-postgres";
 
-const pool = new pg.Pool();
+import { users } from "./schemas/users";
+import { posts } from "./schemas/posts";
 
-export default async (query: string, params?: any[]) => {
-  return await pool.query(query, params);
-};
+export const db = drizzle(sql, {
+  schema: { users, posts },
+});

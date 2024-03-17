@@ -1,9 +1,16 @@
-import query from "./";
+import { desc } from "drizzle-orm";
+
+import { db } from "./";
+import { posts } from "./schemas/posts";
+
+import type { SelectPost } from "./schemas/posts";
 
 export const getPosts = async () => {
-  const result = await query(
-    "SELECT * FROM posts ORDER BY createdBy DESC LIMIT 50",
-  );
+  const result: SelectPost[] = await db
+    .select()
+    .from(posts)
+    .orderBy(desc(posts.createdAt))
+    .limit(50);
 
-  return result.rows || [];
+  return result || [];
 };

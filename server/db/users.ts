@@ -1,47 +1,46 @@
+import { randomBytes } from "crypto";
 import { hashSync } from "bcrypt";
+import { eq } from "drizzle-orm";
 
-import query from "./";
-import { UnverifiedUser, DbUser } from "~/types/user";
+import { db } from "./";
+import { users } from "./schemas/users";
+import type { InsertUser, SelectUser } from "./schemas/users";
+import type { BaseUser } from "~/types/user";
 
 const SALT = 10;
 
-export const getUser = async <T = DbUser>(
+export const getUser = async <T = SelectUser>(
   email: string,
-  fields = "*",
-  filter = "",
-): Promise<T> => {
-  const result = await query(
-    `SELECT ${fields} FROM users WHERE email=$1 ${filter} LIMIT 1`,
-    [email],
-  );
-
-  return result.rows[0] || null;
+  fields: Record<string, boolean> = {},
+  filter: Record<string, any> = {},
+): Promise<T | undefined> => {
+  return (await db.query.users.findFirst({
+    columns: fields,
+    with: { email, ...filter },
+  })) as T;
 };
 
 export const addUser = async (
-  payload: UnverifiedUser,
-): Promise<UnverifiedUser> => {
-  const result = await query(
-    "INSERT INTO users (email, password, name, type, verified, created_at, token) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-    [
-      payload.email,
-      hashSync(payload.password as string, SALT),
-      payload.name,
-      payload.type,
-      false,
-      new Date(),
-      payload.token,
-    ],
-  );
+  payload: BaseUser,
+): Promise<InsertUser | null> => {
+  const result = await db.insert(users).values({
+    email: payload.email,
+    password: hashSync(payload.password as string, SALT),
+    name: payload.name,
+    type: payload.type,
+    token: randomBytes(128).toString("hex"),
+    createdAt: new Date(),
+    verified: false,
+  } as InsertUser);
 
   return result.rowCount || 0 ? result.rows[0] : null;
 };
 
 export const verifyUser = async (token: string): Promise<boolean> => {
-  const result = await query(
-    "UPDATE users SET verified = true WHERE token = $2",
-    [token],
-  );
+  const result = await db
+    .update(users)
+    .set({ verified: true, token: null })
+    .where(eq(users.token, token));
 
   return (result.rowCount || 0) > 0;
 };

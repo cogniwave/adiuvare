@@ -8,8 +8,8 @@ import { signToken } from "~/server/utils/token";
 const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
   const user = await getUser<TokenUser & { password?: string }>(
     email,
-    "email, type, name, password",
-    "AND verified=true",
+    { email: true, type: true, name: true, password: true },
+    { verified: true },
   );
 
   if (!user || !compareSync(password, user.password as string)) {
