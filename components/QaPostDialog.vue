@@ -129,7 +129,7 @@ import QaPostTag from "./QaPostTag.vue";
 import QaPostSchedule from "./scheduling/QaPostSchedule.vue";
 
 const $store = usePostsStore();
-const { errors, hasErrors, handleErrors, clearErrors } = useFormErrors();
+const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const title = ref<string>("dsadsa");
 const description = ref<string>("dsadsa");
