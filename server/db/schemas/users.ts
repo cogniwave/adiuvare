@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   uuid,
@@ -7,11 +8,12 @@ import {
   boolean,
   varchar,
 } from "drizzle-orm/pg-core";
+import { posts } from "./posts";
 
 export const users = pgTable(
   "users",
   {
-    id: uuid("id").primaryKey().unique().notNull(),
+    id: uuid("id").primaryKey().unique().notNull().defaultRandom(),
     name: text("name").notNull(),
     email: text("email").unique().notNull(),
     password: text("password").notNull(),
@@ -24,6 +26,10 @@ export const users = pgTable(
     uniqueIndex: uniqueIndex("email_idx").on(users.email),
   }),
 );
+
+export const postsRelation = relations(users, ({ many }) => ({
+  id: many(posts),
+}));
 
 export type InsertUser = typeof users.$inferInsert;
 export type SelectUser = typeof users.$inferSelect;

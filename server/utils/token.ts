@@ -6,7 +6,7 @@ import { InvalidToken } from "~/exceptions";
 export const signToken = (user: TokenUser, type: "access" | "refresh") => {
   return jwt.sign(user, process.env.JWT_KEY as string, {
     expiresIn: type === "access" ? "15m" : "1d",
-    audience: "queroajudar",
+    audience: ["qaweb", "qaapp"],
     subject: "queroajudaraut",
     issuer: "queroajudar",
   });
@@ -14,7 +14,7 @@ export const signToken = (user: TokenUser, type: "access" | "refresh") => {
 
 export const validateToken = (token: string) => {
   const user = jwt.verify(token, process.env.JWT_KEY as string, {
-    audience: "queroajudar",
+    audience: ["qaweb", "qaapp"],
     subject: "queroajudaraut",
     issuer: "queroajudar",
   });
@@ -23,5 +23,5 @@ export const validateToken = (token: string) => {
     throw new InvalidToken();
   }
 
-  return user;
+  return user as TokenUser;
 };

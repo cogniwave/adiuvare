@@ -4,6 +4,7 @@
     class="pl-0 pr-0"
     rounded="4px"
     hide-details="auto"
+    validate-on="blur"
     :variant="variant"
     :model-value="proxyValue"
     :label="proxyLabel"

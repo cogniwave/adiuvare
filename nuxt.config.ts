@@ -79,7 +79,13 @@ export default defineNuxtConfig({
       name: "string",
       type: "volunteer | org",
     },
+    token: {
+      maxAgeInSeconds: 60 * 5, // 5 min
+    },
     enableRefreshOnWindowFocus: true,
     enableRefreshPeriodically: 60000,
+    globalAppMiddleware: {
+      isEnabled: true,
+    },
   },
 });

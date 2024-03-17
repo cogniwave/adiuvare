@@ -1,8 +1,9 @@
 import { ref, watch } from "vue";
 
-import type { FormErrors } from "@/types/form";
-import { AxiosError } from "@/exceptions";
 import { usePostsStore } from "@/stores/posts";
+
+import type { FormErrors } from "@/types/form";
+import type { NuxtError } from "@/exceptions";
 
 // by convention, composable function names start with "use"
 export function useFormErrors() {
@@ -11,15 +12,10 @@ export function useFormErrors() {
 
   const $store = usePostsStore();
 
-  const handleErrors = (err: unknown) => {
-    // unexpected error happened somewhere
-    if (!(err instanceof AxiosError)) {
-      return;
-    }
-
-    if (err.status === 422) {
+  const handleErrors = (err: NuxtError) => {
+    if (err.statusCode === 422) {
       // show form errors
-      for (const [field, error] of Object.entries(err.data.errors)) {
+      for (const [field, error] of Object.entries(err.data.data || {})) {
         errors.value[field] = error;
       }
 

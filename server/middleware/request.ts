@@ -1,3 +1,7 @@
+import { createError } from "h3";
+
+import { validateToken } from "../utils/token";
+
 const PROTECTED_ROUTES: string[] = [];
 
 export default defineEventHandler(async (event) => {
@@ -15,7 +19,7 @@ export default defineEventHandler(async (event) => {
   // validate and add token to event
   try {
     const user = validateToken(token.split("Bearer ")[1]);
-    event.user = user;
+    (event as any).user = user;
     // todo: add
     // event.context.sessions = { ...event.context.sessions, user: user };
   } catch (err) {

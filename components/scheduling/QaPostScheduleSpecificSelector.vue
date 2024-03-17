@@ -72,7 +72,6 @@ const minDate = ref(d.toISOString());
 // };
 
 const onSave = () => {
-  console.log(proxyDate.value);
   date.value = proxyDate.value.format("DD/MM/YYYY");
 
   if (!times.value.length) {

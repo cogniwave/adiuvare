@@ -1,6 +1,6 @@
 {
-  "id": "8bd4c341-e47a-4b3e-a8a4-912bfa4150d6",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "928db61c-b563-49ca-b283-90c1d6d3236e",
+  "prevId": "8bd4c341-e47a-4b3e-a8a4-912bfa4150d6",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -12,7 +12,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "title": {
           "name": "title",

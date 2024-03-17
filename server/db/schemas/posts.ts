@@ -11,6 +11,7 @@ import {
 
 import { users } from "./users";
 import { PostSchedule } from "~/types/post";
+import { relations } from "drizzle-orm";
 
 export const needsEnum = pgEnum("needs", [
   "money",
@@ -29,7 +30,7 @@ export const stateEnum = pgEnum("state", [
 export const posts = pgTable(
   "posts",
   {
-    id: uuid("id").primaryKey().unique().notNull(),
+    id: uuid("id").primaryKey().unique().notNull().defaultRandom(),
     title: varchar("title", { length: 264 }).notNull(),
     description: text("descrition").notNull(),
     locations: text("locations").notNull(),
@@ -47,6 +48,13 @@ export const posts = pgTable(
     locationsIdx: index("locations_idx").on(posts.locations),
   }),
 );
+
+export const postsRelation = relations(posts, ({ one }) => ({
+  createdUserId: one(users, {
+    fields: [posts.createdUserId],
+    references: [users.id],
+  }),
+}));
 
 export type InsertPost = typeof posts.$inferInsert;
 export type SelectPost = typeof posts.$inferSelect;

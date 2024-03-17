@@ -6,8 +6,6 @@ import { LoginPayload } from "~/types/user";
 const sendEmail = console.log;
 
 const sendResetEmail = async (body: any) => {
-  console.log(body);
-
   const { value: payload, error } = Joi.object<LoginPayload>({
     email: Joi.string()
       .required()

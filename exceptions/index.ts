@@ -23,19 +23,17 @@ export class ValidationError extends Error {
   }
 }
 
-export class AxiosError extends Error {
+export interface NuxtError {
+  statusCode: number;
   data: {
-    reason: string;
-    errors: Errors;
+    message: string;
+    statusCode: number;
+    statusMessage?: string;
+    url: string;
+    // only exists in dev
+    stack?: string;
+    data?: Record<string, string>;
   };
-  status: number;
-
-  constructor(reason: string, status: number, errors: Errors = {}) {
-    super(reason);
-
-    this.data = { reason, errors };
-    this.status = status;
-  }
 }
 
 export class InvalidToken extends Error {}

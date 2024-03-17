@@ -1,29 +1,41 @@
 import Joi from "joi";
 
-import { getUser, addUser } from "~/server/db/users";
+import { addUser } from "~/server/db/users";
 import { sendMail } from "~/server/services/mail";
-import type { BaseUser } from "~/types/user";
-import type { InsertUser, SelectUser } from "~/server/db/schemas/users";
+import type { BaseUser, User } from "~/types/user";
+import type { DrizzleError } from "~/server/types/drizzle";
 
 const sendVerificationEmail = (email: string, name: string) => {
   sendMail("Confirmação de conta", email, "foo", { name });
 };
 
-const register = async (payload: BaseUser): Promise<InsertUser> => {
-  const user: SelectUser | undefined = await getUser(payload.email);
+const register = async (payload: BaseUser): Promise<User> => {
+  try {
+    const newUser = await addUser(payload);
 
-  if (user) {
-    throw createError({ statusCode: 422, message: "Email already exists" });
+    if (!newUser) {
+      throw Error("Something went wrong");
+    }
+
+    sendVerificationEmail(payload.email, payload.name);
+    return newUser;
+  } catch (err: DrizzleError) {
+    if (err.constraint === "users_email_unique") {
+      throw createError({
+        data: {
+          email: "Já existe uma conta com este email",
+        },
+        statusCode: 422,
+        message: "Email already exists",
+        statusMessage: "Validation error",
+      });
+    }
+
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Something went wrong",
+    });
   }
-
-  const newUser = await addUser(payload);
-
-  if (!newUser) {
-    throw Error("Something went wrong");
-  }
-
-  sendVerificationEmail(payload.email, payload.name);
-  return newUser;
 };
 
 export default defineEventHandler(async (event) => {
@@ -67,8 +79,8 @@ export default defineEventHandler(async (event) => {
 
   try {
     return await register(value);
-  } catch (err) {
-    console.log(err);
-    throw createError(JSON.stringify(err));
+  } catch (err: any) {
+    // console.log(err);
+    throw createError(err);
   }
 });

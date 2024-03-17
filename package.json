@@ -26,7 +26,6 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.8",
     "nuxt-bugsnag": "^7.2.3",
-    "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",
     "uuid": "^9.0.1"
   },
@@ -37,7 +36,6 @@
     "@types/eslint": "^8",
     "@types/jsonwebtoken": "^9",
     "@types/nodemailer": "^6",
-    "@types/passport-jwt": "^4",
     "@types/pg": "^8",
     "@types/uuid": "^9",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
