@@ -24,7 +24,7 @@ import { onBeforeMount, ref } from "vue";
 import QaFilter from "@/components/QaFilter.vue";
 import QaPost from "@/components/QaPost.vue";
 // import QaPostDialog from "@/components/QaPostDialog.vue";
-import { usePostsStore } from "@/stores/posts";
+import { usePostsStore } from "@/stores/posts.store";
 
 definePageMeta({ path: "/" });
 
@@ -41,3 +41,4 @@ onBeforeMount(() => useAsyncData("posts", () => store.getPosts()));
   margin: auto; */
 /* } */
 </style>
+@/stores/posts.store

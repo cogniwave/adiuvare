@@ -6,13 +6,13 @@
           <h2 class="text-h5 text-white">Iniciar sessão</h2>
         </v-card-title>
 
-        <v-card-text>
-          <v-form
-            ref="form"
-            class="px-4 pt-4"
-            validate-on="submit lazy"
-            @submit.prevent="submit"
-          >
+        <v-form
+          ref="form"
+          class="px-4 pt-4"
+          validate-on="submit lazy"
+          @submit.prevent="submit"
+        >
+          <v-card-text>
             <form-qa-input
               v-model:model-value="email"
               type="email"
@@ -33,7 +33,7 @@
               spellcheck="false"
               :type="passwordFieldType"
               :rules="[required, isValidPassword]"
-              :error="errors.email"
+              :error="errors.password"
             >
               <template v-slot:append>
                 <v-icon class="cursor-pointer" @click="switchVisibility">
@@ -41,29 +41,29 @@
                 </v-icon>
               </template>
             </form-qa-input>
-          </v-form>
-        </v-card-text>
+          </v-card-text>
 
-        <v-card-actions class="px-5 d-flex flex-column">
-          <v-btn
-            type="submit"
-            variant="tonal"
-            color="primary"
-            class="w-75 mb-5"
-            :loading="submitting"
-            @click="submit"
-          >
-            Iniciar sessão
-          </v-btn>
+          <v-card-actions class="px-5 d-flex flex-column">
+            <v-btn
+              type="submit"
+              variant="tonal"
+              color="primary"
+              class="w-75 mb-5"
+              :loading="submitting"
+              @click="submit"
+            >
+              Iniciar sessão
+            </v-btn>
 
-          <router-link to="register" class="text-blue-grey pb-1">
-            Criar conta
-          </router-link>
+            <router-link to="register" class="text-blue-grey pb-1">
+              Criar conta
+            </router-link>
 
-          <router-link to="reset-password" class="text-blue-grey">
-            Esqueci-me da palavra passe
-          </router-link>
-        </v-card-actions>
+            <router-link to="reset-password" class="text-blue-grey">
+              Esqueci-me da palavra passe
+            </router-link>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-col>
   </v-row>
@@ -78,7 +78,8 @@ import type { VForm } from "vuetify/lib/components/index.mjs";
 import { login } from "@/services/user.service";
 import { required, isEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { useSessionStore } from "@/stores/session";
+import { useSessionStore } from "@/stores/session.store";
+import { useNotifyStore } from "@/stores/notify.store";
 
 definePageMeta({
   auth: {
@@ -98,8 +99,9 @@ const submitting = ref<boolean>(false);
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
-const router = useRouter();
-const userStore = useSessionStore();
+const $router = useRouter();
+const $sessionStore = useSessionStore();
+const $notifyStore = useNotifyStore();
 
 // form controls
 const switchVisibility = () => {
@@ -129,11 +131,16 @@ const submit = async () => {
 
   login(email.value, password.value)
     .then((user) => {
-      userStore.setUser(user);
-      router.replace("/");
+      $sessionStore.setUser(user);
+      $router.replace("/");
     })
     .catch((errs) => {
-      handleErrors(errs);
+      if (errs.statusCode === 401) {
+        $notifyStore.notifyError("Email ou palavra-passe errados");
+      } else {
+        handleErrors(errs);
+      }
+
       submitting.value = false;
     });
 };

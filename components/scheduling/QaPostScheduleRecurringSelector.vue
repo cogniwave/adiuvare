@@ -150,7 +150,7 @@ import type {
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 import { toHumanDay } from "@/utils/scheduling";
-import { usePostsStore } from "@/stores/posts";
+import { usePostsStore } from "@/stores/posts.store";
 
 // setup
 
@@ -236,3 +236,4 @@ const onUpdate = (payload: RecurringSchedule) => {
   }
 }
 </style>
+@/stores/posts.store

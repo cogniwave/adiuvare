@@ -1,27 +1,37 @@
 import { randomBytes } from "crypto";
 import { hashSync } from "bcrypt";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
 import { db } from "./";
 import { users } from "./schemas/users";
 import type { SelectUser } from "./schemas/users";
 import type { BaseUser, User } from "~/types/user";
+import { PgColumn } from "drizzle-orm/pg-core";
 
 const SALT = 10;
 
 export const getUser = async <T = SelectUser>(
   email: string,
-  fields: Record<string, boolean> = {},
-  filter: Record<string, any> = {},
+  filter: Array<Array<string | any>> = [],
+  fields: Record<string, PgColumn> = {},
 ): Promise<T | undefined> => {
-  return (await db.query.users.findFirst({
-    columns: fields,
-    with: {
-      email,
-      posts: true,
-      ...filter,
-    },
-  })) as T;
+  const result = await db
+    .select({
+      email: users.email,
+      type: users.type,
+      name: users.name,
+      ...fields,
+    })
+    .from(users)
+    .where(
+      or(
+        eq(users.email, email),
+        ...filter.map(([key, value]) => eq(key, value)),
+      ),
+    )
+    .limit(1);
+
+  return result.length ? (result[0] as T) : undefined;
 };
 
 export const addUser = async (payload: BaseUser): Promise<User | null> => {

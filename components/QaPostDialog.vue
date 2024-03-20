@@ -122,7 +122,7 @@ import type { SelectOption } from "@/types/form";
 
 import { required } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { usePostsStore } from "@/stores/posts";
+import { usePostsStore } from "@/stores/posts.store";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostTag from "./QaPostTag.vue";
@@ -238,3 +238,4 @@ const submit = async () => {
   overflow: auto;
 }
 </style>
+@/stores/posts.store

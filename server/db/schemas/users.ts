@@ -27,8 +27,8 @@ export const users = pgTable(
   }),
 );
 
-export const postsRelation = relations(users, ({ many }) => ({
-  id: many(posts),
+export const usersRelations = relations(users, ({ many }) => ({
+  posts: many(posts),
 }));
 
 export type InsertUser = typeof users.$inferInsert;

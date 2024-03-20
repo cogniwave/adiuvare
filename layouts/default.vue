@@ -28,9 +28,11 @@
           </v-list>
         </v-menu>
 
-        <v-btn v-else flat to="login"> Iniciar sessão </v-btn>
+        <v-btn v-else variant="plain" to="login"> Iniciar sessão </v-btn>
       </template>
     </v-app-bar>
+
+    <qa-snackbar />
 
     <v-main>
       <slot />
@@ -39,7 +41,8 @@
 </template>
 
 <script setup lang="ts">
-import { useSessionStore } from "@/stores/session";
+import { useSessionStore } from "@/stores/session.store";
+import QaSnackbar from "@/components/common/QaSnackbar.vue";
 
 const { user, logout } = useSessionStore();
 </script>

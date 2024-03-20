@@ -51,7 +51,7 @@ import dayjs, { Dayjs } from "@/services/dayjs.service";
 import { required, validDate } from "@/utils/validators";
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
-import { usePostsStore } from "@/stores/posts";
+import { usePostsStore } from "@/stores/posts.store";
 
 const $store = usePostsStore();
 
@@ -108,3 +108,4 @@ const onUpdate = (payload: SpecificSchedule) => {
   justify-content: center;
 }
 </style>
+@/stores/posts.store

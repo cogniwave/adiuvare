@@ -49,8 +49,8 @@ export const posts = pgTable(
   }),
 );
 
-export const postsRelation = relations(posts, ({ one }) => ({
-  createdUserId: one(users, {
+export const postsRelations = relations(posts, ({ one }) => ({
+  creator: one(users, {
     fields: [posts.createdUserId],
     references: [users.id],
   }),

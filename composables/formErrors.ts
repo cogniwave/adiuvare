@@ -1,6 +1,6 @@
 import { ref, watch } from "vue";
 
-import { usePostsStore } from "@/stores/posts";
+import { usePostsStore } from "@/stores/posts.store";
 
 import type { FormErrors } from "@/types/form";
 import type { NuxtError } from "@/exceptions";

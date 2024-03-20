@@ -1,7 +1,7 @@
 <template>
   <v-row align-content="center">
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
-      <v-card class="shadow-24 q-pb-md" style="width: 600px">
+      <v-card class="shadow-24 q-pb-md">
         <v-card-title class="bg-primary">
           <h2 class="text-h5 text-white q-my-xs">Recuperar palavra passe</h2>
         </v-card-title>
