@@ -71,14 +71,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import { login } from "@/services/user.service";
 import { required, isEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { useSessionStore } from "@/stores/session.store";
 import { useNotifyStore } from "@/stores/notify.store";
 
 definePageMeta({
@@ -99,9 +96,8 @@ const submitting = ref<boolean>(false);
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
-const $router = useRouter();
-const $sessionStore = useSessionStore();
 const $notifyStore = useNotifyStore();
+const { signIn } = useAuth();
 
 // form controls
 const switchVisibility = () => {
@@ -129,20 +125,18 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  login(email.value, password.value)
-    .then((user) => {
-      $sessionStore.setUser(user);
-      $router.replace("/");
-    })
-    .catch((errs) => {
-      if (errs.statusCode === 401) {
-        $notifyStore.notifyError("Email ou palavra-passe errados");
-      } else {
-        handleErrors(errs);
-      }
+  signIn(
+    { email: email.value, password: password.value },
+    { redirect: true, callbackUrl: "/" },
+  ).catch((errs) => {
+    if (errs.statusCode === 401) {
+      $notifyStore.notifyError("Email ou palavra-passe errados");
+    } else {
+      handleErrors(errs);
+    }
 
-      submitting.value = false;
-    });
+    submitting.value = false;
+  });
 };
 </script>
 

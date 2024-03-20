@@ -81,6 +81,6 @@ export default defineEventHandler(async (event) => {
     return await register(value);
   } catch (err: any) {
     // console.log(err);
-    throw createError(err);
+    // throw createError(err);
   }
 });

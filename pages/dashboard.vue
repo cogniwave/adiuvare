@@ -26,19 +26,13 @@ import QaPost from "@/components/QaPost.vue";
 // import QaPostDialog from "@/components/QaPostDialog.vue";
 import { usePostsStore } from "@/stores/posts.store";
 
-definePageMeta({ path: "/" });
+definePageMeta({
+  path: "/",
+  auth: { unauthenticatedOnly: false },
+});
 
 const page = ref(0);
 const store = usePostsStore();
 
 onBeforeMount(() => useAsyncData("posts", () => store.getPosts()));
 </script>
-
-<style scoped>
-/* .q-page {
-  width: 60vw;
-  display: block;
-  margin: auto; */
-/* } */
-</style>
-@/stores/posts.store

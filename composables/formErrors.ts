@@ -1,6 +1,7 @@
 import { ref, watch } from "vue";
 
 import { usePostsStore } from "@/stores/posts.store";
+import { useNotifyStore } from "@/stores/notify.store";
 
 import type { FormErrors } from "@/types/form";
 import type { NuxtError } from "@/exceptions";
@@ -10,7 +11,8 @@ export function useFormErrors() {
   const errors = ref<FormErrors>({});
   const hasErrors = ref(false);
 
-  const $store = usePostsStore();
+  const $notifyStore = useNotifyStore();
+  const $postsStore = usePostsStore();
 
   const handleErrors = (err: NuxtError) => {
     if (err.statusCode === 422) {
@@ -23,6 +25,8 @@ export function useFormErrors() {
     } else {
       hasErrors.value = false;
     }
+
+    $notifyStore.notifyError("Erro inesperado");
   };
 
   const clearErrors = () => {
@@ -31,7 +35,7 @@ export function useFormErrors() {
   };
 
   watch(
-    () => $store.formErrors,
+    () => $postsStore.formErrors,
     (formErrors) => {
       if (!Object.keys(formErrors)) {
         return clearErrors();

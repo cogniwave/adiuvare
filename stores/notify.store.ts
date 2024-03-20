@@ -33,5 +33,9 @@ export const useNotifyStore = defineStore("notify", {
     notifySuccess(text: string, timeout: number = DEFAULT_TIMEOUT) {
       this.notify(text, "success", timeout);
     },
+
+    notifyWarning(text: string, timeout: number = DEFAULT_TIMEOUT) {
+      this.notify(text, "warning", timeout);
+    },
   },
 });

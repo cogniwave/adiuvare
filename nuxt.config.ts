@@ -12,6 +12,12 @@ export default defineNuxtConfig({
     transpile: ["vuetify", "jsonwebtoken"],
   },
 
+  components: [
+    { path: "~/components/menu", pathPrefix: false },
+    { path: "~/components/common", pathPrefix: false },
+    "~/components",
+  ],
+
   css: [
     "~/scss/styles.scss", // you should add main.scss somewhere in your app
   ],
@@ -61,29 +67,38 @@ export default defineNuxtConfig({
   },
 
   auth: {
-    provider: { type: "refresh" },
     baseURL: "/api/v1/auth",
-    endpoints: {
-      signIn: { path: "/login", method: "post" },
-      signOut: { path: "/logout", method: "post" },
-      signUp: { path: "/register", method: "post" },
-      getSession: { path: "/session", method: "get" },
-      refresh: { path: "/refresh", method: "post" },
+    provider: {
+      type: "refresh",
+      // same as default, but explicit for future reference
+      endpoints: {
+        signIn: { path: "/login", method: "post" },
+        signOut: { path: "/logout", method: "post" },
+        signUp: { path: "/register", method: "post" },
+        getSession: { path: "/session", method: "get" },
+        refresh: { path: "/refresh", method: "post" },
+      },
+      sessionDataType: {
+        email: "string",
+        name: "string",
+        type: "volunteer | org",
+      },
+      token: {
+        maxAgeInSeconds: 300, // 5 min
+        signInResponseTokenPointer: "/token/accessToken",
+        cookieName: null,
+      },
+      refreshToken: {
+        maxAgeInSeconds: 21600, // 6h
+        signInResponseRefreshTokenPointer: "/token/refreshToken",
+        cookieName: null,
+      },
     },
-    pages: {
-      login: "/login",
-      register: "/login",
+    session: {
+      enableRefreshOnWindowFocus: true,
+      enableRefreshPeriodically: 60000,
     },
-    sessionDataType: {
-      email: "string",
-      name: "string",
-      type: "volunteer | org",
-    },
-    token: {
-      maxAgeInSeconds: 60 * 5, // 5 min
-    },
-    enableRefreshOnWindowFocus: true,
-    enableRefreshPeriodically: 60000,
+    // todo: verificar se ha mais paginas protegidas ou desprotegidas e atualizar accordingly
     globalAppMiddleware: {
       isEnabled: true,
     },

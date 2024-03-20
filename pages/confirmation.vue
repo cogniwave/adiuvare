@@ -42,6 +42,10 @@ const $route = useRoute();
 
 useHead({ title: "Confirmação de conta" });
 
+definePageMeta({
+  auth: { unauthenticatedOnly: false },
+});
+
 onBeforeMount(() => {
   const token = $route.params.token;
 

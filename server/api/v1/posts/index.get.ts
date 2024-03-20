@@ -1,8 +1,6 @@
 import { getPosts } from "~/server/db/posts";
 
-export default defineEventHandler(async (event) => {
-  console.log("user", event.user);
-
+export default defineEventHandler(async () => {
   try {
     return await getPosts();
   } catch (err) {

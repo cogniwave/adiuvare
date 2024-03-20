@@ -13,8 +13,6 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
     { password: users.password },
   );
 
-  console.log(user);
-
   if (!user || !compareSync(password, user.password as string)) {
     throw createError({ statusCode: 401, message: "Invalid credentails" });
   }
@@ -47,10 +45,12 @@ export default defineEventHandler(async (event) => {
   try {
     const user = await login(payload);
 
-    setHeader(event, "Authorization", `Bearer ${signToken(user, "access")}`);
-    setHeader(event, "x-refresh", signToken(user, "refresh"));
-
-    return user;
+    return {
+      token: {
+        accessToken: signToken(user, "access"),
+        refreshToken: signToken(user, "refresh"),
+      },
+    };
   } catch (err) {
     console.log(err);
     throw createError(err as any);
