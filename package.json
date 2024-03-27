@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@nuxtjs/eslint-module": "^4.1.0",
-    "@sidebase/nuxt-auth": "^0.6.7",
+    "@sidebase/nuxt-auth": "^0.7.0",
     "@types/bcrypt": "^5",
     "@types/eslint": "^8",
     "@types/jsonwebtoken": "^9",

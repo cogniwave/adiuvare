@@ -28,9 +28,7 @@ export default defineNuxtConfig({
     "@nuxtjs/eslint-module",
     "nuxt-bugsnag",
     "@sidebase/nuxt-auth",
-    // @ts-expect-error for some reason this starts raising error with @sidebase/next-auth
     (_, nuxt) => {
-      // @ts-expect-error same here
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         config.plugins?.push(vuetify({ autoImport: true }));
       });
@@ -86,12 +84,13 @@ export default defineNuxtConfig({
       token: {
         maxAgeInSeconds: 300, // 5 min
         signInResponseTokenPointer: "/token/accessToken",
-        cookieName: null,
+        cookieName: "token",
+        sameSiteAttribute: "strict",
       },
       refreshToken: {
         maxAgeInSeconds: 21600, // 6h
         signInResponseRefreshTokenPointer: "/token/refreshToken",
-        cookieName: null,
+        cookieName: "refresh",
       },
     },
     session: {

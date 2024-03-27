@@ -77,6 +77,7 @@ import type { VForm } from "vuetify/lib/components/index.mjs";
 import { required, isEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 import { useNotifyStore } from "@/stores/notify.store";
+import { useSessionStore } from "@/stores/session.store";
 
 definePageMeta({
   auth: {
@@ -97,7 +98,8 @@ const submitting = ref<boolean>(false);
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const $notifyStore = useNotifyStore();
-const { signIn } = useAuth();
+const $sessionStore = useSessionStore();
+const { signIn, data, token } = useAuth();
 
 // form controls
 const switchVisibility = () => {
@@ -128,15 +130,17 @@ const submit = async () => {
   signIn(
     { email: email.value, password: password.value },
     { redirect: true, callbackUrl: "/" },
-  ).catch((errs) => {
-    if (errs.statusCode === 401) {
-      $notifyStore.notifyError("Email ou palavra-passe errados");
-    } else {
-      handleErrors(errs);
-    }
+  )
+    .then(() => $sessionStore.init(token.value as string, data.value))
+    .catch((errs) => {
+      if (errs.statusCode === 401) {
+        $notifyStore.notifyError("Email ou palavra-passe errados");
+      } else {
+        handleErrors(errs);
+      }
 
-    submitting.value = false;
-  });
+      submitting.value = false;
+    });
 };
 </script>
 

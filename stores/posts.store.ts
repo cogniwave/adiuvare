@@ -3,9 +3,9 @@ import { defineStore } from "pinia";
 import type { EmptyPost, Post, PostSchedule } from "@/types/post";
 import type { Errors } from "@/exceptions";
 
-// import dayjs from "@/services/dayjs.service";
 import { getPosts, addPost } from "@/services/posts.service";
 import { ValidationError } from "@/exceptions";
+import { useSessionStore } from "./session.store";
 
 interface PostState {
   post: Post | EmptyPost;
@@ -18,7 +18,7 @@ interface PostState {
 
 const DEFAULT_POST: EmptyPost = {
   title: "",
-  tags: [],
+  needs: [],
   locations: [],
   description: "",
   schedule: { type: "anytime" },
@@ -65,8 +65,10 @@ export const usePostsStore = defineStore("posts", {
     },
 
     async createPost() {
+      const $sesh = useSessionStore();
+
       try {
-        const res = await addPost(this.post as EmptyPost);
+        const res = await addPost(this.post as EmptyPost, $sesh.token);
 
         if (res) {
           this.posts.push(res);
