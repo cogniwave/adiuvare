@@ -22,6 +22,13 @@
       "when": 1710681612697,
       "tag": "0002_deep_warhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1711555524500,
+      "tag": "0003_handy_hairball",
+      "breakpoints": true
     }
   ]
 }

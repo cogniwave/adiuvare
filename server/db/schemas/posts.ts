@@ -33,10 +33,10 @@ export const posts = pgTable(
     id: uuid("id").primaryKey().unique().notNull().defaultRandom(),
     title: varchar("title", { length: 264 }).notNull(),
     description: text("descrition").notNull(),
-    locations: text("locations").notNull(),
+    locations: text("locations").array().notNull(),
     schedule: json("schdule").notNull().$type<PostSchedule>(),
     state: stateEnum("state").default("pending"),
-    needs: needsEnum("needs").notNull(),
+    needs: needsEnum("needs").array().notNull(),
     createdUserId: uuid("created_user_id")
       .notNull()
       .references(() => users.id),
