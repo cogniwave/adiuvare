@@ -45,7 +45,7 @@ const TAG_MAPPING: Config = {
     color: "blue",
     label: "Bens & comida",
   },
-  people: {
+  volunteers: {
     icon: "person",
     color: "accent",
     label: "Pessoas",

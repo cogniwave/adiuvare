@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { ScheduleTime, SpecificSchedule } from "../models";
+import type { ScheduleTime, SpecificSchedule } from "@/types/post";
 
 import dayjs, { Dayjs } from "@/services/dayjs.service";
 import { required, validDate } from "@/utils/validators";

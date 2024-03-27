@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { ScheduleType } from "@/components/models";
+import type { ScheduleType } from "@/types/post";
 
 import QaPostScheduleRecurringSelector from "./QaPostScheduleRecurringSelector.vue";
 import QaPostScheduleSpecificSelector from "./QaPostScheduleSpecificSelector.vue";

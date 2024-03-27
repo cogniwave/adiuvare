@@ -11,6 +11,7 @@
 
       <v-card-text>
         <v-form
+          ref="form"
           class="px-4 pt-4"
           validate-on="submit lazy"
           @submit.prevent="submit"
@@ -35,7 +36,9 @@
             placeholder="E.g.: Precisa-se voluntário"
             :rules="[required]"
             :error="errors.description"
-            @update:model-value="(value) => $store.updatePost('title', value)"
+            @update:model-value="
+              (value) => $store.updatePost('description', value)
+            "
           />
 
           <!-- locations -->
@@ -142,7 +145,7 @@ const form = ref<VForm>();
 const categoryInput = ref<string[]>(["money"]);
 const helpOptions = ref<SelectOption[]>([
   { title: "Dinheiro", value: "money" },
-  { title: "Voluntários", value: "people" },
+  { title: "Voluntários", value: "volunteers" },
   { title: "Bens & comida", value: "goods" },
   { title: "Outros", value: "other" },
 ]);
@@ -209,7 +212,7 @@ const removeCategory = (category: string) => {
 };
 
 const onCategoryUpdate = () => {
-  $store.updatePost("categories", categoryInput.value);
+  $store.updatePost("needs", categoryInput.value);
 };
 
 const submit = async () => {
@@ -238,4 +241,3 @@ const submit = async () => {
   overflow: auto;
 }
 </style>
-@/stores/posts.store

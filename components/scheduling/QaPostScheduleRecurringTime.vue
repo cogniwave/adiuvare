@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { ScheduleTime } from "@/components/models";
+import type { ScheduleTime } from "@/types/post";
 
 import QaTimePicker from "./QaTimePicker.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";

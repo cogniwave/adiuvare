@@ -145,7 +145,7 @@ import type {
   RecurringSchedule,
   ScheduleTime,
   RecurringScheduleTimeGroup,
-} from "@/components/models";
+} from "@/types/post";
 
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
