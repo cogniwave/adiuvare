@@ -11,7 +11,11 @@ export default defineNuxtRouteMiddleware(async () => {
 
   // run on startup
   if (nuxtApp.isHydrating && nuxtApp.payload.serverRendered) {
-    const { signOut, refresh } = useAuth();
+    const { signOut, refresh, refreshToken } = useAuth();
+
+    if (!refreshToken.value) {
+      return;
+    }
 
     try {
       await refresh();
