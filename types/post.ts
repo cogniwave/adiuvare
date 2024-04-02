@@ -52,6 +52,7 @@ export interface Post extends EmptyPost {
   id: string;
   createdBy: string;
   createdAt: Date;
+  createdBySlug: string;
 }
 
 export interface CreatePostPayload {

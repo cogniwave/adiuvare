@@ -55,13 +55,13 @@
               {{ $t("login.title") }}
             </v-btn>
 
-            <router-link to="register" class="text-blue-grey pb-1">
+            <nuxt-link to="register" class="text-blue-grey pb-1">
               {{ $t("register.link") }}
-            </router-link>
+            </nuxt-link>
 
-            <router-link to="reset-password" class="text-blue-grey">
+            <nuxt-link to="reset-password" class="text-blue-grey">
               {{ $t("reset.link") }}
-            </router-link>
+            </nuxt-link>
           </v-card-actions>
         </v-form>
       </v-card>

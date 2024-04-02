@@ -78,11 +78,10 @@
             @update:model-value="onCategoryUpdate"
           >
             <template v-slot:chip="{ item }">
-              <qa-post-tag
+              <qa-post-dialog-need
                 :key="item.value"
-                :tag="item.value"
-                closable
-                @click:remove="removeCategory(item.value)"
+                :need="item.value"
+                @click:remove="removeNeed(item.value)"
               />
             </template>
           </form-qa-select>
@@ -128,7 +127,7 @@ import { useFormErrors } from "@/composables/formErrors";
 import { usePostsStore } from "@/stores/posts.store";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
-import QaPostTag from "./QaPostTag.vue";
+import QaPostDialogNeed from "./QaPostDialogNeed.vue";
 import QaPostSchedule from "./scheduling/QaPostSchedule.vue";
 
 const $store = usePostsStore();
@@ -206,7 +205,7 @@ const onLocationUpdate = () => {
   $store.updatePost("locations", locationInput.value);
 };
 
-const removeCategory = (category: string) => {
+const removeNeed = (category: string) => {
   categoryInput.value = categoryInput.value.filter((c) => category !== c);
   onCategoryUpdate();
 };

@@ -20,6 +20,7 @@ export default defineNuxtPlugin((app) => {
               primary: blueGrey.base,
               surface: blueGrey.darken4,
               background: blueGrey.lighten5,
+              text: blueGrey.darken4,
             },
           },
         },

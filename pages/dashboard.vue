@@ -1,9 +1,11 @@
 <template>
-  <v-row>
-    <v-col offset="2" cols="8">
+  <v-row no-gutters class="mt-10">
+    <v-col offset="3" cols="6">
       <!-- <v-btn @click="store.openDialog">criar</v-btn>
 
       <qa-filter /> -->
+
+      <p class="mb-5">Recent posts</p>
 
       <v-virtual-scroll item-height="264" :items="store.posts">
         <template v-slot:default="{ item }">

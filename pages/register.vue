@@ -110,9 +110,9 @@
                 {{ $t("register.register") }}
               </v-btn>
 
-              <router-link to="login" class="text-blue-grey pb-1">
+              <nuxt-link to="login" class="text-blue-grey pb-1">
                 {{ $t("login.title") }}
-              </router-link>
+              </nuxt-link>
             </v-card-actions>
           </v-form>
 

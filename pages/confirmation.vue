@@ -9,9 +9,9 @@
             <template v-if="success">
               <p class="mb-3">
                 {{ $t("register.confirmation.confirmSuccess") }}
-                <router-link to="login" class="text-blue-grey pb-1">
+                <nuxt-link to="login" class="text-blue-grey pb-1">
                   {{ $t("login.title") }}
-                </router-link>
+                </nuxt-link>
               </p>
             </template>
 

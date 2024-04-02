@@ -1,76 +1,197 @@
 <template>
-  <v-card variant="outlined">
+  <v-card variant="outlined" class="post" rounded="xl">
     <v-card-item>
-      <img
-        src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.png"
-      />
+      <v-card-title class="d-flex align-start">
+        <v-avatar size="64">
+          <v-img
+            :alt="$t('posts.logoAlt')"
+            src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
+            lazy-src="../assets/post-profile-placeholder.png"
+          >
+            <template v-slot:error>
+              {{ post.createdBy[0] }}
+            </template>
+          </v-img>
+        </v-avatar>
 
-      <v-card-text>
-        <v-row>
-          <v-col>
-            <div class="text-h6 column">
-              {{ post.title }}
-              <span class="text-subtitle2 font-weight-normal">
-                {{ post.created_by }}, {{ post.created_at }}
-              </span>
-            </div>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            {{ post.description }}
-          </v-col>
-        </v-row>
+        <div class="text-subtitle ml-3">
+          <nuxt-link :to="`profile/${post.createdBySlug || 'cposas'}`">
+            {{ post.createdBy }}
+          </nuxt-link>
 
-        <v-row>
-          <v-col>
-            <div class="q-mb-sm">
-              <v-chip
-                v-for="location in post.locations"
-                :key="location"
-                class="cursor-pointer"
-                @click="onLocationClick"
-              >
-                {{ location }}
-              </v-chip>
-            </div>
+          <span class="text-subtitle-2 d-block">
+            {{ $d(post.createdAt) }}
+          </span>
+        </div>
 
-            <qa-post-tag
-              v-for="tag in post.tags"
-              :key="tag"
-              :tag="tag"
-              @click="onTagClick"
+        <div class="ml-auto d-flex align-end flex-column">
+          <h3 class="mb-0">{{ post.title }}</h3>
+
+          <div style="line-height: 10px">
+            <qa-post-need
+              v-for="need in post.needs"
+              :key="need"
+              :need="need"
+              rounded="md"
+              label
+              size="x-small"
+              variant="text"
+              class="cursor-pointer ml-1 pr-1"
             />
+          </div>
+        </div>
+      </v-card-title>
+
+      <v-card-text class="mt-5">
+        <v-row>
+          <v-col>
+            {{ desc }}
+
+            <span
+              v-if="descTooLong && !descVisible"
+              class="expand-desc"
+              @click="viewAllDesc"
+            >
+              {{ $t("posts.expandDesc") }}
+            </span>
           </v-col>
         </v-row>
       </v-card-text>
+
+      <v-divider />
+
+      <v-card-actions>
+        <v-chip
+          v-for="location in visibleLocations"
+          :key="location"
+          label
+          class="cursor-pointer mr-1"
+          rounded="md"
+          size="small"
+          @click="onLocationClick"
+        >
+          {{ location }}
+        </v-chip>
+
+        <v-menu v-if="leftoverLocations.length" open-on-hover>
+          <template v-slot:activator="{ props }">
+            <span v-bind="props">
+              <v-chip label size="small">
+                +{{ leftoverLocations.length }}
+              </v-chip>
+            </span>
+          </template>
+
+          <v-list density="compact" class="pt-1 pb-2">
+            <v-list-item
+              v-for="location in leftoverLocations"
+              :key="location"
+              class="pl-2 pr-2"
+            >
+              <v-chip
+                label
+                variant="text"
+                class="cursor-pointer mr-1"
+                rounded="md"
+                size="small"
+              >
+                {{ location }}
+              </v-chip>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <v-btn variant="tonal" size="small" rounded="md" class="ml-auto">
+          Contact
+        </v-btn>
+      </v-card-actions>
     </v-card-item>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import QaPostTag from "@/components/QaPostTag.vue";
+import QaPostNeed from "@/components/QaPostNeed.vue";
+
 import type { Post } from "@/types/post";
 
-defineProps<{
-  post: Post;
-}>();
+const MAX_DESC = 1300;
+const NUM_VISIBLE_LOCATIONS = 3;
+
+const props = defineProps({
+  post: { type: Object as PropType<Post>, required: true },
+});
+
+const desc = ref(props.post.description);
+const descTooLong = ref(false);
+const descVisible = ref(false);
+const visibleLocations = ref<string[]>([]);
+const leftoverLocations = ref<string[]>([]);
+
+onBeforeMount(() => {
+  if (props.post.description.length > MAX_DESC) {
+    desc.value = `${props.post.description
+      .substring(0, MAX_DESC - 10)
+      .trim()}...`;
+
+    descTooLong.value = true;
+  }
+
+  visibleLocations.value = props.post.locations.slice(0, NUM_VISIBLE_LOCATIONS);
+
+  if (props.post.locations.length > NUM_VISIBLE_LOCATIONS) {
+    leftoverLocations.value = props.post.locations.slice(NUM_VISIBLE_LOCATIONS);
+  }
+});
+
+const viewAllDesc = () => {
+  desc.value = props.post.description;
+  descVisible.value = true;
+};
 
 const onLocationClick = () => {};
-
-const onTagClick = () => {};
 </script>
 
-<style scoped>
-img {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  height: 90%;
-  width: auto;
-  opacity: 0.2;
-  left: 0;
-  right: 0;
-  margin: auto;
+<style scoped lang="scss">
+.post {
+  background-color: #fff;
+
+  :deep(.v-img__error) {
+    color: rgb(var(--v-theme-primary));
+    background-color: rgb(var(--v-theme-background));
+    font-size: 2rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .v-card-title {
+    a {
+      text-decoration: none;
+      color: rgb(var(--v-theme-surface));
+    }
+  }
+
+  .v-card-item {
+    color: rgb(var(--v-theme-surface));
+
+    h3 {
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+
+    .v-card-actions {
+      button {
+        color: rgb(var(--v-theme-primary));
+        background-color: rgb(var(--v-theme-background));
+      }
+    }
+  }
+
+  .expand-desc {
+    cursor: pointer;
+    color: rgb(var(--v-theme-primary));
+    font-weight: bold;
+  }
 }
 </style>

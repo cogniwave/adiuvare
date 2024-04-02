@@ -109,7 +109,19 @@
     "title": "Nova publicação",
     "submit": "Criar publicação",
     "cancel": "Cancelar",
-    "chooseSchedule": "Escolher"
+    "chooseSchedule": "Escolher",
+    "expandDesc": "Ver mais",
+    "logoAlt": "Logo de quem criou a publicação",
+    "needs": {
+      "money": "Dinheiro",
+      "moneyDescription": "São necessárias doações monetárias",
+      "goods": "Bens & comida",
+      "goodsDescription": "São necessárias doações de quaisquer bens ou comidas",
+      "volunteers": "Pessoas",
+      "volunteersDescription": "É necessário voluntário humano",
+      "other": "Outros",
+      "otherDescription": "É necessário uma outra ajuda especifica"
+    }
   },
 
   "loading": "A carregar"

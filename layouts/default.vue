@@ -3,14 +3,14 @@
     <v-app-bar color="white" density="compact" elevation="0">
       <template v-slot:title>
         <ClientOnly fallback-tag="a">
-          <router-link to="/">
+          <nuxt-link to="/">
             <v-img
-              src="../public/logo.png"
+              src="../assets/logo.png"
               aspect-ratio="1"
               width="48px"
               eager
             />
-          </router-link>
+          </nuxt-link>
         </ClientOnly>
       </template>
 
@@ -100,6 +100,7 @@ watch(
     img {
       width: 48px;
     }
+
     a {
       color: var(--v-theme-base) !important;
       text-decoration: none;
