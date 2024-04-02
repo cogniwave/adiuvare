@@ -25,6 +25,14 @@ export default defineNuxtPlugin((app) => {
         },
         defaultTheme: "light",
       },
+      defaults: {
+        VCard: {
+          color: blueGrey.lighten5,
+        },
+        VIcon: {
+          size: "x-small",
+        },
+      },
       ssr: true,
       icons: {
         defaultSet: "fa",

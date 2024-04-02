@@ -20,6 +20,10 @@ export default defineNuxtConfig({
           rel: "stylesheet",
           href: "https://use.fontawesome.com/releases/v5.0.13/css/brand.css",
         },
+        {
+          rel: "stylesheet",
+          href: "https://use.fontawesome.com/releases/v5.0.13/css/solid.css",
+        },
       ],
     },
   },

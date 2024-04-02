@@ -1,5 +1,5 @@
 <template>
-  <v-row align-content="center">
+  <v-row align-content="center" no-gutters>
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
       <v-card class="shadow-24 pb-3">
         <v-card-title class="bg-primary">
@@ -16,7 +16,7 @@
             <form-qa-input
               v-model:model-value="email"
               type="email"
-              icon="email"
+              icon="fa-regular fa-at"
               :label="$t('form.name')"
               :rules="[required, isEmail]"
               :error="errors.email"
@@ -24,7 +24,7 @@
 
             <form-qa-input
               v-model:model-value="password"
-              icon="lock"
+              icon="fa-solid fa-lock"
               class="mt-3"
               autocorrect="off"
               autocapitalize="off"

@@ -3,7 +3,7 @@
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
       <v-card class="shadow-24 q-pb-md">
         <v-card-title class="bg-primary">
-          <h2 class="text-h5 text-white q-my-xs"></h2>
+          <h2 class="text-h5 text-white q-my-xs">{{ $t("reset.title") }}</h2>
         </v-card-title>
 
         <template v-if="!emailSent">
@@ -20,7 +20,7 @@
                 v-model:model-value="email"
                 class="mt-3"
                 type="email"
-                icon="email"
+                icon="fa-regular fa-at"
                 :label="$t('form.email')"
                 :error="errors.email"
                 :rules="[required, isEmail]"
@@ -37,7 +37,7 @@
               :loading="submitting"
               @click="submit"
             >
-              {{ $t("register.submit") }}
+              {{ $t("reset.submit") }}
             </v-btn>
 
             <router-link to="register" class="text-blue-grey pb-1">

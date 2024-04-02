@@ -112,6 +112,8 @@ span {
 }
 
 :deep(.v-application) {
-  padding-top: 20px;
+  .v-application__wrap {
+    min-height: calc(100dvh - 48px);
+  }
 }
 </style>
