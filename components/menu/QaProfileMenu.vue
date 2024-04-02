@@ -7,26 +7,26 @@
   >
     <template v-slot:activator="{ props }">
       <span v-bind="props" class="pointer">
-        {{ data.name }} <v-icon>expand_more</v-icon>
+        {{ data.name }} <v-icon>fa-regular fa-chevron-down</v-icon>
       </span>
     </template>
 
     <v-list>
       <v-list-item
-        title="Perfil"
+        :title="$t('nav.profile')"
         append-icon="person"
         @click="$router.push('/profile')"
       />
 
       <v-list-item
-        title="Sair"
+        :title="$t('nav.logout')"
         append-icon="logout"
         @click="signOut({ callbackUrl: '/', redirect: true })"
       />
     </v-list>
   </v-menu>
 
-  <v-btn v-else variant="plain" to="login"> Iniciar sessão </v-btn>
+  <v-btn v-else variant="plain" to="login"> {{ $t("login.title") }} </v-btn>
 </template>
 
 <script setup lang="ts">

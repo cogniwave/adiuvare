@@ -11,7 +11,7 @@ export default defineEventHandler(async () => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: "Something went wrong on our side",
+      statusMessage: "errors.unexpected",
     });
   }
 });

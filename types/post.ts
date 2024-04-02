@@ -50,7 +50,7 @@ export interface EmptyPost {
 
 export interface Post extends EmptyPost {
   id: string;
-  createdBy: Date;
+  createdBy: string;
   createdAt: Date;
 }
 

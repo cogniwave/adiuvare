@@ -23,7 +23,7 @@ const register = async (payload: BaseUser): Promise<User> => {
     if (err.constraint === "users_email_unique") {
       throw createError({
         data: {
-          email: "Já existe uma conta com este email",
+          email: "errors.emailExists",
         },
         statusCode: 422,
         message: "Email already exists",
@@ -33,7 +33,7 @@ const register = async (payload: BaseUser): Promise<User> => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: "Something went wrong",
+      statusMessage: "errors.unexpected",
     });
   }
 };
@@ -48,28 +48,27 @@ export default defineEventHandler(async (event) => {
 
   const { value, error } = Joi.object<BaseUser>({
     name: Joi.string().required().max(255).messages({
-      "string.empty": "Não pode ser vazio",
-      "string.max": "Não pode ter mais que 255 caracteres",
+      "string.empty": "errors.empty",
+      "string.max": "errors.max_255",
     }),
 
     password: Joi.string()
       .required()
       .pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/)
       .messages({
-        "string.empty": "Não pode ser vazia",
-        "string.pattern.base":
-          "Tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
+        "string.empty": "errors.empty",
+        "string.pattern.base": "errors.invalidPassword",
       }),
 
     email: Joi.string().required().email({}).messages({
-      "string.empty": "Não pode ser vazio",
-      "string.max": "Não pode ter mais que 255 caracteres",
-      "string.email": "Não é um email válido",
+      "string.empty": "errors.empty",
+      "string.max": "errors.max_255",
+      "string.email": "errors.invalidEmail",
     }),
 
     type: Joi.string().required().valid("org", "volunteer").messages({
-      "string.empty": "Não pode ser vazio",
-      "any.only": 'Tem que ser "org" ou "voluntário"',
+      "string.empty": "errors.empty",
+      "any.only": "errors.invalidUserType",
     }),
   }).validate(body, { abortEarly: false, stripUnknown: true });
 

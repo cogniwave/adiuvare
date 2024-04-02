@@ -3,7 +3,7 @@
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
       <v-card class="shadow-24 q-pb-md">
         <v-card-title class="bg-primary">
-          <h2 class="text-h5 text-white q-my-xs">Recuperar palavra passe</h2>
+          <h2 class="text-h5 text-white q-my-xs"></h2>
         </v-card-title>
 
         <template v-if="!emailSent">
@@ -20,8 +20,8 @@
                 v-model:model-value="email"
                 class="mt-3"
                 type="email"
-                label="Email"
                 icon="email"
+                :label="$t('form.email')"
                 :error="errors.email"
                 :rules="[required, isEmail]"
               />
@@ -37,24 +37,26 @@
               :loading="submitting"
               @click="submit"
             >
-              Recuperar
+              {{ $t("register.submit") }}
             </v-btn>
 
             <router-link to="register" class="text-blue-grey pb-1">
-              Criar conta
+              {{ $t("register.link") }}
             </router-link>
 
             <router-link to="login" class="text-blue-grey">
-              Iniciar sessão
+              {{ $t("login.title") }}
             </router-link>
           </v-card-actions>
         </template>
 
         <v-card-item v-else>
-          <h6 class="q-my-md">Pedido de recuperação enviado</h6>
+          <h6 class="q-my-md">
+            {{ $t("reset.success") }}
+          </h6>
 
           <span class="q-text-center">
-            Foi enviado um email com os passos seguintes do processo
+            {{ $t("reset.successExtended") }}
           </span>
         </v-card-item>
       </v-card>

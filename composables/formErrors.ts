@@ -11,6 +11,7 @@ export function useFormErrors() {
   const errors = ref<FormErrors>({});
   const hasErrors = ref(false);
 
+  const { t } = useI18n();
   const $notifyStore = useNotifyStore();
   const $postsStore = usePostsStore();
 
@@ -18,7 +19,7 @@ export function useFormErrors() {
     if (err.statusCode === 422) {
       // show form errors
       for (const [field, error] of Object.entries(err.data.data || {})) {
-        errors.value[field] = error;
+        errors.value[field] = t(error);
       }
 
       hasErrors.value = true;
@@ -26,7 +27,7 @@ export function useFormErrors() {
       hasErrors.value = false;
     }
 
-    $notifyStore.notifyError("Erro inesperado");
+    $notifyStore.notifyError(t("errors.unexpected"));
   };
 
   const clearErrors = () => {

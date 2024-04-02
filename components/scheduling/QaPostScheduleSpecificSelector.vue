@@ -24,10 +24,12 @@
     >
       <template v-slot:actions>
         <div class="row items-center justify-end q-gutter-sm">
-          <v-btn flat @click="calendarVisible = false"> Cancelar </v-btn>
+          <v-btn flat @click="calendarVisible = false">
+            {{ $t("posts.cancel") }}
+          </v-btn>
 
           <v-btn color="primary" variant="tonal" @click="onSave">
-            Escolher
+            {{ $t("posts.chooseSchedule") }}
           </v-btn>
         </div>
       </template>

@@ -3,11 +3,11 @@
     v-model:model-value="scheduleType"
     inline
     class="mt-3"
-    label="Horário"
+    :label="$t('form.post.schedule.title')"
   >
-    <v-radio label="Qualquer altura" value="anytime" />
-    <v-radio label="Dia e hora especifica" value="specific" />
-    <v-radio label="Horário recurrente" value="recurring" />
+    <v-radio :label="$t('form.post.schedule.anytime')" value="anytime" />
+    <v-radio :label="$t('form.post.schedule.specific')" value="specific" />
+    <v-radio :label="$t('form.post.schedule.recurring')" value="recurring" />
   </v-radio-group>
 
   <div v-if="scheduleType === 'recurring'" class="q-mx-auto text-center">

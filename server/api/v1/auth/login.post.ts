@@ -14,7 +14,10 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
   );
 
   if (!user || !compareSync(password, user.password as string)) {
-    throw createError({ statusCode: 401, message: "Invalid credentails" });
+    throw createError({
+      statusCode: 401,
+      message: "errors.invalidCredentials",
+    });
   }
 
   delete user.password;
@@ -32,10 +35,10 @@ export default defineEventHandler(async (event) => {
   const { value: payload, error } = Joi.object<LoginPayload>({
     email: Joi.string()
       .required()
-      .messages({ "strings.empty": "Não pode ser vazio" }),
+      .messages({ "strings.empty": "errors.empty" }),
     password: Joi.string()
       .required()
-      .messages({ "strings.empty": "Não pode ser vazio" }),
+      .messages({ "strings.empty": "errors.empty" }),
   }).validate(body, { abortEarly: false, stripUnknown: true });
 
   if (error) {

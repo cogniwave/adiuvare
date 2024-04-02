@@ -9,7 +9,7 @@ const sendResetEmail = async (body: any) => {
   const { value: payload, error } = Joi.object<LoginPayload>({
     email: Joi.string()
       .required()
-      .messages({ "strings.empty": "Não pode ser vazio" }),
+      .messages({ "strings.empty": "errors.empty" }),
   }).validate(body, { abortEarly: false, stripUnknown: true });
 
   if (error) {

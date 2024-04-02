@@ -1,13 +1,13 @@
 <template>
-  <v-row class="mt-10">
+  <v-row>
     <v-col offset="2" cols="8">
-      <v-btn @click="store.openDialog">criar</v-btn>
+      <!-- <v-btn @click="store.openDialog">criar</v-btn>
 
-      <qa-filter />
+      <qa-filter /> -->
 
       <v-virtual-scroll item-height="264" :items="store.posts">
         <template v-slot:default="{ item }">
-          <qa-post :post="item" />
+          <qa-post :post="item" class="mb-5" />
         </template>
       </v-virtual-scroll>
 
@@ -19,6 +19,9 @@
 </template>
 
 <script setup lang="ts">
+// https://cdn.dribbble.com/userupload/8357595/file/original-ad4a908cafbe0bc3bdfa401033e1ba1d.png?resize=752x
+// https://cdn.dribbble.com/userupload/4391981/file/original-1f2087f908f96ad48f1da1e014bc186a.mp4
+// https://cdn.dribbble.com/userupload/10640865/file/original-3fa71060d497c906c597896bae938aa5.png?resize=752x
 import { onBeforeMount, ref } from "vue";
 
 import QaFilter from "@/components/QaFilter.vue";

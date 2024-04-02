@@ -16,24 +16,24 @@ export default defineEventHandler(async (event) => {
   const { value: payload, error } = Joi.object<CreatePostPayload>({
     title: Joi.string()
       .required()
-      .messages({ "strings.empty": "Não pode ser vazio" }),
+      .messages({ "strings.empty": "errors.empty" }),
     description: Joi.string()
       .required()
-      .messages({ "strings.empty": "Não pode ser vazio" }),
+      .messages({ "strings.empty": "errors.empty" }),
     needs: Joi.array()
       .items(Joi.string().valid("volunteers", "money", "goods", "other"))
       .required()
       .messages({
-        "strings.empty": "Não pode ser vazio",
-        "strings.valid": "Campo invalido",
+        "strings.empty": "errors.empty",
+        "strings.valid": "errors.invalidField",
       }),
     locations: Joi.array()
       .items(Joi.string())
       .required()
-      .messages({ "strings.empty": "Não pode ser vazio" }),
+      .messages({ "strings.empty": "errors.empty" }),
     schedule: Joi.object()
       .required()
-      .messages({ "strings.empty": "Não pode ser vazio" }),
+      .messages({ "strings.empty": "errors.empty" }),
   }).validate(body, { abortEarly: false, stripUnknown: true });
 
   if (error) {
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: "Something went wrong on our side",
+      statusMessage: "errors.unexpected",
     });
   }
 });

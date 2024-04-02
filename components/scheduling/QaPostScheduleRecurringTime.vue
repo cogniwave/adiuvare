@@ -18,7 +18,7 @@
 
         <div class="button-group ml-3">
           <v-tooltip
-            text="Remover horário"
+            :text="$t('form.post.schedule.addRecurring')"
             location="bottom"
             close-on-content-click
           >
@@ -39,7 +39,7 @@
           </v-tooltip>
 
           <v-tooltip
-            text="Adicionar outro horário"
+            :text="$t('form.post.schedule.removeRecurring')"
             location="bottom"
             close-on-content-click
             close-delay="0"
@@ -63,7 +63,7 @@
       </div>
 
       <small v-if="time.error" class="text-error text-start d-block mt-2">
-        Hora inicio tem que ser antes de hora de fim
+        {{ $t("errors.post.endHourHigherThanStart") }}
       </small>
     </template>
   </div>

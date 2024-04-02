@@ -12,9 +12,9 @@ export default defineEventHandler(async (event) => {
 
   const { value, error } = Joi.object<{ token: string }>({
     token: Joi.string().required().min(1).max(255).messages({
-      "string.empty": "Token invalido",
-      "string.max": "Token invalido",
-      "string.min": "Token invalido",
+      "string.empty": "errors.invalidConfirmToken",
+      "string.max": "errors.invalidConfirmToken",
+      "string.min": "errors.invalidConfirmToken",
     }),
   }).validate(body, { abortEarly: false, stripUnknown: true });
 

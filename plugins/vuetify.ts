@@ -1,7 +1,8 @@
-import "material-design-icons-iconfont/dist/material-design-icons.css";
+import "@fortawesome/fontawesome-free/css/all.css"; // Ensure your project is capable of handling css files
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
-import { aliases, md } from "vuetify/iconsets/md";
+import { aliases, fa } from "vuetify/iconsets/fa";
+import { blueGrey } from "vuetify/util/colors";
 import pt from "dayjs/locale/pt";
 import DayjsAdapter from "@date-io/dayjs";
 
@@ -12,11 +13,23 @@ export default defineNuxtPlugin((app) => {
         adapter: DayjsAdapter,
         locale: { pt },
       },
+      theme: {
+        themes: {
+          light: {
+            colors: {
+              primary: blueGrey.base,
+              surface: blueGrey.darken4,
+              background: blueGrey.lighten5,
+            },
+          },
+        },
+        defaultTheme: "light",
+      },
       ssr: true,
       icons: {
-        defaultSet: "md",
+        defaultSet: "fa",
         aliases,
-        sets: { md },
+        sets: { fa },
       },
     }),
   );

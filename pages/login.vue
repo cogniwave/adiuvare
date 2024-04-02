@@ -3,7 +3,7 @@
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
       <v-card class="shadow-24 pb-3">
         <v-card-title class="bg-primary">
-          <h2 class="text-h5 text-white">Iniciar sessão</h2>
+          <h2 class="text-h5 text-white">{{ $t("login.title") }}</h2>
         </v-card-title>
 
         <v-form
@@ -16,28 +16,28 @@
             <form-qa-input
               v-model:model-value="email"
               type="email"
-              label="Email"
               icon="email"
+              :label="$t('form.name')"
               :rules="[required, isEmail]"
               :error="errors.email"
             />
 
             <form-qa-input
               v-model:model-value="password"
-              label="Palavra-passe"
               icon="lock"
               class="mt-3"
               autocorrect="off"
               autocapitalize="off"
               autocomplete="off"
               spellcheck="false"
+              :label="$t('form.password')"
               :type="passwordFieldType"
               :rules="[required, isValidPassword]"
               :error="errors.password"
             >
               <template v-slot:append>
                 <v-icon class="cursor-pointer" @click="switchVisibility">
-                  {{ visibilityIcon }}
+                  fa-regular fa-{{ visibilityIcon }}
                 </v-icon>
               </template>
             </form-qa-input>
@@ -52,15 +52,15 @@
               :loading="submitting"
               @click="submit"
             >
-              Iniciar sessão
+              {{ $t("login.title") }}
             </v-btn>
 
             <router-link to="register" class="text-blue-grey pb-1">
-              Criar conta
+              {{ $t("register.link") }}
             </router-link>
 
             <router-link to="reset-password" class="text-blue-grey">
-              Esqueci-me da palavra passe
+              {{ $t("login.forgot_password") }}
             </router-link>
           </v-card-actions>
         </v-form>
@@ -92,7 +92,7 @@ const password = ref<string>("");
 const form = ref<VForm>();
 const passwordFieldType = ref<"text" | "password">("password");
 const visibility = ref<boolean>(false);
-const visibilityIcon = ref<"visibility" | "visibility_off">("visibility");
+const visibilityIcon = ref<"eye" | "eye-slash">("eye");
 const submitting = ref<boolean>(false);
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
@@ -106,11 +106,11 @@ const switchVisibility = () => {
   if (visibility.value) {
     visibility.value = false;
     passwordFieldType.value = "password";
-    visibilityIcon.value = "visibility";
+    visibilityIcon.value = "eye";
   } else {
     visibility.value = true;
     passwordFieldType.value = "text";
-    visibilityIcon.value = "visibility_off";
+    visibilityIcon.value = "eye-slash";
   }
 };
 

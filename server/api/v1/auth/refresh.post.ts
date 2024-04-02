@@ -13,13 +13,13 @@ export default eventHandler(async (event) => {
   const result = Joi.object<{ refreshToken: string }>({
     refreshToken: Joi.string()
       .required()
-      .messages({ "strings.empty": "No refresh token" }),
+      .messages({ "strings.empty": "errors.emptyRefreshToken" }),
   }).validate(body, { abortEarly: false, stripUnknown: true });
 
   if (result.error) {
     throw createError({
       statusCode: 403,
-      statusMessage: "Unauthorized, no refreshToken in payload",
+      statusMessage: "errors.noRefreshToken",
     });
   }
 
@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
   if (!user) {
     throw createError({
       statusCode: 403,
-      statusMessage: "Unauthorized, refreshToken can`t be verified",
+      statusMessage: "errors.invalidRefreshToken",
     });
   }
 

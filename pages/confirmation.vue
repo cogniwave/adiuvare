@@ -2,28 +2,27 @@
   <v-row align-content="center">
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
       <v-card class="shadow-24 q-pb-md" :loading="submitting">
-        <v-card-title>Confirmação de conta</v-card-title>
+        <v-card-title>{{ $t("register.confirmation.title") }}</v-card-title>
 
         <v-card-item>
           <template v-if="submitting">
             <template v-if="success">
               <p class="mb-3">
-                A sua conta está confirmada, já pode
+                {{ $t("register.confirmation.confirmSuccess") }}
                 <router-link to="login" class="text-blue-grey pb-1">
-                  iniciar sessão
+                  {{ $t("login.title") }}
                 </router-link>
               </p>
             </template>
 
             <template v-else>
               <p class="mb-3">
-                Não foi possível confirmar a sua conta, contacte o apoio ao
-                cliente
+                {{ $t("register.confirmation.confirmError") }}
               </p>
             </template>
           </template>
 
-          <p>Aguarde um momento enquanto confirmamos a conta</p>
+          <p>{{ $t("register.confirmation.confirmLoading") }}</p>
         </v-card-item>
       </v-card>
     </v-col>
@@ -39,8 +38,9 @@ const submitting = ref<boolean>(true);
 const success = ref<boolean>(true);
 
 const $route = useRoute();
+const { t } = useI18n();
 
-useHead({ title: "Confirmação de conta" });
+useHead({ title: t("register.confirmation.seo_title") });
 
 definePageMeta({
   auth: { unauthenticatedOnly: false },

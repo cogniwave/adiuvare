@@ -6,6 +6,24 @@ import { version } from "./package.json";
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  app: {
+    head: {
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1",
+      title: "Quero Ajudar",
+      link: [
+        {
+          rel: "stylesheet",
+          href: "https://use.fontawesome.com/releases/v5.0.13/css/regular.css",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://use.fontawesome.com/releases/v5.0.13/css/brand.css",
+        },
+      ],
+    },
+  },
+
   ssr: true,
 
   build: {
@@ -28,6 +46,7 @@ export default defineNuxtConfig({
     "@nuxtjs/eslint-module",
     "nuxt-bugsnag",
     "@sidebase/nuxt-auth",
+    "@nuxtjs/i18n",
     (_, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         config.plugins?.push(vuetify({ autoImport: true }));
@@ -101,5 +120,16 @@ export default defineNuxtConfig({
     globalAppMiddleware: {
       isEnabled: true,
     },
+  },
+
+  i18n: {
+    locales: [
+      { code: "pt", iso: "pt-PT", file: "pt.json" },
+      { code: "en", iso: "en-GB", file: "en.json" },
+    ],
+    defaultDirection: "ltr",
+    defaultLocale: "pt",
+    lazy: true,
+    langDir: "i18n",
   },
 });

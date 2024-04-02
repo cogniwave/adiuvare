@@ -1,0 +1,105 @@
+{
+  "login": {
+    "title": "Iniciar sessão"
+  },
+  "reset": {
+    "link": "Esqueci-me da palavra passe",
+    "title": "Recuperar palavra passe",
+    "submit": "Recuperar",
+    "success": "Pedido de recuperação enviado",
+    "successExtended": "Foi enviado um email com os passos seguintes do processo"
+  },
+  "register": {
+    "success": "Criado com sucesso",
+    "successMessage": "Foi enviado um email para confirmar o registo",
+    "register": "Criar conta",
+    "title": "Registar",
+    "link": "Criar conta",
+    "confirmation": {
+      "title": "Confirmação de conta",
+      "confirmSuccess": "A sua conta está confirmada, já pode",
+      "confirmError": "Não foi possível confirmar a sua conta, contacte o apoio ao cliente",
+      "confirmLoading": "Aguarde um momento enquanto confirmamos a conta",
+      "seo_title": "Confirmação de conta"
+    }
+  },
+  "form": {
+    "name": "Nome",
+    "email": "Email",
+    "emailRepeat": "Repita o email",
+    "password": "Palavra-passe",
+    "passwordRepeat": "Repita a palavra-passe",
+    "userType": {
+      "title": "Tipo de utilizador",
+      "volunteer": "Voluntário",
+      "org": "Organização"
+    },
+    "post": {
+      "title": "Título",
+      "titlePlaceholder": "E.g.: Precisa-se voluntário",
+      "description": "Descrição",
+      "descriptionPlaceholder": "E.g.: Precisa-se voluntário para ajudar com a distribuição de comida às sextas à noite",
+      "location": "Área(s) de atuação",
+      "locationPlaceholder": "E.g.: Barreiro; Bombarral; Lisboa",
+      "category": "Que ajuda precisa",
+      "schedule": {
+        "title": "Horário",
+        "anytime": "Qualquer altura",
+        "specific": "Dia e hora especifica",
+        "recurring": "Horário recurrente",
+        "day": {
+          "monday": "Segunda-feira",
+          "mondayShort": "S",
+          "tuesday": "Terça-feira",
+          "tuesdayShort": "T",
+          "wednesday": "Quarta-feira",
+          "wednesdayShort": "Q",
+          "thursday": "Quinta-feira",
+          "thursdayShort": "Q",
+          "friday": "Sexta-feira",
+          "fridayShort": "S",
+          "saturday": "Sábado",
+          "saturdayShort": "S",
+          "sunday": "Domingo",
+          "sundayShort": "D"
+        },
+        "addRecurring": "Remover horário",
+        "removeRecurring": "Adicionar outro horário"
+      }
+    }
+  },
+  "notFound": {
+    "title": "Oops. Não encontrámos nada aqui...",
+    "link": "Voltar para a página inicial"
+  },
+  "nav": {
+    "profile": "Perfil",
+    "logout": "Sair"
+  },
+  "errors": {
+    "unexpected": "Erro inesperado",
+    "post": {
+      "endHourHigherThanStart": "Hora inicio tem que ser antes de hora de fim",
+      "empty": "Não pode ser vazio"
+    },
+    "invalidCredentials": "Credenciais inválidas",
+    "empty": "Não pode ser",
+    "invalidConfirmToken": "Token invalido",
+    "emptyRefreshToken": "No refresh token",
+    "noRefreshToken": "Unauthorized, no refreshToken in payload",
+    "invalidRefreshToken": "Unauthorized, refreshToken can`t be verified",
+    "max": "Não pode ter mais que {max} caracteres",
+    "between": "Não pode ter mais que {min} caracteres",
+    "invalidUserType": "Tem que ser \"org\" ou \"voluntário\"",
+    "invalidPassword": "Tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
+    "emailExists": "Já existe uma conta com este email",
+    "invalidEmail": "Não é um email válido",
+    "invalidField": "Invalid field"
+  },
+  "posts": {
+    "title": "Nova publicação",
+    "submit": "Criar publicação",
+    "cancel": "Cancelar",
+    "chooseSchedule": "Escolher"
+  }
+}

@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-card-title class="bg-primary">
-        <h2 class="text-h5 text-white my-1">Nova publicação</h2>
+        <h2 class="text-h5 text-white my-1">{{ $t("posts.title") }}</h2>
       </v-card-title>
 
       <v-card-text>
@@ -19,9 +19,9 @@
           <!-- title -->
           <form-qa-input
             v-model:model-value="title"
-            label="Título"
             icon="title"
-            placeholder="E.g.: Precisa-se voluntário para ajudar com a distribuição de comida às sextas à noite"
+            :placeholder="$t('form.post.titlePlaceholder')"
+            :label="$t('form.post.title')"
             :rules="[required]"
             :error="errors.title"
             @update:model-value="(value) => $store.updatePost('title', value)"
@@ -30,10 +30,10 @@
           <!-- description -->
           <form-qa-textarea
             v-model:model-value="description"
-            label="Descrição"
             class="mt-5"
             icon="description"
-            placeholder="E.g.: Precisa-se voluntário"
+            :placeholder="$t('form.post.descriptionPlaceholder')"
+            :label="$t('form.post.description')"
             :rules="[required]"
             :error="errors.description"
             @update:model-value="
@@ -46,12 +46,12 @@
           <form-qa-autocomplete
             v-model:model-value="locationInput"
             multiple
-            label="Área(s) de atuação"
-            placeholder="E.g.: Barreiro; Bombarral; Lisboa"
             icon="map"
             class="mt-5"
             chips
             closable-chips
+            :label="$t('form.post.location')"
+            :placeholder="$t('form.post.locationPlaceholder')"
             :no-data-text="noDataText"
             :rules="[required]"
             :error="errors.locations"
@@ -70,8 +70,8 @@
             use-chips
             hide-hint
             icon="support"
-            label="Que ajuda precisa"
             class="mt-5 mb-2"
+            :label="$t('form.post.category')"
             :rules="[required]"
             :error="errors.category"
             :items="helpOptions"
@@ -102,7 +102,7 @@
           :loading="submitting"
           @click="submit"
         >
-          Criar publicação
+          {{ $t("post.submit") }}
         </v-btn>
 
         <v-btn
@@ -110,7 +110,7 @@
           :disable="submitting"
           @click="$store.closeDialog()"
         >
-          Cancelar
+          {{ $t("post.cancel") }}
         </v-btn>
       </v-card-actions>
     </v-card>
