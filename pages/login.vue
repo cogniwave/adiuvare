@@ -60,7 +60,7 @@
             </router-link>
 
             <router-link to="reset-password" class="text-blue-grey">
-              {{ $t("login.forgot_password") }}
+              {{ $t("reset.link") }}
             </router-link>
           </v-card-actions>
         </v-form>

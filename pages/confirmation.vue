@@ -40,7 +40,7 @@ const success = ref<boolean>(true);
 const $route = useRoute();
 const { t } = useI18n();
 
-useHead({ title: t("register.confirmation.seo_title") });
+useHead({ title: t("register.confirmation.seoTitle") });
 
 definePageMeta({
   auth: { unauthenticatedOnly: false },

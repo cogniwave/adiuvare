@@ -22,7 +22,7 @@
       "confirmSuccess": "A sua conta está confirmada, já pode",
       "confirmError": "Não foi possível confirmar a sua conta, contacte o apoio ao cliente",
       "confirmLoading": "Aguarde um momento enquanto confirmamos a conta",
-      "seo_title": "Confirmação de conta"
+      "seoTitle": "Confirmação de conta"
     }
   },
 
