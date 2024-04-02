@@ -15,7 +15,7 @@
       </template>
 
       <template v-slot:append>
-        <ClientOnly fallback-tag="span" fallback="Loading">
+        <ClientOnly fallback-tag="span" :fallback="$t('loading')">
           <v-icon
             v-if="status === 'authenticated'"
             size="x-small"

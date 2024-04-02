@@ -2,6 +2,7 @@
   "login": {
     "title": "Iniciar sessão"
   },
+
   "reset": {
     "link": "Esqueci-me da palavra passe",
     "title": "Recuperar palavra passe",
@@ -9,6 +10,7 @@
     "success": "Pedido de recuperação enviado",
     "successExtended": "Foi enviado um email com os passos seguintes do processo"
   },
+
   "register": {
     "success": "Criado com sucesso",
     "successMessage": "Foi enviado um email para confirmar o registo",
@@ -23,17 +25,20 @@
       "seo_title": "Confirmação de conta"
     }
   },
+
   "form": {
     "name": "Nome",
     "email": "Email",
     "emailRepeat": "Repita o email",
     "password": "Palavra-passe",
     "passwordRepeat": "Repita a palavra-passe",
+
     "userType": {
       "title": "Tipo de utilizador",
       "volunteer": "Voluntário",
       "org": "Organização"
     },
+
     "post": {
       "title": "Título",
       "titlePlaceholder": "E.g.: Precisa-se voluntário",
@@ -68,14 +73,17 @@
       }
     }
   },
+
   "notFound": {
     "title": "Oops. Não encontrámos nada aqui...",
     "link": "Voltar para a página inicial"
   },
+
   "nav": {
     "profile": "Perfil",
     "logout": "Sair"
   },
+
   "errors": {
     "unexpected": "Erro inesperado",
     "post": {
@@ -96,10 +104,13 @@
     "invalidEmail": "Não é um email válido",
     "invalidField": "Invalid field"
   },
+
   "posts": {
     "title": "Nova publicação",
     "submit": "Criar publicação",
     "cancel": "Cancelar",
     "chooseSchedule": "Escolher"
-  }
+  },
+
+  "loading": "A carregar"
 }
