@@ -34,6 +34,18 @@ export const getUser = async <T = SelectUser>(
   return result.length ? (result[0] as T) : undefined;
 };
 
+const genSlugToken = () => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  let token = "";
+  for (let i = 0; i < 6; i++) {
+    token += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+
+  return token;
+};
+
 export const addUser = async (payload: BaseUser): Promise<User | null> => {
   const result = await db
     .insert(users)
@@ -42,6 +54,7 @@ export const addUser = async (payload: BaseUser): Promise<User | null> => {
       password: hashSync(payload.password as string, SALT),
       name: payload.name,
       type: payload.type,
+      slug: `${payload.email.split("@")[0]}-${genSlugToken()}`,
       token: randomBytes(32).toString("hex"),
       createdAt: new Date(),
       verified: false,

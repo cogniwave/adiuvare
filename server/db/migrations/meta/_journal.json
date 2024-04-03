@@ -29,6 +29,13 @@
       "when": 1711555524500,
       "tag": "0003_handy_hairball",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1712156136076,
+      "tag": "0004_faulty_chimera",
+      "breakpoints": true
     }
   ]
 }

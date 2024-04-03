@@ -18,12 +18,14 @@ export const users = pgTable(
     email: text("email").unique().notNull(),
     password: text("password").notNull(),
     type: text("type").notNull(),
+    slug: text("slug").unique(),
     createdAt: timestamp("created_at").notNull(),
     verified: boolean("verified").notNull(),
     token: varchar("token", { length: 128 }),
   },
   (users) => ({
-    uniqueIndex: uniqueIndex("email_idx").on(users.email),
+    email: uniqueIndex("email_idx").on(users.email),
+    slug: uniqueIndex("slug_idx").on(users.slug),
   }),
 );
 
