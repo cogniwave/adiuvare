@@ -18,7 +18,8 @@ export default defineNuxtPlugin((app) => {
           light: {
             colors: {
               primary: blueGrey.base,
-              surface: blueGrey.darken4,
+              accent: blueGrey.darken4,
+              surface: "#f7f7f7",
               background: blueGrey.lighten5,
               text: blueGrey.darken4,
             },
@@ -28,7 +29,11 @@ export default defineNuxtPlugin((app) => {
       },
       defaults: {
         VCard: {
-          color: blueGrey.lighten5,
+          variant: "outlined",
+          class: "post",
+          rounded: "xl",
+          color: blueGrey.darken4,
+          background: "#f7f7f7",
         },
         VIcon: {
           size: "x-small",

@@ -5,15 +5,7 @@
 
       <qa-filter /> -->
 
-      <p class="mb-5">Recent posts</p>
-
-      <v-virtual-scroll item-height="264" :items="store.posts">
-        <template v-slot:default="{ item }">
-          <qa-post :post="item" class="mb-5" />
-        </template>
-      </v-virtual-scroll>
-
-      <v-pagination v-model="page" length="5" />
+      <qa-feed />
 
       <qa-post-dialog v-if="store.dialogRendered" />
     </v-col>
@@ -27,8 +19,7 @@
 import { onBeforeMount, ref } from "vue";
 
 import QaFilter from "@/components/QaFilter.vue";
-import QaPost from "@/components/QaPost.vue";
-// import QaPostDialog from "@/components/QaPostDialog.vue";
+import QaFeed from "@/components/feed/QaFeed.vue";
 import { usePostsStore } from "@/stores/posts.store";
 
 definePageMeta({

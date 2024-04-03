@@ -24,10 +24,6 @@ const DEFAULT_POST: EmptyPost = {
   schedule: { type: "anytime" },
 };
 
-// const formatDate = (date: number) => {
-//   return dayjs(date).format("hh:mm DD/MM/YYYY");
-// };
-
 export const usePostsStore = defineStore("posts", {
   state: (): PostState => ({
     posts: [],
@@ -44,16 +40,16 @@ export const usePostsStore = defineStore("posts", {
       try {
         const posts = await getPosts();
 
-        this.posts = posts.map((p) => ({
-          ...p,
-          // created_at: formatDate(p.created_at.seconds),
-        }));
+        this.posts = posts;
+
+        return posts.length;
       } catch (err) {
         console.log(err);
+      } finally {
+        this.loading = false;
       }
 
-      this.loading = false;
-      return true;
+      return 0;
     },
 
     updatePost(prop: string, val: string | string[] | PostSchedule) {

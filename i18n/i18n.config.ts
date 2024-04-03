@@ -1,8 +1,9 @@
 import pt from "./pt.json";
 import en from "./en.json";
 
-console.log("config");
 export default defineI18nConfig(() => ({
+  warnHtmlInMessage: false,
+
   strategy: "no_prefix",
 
   fallbackLocale: "pt",

@@ -1,5 +1,5 @@
 <template>
-  <v-card variant="outlined" class="post" rounded="xl">
+  <v-card flat variant="text" class="post" rounded="xl">
     <v-card-item>
       <v-card-title class="d-flex align-start">
         <v-avatar size="64">
@@ -153,7 +153,7 @@ const onLocationClick = () => {};
 
 <style scoped lang="scss">
 .post {
-  background-color: #fff;
+  background-color: rgb(var(--v-theme-surface));
 
   :deep(.v-img__error) {
     color: rgb(var(--v-theme-primary));
@@ -168,12 +168,12 @@ const onLocationClick = () => {};
   .v-card-title {
     a {
       text-decoration: none;
-      color: rgb(var(--v-theme-surface));
+      color: rgb(var(--v-theme-accent));
     }
   }
 
   .v-card-item {
-    color: rgb(var(--v-theme-surface));
+    color: rgb(var(--v-theme-accent));
 
     h3 {
       font-weight: normal;

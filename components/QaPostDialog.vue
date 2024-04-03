@@ -235,8 +235,7 @@ const submit = async () => {
 </script>
 
 <style scoped>
-.q-list {
-  max-height: 200px;
-  overflow: auto;
+:deep(.v-card) {
+  background-color: rgba(var(--v-theme-surface));
 }
 </style>
