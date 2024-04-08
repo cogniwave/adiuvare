@@ -16,8 +16,6 @@ export const useSessionStore = defineStore("session", {
     init(token: string, user: TokenUser) {
       this.token = token;
       this.user = user;
-
-      console.log("token", token, user);
     },
   },
 });

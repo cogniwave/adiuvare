@@ -19,7 +19,7 @@ export const users = pgTable(
     password: text("password").notNull(),
     type: text("type").notNull(),
     slug: text("slug").unique(),
-    createdAt: timestamp("created_at").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
     verified: boolean("verified").notNull(),
     token: varchar("token", { length: 128 }),
   },

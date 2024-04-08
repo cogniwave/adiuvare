@@ -1,7 +1,8 @@
 <template>
   <v-dialog
-    width="65vw"
     :model-value="$store.dialogVisible"
+    width="65vw"
+    persistent
     @update:model-value="$store.closeDialog()"
   >
     <v-card>
@@ -128,14 +129,14 @@ import { usePostsStore } from "@/stores/posts.store";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "./QaPostDialogNeed.vue";
-import QaPostSchedule from "./scheduling/QaPostSchedule.vue";
+import QaPostSchedule from "@/components/scheduling/QaPostSchedule.vue";
 
 const $store = usePostsStore();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
-const title = ref<string>("dsadsa");
-const description = ref<string>("dsadsa");
-const locationInput = ref<string[]>(["foo"]);
+const title = ref<string>("");
+const description = ref<string>("");
+const locationInput = ref<string[]>([]);
 const locations = ref<string[]>([]);
 const fetchingLocations = ref(false);
 const noDataText = ref("Escreva para procurar morada");

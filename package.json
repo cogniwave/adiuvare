@@ -11,7 +11,7 @@
     "postinstall": "nuxt prepare",
     "db:ui": "yarn drizzle-kit studio --verbose",
     "db:generate": "drizzle-kit generate:pg",
-    "db:migrate": "npx tsx server/db/migrate.ts"
+    "db:migrate": "drizzle-kit generate:pg && npx tsx server/db/migrate.ts"
   },
   "dependencies": {
     "@date-io/dayjs": "^3.0.0",

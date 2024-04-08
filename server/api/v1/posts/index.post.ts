@@ -46,8 +46,6 @@ export default defineEventHandler(async (event) => {
 
   const token = event.headers.get("Authorization");
 
-  console.log();
-
   if (!token) {
     throw createError({ statusCode: 403, message: "Unauthorized" });
   }

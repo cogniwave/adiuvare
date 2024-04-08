@@ -1,6 +1,6 @@
 <template>
   <!-- show loading -->
-  <template v-if="$store.loading">
+  <template v-if="$postsStore.loading">
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
@@ -9,10 +9,10 @@
   </template>
 
   <!-- render posts -->
-  <template v-else-if="$store.posts.length">
+  <template v-else-if="$postsStore.posts.length">
     <p class="mb-5">Recent posts</p>
 
-    <v-virtual-scroll item-height="264" :items="$store.posts">
+    <v-virtual-scroll item-height="264" :items="$postsStore.posts">
       <template v-slot:default="{ item }">
         <qa-post :post="item" class="mb-5" />
       </template>
@@ -20,7 +20,7 @@
 
     <!-- there aren't enough posts to show pagination -->
     <v-pagination
-      v-if="$store.totalPosts > PER_PAGE"
+      v-if="$postsStore.totalPosts > PER_PAGE"
       v-model="page"
       length="5"
     />
@@ -34,27 +34,33 @@
       tag="h3"
       for="feed.noPostsButton"
     >
-      <span @click="$store.openDialog">{{ $t("feed.noPostsButton") }}</span>
+      <span @click="$postsStore.openDialog">
+        {{ $t("feed.noPostsButton") }}
+      </span>
     </i18n-t>
   </template>
+
+  <qa-post-report-dialog v-if="$reportStore.dialogRendered" />
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 
-import QaPost from "@/components/QaPost.vue";
+import QaPost from "@/components/posts/QaPost.vue";
 import { usePostsStore } from "@/stores/posts.store";
+import { useReportStore } from "@/stores/report.store";
 
 const PER_PAGE = 30;
 
-const $store = usePostsStore();
+const $postsStore = usePostsStore();
+const $reportStore = useReportStore();
 
 const page = ref(0);
 
 onBeforeMount(() => {
-  useAsyncData("posts", () => $store.getPosts());
+  useAsyncData("posts", () => $postsStore.getPosts());
 
-  useAsyncData("posts", () => $store.getTotalPosts());
+  useAsyncData("posts", () => $postsStore.getTotalPosts());
 });
 </script>
 

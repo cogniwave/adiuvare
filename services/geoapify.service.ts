@@ -60,6 +60,7 @@ export const getCities = async (text: string) => {
     return [];
   }
 
+  // TODO: FIX THIS, should not use usefetch
   const result = await useFetch<GeoApifyResult>(
     `https://api.geoapify.com/v1/geocode/autocomplete?text=${text}&type=city&limit=5&filter=countrycode:pt&lang=pt&format=json&apiKey=0ab5e06c6b3e4d3b8f470a4e02130184`,
     { headers: { "Content-Type": "application/json" } },

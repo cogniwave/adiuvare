@@ -99,7 +99,21 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const $notifyStore = useNotifyStore();
 const $sessionStore = useSessionStore();
+const $route = useRoute();
+const $router = useRouter();
+const { t } = useI18n();
 const { signIn, data, token } = useAuth();
+
+onMounted(() => {
+  if ($route.query?.requireAuth) {
+    $notifyStore.notifyWarning(t("login.actionRequiresAuth"));
+    $router.replace({
+      path: "/login",
+      query: { ...$route.query, requireAuth: undefined },
+    });
+    return;
+  }
+});
 
 // form controls
 const switchVisibility = () => {
@@ -127,11 +141,12 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  signIn(
-    { email: email.value, password: password.value },
-    { redirect: true, callbackUrl: "/" },
-  )
-    .then(() => $sessionStore.init(token.value as string, data.value))
+  signIn({ email: email.value, password: password.value }, { redirect: false })
+    .then(() => {
+      $sessionStore.init(token.value as string, data.value);
+
+      $router.replace($route.query?.return || "/");
+    })
     .catch((errs) => {
       if (errs.statusCode === 401) {
         $notifyStore.notifyError("Email ou palavra-passe errados");

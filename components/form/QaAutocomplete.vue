@@ -27,7 +27,7 @@
     </template>
 
     <template v-slot:message="{ message }">
-      <i class="far fa-exclamation-circle" />
+      <i class="fa-solid fa-exclamation-circle" />
       <span v-html="message" class="ml-1" />
     </template>
 

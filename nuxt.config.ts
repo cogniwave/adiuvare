@@ -34,6 +34,7 @@ export default defineNuxtConfig({
     { path: "~/components/menu", pathPrefix: false },
     { path: "~/components/common", pathPrefix: false },
     { path: "~/components/feed", pathPrefix: false },
+    { path: "~/components/posts", pathPrefix: false },
     "~/components",
   ],
 

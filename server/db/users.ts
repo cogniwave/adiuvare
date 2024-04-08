@@ -56,7 +56,6 @@ export const addUser = async (payload: BaseUser): Promise<User | null> => {
       type: payload.type,
       slug: `${payload.email.split("@")[0]}-${genSlugToken()}`,
       token: randomBytes(32).toString("hex"),
-      createdAt: new Date(),
       verified: false,
     })
     .returning({

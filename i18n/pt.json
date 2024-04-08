@@ -1,6 +1,7 @@
 {
   "login": {
-    "title": "Iniciar sessão"
+    "title": "Iniciar sessão",
+    "actionRequiresAuth": "É necessário iniciar sessão para essa ação"
   },
 
   "reset": {
@@ -71,6 +72,13 @@
         "addRecurring": "Remover horário",
         "removeRecurring": "Adicionar outro horário"
       }
+    },
+
+    "report": {
+      "reason": "Motivo",
+      "reasonPlaceholder": "Qual é a motivo por estar a reportar esta publicação?",
+      "email": "Email",
+      "emailPlaceholder": "Qual o seu email para entrarmos em contacto se necessário"
     }
   },
 
@@ -122,6 +130,14 @@
       "volunteersDescription": "É necessário voluntário humano",
       "other": "Outros",
       "otherDescription": "É necessário uma outra ajuda especifica"
+    },
+    "report": {
+      "button": "Reportar publicação",
+      "title": "Reportar publicação {0}",
+      "description": "Por favor diga-nos porque está a reportar esta publicação. A nossa equipa irá avaliar e se de facto a publicação vai contra as regras da plataforma, e se for será removida. Iremos utilizar o seu email para o atualizar do processo ou entrar em contacto se necessário mais informações",
+      "submit": "Reportar",
+      "cancel": "Cancelar",
+      "success": "Publicação reportada com sucesso. Obrigado, iremos analisar assim que possível!"
     }
   },
 

@@ -36,6 +36,20 @@
       "when": 1712156136076,
       "tag": "0004_faulty_chimera",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1712601104601,
+      "tag": "0005_salty_black_bird",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1712602382289,
+      "tag": "0006_fine_captain_midlands",
+      "breakpoints": true
     }
   ]
 }

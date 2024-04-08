@@ -101,7 +101,39 @@
           </v-list>
         </v-menu>
 
-        <v-btn variant="outlined" size="small" rounded="md" class="ml-auto">
+        <v-spacer />
+
+        <!-- post options -->
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              variant="plain"
+              size="x-small"
+              class="mr-2"
+              icon
+            >
+              <v-icon size="x-small">fa-solid fa-ellipsis-vertical</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list density="compact" class="py-2">
+            <v-list-item
+              class="pl-2 pr-2"
+              prepend-icon="fa-solid fa-bullhorn"
+              :title="$t('posts.report.title')"
+              @click="onReportPost"
+            />
+          </v-list>
+        </v-menu>
+
+        <v-btn
+          variant="outlined"
+          size="small"
+          rounded="md"
+          class="ml-auto btn-contact"
+          @click="onContactClick"
+        >
           {{ $t("posts.contact") }}
         </v-btn>
       </v-card-actions>
@@ -110,8 +142,8 @@
 </template>
 
 <script setup lang="ts">
-import QaPostNeed from "@/components/QaPostNeed.vue";
-
+import QaPostNeed from "@/components/posts/QaPostNeed.vue";
+import { useReportStore } from "@/stores/report.store";
 import type { Post } from "@/types/post";
 
 const MAX_DESC = 1300;
@@ -121,6 +153,10 @@ const props = defineProps({
   post: { type: Object as PropType<Post>, required: true },
 });
 
+const $router = useRouter();
+const { status } = useAuth();
+const $reportStore = useReportStore();
+
 const desc = ref(props.post.description);
 const descTooLong = ref(false);
 const descVisible = ref(false);
@@ -129,9 +165,7 @@ const leftoverLocations = ref<string[]>([]);
 
 onBeforeMount(() => {
   if (props.post.description.length > MAX_DESC) {
-    desc.value = `${props.post.description
-      .substring(0, MAX_DESC - 10)
-      .trim()}...`;
+    desc.value = shortenText(props.post.description, MAX_DESC);
 
     descTooLong.value = true;
   }
@@ -149,6 +183,17 @@ const viewAllDesc = () => {
 };
 
 const onLocationClick = () => {};
+
+const onContactClick = () => {
+  if (status.value === "unauthenticated") {
+    return $router.push({
+      path: "/login",
+      query: { return: "/", requireAuth: true },
+    });
+  }
+};
+
+const onReportPost = () => $reportStore.openDialog(props.post);
 </script>
 
 <style scoped lang="scss">
@@ -181,7 +226,7 @@ const onLocationClick = () => {};
     }
 
     .v-card-actions {
-      button {
+      .btn-contact {
         color: rgb(var(--v-theme-primary));
         background-color: rgb(var(--v-theme-background));
       }
