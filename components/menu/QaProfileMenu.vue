@@ -1,12 +1,7 @@
 <template>
-  <v-menu
-    v-if="status === 'authenticated'"
-    open-on-hover
-    open-delay="0"
-    close-delay="100"
-  >
+  <v-menu v-if="status === 'authenticated'">
     <template v-slot:activator="{ props }">
-      <span v-bind="props" class="pointer ml-5">
+      <span v-bind="props" class="cursor-pointer ml-5">
         {{ data.name }} <v-icon>fa-solid fa-chevron-down</v-icon>
       </span>
     </template>

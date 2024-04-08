@@ -134,7 +134,7 @@ const search = () => console.log("searching");
 </script>
 
 <style scoped lang="scss">
-.v-toolbar {
+:deep(.v-toolbar) {
   box-shadow: 0px 1px 20px 0px #e8e8e8 !important;
 
   .v-toolbar__content {

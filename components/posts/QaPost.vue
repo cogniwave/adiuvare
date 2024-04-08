@@ -6,7 +6,7 @@
           <v-img
             :alt="$t('posts.logoAlt')"
             src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
-            lazy-src="../assets/post-profile-placeholder.png"
+            lazy-src="/assets/post-profile-placeholder.png"
           >
             <template v-slot:error>
               {{ post.createdBy[0] }}
