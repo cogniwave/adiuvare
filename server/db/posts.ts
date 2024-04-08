@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 
 import { db } from "./";
 import { posts } from "./schemas/posts";
@@ -8,7 +8,7 @@ import type { InsertPost } from "./schemas/posts";
 import type { Post } from "~/types/post";
 
 export const getPosts = async () => {
-  const result: Post[] = await db
+  const result = (await db
     .select({
       id: posts.id,
       title: posts.title,
@@ -23,9 +23,19 @@ export const getPosts = async () => {
     .where(eq(posts.state, "visible"))
     .innerJoin(users, eq(posts.createdUserId, users.id))
     .orderBy(desc(posts.createdAt))
-    .limit(50);
+    .limit(50)) as Post[];
 
   return result || [];
+};
+
+export const getTotalPosts = async () => {
+  const result = await db.select({ total: count() }).from(posts);
+
+  try {
+    return result[0].total ?? 0;
+  } catch (_) {
+    return 0;
+  }
 };
 
 export const createPost = async (payload: InsertPost) => {

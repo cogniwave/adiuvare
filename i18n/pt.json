@@ -112,11 +112,12 @@
     "chooseSchedule": "Escolher",
     "expandDesc": "Ver mais",
     "logoAlt": "Logo de quem criou a publicação",
+    "contact": "Contactar",
     "needs": {
       "money": "Dinheiro",
       "moneyDescription": "São necessárias doações monetárias",
       "goods": "Bens & comida",
-      "goodsDescription": "São necessárias doações de quaisquer bens ou comidas",
+      "goodsDescription": "São necessárias doações de quaisquera bens ou comidas",
       "volunteers": "Pessoas",
       "volunteersDescription": "É necessário voluntário humano",
       "other": "Outros",
@@ -127,8 +128,11 @@
   "loading": "A carregar",
 
   "feed": {
-    "noPagination": "Não existem mais publicações",
     "noPosts": "Não existem publicações, sê o {0}!",
     "noPostsButton": "primeiro"
+  },
+
+  "filter": {
+    "placeholder": "Pesquise por zona, necessidade, organização, ..."
   }
 }

@@ -10,7 +10,7 @@
 import { useSessionStore } from "@/stores/session.store";
 
 definePageMeta({
-  path: "/profile",
+  path: "/profile/:slug",
   auth: { unauthenticatedOnly: false },
 });
 

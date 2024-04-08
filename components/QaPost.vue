@@ -101,8 +101,8 @@
           </v-list>
         </v-menu>
 
-        <v-btn variant="tonal" size="small" rounded="md" class="ml-auto">
-          Contact
+        <v-btn variant="outlined" size="small" rounded="md" class="ml-auto">
+          {{ $t("posts.contact") }}
         </v-btn>
       </v-card-actions>
     </v-card-item>

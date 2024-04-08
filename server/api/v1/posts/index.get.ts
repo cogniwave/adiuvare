@@ -1,8 +1,10 @@
-import { getPosts } from "~/server/db/posts";
+import { getPosts, getTotalPosts } from "~/server/db/posts";
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
-    return await getPosts();
+    const query = getQuery(event);
+
+    return await (query.total ? getTotalPosts() : getPosts());
   } catch (err) {
     useBugsnag().notify({
       name: "failed to get posts",

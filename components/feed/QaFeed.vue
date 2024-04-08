@@ -20,14 +20,10 @@
 
     <!-- there aren't enough posts to show pagination -->
     <v-pagination
-      v-if="false && $store.posts.length < PER_PAGE"
+      v-if="$store.totalPosts > PER_PAGE"
       v-model="page"
       length="5"
     />
-
-    <small v-else class="d-block text-center font-italic">
-      {{ $t("feed.noPagination") }}
-    </small>
   </template>
 
   <!-- no posts exist -->
@@ -45,7 +41,6 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
-// import  from "vue-i18n"
 
 import QaPost from "@/components/QaPost.vue";
 import { usePostsStore } from "@/stores/posts.store";
@@ -55,17 +50,11 @@ const PER_PAGE = 30;
 const $store = usePostsStore();
 
 const page = ref(0);
-const showPagination = ref(false);
 
 onBeforeMount(() => {
-  useAsyncData("posts", async () => {
-    try {
-      const len = await $store.getPosts();
-      showPagination.value = len < PER_PAGE;
-    } catch (err) {
-      // todo: handle this
-    }
-  });
+  useAsyncData("posts", () => $store.getPosts());
+
+  useAsyncData("posts", () => $store.getTotalPosts());
 });
 </script>
 

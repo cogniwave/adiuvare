@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import type { EmptyPost, Post, PostSchedule } from "@/types/post";
 import type { Errors } from "@/exceptions";
 
-import { getPosts, addPost } from "@/services/posts.service";
+import { getPosts, addPost, getTotalPosts } from "@/services/posts.service";
 import { ValidationError } from "@/exceptions";
 import { useSessionStore } from "./session.store";
 
@@ -14,6 +14,7 @@ interface PostState {
   dialogVisible: boolean;
   dialogRendered: boolean;
   formErrors: Errors;
+  totalPosts: number;
 }
 
 const DEFAULT_POST: EmptyPost = {
@@ -32,24 +33,27 @@ export const usePostsStore = defineStore("posts", {
     dialogVisible: true,
     dialogRendered: false,
     formErrors: {},
+    totalPosts: 0,
   }),
   actions: {
     async getPosts() {
       this.loading = true;
 
       try {
-        const posts = await getPosts();
-
-        this.posts = posts;
-
-        return posts.length;
+        this.posts = await getPosts();
       } catch (err) {
         console.log(err);
       } finally {
         this.loading = false;
       }
+    },
 
-      return 0;
+    async getTotalPosts() {
+      try {
+        this.totalPosts = await getTotalPosts();
+      } catch (err) {
+        console.log(err);
+      }
     },
 
     updatePost(prop: string, val: string | string[] | PostSchedule) {
