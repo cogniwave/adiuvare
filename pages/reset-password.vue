@@ -20,7 +20,7 @@
                 v-model:model-value="email"
                 class="mt-3"
                 type="email"
-                icon="fa-regular fa-at"
+                icon="fa-solid fa-at"
                 :label="$t('form.email')"
                 :error="errors.email"
                 :rules="[required, isEmail]"

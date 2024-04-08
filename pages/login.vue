@@ -16,7 +16,7 @@
             <form-qa-input
               v-model:model-value="email"
               type="email"
-              icon="fa-regular fa-at"
+              icon="fa-solid fa-at"
               :label="$t('form.name')"
               :rules="[required, isEmail]"
               :error="errors.email"
@@ -37,7 +37,7 @@
             >
               <template v-slot:append>
                 <v-icon class="cursor-pointer" @click="switchVisibility">
-                  fa-regular fa-{{ visibilityIcon }}
+                  fa-solid fa-{{ visibilityIcon }}
                 </v-icon>
               </template>
             </form-qa-input>

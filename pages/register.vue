@@ -18,7 +18,7 @@
               v-model:model-value="name"
               type="text"
               class="mt-3"
-              icon="fa-regular fa-user"
+              icon="fa-solid fa-user"
               :label="$t('form.name')"
               :error="errors.name"
               :rules="[required]"
@@ -28,7 +28,7 @@
               v-model:model-value="email"
               type="email"
               class="mt-3"
-              icon="fa-regular fa-at"
+              icon="fa-solid fa-at"
               :label="$t('form.email')"
               :error="errors.email"
               :rules="[required, isEmail]"
@@ -37,7 +37,7 @@
             <form-qa-input
               v-model:model-value="email2"
               type="email"
-              icon="fa-regular fa-at"
+              icon="fa-solid fa-at"
               class="mt-3"
               :label="$t('form.emailRepeat')"
               :rules="[required, isEmail, match(email, 'Emails')]"
@@ -58,7 +58,7 @@
             >
               <template v-slot:append>
                 <v-icon class="cursor-pointer" @click="switchVisibility">
-                  fa-regular fa-{{ visibilityIcon }}
+                  fa-solid fa-{{ visibilityIcon }}
                 </v-icon>
               </template>
             </form-qa-input>
@@ -81,7 +81,7 @@
             >
               <template v-slot:append>
                 <v-icon class="cursor-pointer" @click="switchVisibility">
-                  fa-regular fa-{{ visibilityIcon }}
+                  fa-solid fa-{{ visibilityIcon }}
                 </v-icon>
               </template>
             </form-qa-input>

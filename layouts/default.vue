@@ -46,10 +46,10 @@
                   :content="notifBadge"
                   label="notifications"
                 >
-                  <v-icon size="x-small"> fa-regular fa-bell </v-icon>
+                  <v-icon size="x-small"> fa-solid fa-bell </v-icon>
                 </v-badge>
 
-                <v-icon v-else size="x-small"> fa-regular fa-bell </v-icon>
+                <v-icon v-else size="x-small"> fa-solid fa-bell </v-icon>
               </v-btn>
 
               <qa-profile-menu />
