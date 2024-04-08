@@ -6,8 +6,8 @@
     close-delay="100"
   >
     <template v-slot:activator="{ props }">
-      <span v-bind="props" class="pointer">
-        {{ data.name }} <v-icon>fa-regular fa-chevron-down</v-icon>
+      <span v-bind="props" class="pointer ml-5">
+        {{ data.name }} <v-icon>fa-solid fa-chevron-down</v-icon>
       </span>
     </template>
 

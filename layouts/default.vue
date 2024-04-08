@@ -34,13 +34,23 @@
 
           <v-col cols="3" offset="3" align-self="center" align="end">
             <ClientOnly fallback-tag="span" :fallback="$t('loading')">
-              <v-icon
+              <v-btn
                 v-if="status === 'authenticated'"
+                class="text-none"
+                stacked
                 size="x-small"
                 @click="notifsOpen = !notifsOpen"
               >
-                fa-regular fa-bell
-              </v-icon>
+                <v-badge
+                  v-if="notifications?.length"
+                  :content="notifBadge"
+                  label="notifications"
+                >
+                  <v-icon size="x-small"> fa-regular fa-bell </v-icon>
+                </v-badge>
+
+                <v-icon v-else size="x-small"> fa-regular fa-bell </v-icon>
+              </v-btn>
 
               <qa-profile-menu />
             </ClientOnly>
@@ -95,8 +105,16 @@ import { getNotifications } from "@/services/notifications.service";
 const { status } = useAuth();
 
 const notifsOpen = ref(false);
-const notifications = ref<Notification[] | null>([]);
+const notifications = ref<Notification[]>([]);
 const query = ref("");
+
+const notifBadge = computed(() => {
+  if (notifications.value) {
+    return notifications.value.length > 9 ? "9+" : notifications.value.length;
+  }
+
+  return "0";
+});
 
 watch(
   () => status,
@@ -105,7 +123,7 @@ watch(
       try {
         notifications.value = await getNotifications();
       } catch (err) {
-        notifications.value = null;
+        notifications.value = [];
       }
     }
   },
@@ -120,6 +138,10 @@ const search = () => console.log("searching");
   box-shadow: 0px 1px 20px 0px #e8e8e8 !important;
 
   .v-toolbar__content {
+    .v-toolbar-title {
+      margin-inline-end: 16px;
+    }
+
     .v-img {
       cursor: pointer !important;
     }
