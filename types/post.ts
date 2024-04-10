@@ -48,8 +48,11 @@ export interface EmptyPost {
   locations: string[];
 }
 
+export type PostState = "pending" | "visible" | "hidden" | "unapproved";
+
 export interface Post extends EmptyPost {
   id: string;
+  state: PostState;
   createdBy: string;
   createdAt: Date;
   createdBySlug: string;
@@ -61,4 +64,13 @@ export interface CreatePostPayload {
   schedule: PostSchedule;
   needs: PostCategory[];
   title: string;
+}
+
+export interface PostDeletePayload {
+  id: string;
+  title: string;
+}
+
+export interface PostStateTogglePayload extends PostDeletePayload {
+  enable: boolean;
 }

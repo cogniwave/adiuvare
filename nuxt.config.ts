@@ -100,7 +100,8 @@ export default defineNuxtConfig({
       sessionDataType: {
         email: "string",
         name: "string",
-        type: "volunteer | org",
+        type: "volunteer" || "org",
+        slug: "string",
       },
       token: {
         maxAgeInSeconds: 300, // 5 min

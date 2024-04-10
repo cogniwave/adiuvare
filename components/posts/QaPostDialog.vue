@@ -102,7 +102,7 @@
           :loading="submitting"
           @click="submit"
         >
-          {{ $t("post.submit") }}
+          {{ $t("posts.submit") }}
         </v-btn>
 
         <v-btn
@@ -110,7 +110,7 @@
           :disable="submitting"
           @click="$store.closeDialog()"
         >
-          {{ $t("post.cancel") }}
+          {{ $t("posts.cancel") }}
         </v-btn>
       </v-card-actions>
     </v-card>

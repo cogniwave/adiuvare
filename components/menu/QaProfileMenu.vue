@@ -2,7 +2,8 @@
   <v-menu v-if="status === 'authenticated'">
     <template v-slot:activator="{ props }">
       <span v-bind="props" class="cursor-pointer ml-5">
-        {{ data.name }} <v-icon>fa-solid fa-chevron-down</v-icon>
+        {{ data.name }}
+        <v-icon class="ml-2 mb-1">fa-solid fa-chevron-down</v-icon>
       </span>
     </template>
 
@@ -10,7 +11,7 @@
       <v-list-item
         :title="$t('nav.profile')"
         append-icon="person"
-        @click="$router.push('/profile')"
+        @click="goToProfile"
       />
 
       <v-list-item
@@ -27,4 +28,6 @@
 <script setup lang="ts">
 const $router = useRouter();
 const { signOut, status, data } = useAuth();
+
+const goToProfile = () => $router.push(`/profile/${data.value.slug}`);
 </script>

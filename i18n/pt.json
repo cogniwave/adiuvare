@@ -132,15 +132,29 @@
       "otherDescription": "É necessário uma outra ajuda especifica"
     },
     "report": {
-      "button": "Reportar publicação",
       "title": "Reportar publicação {0}",
       "description": "Por favor diga-nos porque está a reportar esta publicação. A nossa equipa irá avaliar e se de facto a publicação vai contra as regras da plataforma, e se for será removida. Iremos utilizar o seu email para o atualizar do processo ou entrar em contacto se necessário mais informações",
       "submit": "Reportar",
       "cancel": "Cancelar",
       "success": "Publicação reportada com sucesso. Obrigado, iremos analisar assim que possível!"
+    },
+    "options": {
+      "edit": "Editar",
+      "enable": "Ativar",
+      "disable": "Desativar",
+      "delete": "Apagar",
+      "report": "Reportar publicação"
+    },
+    "confirm": {
+      "disableTitle": "Confirmação de desativação",
+      "disableDescription": "A publicação {0} será desativada. A publicação ainda estará disponível para si nas suas publicações mas mais ninguém conseguirá ver",
+      "disableConfirm": "Desativar",
+      "cancel": "Cancelar",
+      "deleteTitle": "Confirmação de remoção",
+      "deleteDescription": "A publicação {0} será removida. Ainda terá acesso aos contactos relacionados, mas a publicação em si deixará de ser acessível",
+      "deleteConfirm": "Apagar"
     }
   },
-
   "loading": "A carregar",
 
   "feed": {

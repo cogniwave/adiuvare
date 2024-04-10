@@ -47,11 +47,7 @@
           <v-col>
             {{ desc }}
 
-            <span
-              v-if="descTooLong && !descVisible"
-              class="expand-desc"
-              @click="viewAllDesc"
-            >
+            <span v-if="descTooLong && !descVisible" class="expand-desc" @click="viewAllDesc">
               {{ $t("posts.expandDesc") }}
             </span>
           </v-col>
@@ -76,25 +72,13 @@
         <v-menu v-if="leftoverLocations.length" open-on-hover>
           <template v-slot:activator="{ props }">
             <span v-bind="props">
-              <v-chip label size="small">
-                +{{ leftoverLocations.length }}
-              </v-chip>
+              <v-chip label size="small"> +{{ leftoverLocations.length }} </v-chip>
             </span>
           </template>
 
           <v-list density="compact" class="pt-1 pb-2">
-            <v-list-item
-              v-for="location in leftoverLocations"
-              :key="location"
-              class="pl-2 pr-2"
-            >
-              <v-chip
-                label
-                variant="text"
-                class="cursor-pointer mr-1"
-                rounded="md"
-                size="small"
-              >
+            <v-list-item v-for="location in leftoverLocations" :key="location" class="pl-2 pr-2">
+              <v-chip label variant="text" class="cursor-pointer mr-1" rounded="md" size="small">
                 {{ location }}
               </v-chip>
             </v-list-item>
@@ -106,23 +90,53 @@
         <!-- post options -->
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              variant="plain"
-              size="x-small"
-              class="mr-2"
-              icon
-            >
+            <v-btn v-bind="props" variant="plain" size="x-small" class="mr-2" icon>
               <v-icon size="x-small">fa-solid fa-ellipsis-vertical</v-icon>
             </v-btn>
           </template>
 
           <v-list density="compact" class="py-2">
+            <template v-if="post.createdBySlug !== user">
+              <!-- edit post -->
+              <v-list-item
+                class="pl-2 pr-2"
+                prepend-icon="fa-solid fa-pencil"
+                :title="$t('posts.options.edit')"
+                @click="onEdit"
+              />
+
+              <!-- enable post -->
+              <v-list-item
+                v-if="post.state === 'hidden'"
+                class="pl-2 pr-2"
+                prepend-icon="fa-solid fa-check-double"
+                :title="$t('posts.options.enable')"
+                @click="$emit('click:state', { enable: true, title: post.title, id: post.id })"
+              />
+
+              <!-- disable post -->
+              <v-list-item
+                v-else
+                class="pl-2 pr-2"
+                prepend-icon="fa-solid fa-ban"
+                :title="$t('posts.options.disable')"
+                @click="$emit('click:state', { enable: false, title: post.title, id: post.id })"
+              />
+
+              <v-list-item
+                class="pl-2 pr-2"
+                prepend-icon="fa-solid fa-trash"
+                :title="$t('posts.options.delete')"
+                @click="$emit('click:delete', post)"
+              />
+            </template>
+
             <v-list-item
+              v-else
               class="pl-2 pr-2"
               prepend-icon="fa-solid fa-bullhorn"
-              :title="$t('posts.report.title')"
-              @click="onReportPost"
+              :title="$t('posts.options.report')"
+              @click="onReport"
             />
           </v-list>
         </v-menu>
@@ -142,20 +156,29 @@
 </template>
 
 <script setup lang="ts">
+import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
+
 import QaPostNeed from "@/components/posts/QaPostNeed.vue";
+import { usePostsStore } from "@/stores/posts.store";
 import { useReportStore } from "@/stores/report.store";
-import type { Post } from "@/types/post";
 
 const MAX_DESC = 1300;
 const NUM_VISIBLE_LOCATIONS = 3;
 
+const $emit = defineEmits<{
+  (e: "click:state", payload: PostStateTogglePayload): void;
+  (e: "click:delete", payload: PostDeletePayload): void;
+}>();
+
 const props = defineProps({
   post: { type: Object as PropType<Post>, required: true },
+  user: { type: String, required: true },
 });
 
 const $router = useRouter();
 const { status } = useAuth();
 const $reportStore = useReportStore();
+const $postsStore = usePostsStore();
 
 const desc = ref(props.post.description);
 const descTooLong = ref(false);
@@ -193,7 +216,12 @@ const onContactClick = () => {
   }
 };
 
-const onReportPost = () => $reportStore.openDialog(props.post);
+const onReport = () => $reportStore.openDialog(props.post);
+
+const onEdit = () => {
+  $postsStore.setPost(props.post);
+  $router.push(`posts/${props.post.id}`);
+};
 </script>
 
 <style scoped lang="scss">

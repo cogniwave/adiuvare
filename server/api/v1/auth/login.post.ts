@@ -10,7 +10,7 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
   const user = await getUser<TokenUser & { password?: string }>(
     email,
     [["verified", true]],
-    { password: users.password },
+    { password: users.password, slug: users.slug },
   );
 
   if (!user || !compareSync(password, user.password as string)) {

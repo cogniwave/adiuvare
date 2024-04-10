@@ -41,11 +41,7 @@
                 size="x-small"
                 @click="notifsOpen = !notifsOpen"
               >
-                <v-badge
-                  v-if="notifications?.length"
-                  :content="notifBadge"
-                  label="notifications"
-                >
+                <v-badge v-if="notifications?.length" :content="notifBadge" label="notifications">
                   <v-icon size="x-small"> fa-solid fa-bell </v-icon>
                 </v-badge>
 
@@ -71,10 +67,7 @@
           title="Something went wrong trying to fetch notifications"
         />
 
-        <v-list-item
-          v-else-if="!notifications.length"
-          title="You have no notifications"
-        />
+        <v-list-item v-else-if="!notifications.length" title="You have no notifications" />
 
         <template v-else>
           <v-list-item

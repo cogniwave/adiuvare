@@ -1,20 +1,35 @@
 import { defineStore } from "pinia";
 
-import type { EmptyPost, Post, PostSchedule } from "@/types/post";
+import type {
+  EmptyPost,
+  Post,
+  PostDeletePayload,
+  PostSchedule,
+  PostStateTogglePayload,
+} from "@/types/post";
 import type { Errors } from "@/exceptions";
 
-import { getPosts, addPost, getTotalPosts } from "@/services/posts.service";
+import {
+  getPosts,
+  addPost,
+  getTotalPosts,
+  disablePost,
+  deletePost,
+} from "@/services/posts.service";
 import { ValidationError } from "@/exceptions";
-import { useSessionStore } from "./session.store";
 
 interface PostState {
-  post: Post | EmptyPost;
+  post: Post | EmptyPost | PostDeletePayload | PostStateTogglePayload;
   posts: Post[];
   loading: boolean;
   dialogVisible: boolean;
   dialogRendered: boolean;
   formErrors: Errors;
   totalPosts: number;
+
+  disableDialogVisible: boolean;
+
+  deleteDialogVisible: boolean;
 }
 
 const DEFAULT_POST: EmptyPost = {
@@ -28,12 +43,14 @@ const DEFAULT_POST: EmptyPost = {
 export const usePostsStore = defineStore("posts", {
   state: (): PostState => ({
     posts: [],
-    post: { ...DEFAULT_POST },
+    post: { ...DEFAULT_POST } as Post,
     loading: true,
     dialogVisible: true,
     dialogRendered: false,
     formErrors: {},
     totalPosts: 0,
+    disableDialogVisible: true,
+    deleteDialogVisible: true,
   }),
   actions: {
     async getPosts() {
@@ -60,15 +77,13 @@ export const usePostsStore = defineStore("posts", {
       this.post = { ...this.post, [prop]: val };
     },
 
-    setPost(post?: Post) {
+    setPost(post?: Post | PostDeletePayload | PostStateTogglePayload) {
       this.post = post || { ...DEFAULT_POST };
     },
 
     async createPost() {
-      const $sesh = useSessionStore();
-
       try {
-        const res = await addPost(this.post as EmptyPost, $sesh.token);
+        const res = await addPost(this.post as EmptyPost);
 
         if (res) {
           this.posts.push(res);
@@ -96,6 +111,26 @@ export const usePostsStore = defineStore("posts", {
 
     closeDialog() {
       this.dialogVisible = false;
+    },
+
+    async disablePost(id: string) {
+      await disablePost(id);
+
+      this.posts = this.posts.filter((p) => p.id !== id);
+    },
+
+    toggleDisableDialog(payload: boolean) {
+      this.disableDialogVisible = payload;
+    },
+
+    toggleDeleteDialog(payload: boolean) {
+      this.deleteDialogVisible = payload;
+    },
+
+    async deletePost(id: string) {
+      await deletePost(id);
+
+      this.posts = this.posts.filter((p) => p.id !== id);
     },
   },
 });

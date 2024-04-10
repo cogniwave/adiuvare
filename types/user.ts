@@ -28,5 +28,6 @@ export interface UnverifiedUser extends Omit<DbUser, "id"> {
 export interface TokenUser {
   name: string;
   email: string;
+  slug: string;
   type: UserType;
 }
