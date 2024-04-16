@@ -1,22 +1,18 @@
 import Joi from "joi";
 
 import { getUser } from "~/server/db/users";
-import { LoginPayload } from "~/types/user";
+import type { LoginPayload } from "~/types/user";
+import { getValidatedInput } from "~/server/utils/request";
+import type { H3Event, EventHandlerRequest } from "h3";
 
 const sendEmail = console.log;
 
-const sendResetEmail = async (body: any) => {
-  const { value: payload, error } = Joi.object<LoginPayload>({
-    email: Joi.string()
-      .required()
-      .messages({ "strings.empty": "errors.empty" }),
-  }).validate(body, { abortEarly: false, stripUnknown: true });
+const sendResetEmail = async (event: H3Event<EventHandlerRequest>) => {
+  const body = await getValidatedInput<LoginPayload>(event, {
+    email: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+  });
 
-  if (error) {
-    throw createError(error);
-  }
-
-  const user = await getUser(payload.email);
+  const user = await getUser(body.email);
 
   if (user) {
     sendEmail(user.email, user.name);
@@ -27,6 +23,6 @@ const sendResetEmail = async (body: any) => {
 
 export default defineEventHandler((event) => {
   if (event.method === "GET") {
-    return sendResetEmail(event.toJSON());
+    return sendResetEmail(event);
   }
 });

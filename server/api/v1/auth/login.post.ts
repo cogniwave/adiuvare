@@ -4,6 +4,7 @@ import { compareSync } from "bcrypt";
 import { getUser } from "~/server/db/users";
 import { LoginPayload, TokenUser } from "~/types/user";
 import { signToken } from "~/server/utils/token";
+import { getValidatedInput } from "~/server/utils/request";
 import { users } from "~/server/db/schemas/users";
 
 const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
@@ -25,24 +26,13 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
 };
 
 export default defineEventHandler(async (event) => {
-  let body;
-  try {
-    body = await readBody(event);
-  } catch (error) {
-    throw createError(error as any);
-  }
-
-  const { value: payload, error } = Joi.object<LoginPayload>({
+  const body = await getValidatedInput<LoginPayload>(event, {
     email: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
     password: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
-  }).validate(body, { abortEarly: false, stripUnknown: true });
-
-  if (error) {
-    throw createError(error);
-  }
+  });
 
   try {
-    const user = await login(payload);
+    const user = await login(body);
 
     return {
       token: {

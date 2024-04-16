@@ -3,40 +3,24 @@ import Joi from "joi";
 import type { Report } from "~/types/report";
 import { createReport } from "~/server/db/reports";
 import { notifyNewReport } from "~/server/services/slack";
+import { getValidatedInput } from "~/server/utils/request";
 
 export default defineEventHandler(async (event) => {
-  let body;
-  try {
-    body = await readBody(event);
-  } catch (error) {
-    throw createError(error as any);
-  }
-
-  const { value: payload, error } = Joi.object<Report>({
+  const body = await getValidatedInput<Report>(event, {
     post: Joi.object().required().messages({ "strings.empty": "errors.empty" }),
-    reason: Joi.string()
-      .required()
-      .messages({ "strings.empty": "errors.empty" }),
+    reason: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
     user: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
-  }).validate(body, { abortEarly: false, stripUnknown: true });
-
-  if (error) {
-    throw createError({
-      data: error.details.map((d) => d.message),
-      message: "Invalid params",
-      statusCode: 422,
-    });
-  }
+  });
 
   // validate and add token to event
   try {
     await createReport({
-      post: payload.post,
-      reason: payload.reason,
-      reportBy: payload.user,
+      post: body.post,
+      reason: body.reason,
+      reportBy: body.user,
     });
 
-    notifyNewReport(payload);
+    notifyNewReport(body);
 
     setResponseStatus(event, 201);
     return "ok";

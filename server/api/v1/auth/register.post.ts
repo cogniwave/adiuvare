@@ -2,6 +2,7 @@ import Joi from "joi";
 
 import { addUser } from "~/server/db/users";
 import { sendMail } from "~/server/services/mail";
+import { getValidatedInput } from "~/server/utils/request";
 import type { BaseUser, User } from "~/types/user";
 import type { DrizzleError } from "~/server/types/drizzle";
 
@@ -39,14 +40,7 @@ const register = async (payload: BaseUser): Promise<User> => {
 };
 
 export default defineEventHandler(async (event) => {
-  let body;
-  try {
-    body = await readBody(event);
-  } catch (error) {
-    throw createError(error as any);
-  }
-
-  const { value, error } = Joi.object<BaseUser>({
+  const body = await getValidatedInput<BaseUser>(event, {
     name: Joi.string().required().max(255).messages({
       "string.empty": "errors.empty",
       "string.max": "errors.max_255",
@@ -70,14 +64,10 @@ export default defineEventHandler(async (event) => {
       "string.empty": "errors.empty",
       "any.only": "errors.invalidUserType",
     }),
-  }).validate(body, { abortEarly: false, stripUnknown: true });
-
-  if (error) {
-    throw createError(error);
-  }
+  });
 
   try {
-    return await register(value);
+    return await register(body);
   } catch (err: any) {
     // console.log(err);
     // throw createError(err);

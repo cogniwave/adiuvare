@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { H3Event, EventHandlerRequest } from "h3";
+import type { H3Event, EventHandlerRequest } from "h3";
 
 // make this a separate function to call on functions where we need to get current logged user
 // this could be a middleware but we wouldn't use it in every request so it'd be wasted time
