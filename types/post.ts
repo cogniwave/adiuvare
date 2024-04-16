@@ -74,3 +74,19 @@ export interface PostDeletePayload {
 export interface PostStateTogglePayload extends PostDeletePayload {
   enable: boolean;
 }
+
+export interface UpdatePostPayload extends CreatePostPayload {
+  state: PostState;
+  updatedBy: string;
+}
+
+export interface PostHistory {
+  updatedBy: string;
+  updatedAt: Date;
+  state: PostState;
+  description: string;
+  locations: string[];
+  schedule: PostSchedule;
+  needs: PostCategory[];
+  title: string;
+}

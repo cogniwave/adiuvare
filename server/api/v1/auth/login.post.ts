@@ -7,11 +7,11 @@ import { signToken } from "~/server/utils/token";
 import { users } from "~/server/db/schemas/users";
 
 const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
-  const user = await getUser<TokenUser & { password?: string }>(
-    email,
-    [["verified", true]],
-    { password: users.password, slug: users.slug },
-  );
+  const user = await getUser<TokenUser & { password?: string }>(email, [["verified", true]], {
+    password: users.password,
+    slug: users.slug,
+    id: users.id,
+  });
 
   if (!user || !compareSync(password, user.password as string)) {
     throw createError({
@@ -33,12 +33,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const { value: payload, error } = Joi.object<LoginPayload>({
-    email: Joi.string()
-      .required()
-      .messages({ "strings.empty": "errors.empty" }),
-    password: Joi.string()
-      .required()
-      .messages({ "strings.empty": "errors.empty" }),
+    email: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    password: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
   }).validate(body, { abortEarly: false, stripUnknown: true });
 
   if (error) {

@@ -1,48 +1,26 @@
 import Joi from "joi";
 
 import type { CreatePostPayload } from "~/types/post";
+import { POST_NEEDS } from "~/server/db/schemas/posts";
 import { createPost } from "~/server/db/posts";
 import { getUser } from "~/server/db/users";
 import { users } from "~/server/db/schemas/users";
+import { getValidatedInput } from "~/server/utils/request";
 
 export default defineEventHandler(async (event) => {
-  let body;
-  try {
-    body = await readBody(event);
-  } catch (error) {
-    throw createError(error as any);
-  }
-
-  const { value: payload, error } = Joi.object<CreatePostPayload>({
-    title: Joi.string()
-      .required()
-      .messages({ "strings.empty": "errors.empty" }),
-    description: Joi.string()
-      .required()
-      .messages({ "strings.empty": "errors.empty" }),
-    needs: Joi.array()
-      .items(Joi.string().valid("volunteers", "money", "goods", "other"))
-      .required()
-      .messages({
-        "strings.empty": "errors.empty",
-        "strings.valid": "errors.invalidField",
-      }),
+  const body = await getValidatedInput<CreatePostPayload>(event, {
+    title: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    description: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    needs: Joi.array().items(Joi.string().valid(POST_NEEDS)).required().messages({
+      "strings.empty": "errors.empty",
+      "strings.valid": "errors.invalidField",
+    }),
     locations: Joi.array()
       .items(Joi.string())
       .required()
       .messages({ "strings.empty": "errors.empty" }),
-    schedule: Joi.object()
-      .required()
-      .messages({ "strings.empty": "errors.empty" }),
-  }).validate(body, { abortEarly: false, stripUnknown: true });
-
-  if (error) {
-    throw createError({
-      data: error.details.map((d) => d.message),
-      message: "Invalid params",
-      statusCode: 422,
-    });
-  }
+    schedule: Joi.object().required().messages({ "strings.empty": "errors.empty" }),
+  });
 
   const token = event.headers.get("Authorization");
 
@@ -59,7 +37,7 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 403, message: "User not found" });
     }
 
-    return await createPost({ ...payload, createdUserId: user.id });
+    return await createPost({ ...body, createdUserId: user.id });
   } catch (err) {
     console.log(err);
     useBugsnag().notify({

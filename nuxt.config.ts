@@ -102,6 +102,7 @@ export default defineNuxtConfig({
         name: "string",
         type: "volunteer" || "org",
         slug: "string",
+        id: "string",
       },
       token: {
         maxAgeInSeconds: 300, // 5 min

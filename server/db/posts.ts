@@ -1,11 +1,12 @@
-import { count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 
 import { db } from "./";
 import { posts } from "./schemas/posts";
 import { users } from "./schemas/users";
+import { postHistory } from "./schemas/postHistory";
 
 import type { InsertPost } from "./schemas/posts";
-import type { Post } from "~/types/post";
+import type { Post, UpdatePostPayload } from "~/types/post";
 
 export const getPosts = async () => {
   const result = (await db
@@ -40,4 +41,62 @@ export const getTotalPosts = async () => {
 
 export const createPost = async (payload: InsertPost) => {
   return await db.insert(posts).values(payload);
+};
+
+export const updatePost = async (postId: string, payload: UpdatePostPayload, userId: string) => {
+  const old = await getPost(postId);
+
+  if (!old) {
+    return null;
+  }
+
+  if (old.createdUserId !== userId) {
+    return { old, updated: old };
+  }
+
+  await db.transaction(async (tx) => {
+    // update post
+    await tx
+      .update(posts)
+      .set({ ...payload, updatedBy: userId })
+      .where(eq(posts.id, postId));
+    try {
+      // add entry to history
+      await tx.insert(postHistory).values({
+        postId: postId,
+        userId: userId,
+        updatedAt: new Date(),
+        state: old.state,
+        description: old.description,
+        locations: old.locations,
+        schedule: old.schedule,
+        needs: old.needs,
+        title: old.title,
+      });
+    } catch (err) {
+      tx.rollback();
+    }
+  });
+
+  return { old, updated: { ...old, ...payload } };
+};
+
+export const deletePost = async (id: string) => {
+  return await db.delete(posts).where(eq(posts.id, id));
+};
+
+export const getPost = async (postId: string) => {
+  const result = await db.select().from(posts).where(eq(posts.id, postId)).limit(1);
+
+  return result.length === 1 ? result[0] : null;
+};
+
+export const getPostByOwner = async (postId: string, userId: string) => {
+  const result = await db
+    .select({ createdBy: users.name })
+    .from(posts)
+    .where(and(eq(posts.id, postId), eq(posts.createdUserId, userId)))
+    .limit(1);
+
+  return result.length === 1 ? result[0] : null;
 };
