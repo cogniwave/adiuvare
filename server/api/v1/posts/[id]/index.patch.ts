@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-import { POST_NEEDS, POST_STATES } from "~/server/db/schemas/posts";
+import { POST_NEEDS, POST_STATES } from "~/server/db/schemas/posts.schema";
 import { updatePost } from "~/server/db/posts";
 import { getSessionUser, getValidatedInput } from "~/server/utils/request";
 import { UpdatePostPayload } from "~/types/post";

@@ -1,11 +1,11 @@
 import { and, count, desc, eq } from "drizzle-orm";
 
 import { db } from "./";
-import { posts } from "./schemas/posts";
-import { users } from "./schemas/users";
-import { postHistory } from "./schemas/postHistory";
+import { posts } from "./schemas/posts.schema";
+import { users } from "./schemas/users.schema";
+import { postHistory } from "./schemas/postHistory.schema";
 
-import type { InsertPost } from "./schemas/posts";
+import type { InsertPost } from "./schemas/posts.schema";
 import type { Post, UpdatePostPayload } from "~/types/post";
 
 export const getPosts = async () => {

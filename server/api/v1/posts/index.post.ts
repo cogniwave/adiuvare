@@ -1,10 +1,10 @@
 import Joi from "joi";
 
 import type { CreatePostPayload } from "~/types/post";
-import { POST_NEEDS } from "~/server/db/schemas/posts";
+import { POST_NEEDS } from "~/server/db/schemas/posts.schema";
 import { createPost } from "~/server/db/posts";
 import { getUser } from "~/server/db/users";
-import { users } from "~/server/db/schemas/users";
+import { users } from "~/server/db/schemas/users.schema";
 import { getValidatedInput } from "~/server/utils/request";
 
 export default defineEventHandler(async (event) => {

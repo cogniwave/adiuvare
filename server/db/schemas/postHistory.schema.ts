@@ -1,8 +1,17 @@
-import { pgTable, text, timestamp, index, varchar, uuid, json } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  index,
+  varchar,
+  uuid,
+  json,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-import { users } from "./users";
-import { needsEnum, posts, stateEnum } from "./posts";
+import { users } from "./users.schema";
+import { needsEnum, posts, stateEnum } from "./posts.schema";
 import type { PostSchedule } from "~/types/post";
 
 export const postHistory = pgTable(
@@ -24,21 +33,19 @@ export const postHistory = pgTable(
     needs: needsEnum("needs").array().notNull(),
   },
   (postHistory) => ({
-    idIdx: index("id_idx").on(postHistory.id),
-    postId: index("post_idx").on(postHistory.postId),
-    userId: index("user_idx").on(postHistory.userId),
+    idIdx: uniqueIndex("report_history_id_idx").on(postHistory.id),
+    postId: index("report_history_post_idx").on(postHistory.postId),
+    userId: index("report_history_user_idx").on(postHistory.userId),
   }),
 );
 
-export const postsRelations = relations(postHistory, ({ one }) => ({
-  creator: one(posts, {
+export const postHistoryRelations = relations(postHistory, ({ one }) => ({
+  postId: one(posts, {
     fields: [postHistory.postId],
     references: [posts.id],
   }),
-}));
 
-export const usersRelations = relations(postHistory, ({ one }) => ({
-  creator: one(users, {
+  userid: one(users, {
     fields: [postHistory.userId],
     references: [users.id],
   }),

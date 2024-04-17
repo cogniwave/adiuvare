@@ -10,7 +10,7 @@ import {
   json,
 } from "drizzle-orm/pg-core";
 
-import { posts } from "./posts";
+import { posts } from "./posts.schema";
 import type { UserContact } from "~/types/user";
 
 export const users = pgTable(
@@ -28,13 +28,14 @@ export const users = pgTable(
     contacts: json("contacts").$type<UserContact[]>(),
   },
   (users) => ({
-    email: uniqueIndex("email_idx").on(users.email),
-    slug: uniqueIndex("slug_idx").on(users.slug),
+    idIdx: uniqueIndex("user_id_idx").on(users.id),
+    email: uniqueIndex("user_email_idx").on(users.email),
+    slug: uniqueIndex("user_slug_idx").on(users.slug),
   }),
 );
 
 export const usersRelations = relations(users, ({ many }) => ({
-  posts: many(posts),
+  posts: many(posts, { relationName: "post_creator" }),
 }));
 
 export type InsertUser = typeof users.$inferInsert;

@@ -3,8 +3,8 @@ import { hashSync } from "bcrypt";
 import { eq, or } from "drizzle-orm";
 
 import { db } from "./";
-import { users } from "./schemas/users";
-import type { SelectUser } from "./schemas/users";
+import { users } from "./schemas/users.schema";
+import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, User } from "~/types/user";
 import { PgColumn } from "drizzle-orm/pg-core";
 
@@ -23,20 +23,14 @@ export const getUser = async <T = SelectUser>(
       ...fields,
     })
     .from(users)
-    .where(
-      or(
-        eq(users.email, email),
-        ...filter.map(([key, value]) => eq(key, value)),
-      ),
-    )
+    .where(or(eq(users.email, email), ...filter.map(([key, value]) => eq(key, value))))
     .limit(1);
 
   return result.length ? (result[0] as T) : undefined;
 };
 
 const genSlugToken = () => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   let token = "";
   for (let i = 0; i < 6; i++) {

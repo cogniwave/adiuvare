@@ -1,11 +1,4 @@
-import {
-  pgTable,
-  uuid,
-  text,
-  timestamp,
-  index,
-  json,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, index, json } from "drizzle-orm/pg-core";
 
 export const reports = pgTable(
   "reports",
@@ -17,7 +10,7 @@ export const reports = pgTable(
     post: json("post").notNull(),
   },
   (reports) => ({
-    idIdx: index("id").on(reports.id),
+    idIdx: index("report_id_idx").on(reports.id),
   }),
 );
 
