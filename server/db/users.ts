@@ -1,12 +1,13 @@
 import { randomBytes } from "crypto";
 import { hashSync } from "bcrypt";
 import { eq, or } from "drizzle-orm";
+import { PgColumn } from "drizzle-orm/pg-core";
 
 import { db } from "./";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, User } from "~/types/user";
-import { PgColumn } from "drizzle-orm/pg-core";
+import { genSlugToken } from "~/server/utils";
 
 const SALT = 10;
 
@@ -27,17 +28,6 @@ export const getUser = async <T = SelectUser>(
     .limit(1);
 
   return result.length ? (result[0] as T) : undefined;
-};
-
-const genSlugToken = () => {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  let token = "";
-  for (let i = 0; i < 6; i++) {
-    token += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-
-  return token;
 };
 
 export const addUser = async (payload: BaseUser): Promise<User | null> => {
