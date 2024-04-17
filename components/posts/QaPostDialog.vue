@@ -11,16 +11,11 @@
       </v-card-title>
 
       <v-card-text>
-        <v-form
-          ref="form"
-          class="px-4 pt-4"
-          validate-on="submit lazy"
-          @submit.prevent="submit"
-        >
+        <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
           <!-- title -->
           <form-qa-input
             v-model:model-value="title"
-            icon="title"
+            icon="fa-solid fa-heading"
             :placeholder="$t('form.post.titlePlaceholder')"
             :label="$t('form.post.title')"
             :rules="[required]"
@@ -32,14 +27,12 @@
           <form-qa-textarea
             v-model:model-value="description"
             class="mt-5"
-            icon="description"
+            icon="fa-solid fa-quote-left"
             :placeholder="$t('form.post.descriptionPlaceholder')"
             :label="$t('form.post.description')"
             :rules="[required]"
             :error="errors.description"
-            @update:model-value="
-              (value) => $store.updatePost('description', value)
-            "
+            @update:model-value="(value) => $store.updatePost('description', value)"
           />
 
           <!-- locations -->
@@ -47,7 +40,7 @@
           <form-qa-autocomplete
             v-model:model-value="locationInput"
             multiple
-            icon="map"
+            icon="fa-solid fa-location-dot"
             class="mt-5"
             chips
             closable-chips
@@ -70,7 +63,7 @@
             options-dense
             use-chips
             hide-hint
-            icon="support"
+            icon="fa-solid fa-parachute-box"
             class="mt-5 mb-2"
             :label="$t('form.post.category')"
             :rules="[required]"
@@ -88,28 +81,18 @@
           </form-qa-select>
 
           <!-- horarios -->
-          <!-- <label>Horário</label> -->
           <qa-post-schedule />
         </v-form>
       </v-card-text>
 
-      <v-card-actions class="px-5 d-flex flex-column">
-        <v-btn
-          type="submit"
-          variant="tonal"
-          color="primary"
-          class="w-50 mb-2"
-          :loading="submitting"
-          @click="submit"
-        >
+      <v-divider />
+
+      <v-card-actions class="px-5 d-flex align-center justify-end">
+        <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
           {{ $t("posts.submit") }}
         </v-btn>
 
-        <v-btn
-          variant="flat"
-          :disable="submitting"
-          @click="$store.closeDialog()"
-        >
+        <v-btn variant="flat" :disable="submitting" @click="$store.closeDialog()">
           {{ $t("posts.cancel") }}
         </v-btn>
       </v-card-actions>

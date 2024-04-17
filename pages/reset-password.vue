@@ -1,7 +1,7 @@
 <template>
   <v-row align-content="center">
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
-      <v-card class="shadow-24 q-pb-md">
+      <v-card class="shadow-24 q-pb-md bg-white">
         <v-card-title class="bg-primary">
           <h2 class="text-h5 text-white q-my-xs">{{ $t("reset.title") }}</h2>
         </v-card-title>
@@ -28,25 +28,22 @@
             </v-form>
           </v-card-item>
 
-          <v-card-actions class="px-5 d-flex flex-column">
-            <v-btn
-              type="submit"
-              variant="tonal"
-              color="primary"
-              class="w-75 mb-5"
-              :loading="submitting"
-              @click="submit"
-            >
-              {{ $t("reset.submit") }}
-            </v-btn>
+          <v-divider />
 
-            <nuxt-link to="register" class="text-blue-grey pb-1">
+          <v-card-actions class="px-5 d-flex align-center justify-end">
+            <nuxt-link to="register" class="text-blue-grey">
               {{ $t("register.link") }}
             </nuxt-link>
 
-            <nuxt-link to="login" class="text-blue-grey">
+            <span class="text-blue-grey mx-2">|</span>
+
+            <nuxt-link to="login" class="text-blue-grey mr-auto">
               {{ $t("login.title") }}
             </nuxt-link>
+
+            <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+              {{ $t("reset.submit") }}
+            </v-btn>
           </v-card-actions>
         </template>
 

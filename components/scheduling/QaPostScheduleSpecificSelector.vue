@@ -1,14 +1,11 @@
 <template>
-  <v-overlay
-    v-model:model-value="calendarVisible"
-    location-strategy="connected"
-  >
+  <v-overlay v-model:model-value="calendarVisible" location-strategy="connected">
     <template #activator="{ props }">
       <form-qa-input
         v-bind="props"
         v-model="date"
         placeholder="E.g.: 18/05/2023"
-        icon="event"
+        icon="fa-solid fa-calendar-day"
         :rules="[required, validDate]"
         :error="errors"
       />
@@ -37,10 +34,7 @@
   </v-overlay>
 
   <div v-if="date" class="time-group mt-2">
-    <qa-post-schedule-recurring-time
-      :model-value="times"
-      @update:model-value="onTimesUpdate"
-    />
+    <qa-post-schedule-recurring-time :model-value="times" @update:model-value="onTimesUpdate" />
   </div>
 </template>
 

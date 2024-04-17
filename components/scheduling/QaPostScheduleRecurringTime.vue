@@ -29,9 +29,9 @@
                 rounded="xl"
                 class="mr-1"
                 density="compact"
-                variant="outlined"
+                variant="tonal"
                 size="xs"
-                icon="remove"
+                icon="fa-solid fa-circle-minus"
                 color="primary"
                 @click="onRemove(time.id)"
               />
@@ -50,9 +50,9 @@
                 v-bind="props"
                 rounded="xl"
                 density="compact"
-                variant="outlined"
+                variant="tonal"
                 size="xs"
-                icon="add"
+                icon="fa-solid fa-circle-plus"
                 class="q-ml-sm"
                 color="primary"
                 @click="onAdd"
@@ -99,10 +99,7 @@ const onRemove = (id: string) => {
 };
 
 const onChange = (val: string, field: "start" | "end", item: ScheduleTime) => {
-  const validateTime = (
-    [hour1, minute1]: number[],
-    [hour2, minute2]: number[],
-  ) => {
+  const validateTime = ([hour1, minute1]: number[], [hour2, minute2]: number[]) => {
     return hour1 > hour2 || (hour1 === hour2 && minute1 >= minute2);
   };
 

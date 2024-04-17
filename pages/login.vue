@@ -1,17 +1,12 @@
 <template>
   <v-row align-content="center" no-gutters>
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
-      <v-card class="shadow-24 pb-3">
+      <v-card class="shadow-24 pb-3 bg-white">
         <v-card-title class="bg-primary">
           <h2 class="text-h5 text-white">{{ $t("login.title") }}</h2>
         </v-card-title>
 
-        <v-form
-          ref="form"
-          class="px-4 pt-4"
-          validate-on="submit lazy"
-          @submit.prevent="submit"
-        >
+        <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
           <v-card-text>
             <form-qa-input
               v-model:model-value="email"
@@ -43,25 +38,20 @@
             </form-qa-input>
           </v-card-text>
 
-          <v-card-actions class="px-5 d-flex flex-column">
-            <v-btn
-              type="submit"
-              variant="tonal"
-              color="primary"
-              class="w-75 mb-5"
-              :loading="submitting"
-              @click="submit"
-            >
-              {{ $t("login.title") }}
-            </v-btn>
-
-            <nuxt-link to="register" class="text-blue-grey pb-1">
+          <v-card-actions class="px-5 d-flex align-center justify-end">
+            <nuxt-link to="register" class="text-blue-grey">
               {{ $t("register.link") }}
             </nuxt-link>
 
-            <nuxt-link to="reset-password" class="text-blue-grey">
+            <span class="text-blue-grey mx-2">| </span>
+
+            <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
               {{ $t("reset.link") }}
             </nuxt-link>
+
+            <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+              {{ $t("login.title") }}
+            </v-btn>
           </v-card-actions>
         </v-form>
       </v-card>

@@ -1,12 +1,12 @@
 <template>
   <v-row align-content="center">
     <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
-      <v-card class="shadow-24 q-pb-md">
+      <v-card class="shadow-24">
         <v-card-title class="bg-primary">
           <h1 class="text-h5 text-white">{{ $t("register.title") }}</h1>
         </v-card-title>
 
-        <v-card-item>
+        <v-card-item class="bg-white">
           <v-form
             v-if="!userCreated"
             ref="form"
@@ -73,11 +73,7 @@
               spellcheck="false"
               :label="$t('form.passwordRepeat')"
               :type="passwordFieldType"
-              :rules="[
-                required,
-                isValidPassword,
-                match(password, 'Palavras passe'),
-              ]"
+              :rules="[required, isValidPassword, match(password, 'Palavras passe')]"
             >
               <template v-slot:append>
                 <v-icon class="cursor-pointer" @click="switchVisibility">
@@ -92,27 +88,20 @@
               class="mt-3"
               :label="$t('form.userType.title')"
             >
-              <v-radio
-                :label="$t('form.userType.volunteer')"
-                value="volunteer"
-              />
+              <v-radio :label="$t('form.userType.volunteer')" value="volunteer" />
               <v-radio :label="$t('form.userType.org')" value="org" />
             </v-radio-group>
 
-            <v-card-actions class="px-5 d-flex flex-column">
-              <v-btn
-                type="submit"
-                variant="tonal"
-                color="primary"
-                class="w-75 mb-5"
-                :loading="submitting"
-              >
-                {{ $t("register.register") }}
-              </v-btn>
+            <v-divider />
 
-              <nuxt-link to="login" class="text-blue-grey pb-1">
+            <v-card-actions class="px-5 d-flex align-center justify-end">
+              <nuxt-link to="login" class="text-blue-grey mr-auto">
                 {{ $t("login.title") }}
               </nuxt-link>
+
+              <v-btn type="submit" color="primary" :loading="submitting">
+                {{ $t("register.register") }}
+              </v-btn>
             </v-card-actions>
           </v-form>
 
