@@ -2,14 +2,15 @@
   <v-chip
     text-color="white"
     class="cursor-pointer"
-    variant="outlined"
+    variant="flat"
+    rounded="lg"
     :prepend-icon="details.icon"
     :color="details.color"
     :closable="closable"
     @click.prevent="emit('click', need)"
     @click:close.prevent="emit('click:remove', need)"
   >
-    {{ details.label }}
+    {{ $t(details.label) }}
   </v-chip>
 </template>
 

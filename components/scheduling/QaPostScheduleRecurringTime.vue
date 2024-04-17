@@ -87,6 +87,11 @@ const $emit = defineEmits<{
 
 const times = ref<ScheduleTime[]>(props.modelValue);
 
+watch(
+  () => props.modelValue,
+  (t) => (times.value = t),
+);
+
 const onAdd = () => {
   times.value = [...times.value, getNewGroupTimes()];
 

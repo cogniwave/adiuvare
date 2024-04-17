@@ -12,6 +12,9 @@ export const useSessionStore = defineStore("session", {
     user: {} as TokenUser,
     token: "",
   }),
+  getters: {
+    isOrg: (state) => state.user.type === "org",
+  },
   actions: {
     init(token: string, user: TokenUser) {
       this.token = token;

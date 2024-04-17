@@ -34,8 +34,7 @@ export const validDate = (val: string) => {
     // if previous year(s)
     toValidate.year() < today.year() ||
     // if it's same year, but previous month
-    (toValidate.year() === today.year() &&
-      toValidate.month() < today.month()) ||
+    (toValidate.year() === today.year() && toValidate.month() < today.month()) ||
     // if it's same year and month, but previous day
     (toValidate.year() === today.year() &&
       toValidate.month() === today.month() &&

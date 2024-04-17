@@ -15,7 +15,7 @@
             </ClientOnly>
           </v-col>
 
-          <v-col cols="3" offset="2" align-self="center">
+          <v-col v-show="isFeed" cols="3" offset="2" align-self="center">
             <form @submit.prevent="search">
               <v-text-field
                 v-model:model-value="query"
@@ -32,10 +32,24 @@
             </form>
           </v-col>
 
-          <v-col cols="3" offset="3" align-self="center" align="end">
+          <v-col v-show="isFeed" cols="3" align-self="center" align="end">
+            <v-btn
+              v-if="authed && $sessionStore.isOrg"
+              size="small"
+              rounded="md"
+              variant="plain"
+              class="ml-auto btn-contact"
+              @click="$postsStore.openDialog()"
+            >
+              {{ $t("posts.submit") }}
+            </v-btn>
+          </v-col>
+
+          <v-col cols="3" align-self="center" align="end">
             <ClientOnly fallback-tag="span" :fallback="$t('loading')">
-              <v-btn
-                v-if="status === 'authenticated'"
+              <!-- todo: readd when we actually have notifications -->
+              <!-- <v-btn
+                v-if="authed"
                 class="text-none"
                 stacked
                 size="x-small"
@@ -46,7 +60,7 @@
                 </v-badge>
 
                 <v-icon v-else size="x-small"> fa-solid fa-bell </v-icon>
-              </v-btn>
+              </v-btn> -->
 
               <qa-profile-menu />
             </ClientOnly>
@@ -55,12 +69,8 @@
       </template>
     </v-app-bar>
 
-    <v-navigation-drawer
-      v-if="status === 'authenticated'"
-      v-model:model-value="notifsOpen"
-      temporary
-      location="right"
-    >
+    <!-- todo: add when there's messages and stuffs -->
+    <!-- <v-navigation-drawer v-if="authed" v-model:model-value="notifsOpen" temporary location="right">
       <template v-slot:prepend>
         <v-list-item
           v-if="notifications === null"
@@ -80,7 +90,7 @@
           />
         </template>
       </template>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 
     <qa-snackbar />
 
@@ -91,37 +101,47 @@
 </template>
 
 <script setup lang="ts">
-import type { Notification } from "@/types/notification";
+// import type { Notification } from "@/types/notification";
 
-import { getNotifications } from "@/services/notifications.service";
+import { useRoute } from "vue-router";
+// import { getNotifications } from "@/services/notifications.service";
+import { useSessionStore } from "@/stores/session.store";
+import { usePostsStore } from "@/stores/posts.store";
 
 const { status } = useAuth();
+const $sessionStore = useSessionStore();
+const $postsStore = usePostsStore();
+const $route = useRoute();
 
-const notifsOpen = ref(false);
-const notifications = ref<Notification[]>([]);
+// const notifsOpen = ref(false);
+// const notifications = ref<Notification[]>([]);
 const query = ref("");
 
-const notifBadge = computed(() => {
-  if (notifications.value) {
-    return notifications.value.length > 9 ? "9+" : notifications.value.length;
-  }
+const authed = computed(() => status.value === "authenticated");
+const isFeed = computed(() => $route.path === "/");
 
-  return "0";
-});
+// const notifBadge = computed<string>(() => {
+//   if (notifications.value) {
+//     return notifications.value.length > 9 ? "9+" : String(notifications.value.length);
+//   }
 
-watch(
-  () => status,
-  async (status) => {
-    if (status.value === "authenticated") {
-      try {
-        notifications.value = await getNotifications();
-      } catch (err) {
-        notifications.value = [];
-      }
-    }
-  },
-  { immediate: true },
-);
+//   return "0";
+// });
+
+// todo: readd when we actually have something to notify about
+// watch(
+//   () => status,
+//   async () => {
+//     if (authed.value) {
+//       try {
+//         notifications.value = await getNotifications();
+//       } catch (err) {
+//         notifications.value = [];
+//       }
+//     }
+//   },
+//   { immediate: true },
+// );
 
 const search = () => console.log("searching");
 </script>

@@ -88,12 +88,12 @@
       <v-divider />
 
       <v-card-actions class="px-5 d-flex align-center justify-end">
-        <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-          {{ $t("posts.submit") }}
+        <v-btn :disable="submitting" @click="$store.closeDialog()">
+          {{ $t("posts.cancel") }}
         </v-btn>
 
-        <v-btn variant="flat" :disable="submitting" @click="$store.closeDialog()">
-          {{ $t("posts.cancel") }}
+        <v-btn type="submit" variant="flat" color="primary" :loading="submitting" @click="submit">
+          {{ $t("posts.submit") }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -125,7 +125,7 @@ const fetchingLocations = ref(false);
 const noDataText = ref("Escreva para procurar morada");
 
 const form = ref<VForm>();
-const categoryInput = ref<string[]>(["money"]);
+const categoryInput = ref<string[]>([]);
 const helpOptions = ref<SelectOption[]>([
   { title: "Dinheiro", value: "money" },
   { title: "Voluntários", value: "volunteers" },

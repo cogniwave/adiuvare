@@ -3,21 +3,22 @@
     <template #activator="{ props }">
       <form-qa-input
         v-bind="props"
-        v-model="date"
+        :model-value="date"
         placeholder="E.g.: 18/05/2023"
         icon="fa-solid fa-calendar-day"
+        readonly
         :rules="[required, validDate]"
-        :error="errors"
       />
     </template>
 
     <v-date-picker
-      v-model:model-value="proxyDate"
+      :model-value="proxyDate"
       color="primary"
       hide-header
       show-adjacent-months
       style="width: 512px"
       :min="minDate"
+      @update:model-value="onProxyChange"
     >
       <template v-slot:actions>
         <div class="row items-center justify-end q-gutter-sm">
@@ -25,7 +26,7 @@
             {{ $t("posts.cancel") }}
           </v-btn>
 
-          <v-btn color="primary" variant="tonal" @click="onSave">
+          <v-btn color="primary" variant="flat" @click="onSave">
             {{ $t("posts.chooseSchedule") }}
           </v-btn>
         </div>
@@ -42,8 +43,9 @@
 import { ref } from "vue";
 
 import type { ScheduleTime, SpecificSchedule } from "@/types/post";
+import type { Dayjs } from "@/services/dayjs.service";
 
-import dayjs, { Dayjs } from "@/services/dayjs.service";
+import dayjs from "@/services/dayjs.service";
 import { required, validDate } from "@/utils/validators";
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
@@ -54,18 +56,10 @@ const $store = usePostsStore();
 const calendarVisible = ref(false);
 const date = ref("");
 const proxyDate = ref<Dayjs>(dayjs());
-const errors = ref("");
 const times = ref<ScheduleTime[]>([]);
 const d = new Date();
 d.setDate(d.getDate() - 1);
 const minDate = ref(d.toISOString());
-
-// const updateProxy = () => {
-//   if (date.value) {
-//     const [d, m, y] = date.value.split("/");
-//     proxyDate.value = `${y}/${m}/${d}`;
-//   }
-// };
 
 const onSave = () => {
   date.value = proxyDate.value.format("DD/MM/YYYY");
@@ -92,6 +86,11 @@ const onTimesUpdate = (payload: ScheduleTime[]) => {
 
 const onUpdate = (payload: SpecificSchedule) => {
   $store.updatePost("schedule", { type: "recurring", payload });
+};
+
+const onProxyChange = (proxy: Dayjs) => {
+  proxyDate.value = proxy;
+  date.value = proxy.format("DD/MM/YYYY");
 };
 </script>
 
