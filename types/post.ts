@@ -1,5 +1,7 @@
 import { Dayjs } from "dayjs";
 
+import type { UserContact } from "./user";
+
 export type Day =
   | "monday"
   | "tuesday"
@@ -56,6 +58,7 @@ export interface Post extends EmptyPost {
   createdBy: string;
   createdAt: Date;
   createdBySlug: string;
+  contacts: UserContact[];
 }
 
 export interface CreatePostPayload {

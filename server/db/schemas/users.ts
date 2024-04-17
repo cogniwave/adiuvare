@@ -7,8 +7,11 @@ import {
   uniqueIndex,
   boolean,
   varchar,
+  json,
 } from "drizzle-orm/pg-core";
+
 import { posts } from "./posts";
+import type { UserContact } from "~/types/user";
 
 export const users = pgTable(
   "users",
@@ -22,6 +25,7 @@ export const users = pgTable(
     createdAt: timestamp("created_at").notNull().defaultNow(),
     verified: boolean("verified").notNull(),
     token: varchar("token", { length: 128 }),
+    contacts: json("contacts").$type<UserContact[]>(),
   },
   (users) => ({
     email: uniqueIndex("email_idx").on(users.email),

@@ -19,6 +19,7 @@ export const getPosts = async () => {
       schedule: posts.schedule,
       createdAt: posts.createdAt,
       createdBy: users.name,
+      contacts: users.contacts,
     })
     .from(posts)
     .where(eq(posts.state, "visible"))

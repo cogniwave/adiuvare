@@ -141,15 +141,39 @@
           </v-list>
         </v-menu>
 
-        <v-btn
-          variant="outlined"
-          size="small"
-          rounded="md"
-          class="ml-auto btn-contact"
-          @click="onContactClick"
-        >
-          {{ $t("posts.contact") }}
-        </v-btn>
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              variant="outlined"
+              size="small"
+              rounded="md"
+              class="ml-auto btn-contact"
+            >
+              {{ $t("posts.contact") }}
+            </v-btn>
+          </template>
+
+          <v-list density="compact">
+            <template v-for="(c, idx) in post.contacts" :key="idx">
+              <v-list-item v-if="c.type === 'email'" icon="fa-solid fa-phone">
+                <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
+              </v-list-item>
+
+              <v-list-item v-else-if="c.type === 'phone'" icon="fa-solid fa-phone">
+                <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
+              </v-list-item>
+
+              <v-list-item
+                v-else
+                :key="c.contact"
+                icon="fa-solid fa-file-signature"
+                :title="c.contact"
+              >
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
       </v-card-actions>
     </v-card-item>
   </v-card>
@@ -176,7 +200,6 @@ const props = defineProps({
 });
 
 const $router = useRouter();
-const { status } = useAuth();
 const $reportStore = useReportStore();
 const $postsStore = usePostsStore();
 
@@ -206,15 +229,6 @@ const viewAllDesc = () => {
 };
 
 const onLocationClick = () => {};
-
-const onContactClick = () => {
-  if (status.value === "unauthenticated") {
-    return $router.push({
-      path: "/login",
-      query: { return: "/", requireAuth: true },
-    });
-  }
-};
 
 const onReport = () => $reportStore.openDialog(props.post);
 

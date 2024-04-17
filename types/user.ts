@@ -32,3 +32,11 @@ export interface TokenUser {
   slug: string;
   type: UserType;
 }
+
+export type ContactType = "email" | "phone" | "other";
+
+export interface UserContact {
+  label: string;
+  type: ContactType;
+  contact: string;
+}
