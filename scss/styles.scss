@@ -11,6 +11,7 @@ body {
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
+  background: rgb(var(--v-theme-background));
 }
 
 a {
@@ -36,4 +37,27 @@ p {
 
 .v-messages__message {
   text-align: left;
+}
+
+// .v-application {
+//   background: rgb(var(--v-theme-background));
+// }
+
+.v-toolbar {
+  box-shadow: 0px 1px 20px 0px #e8e8e8 !important;
+
+  .v-toolbar__content {
+    .v-toolbar-title {
+      margin-inline-end: 16px;
+    }
+
+    .v-img {
+      cursor: pointer !important;
+    }
+
+    a {
+      color: var(--v-theme-base) !important;
+      text-decoration: none;
+    }
+  }
 }

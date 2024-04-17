@@ -1,11 +1,7 @@
 <template>
-  <v-row no-gutters class="mt-10">
-    <v-col offset="3" cols="6">
-      <qa-feed />
+  <qa-feed />
 
-      <qa-post-dialog v-if="store.dialogRendered" />
-    </v-col>
-  </v-row>
+  <qa-post-dialog v-if="store.dialogRendered" />
 </template>
 
 <script setup lang="ts">
