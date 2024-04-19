@@ -6,9 +6,9 @@
         text-color="white"
         rounded="md"
         label
-        size="x-small"
         variant="text"
-        class="cursor-pointer ml-1 pr-1"
+        class="cursor-pointer ml-2 pr-1"
+        :size="size"
         :prepend-icon="details.icon"
         :color="details.color"
       >
@@ -26,6 +26,7 @@ import type { PostCategory } from "@/types/post";
 
 const props = defineProps({
   need: { type: String as PropType<PostCategory>, required: true },
+  size: { type: String, default: "x-small" },
 });
 
 const { getNeedDetails } = useNeed();

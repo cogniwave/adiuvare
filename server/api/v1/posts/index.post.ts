@@ -12,10 +12,13 @@ export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<CreatePostPayload>(event, {
     title: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
     description: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
-    needs: Joi.array().items(Joi.string().valid(POST_NEEDS)).required().messages({
-      "strings.empty": "errors.empty",
-      "strings.valid": "errors.invalidField",
-    }),
+    needs: Joi.array()
+      .items(Joi.string().valid(...POST_NEEDS))
+      .required()
+      .messages({
+        "strings.empty": "errors.empty",
+        "strings.valid": "errors.invalidField",
+      }),
     locations: Joi.array()
       .items(Joi.string())
       .required()

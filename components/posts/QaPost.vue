@@ -1,182 +1,183 @@
 <template>
-  <v-card flat variant="text" class="post" rounded="xl">
-    <v-card-item>
-      <v-card-title class="d-flex align-start">
-        <v-avatar size="64">
-          <v-img
-            :alt="$t('posts.logoAlt')"
-            src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
-            lazy-src="/assets/post-profile-placeholder.png"
-          >
-            <template v-slot:error>
-              {{ post.createdBy[0] }}
-            </template>
-          </v-img>
-        </v-avatar>
-
-        <div class="text-subtitle ml-3">
-          <nuxt-link :to="`profile/${post.createdBySlug || 'cposas'}`">
-            {{ post.createdBy }}
-          </nuxt-link>
-
-          <span class="text-subtitle-2 d-block">
-            {{ $d(post.createdAt) }}
-          </span>
-        </div>
-
-        <div class="ml-auto d-flex align-end flex-column">
-          <h3 class="mb-0">{{ post.title }}</h3>
-
-          <div style="line-height: 10px">
-            <qa-post-need
-              v-for="need in post.needs"
-              :key="need"
-              :need="need"
-              rounded="md"
-              label
-              size="x-small"
-              variant="text"
-              class="cursor-pointer ml-1 pr-1"
-            />
-          </div>
-        </div>
-      </v-card-title>
-
-      <v-card-text class="mt-5">
-        <v-row>
-          <v-col>
-            {{ desc }}
-
-            <span v-if="descTooLong && !descVisible" class="expand-desc" @click="viewAllDesc">
-              {{ $t("posts.expandDesc") }}
-            </span>
-          </v-col>
-        </v-row>
-      </v-card-text>
-
-      <v-divider />
-
-      <v-card-actions>
-        <v-chip
-          v-for="location in visibleLocations"
-          :key="location"
-          label
-          class="cursor-pointer mr-1"
-          rounded="md"
-          size="small"
-          @click="onLocationClick"
-        >
-          {{ location }}
-        </v-chip>
-
-        <v-menu v-if="leftoverLocations.length" open-on-hover>
-          <template v-slot:activator="{ props }">
-            <span v-bind="props">
-              <v-chip label size="small"> +{{ leftoverLocations.length }} </v-chip>
-            </span>
-          </template>
-
-          <v-list density="compact" class="pt-1 pb-2">
-            <v-list-item v-for="location in leftoverLocations" :key="location" class="pl-2 pr-2">
-              <v-chip label variant="text" class="cursor-pointer mr-1" rounded="md" size="small">
-                {{ location }}
-              </v-chip>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-
-        <v-spacer />
-
-        <!-- post options -->
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" variant="plain" size="x-small" class="mr-2" icon>
-              <v-icon size="x-small">fa-solid fa-ellipsis-vertical</v-icon>
-            </v-btn>
-          </template>
-
-          <v-list density="compact" class="py-2">
-            <template v-if="post.createdBySlug !== user">
-              <!-- edit post -->
-              <v-list-item
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-pencil"
-                :title="$t('posts.options.edit')"
-                @click="onEdit"
-              />
-
-              <!-- enable post -->
-              <v-list-item
-                v-if="post.state === 'hidden'"
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-check-double"
-                :title="$t('posts.options.enable')"
-                @click="$emit('click:state', { enable: true, title: post.title, id: post.id })"
-              />
-
-              <!-- disable post -->
-              <v-list-item
-                v-else
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-ban"
-                :title="$t('posts.options.disable')"
-                @click="$emit('click:state', { enable: false, title: post.title, id: post.id })"
-              />
-
-              <v-list-item
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-trash"
-                :title="$t('posts.options.delete')"
-                @click="$emit('click:delete', post)"
-              />
-            </template>
-
-            <v-list-item
-              v-else
-              class="pl-2 pr-2"
-              prepend-icon="fa-solid fa-bullhorn"
-              :title="$t('posts.options.report')"
-              @click="onReport"
-            />
-          </v-list>
-        </v-menu>
-
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              variant="outlined"
-              size="small"
-              rounded="md"
-              class="ml-auto btn-contact"
+  <nuxt-link :to="`posts/${post.slug}`">
+    <!-- click event just to give it the nice ripple and hover effect xD -->
+    <v-card flat variant="text" class="post" rounded="xl" @click="() => {}">
+      <v-card-item>
+        <v-card-title class="d-flex align-start">
+          <v-avatar size="64">
+            <v-img
+              :alt="$t('posts.logoAlt')"
+              src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
+              lazy-src="/assets/post-profile-placeholder.png"
             >
-              {{ $t("posts.contact") }}
-            </v-btn>
-          </template>
+              <template v-slot:error>
+                {{ post.createdBy[0] }}
+              </template>
+            </v-img>
+          </v-avatar>
 
-          <v-list density="compact">
-            <template v-for="(c, idx) in post.contacts" :key="idx">
-              <v-list-item v-if="c.type === 'email'" icon="fa-solid fa-phone">
-                <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
-              </v-list-item>
+          <div class="text-subtitle ml-3">
+            <nuxt-link :to="`profile/${post.createdBySlug || 'cposas'}`" @click.stop>
+              {{ post.createdBy }}
+            </nuxt-link>
 
-              <v-list-item v-else-if="c.type === 'phone'" icon="fa-solid fa-phone">
-                <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
+            <span class="text-subtitle-2 d-block">
+              {{ $d(post.createdAt) }}
+            </span>
+          </div>
+
+          <div class="ml-auto d-flex align-end flex-column">
+            <h3 class="mb-0">{{ post.title }}</h3>
+
+            <div style="line-height: 10px">
+              <qa-post-need v-for="need in post.needs" :key="need" :need="need" />
+            </div>
+          </div>
+        </v-card-title>
+
+        <v-card-text class="mt-5">
+          <v-row>
+            <v-col>
+              {{ desc }}
+
+              <span v-if="descTooLong && !descVisible" class="expand-desc" @click="viewAllDesc">
+                {{ $t("posts.expandDesc") }}
+              </span>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+        <v-divider />
+
+        <v-card-actions>
+          <v-chip
+            v-for="location in visibleLocations"
+            :key="location"
+            label
+            class="cursor-pointer mr-1"
+            rounded="md"
+            size="small"
+            @click="onLocationClick"
+          >
+            {{ location }}
+          </v-chip>
+
+          <v-menu v-if="leftoverLocations.length" open-on-hover>
+            <template v-slot:activator="{ props }">
+              <span v-bind="props">
+                <v-chip label size="small"> +{{ leftoverLocations.length }} </v-chip>
+              </span>
+            </template>
+
+            <v-list density="compact" class="pt-1 pb-2">
+              <v-list-item v-for="location in leftoverLocations" :key="location" class="pl-2 pr-2">
+                <v-chip label variant="text" class="cursor-pointer mr-1" rounded="md" size="small">
+                  {{ location }}
+                </v-chip>
               </v-list-item>
+            </v-list>
+          </v-menu>
+
+          <v-spacer />
+
+          <!-- post options -->
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                variant="plain"
+                size="x-small"
+                class="mr-2"
+                icon
+                @click.stop.prevent
+              >
+                <v-icon size="x-small">fa-solid fa-ellipsis-vertical</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list density="compact" class="py-2">
+              <template v-if="post.createdBySlug !== user">
+                <!-- edit post -->
+                <v-list-item
+                  class="pl-2 pr-2"
+                  prepend-icon="fa-solid fa-pencil"
+                  :title="$t('posts.options.edit')"
+                  @click.stop.prevent="openPost()"
+                />
+
+                <!-- enable post -->
+                <v-list-item
+                  v-if="post.state === 'hidden'"
+                  class="pl-2 pr-2"
+                  prepend-icon="fa-solid fa-check-double"
+                  :title="$t('posts.options.enable')"
+                  @click="$emit('click:state', { enable: true, title: post.title, id: post.id })"
+                />
+
+                <!-- disable post -->
+                <v-list-item
+                  v-else
+                  class="pl-2 pr-2"
+                  prepend-icon="fa-solid fa-ban"
+                  :title="$t('posts.options.disable')"
+                  @click="$emit('click:state', { enable: false, title: post.title, id: post.id })"
+                />
+
+                <v-list-item
+                  class="pl-2 pr-2"
+                  prepend-icon="fa-solid fa-trash"
+                  :title="$t('posts.options.delete')"
+                  @click="$emit('click:delete', post)"
+                />
+              </template>
 
               <v-list-item
-                v-else
-                :key="c.contact"
-                icon="fa-solid fa-file-signature"
-                :title="c.contact"
+                class="pl-2 pr-2"
+                prepend-icon="fa-solid fa-bullhorn"
+                :title="$t('posts.options.report')"
+                @click="onReport"
+              />
+            </v-list>
+          </v-menu>
+
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                variant="outlined"
+                size="small"
+                rounded="md"
+                class="ml-auto btn-contact"
+                @click.stop.prevent
               >
-              </v-list-item>
+                {{ $t("posts.contact") }}
+              </v-btn>
             </template>
-          </v-list>
-        </v-menu>
-      </v-card-actions>
-    </v-card-item>
-  </v-card>
+
+            <v-list density="compact">
+              <template v-for="(c, idx) in post.contacts" :key="idx">
+                <v-list-item v-if="c.type === 'email'" icon="fa-solid fa-phone">
+                  <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
+                </v-list-item>
+
+                <v-list-item v-else-if="c.type === 'phone'" icon="fa-solid fa-phone">
+                  <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
+                </v-list-item>
+
+                <v-list-item
+                  v-else
+                  :key="c.contact"
+                  icon="fa-solid fa-file-signature"
+                  :title="c.contact"
+                >
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-menu>
+        </v-card-actions>
+      </v-card-item>
+    </v-card>
+  </nuxt-link>
 </template>
 
 <script setup lang="ts">
@@ -232,15 +233,19 @@ const onLocationClick = () => {};
 
 const onReport = () => $reportStore.openDialog(props.post);
 
-const onEdit = () => {
+const openPost = () => {
   $postsStore.setPost(props.post);
-  $router.push(`posts/${props.post.id}`);
+  $router.push(`posts/${props.post.slug}/edit`);
 };
 </script>
 
 <style scoped lang="scss">
 .post {
   background-color: rgb(var(--v-theme-surface));
+
+  // &:hover {
+  //   background-color: rgba(var(--v-theme-accent), 0.01);
+  // }
 
   :deep(.v-img__error) {
     color: rgb(var(--v-theme-primary));

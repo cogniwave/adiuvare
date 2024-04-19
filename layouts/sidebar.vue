@@ -8,7 +8,25 @@
     <qa-snackbar />
 
     <v-main>
-      <slot />
+      <v-row no-gutters class="py-10">
+        <v-col cols="2">
+          <v-list>
+            <v-list-item :title="$t('menu.home')" to="/"></v-list-item>
+            <v-list-item :title="$t('menu.orgs')" to="/organizations"></v-list-item>
+            <v-list-item :title="$t('menu.posts')" to="/organizations/:id"></v-list-item>
+          </v-list>
+        </v-col>
+
+        <v-col offset="1" cols="6">
+          <slot />
+        </v-col>
+      </v-row>
     </v-main>
   </v-layout>
 </template>
+
+<style scoped>
+.v-list {
+  background: transparent;
+}
+</style>

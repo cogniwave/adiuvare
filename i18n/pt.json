@@ -70,7 +70,8 @@
           "sundayShort": "D"
         },
         "addRecurring": "Remover horário",
-        "removeRecurring": "Adicionar outro horário"
+        "removeRecurring": "Adicionar outro horário",
+        "anytimeBreakdown": "sads"
       }
     },
 
@@ -132,7 +133,7 @@
       "otherDescription": "É necessário uma outra ajuda especifica"
     },
     "report": {
-      "title": "Reportar publicação {0}",
+      "title": "Reportar publicação",
       "description": "Por favor diga-nos porque está a reportar esta publicação. A nossa equipa irá avaliar e se de facto a publicação vai contra as regras da plataforma, e se for será removida. Iremos utilizar o seu email para o atualizar do processo ou entrar em contacto se necessário mais informações",
       "submit": "Reportar",
       "cancel": "Cancelar",
@@ -164,5 +165,11 @@
 
   "filter": {
     "placeholder": "Pesquise por zona, necessidade, organização, ..."
+  },
+
+  "menu": {
+    "home": "Início",
+    "orgs": "Organizações",
+    "posts": "Publicações"
   }
 }

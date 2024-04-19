@@ -54,10 +54,12 @@ export type PostState = "pending" | "visible" | "hidden" | "unapproved";
 
 export interface Post extends EmptyPost {
   id: string;
+  logo: string;
   state: PostState;
   createdBy: string;
   createdAt: Date;
   createdBySlug: string;
+  slug: string;
   contacts: UserContact[];
 }
 

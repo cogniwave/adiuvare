@@ -87,7 +87,7 @@
 
       <v-divider />
 
-      <v-card-actions class="px-5 d-flex align-center justify-end">
+      <v-card-actions class="pa-5 d-flex align-center justify-end">
         <v-btn :disable="submitting" @click="$store.closeDialog()">
           {{ $t("posts.cancel") }}
         </v-btn>

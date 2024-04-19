@@ -6,27 +6,12 @@
     @update:model-value="$store.toggleDialog(false)"
   >
     <v-card>
-      <v-card-title class="bg-primary">
-        <i18n-t
-          scope="global"
-          keypath="posts.report.title"
-          tag="h2"
-          class="text-h5 text-white my-1"
-          for="posts.report.title"
-        >
-          <i>{{ shortenText($store.post.title, 50) }}</i>
-        </i18n-t>
-      </v-card-title>
+      <v-card-title class="bg-primary" :title="$t('posts.report.title')" />
 
       <v-card-text>
         <p v-html="$t('posts.report.description')" />
 
-        <v-form
-          ref="form"
-          class="px-4 pt-4"
-          validate-on="submit lazy"
-          @submit.prevent="submit"
-        >
+        <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
           <!-- email -->
           <form-qa-input
             v-model:model-value="email"
@@ -55,21 +40,11 @@
       <v-divider />
 
       <v-card-actions class="px-5 d-flex align-center justify-end">
-        <v-btn
-          variant="flat"
-          :disable="submitting"
-          @click="$store.toggleDialog(false)"
-        >
+        <v-btn color="primary" :disable="submitting" @click="$store.toggleDialog(false)">
           {{ $t("posts.report.cancel") }}
         </v-btn>
 
-        <v-btn
-          type="submit"
-          variant="tonal"
-          color="primary"
-          :loading="submitting"
-          @click="submit"
-        >
+        <v-btn type="submit" :loading="submitting" @click="submit">
           {{ $t("posts.report.submit") }}
         </v-btn>
       </v-card-actions>

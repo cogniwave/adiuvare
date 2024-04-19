@@ -5,7 +5,7 @@
         <v-col cols="1">
           <ClientOnly fallback-tag="img">
             <v-img
-              src="../../assets/logo.png"
+              src="/assets/logo.png"
               aspect-ratio="1"
               width="48px"
               eager

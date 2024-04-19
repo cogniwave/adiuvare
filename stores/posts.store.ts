@@ -15,6 +15,7 @@ import {
   getTotalPosts,
   disablePost,
   deletePost,
+  getPostBySlug,
 } from "@/services/posts.service";
 import { ValidationError } from "@/exceptions";
 
@@ -43,7 +44,9 @@ const DEFAULT_POST: EmptyPost = {
 export const usePostsStore = defineStore("posts", {
   state: (): PostState => ({
     posts: [],
-    post: { ...DEFAULT_POST } as Post,
+    // @ts-expect-error starts as null but cba to type like as nullable because then will
+    // always need to null check and its unnecessary
+    post: null,
     loading: true,
     dialogVisible: true,
     dialogRendered: false,
@@ -96,7 +99,7 @@ export const usePostsStore = defineStore("posts", {
           return;
         }
 
-        console.log(err);
+        throw err;
       }
     },
 
@@ -131,6 +134,16 @@ export const usePostsStore = defineStore("posts", {
       await deletePost(id);
 
       this.posts = this.posts.filter((p) => p.id !== id);
+    },
+
+    async getPostBySlug(slug: string) {
+      this.loading = true;
+
+      try {
+        this.post = await getPostBySlug(slug);
+      } finally {
+        this.loading = false;
+      }
     },
   },
 });

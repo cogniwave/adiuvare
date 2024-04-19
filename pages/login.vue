@@ -1,62 +1,58 @@
 <template>
-  <v-row align-content="center" no-gutters>
-    <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
-      <v-card class="shadow-24 pb-3 bg-white">
-        <v-card-title class="bg-primary">
-          <h2 class="text-h5 text-white">{{ $t("login.title") }}</h2>
-        </v-card-title>
+  <v-card class="shadow-24 pb-3 bg-white">
+    <v-card-title class="bg-primary">
+      <h2 class="text-h5 text-white">{{ $t("login.title") }}</h2>
+    </v-card-title>
 
-        <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
-          <v-card-text>
-            <form-qa-input
-              v-model:model-value="email"
-              type="email"
-              icon="fa-solid fa-at"
-              :label="$t('form.name')"
-              :rules="[required, isEmail]"
-              :error="errors.email"
-            />
+    <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
+      <v-card-text>
+        <form-qa-input
+          v-model:model-value="email"
+          type="email"
+          icon="fa-solid fa-at"
+          :label="$t('form.name')"
+          :rules="[required, isEmail]"
+          :error="errors.email"
+        />
 
-            <form-qa-input
-              v-model:model-value="password"
-              icon="fa-solid fa-lock"
-              class="mt-3"
-              autocorrect="off"
-              autocapitalize="off"
-              autocomplete="off"
-              spellcheck="false"
-              :label="$t('form.password')"
-              :type="passwordFieldType"
-              :rules="[required, isValidPassword]"
-              :error="errors.password"
-            >
-              <template v-slot:append>
-                <v-icon class="cursor-pointer" @click="switchVisibility">
-                  fa-solid fa-{{ visibilityIcon }}
-                </v-icon>
-              </template>
-            </form-qa-input>
-          </v-card-text>
+        <form-qa-input
+          v-model:model-value="password"
+          icon="fa-solid fa-lock"
+          class="mt-3"
+          autocorrect="off"
+          autocapitalize="off"
+          autocomplete="off"
+          spellcheck="false"
+          :label="$t('form.password')"
+          :type="passwordFieldType"
+          :rules="[required, isValidPassword]"
+          :error="errors.password"
+        >
+          <template v-slot:append>
+            <v-icon class="cursor-pointer" @click="switchVisibility">
+              fa-solid fa-{{ visibilityIcon }}
+            </v-icon>
+          </template>
+        </form-qa-input>
+      </v-card-text>
 
-          <v-card-actions class="px-5 d-flex align-center justify-end">
-            <nuxt-link to="register" class="text-blue-grey">
-              {{ $t("register.link") }}
-            </nuxt-link>
+      <v-card-actions class="px-5 d-flex align-center justify-end">
+        <nuxt-link to="register" class="text-blue-grey">
+          {{ $t("register.link") }}
+        </nuxt-link>
 
-            <span class="text-blue-grey mx-2">| </span>
+        <span class="text-blue-grey mx-2">| </span>
 
-            <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
-              {{ $t("reset.link") }}
-            </nuxt-link>
+        <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
+          {{ $t("reset.link") }}
+        </nuxt-link>
 
-            <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-              {{ $t("login.title") }}
-            </v-btn>
-          </v-card-actions>
-        </v-form>
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+          {{ $t("login.title") }}
+        </v-btn>
+      </v-card-actions>
+    </v-form>
+  </v-card>
 </template>
 
 <script setup lang="ts">

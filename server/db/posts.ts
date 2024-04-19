@@ -18,7 +18,8 @@ export const getPosts = async () => {
       needs: posts.needs,
       schedule: posts.schedule,
       createdAt: posts.createdAt,
-      createdBy: users.name,
+      slug: posts.slug,
+      createdBy: users.slug,
       contacts: users.contacts,
     })
     .from(posts)
@@ -97,6 +98,28 @@ export const getPostByOwner = async (postId: string, userId: string) => {
     .select({ createdBy: users.name })
     .from(posts)
     .where(and(eq(posts.id, postId), eq(posts.createdUserId, userId)))
+    .limit(1);
+
+  return result.length === 1 ? result[0] : null;
+};
+
+export const getPostBySlug = async (slug: string) => {
+  const result = await db
+    .select({
+      id: posts.id,
+      title: posts.title,
+      description: posts.description,
+      locations: posts.locations,
+      needs: posts.needs,
+      schedule: posts.schedule,
+      createdAt: posts.createdAt,
+      slug: posts.slug,
+      createdBy: users.slug,
+      contacts: users.contacts,
+    })
+    .from(posts)
+    .where(and(eq(posts.slug, slug)))
+    .innerJoin(users, eq(posts.createdUserId, users.id))
     .limit(1);
 
   return result.length === 1 ? result[0] : null;

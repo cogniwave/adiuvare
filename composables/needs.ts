@@ -33,7 +33,7 @@ export const useNeed = () => {
         description: "posts.needs.volunteersDescription",
       },
       other: {
-        icon: "fa-solid circle-question",
+        icon: "fa-solid fa-circle-question",
         color: "orange",
         label: "posts.needs.other",
         description: "posts.needs.otherDescription",

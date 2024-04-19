@@ -26,3 +26,7 @@ export const disablePost = (id: string) => updatePost(id, { action: "disable" })
 export const deletePost = (id: string) => {
   return $fetch<Post>(`/api/v1/posts/${id}`, { method: "delete" });
 };
+
+export const getPostBySlug = (slug: string) => {
+  return $fetch<Post>(`/api/v1/posts/${slug}`, { method: "get" });
+};

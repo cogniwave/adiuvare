@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center"
-  >
+  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
     <h1>ca tas tu {{ $store.user }}</h1>
   </div>
 </template>
