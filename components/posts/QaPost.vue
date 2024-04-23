@@ -132,6 +132,7 @@
               </template>
 
               <v-list-item
+                v-else
                 class="pl-2 pr-2"
                 prepend-icon="fa-solid fa-bullhorn"
                 :title="$t('posts.options.report')"

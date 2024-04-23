@@ -6,7 +6,9 @@
     @update:model-value="$store.toggleDialog(false)"
   >
     <v-card>
-      <v-card-title class="bg-primary" :title="$t('posts.report.title')" />
+      <v-card-title class="bg-primary">
+        {{ $t("posts.report.title") }}
+      </v-card-title>
 
       <v-card-text>
         <p v-html="$t('posts.report.description')" />
