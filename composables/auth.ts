@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import type { LoginPayload, TokenUser } from "@/types/user";
 import sessionService from "@/services/session.service";
 
-const REFRESH_INTERVAL = 240; // 4 minutes, 1 less than token duration
+const REFRESH_INTERVAL = 240000; // 4 minutes, 1 less than token duration
 
 let interval: NodeJS.Timeout | null = null;
 
@@ -36,10 +36,11 @@ export const useAuth = () => {
 
   onMounted(() => {
     // When the page is cached on a server, set the token on the client
+    console.log(_accessTokenCookie.value, token.value);
     if (_accessTokenCookie.value && !token.value) {
       token.value = _accessTokenCookie.value;
       refreshToken.value = _refreshTokenCookie.value;
-
+    } else if (token.value) {
       const storageUser = localStorage.getItem("user");
 
       if (!storageUser) {
