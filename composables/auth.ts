@@ -17,12 +17,16 @@ export const useAuth = () => {
     default: () => null,
     maxAge: 300,
     sameSite: "strict",
+    httpOnly: true,
+    secure: true,
   });
 
   const _refreshTokenCookie = useCookie<string | null>("auth:access", {
     default: () => null,
     maxAge: 300,
     sameSite: "strict",
+    httpOnly: true,
+    secure: true,
   });
 
   const data = useState<TokenUser | undefined | null>("auth:data", () => undefined);
@@ -34,12 +38,16 @@ export const useAuth = () => {
 
   const refreshToken = useState("auth:refresh", () => _refreshTokenCookie.value);
 
-  onMounted(() => {
+  onMounted(async () => {
     // When the page is cached on a server, set the token on the client
     if (_accessTokenCookie.value && !token.value) {
       token.value = _accessTokenCookie.value;
       refreshToken.value = _refreshTokenCookie.value;
-    } else if (token.value) {
+    } else if (_refreshTokenCookie.value && !refreshToken.value) {
+      await refresh();
+    }
+
+    if (token.value) {
       const storageUser = localStorage.getItem("user");
 
       if (!storageUser) {
@@ -49,8 +57,6 @@ export const useAuth = () => {
       const user: TokenUser = JSON.parse(storageUser);
 
       data.value = user;
-
-      console.log("aqui");
 
       // refresh token every REFRESH_INTERVAL
       interval = setInterval(refresh, REFRESH_INTERVAL);
