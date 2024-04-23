@@ -20,8 +20,14 @@ export default eventHandler(async (event) => {
     });
   }
 
-  return {
-    accessToken: signToken(user, "access"),
-    refreshToken: signToken(user, "refresh"),
-  };
+  const accessToken = signToken(user, "access");
+
+  setCookie(event, "auth:access", accessToken, {
+    maxAge: 300, // 5 minutes
+    sameSite: "strict",
+    httpOnly: true,
+    secure: true,
+  });
+
+  return accessToken;
 });

@@ -1,4 +1,4 @@
-import type { LoginPayload, LoginResult, RefreshResult } from "@/types/user";
+import type { LoginPayload, LoginResult } from "@/types/user";
 
 const login = async (body: LoginPayload) => {
   return await $fetch<LoginResult>("/api/v1/auth/login", {
@@ -8,7 +8,7 @@ const login = async (body: LoginPayload) => {
 };
 
 const refresh = async (refreshToken: string) => {
-  return await $fetch<RefreshResult>("/api/v1/auth/refresh", {
+  return await $fetch<string>("/api/v1/auth/refresh", {
     method: "post",
     body: { token: refreshToken },
   });

@@ -41,11 +41,8 @@ export interface UserContact {
   contact: string;
 }
 
-export interface RefreshResult {
+export interface LoginResult {
+  user: TokenUser;
   accessToken: string;
   refreshToken: string;
-}
-
-export interface LoginResult extends RefreshResult {
-  user: TokenUser;
 }

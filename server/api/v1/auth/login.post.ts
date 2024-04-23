@@ -41,12 +41,14 @@ export default defineEventHandler(async (event) => {
       maxAge: 300, // 5 minutes
       sameSite: "strict",
       httpOnly: true,
+      secure: true,
     });
 
     setCookie(event, "auth:refresh", refreshToken, {
       maxAge: 21600, // 6 hours
       sameSite: "strict",
       httpOnly: true,
+      secure: true,
     });
 
     return { user, accessToken, refreshToken };

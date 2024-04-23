@@ -26,16 +26,10 @@ export default defineEventHandler(async (event) => {
     schedule: Joi.object().required().messages({ "strings.empty": "errors.empty" }),
   });
 
-  const token = event.headers.get("Authorization");
-
-  if (!token) {
-    throw createError({ statusCode: 403, message: "Unauthorized" });
-  }
-
   // validate and add token to event
   try {
-    const tkn = validateToken(token.split("Bearer ")[1]);
-    const user = await getUser(tkn.email, [], { id: users.id });
+    const tknUser = validateToken(event);
+    const user = await getUser(tknUser.email, [], { id: users.id });
 
     if (!user) {
       throw createError({ statusCode: 403, message: "User not found" });

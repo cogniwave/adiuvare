@@ -50,12 +50,7 @@ export const useAuth = () => {
 
       data.value = user;
 
-      const apiFetch = $fetch.create({
-        baseURL: process.env.APP_BASE_URL,
-        headers: { Authorization: `Bearer ${token.value}` },
-      });
-
-      globalThis.$fetch = apiFetch;
+      console.log("aqui");
 
       // refresh token every REFRESH_INTERVAL
       interval = setInterval(refresh, REFRESH_INTERVAL);
@@ -88,10 +83,9 @@ export const useAuth = () => {
     }
 
     try {
-      const result = await sessionService.refresh(refreshToken.value);
+      const accesToken = await sessionService.refresh(refreshToken.value);
 
-      token.value = result.accessToken;
-      refreshToken.value = result.refreshToken;
+      token.value = accesToken;
 
       return true;
     } catch (err) {
@@ -112,13 +106,6 @@ export const useAuth = () => {
     localStorage.setItem("user", JSON.stringify(result.user));
 
     $router.replace("/");
-
-    const apiFetch = $fetch.create({
-      baseURL: process.env.APP_BASE_URL,
-      headers: { Authorization: `Bearer ${token.value}` },
-    });
-
-    globalThis.$fetch = apiFetch;
   };
 
   // make request to logout, update tokens

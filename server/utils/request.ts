@@ -4,13 +4,7 @@ import type { H3Event, EventHandlerRequest } from "h3";
 // make this a separate function to call on functions where we need to get current logged user
 // this could be a middleware but we wouldn't use it in every request so it'd be wasted time
 export const getSessionUser = (event: H3Event<EventHandlerRequest>) => {
-  const token = event.headers.get("Authorization");
-
-  if (!token) {
-    throw createError({ statusCode: 403, message: "Token not found" });
-  }
-
-  const user = validateToken(token.split("Bearer ")[1]);
+  const user = validateToken(event);
 
   if (!user) {
     throw createError({ statusCode: 403, message: "User not found" });
