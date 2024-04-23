@@ -36,7 +36,6 @@ export const useAuth = () => {
 
   onMounted(() => {
     // When the page is cached on a server, set the token on the client
-    console.log(_accessTokenCookie.value, token.value);
     if (_accessTokenCookie.value && !token.value) {
       token.value = _accessTokenCookie.value;
       refreshToken.value = _refreshTokenCookie.value;

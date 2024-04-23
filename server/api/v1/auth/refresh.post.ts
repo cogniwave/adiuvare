@@ -5,13 +5,13 @@ import { signToken, validateToken } from "~/server/utils/token";
 import { getValidatedInput } from "~/server/utils/request";
 
 export default eventHandler(async (event) => {
-  const body = await getValidatedInput<{ refreshToken: string }>(event, {
-    refreshToken: Joi.string().required().messages({ "strings.empty": "errors.emptyRefreshToken" }),
+  const body = await getValidatedInput<{ token: string }>(event, {
+    token: Joi.string().required().messages({ "strings.empty": "errors.emptyRefreshToken" }),
   });
 
   // todo: since refresh happens slightly before access token expires,
   // we need to invalidate previous access token as well.
-  const user = validateToken(body.refreshToken);
+  const user = validateToken(body.token);
 
   if (!user) {
     throw createError({
