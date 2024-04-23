@@ -9,6 +9,8 @@ export default eventHandler(async (event) => {
     refreshToken: Joi.string().required().messages({ "strings.empty": "errors.emptyRefreshToken" }),
   });
 
+  // todo: since refresh happens slightly before access token expires,
+  // we need to invalidate previous access token as well.
   const user = validateToken(body.refreshToken);
 
   if (!user) {
@@ -19,9 +21,7 @@ export default eventHandler(async (event) => {
   }
 
   return {
-    token: {
-      accessToken: signToken(user, "access"),
-      refreshToken: signToken(user, "refresh"),
-    },
+    accessToken: signToken(user, "access"),
+    refreshToken: signToken(user, "refresh"),
   };
 });

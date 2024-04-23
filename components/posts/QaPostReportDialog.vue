@@ -18,7 +18,7 @@
             class="mb-5"
             type="email"
             icon="fa-solid fa-at"
-            :readonly="status === 'authenticated'"
+            :readonly="loggedIn"
             :label="$t('form.report.email')"
             :placeholder="$t('form.report.emailPlaceholder')"
             :rules="[required, isEmail]"
@@ -65,11 +65,11 @@ import { useNotifyStore } from "@/stores/notify.store";
 const $store = useReportStore();
 const $notifyStore = useNotifyStore();
 const { errors, handleErrors, clearErrors } = useFormErrors();
-const { data, status } = useAuth();
+const { data, loggedIn } = useAuth();
 const { t } = useI18n();
 
 const reason = ref("");
-const email = ref(data.value.email || "");
+const email = ref(data.value?.email || "");
 
 const submitting = ref(false);
 const form = ref<VForm>();
@@ -84,7 +84,7 @@ watch(
     clearErrors();
 
     reason.value = "";
-    email.value = data.value.email || "";
+    email.value = data.value?.email || "";
   },
 );
 

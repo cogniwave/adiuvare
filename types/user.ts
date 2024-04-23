@@ -40,3 +40,12 @@ export interface UserContact {
   type: ContactType;
   contact: string;
 }
+
+export interface RefreshResult {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface LoginResult extends RefreshResult {
+  user: TokenUser;
+}

@@ -34,12 +34,22 @@ export default defineEventHandler(async (event) => {
   try {
     const user = await login(body);
 
-    return {
-      token: {
-        accessToken: signToken(user, "access"),
-        refreshToken: signToken(user, "refresh"),
-      },
-    };
+    const accessToken = signToken(user, "access");
+    const refreshToken = signToken(user, "refresh");
+
+    setCookie(event, "auth:access", accessToken, {
+      maxAge: 300, // 5 minutes
+      sameSite: "strict",
+      httpOnly: true,
+    });
+
+    setCookie(event, "auth:refresh", refreshToken, {
+      maxAge: 21600, // 6 hours
+      sameSite: "strict",
+      httpOnly: true,
+    });
+
+    return { user, accessToken, refreshToken };
   } catch (err) {
     console.log(err);
     throw createError(err as any);

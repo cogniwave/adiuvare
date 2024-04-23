@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-if="authed"
+    v-if="loggedIn"
     v-model:model-value="$notifStore.visible"
     temporary
     location="right"
@@ -33,14 +33,12 @@
 <script lang="ts" setup>
 import { useNotificationsStore } from "@/stores/notifications.store";
 
-const { status } = useAuth();
+const { loggedIn } = useAuth();
 const $notifStore = useNotificationsStore();
-
-const authed = computed(() => status.value === "authenticated");
 
 watch(
   () => status,
-  () => authed.value && $notifStore.getNotifications(),
+  () => loggedIn.value && $notifStore.getNotifications(),
   { immediate: true },
 );
 </script>

@@ -36,7 +36,7 @@
         <ClientOnly fallback-tag="div">
           <v-col v-show="isFeed" cols="3" align-self="center" align="end">
             <v-btn
-              v-if="authed && $sessionStore.isOrg"
+              v-if="loggedIn && isOrg"
               size="small"
               rounded="md"
               variant="plain"
@@ -79,20 +79,18 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router";
-import { useSessionStore } from "@/stores/session.store";
 import { usePostsStore } from "@/stores/posts.store";
 // import { useNotificationsStore } from "@/stores/notifications.store";
 
-const { status } = useAuth();
-const $sessionStore = useSessionStore();
+const { loggedIn, data } = useAuth();
 const $postsStore = usePostsStore();
 // const $notifStore = useNotificationsStore();
 const $route = useRoute();
 
 const query = ref("");
 
-const authed = computed(() => status.value === "authenticated");
 const isFeed = computed(() => $route.path === "/");
+const isOrg = computed(() => data.value?.type === "org");
 
 const search = () => console.log("searching");
 </script>

@@ -18,17 +18,13 @@
     </v-virtual-scroll>
 
     <!-- there aren't enough posts to show pagination -->
-    <v-pagination
-      v-if="$store.totalPosts > PER_PAGE"
-      v-model="page"
-      length="5"
-    />
+    <v-pagination v-if="$store.totalPosts > PER_PAGE" v-model="page" length="5" />
   </template>
 </template>
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router";
-import { useSessionStore } from "@/stores/session.store";
+import { usePostsStore } from "@/stores/posts.store";
 
 definePageMeta({
   path: "/profile/:slug",
@@ -36,13 +32,13 @@ definePageMeta({
 });
 
 const $route = useRoute();
-const $store = useSessionStore();
+const $store = usePostsStore();
 const { data } = useAuth();
 
 const canEdit = ref(false);
 
 onBeforeMount(() => {
-  if ($route.params.slug === data.value.slug) {
+  if ($route.params.slug === data.value?.slug) {
     canEdit.value = true;
   }
 });

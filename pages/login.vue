@@ -47,7 +47,7 @@
           {{ $t("reset.link") }}
         </nuxt-link>
 
-        <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+        <v-btn type="submit" color="primary" :loading="submitting">
           {{ $t("login.title") }}
         </v-btn>
       </v-card-actions>
@@ -63,7 +63,6 @@ import type { VForm } from "vuetify/lib/components/index.mjs";
 import { required, isEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 import { useNotifyStore } from "@/stores/notify.store";
-import { useSessionStore } from "@/stores/session.store";
 
 definePageMeta({
   auth: {
@@ -84,11 +83,10 @@ const submitting = ref<boolean>(false);
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const $notifyStore = useNotifyStore();
-const $sessionStore = useSessionStore();
 const $route = useRoute();
 const $router = useRouter();
 const { t } = useI18n();
-const { signIn, data, token } = useAuth();
+const { login } = useAuth();
 
 onMounted(() => {
   if ($route.query?.requireAuth) {
@@ -120,28 +118,22 @@ const submit = async () => {
     return;
   }
 
-  if (!(await form.value.validate())) {
+  if (!(await form.value.validate()).valid) {
     return;
   }
 
   clearErrors();
   submitting.value = true;
 
-  signIn({ email: email.value, password: password.value }, { redirect: false })
-    .then(() => {
-      $sessionStore.init(token.value as string, data.value);
+  login({ email: email.value, password: password.value }).catch((errs) => {
+    if (errs.statusCode === 401) {
+      $notifyStore.notifyError("Email ou palavra-passe errados");
+    } else {
+      handleErrors(errs);
+    }
 
-      $router.replace($route.query?.return || "/");
-    })
-    .catch((errs) => {
-      if (errs.statusCode === 401) {
-        $notifyStore.notifyError("Email ou palavra-passe errados");
-      } else {
-        handleErrors(errs);
-      }
-
-      submitting.value = false;
-    });
+    submitting.value = false;
+  });
 };
 </script>
 
