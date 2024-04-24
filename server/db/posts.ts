@@ -21,6 +21,7 @@ export const getPosts = async () => {
       slug: posts.slug,
       createdBy: users.slug,
       contacts: users.contacts,
+      createdBySlug: users.slug,
     })
     .from(posts)
     .where(eq(posts.state, "visible"))

@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link :to="`posts/${post.slug}`">
+  <nuxt-link :to="`/posts/${post.slug}`">
     <!-- click event just to give it the nice ripple and hover effect xD -->
     <v-card flat variant="text" class="post mb-3" rounded="xl" @click="() => {}">
       <v-card-item>
@@ -17,7 +17,7 @@
           </v-avatar>
 
           <div class="text-subtitle ml-3">
-            <nuxt-link :to="`profile/${post.createdBySlug || 'cposas'}`" @click.stop>
+            <nuxt-link :to="`/profile/${post.createdBySlug}`" @click.stop>
               {{ post.createdBy }}
             </nuxt-link>
 
