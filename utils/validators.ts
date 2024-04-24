@@ -30,18 +30,5 @@ export const validDate = (val: string) => {
 
   const today = dayjs();
 
-  if (
-    // if previous year(s)
-    toValidate.year() < today.year() ||
-    // if it's same year, but previous month
-    (toValidate.year() === today.year() && toValidate.month() < today.month()) ||
-    // if it's same year and month, but previous day
-    (toValidate.year() === today.year() &&
-      toValidate.month() === today.month() &&
-      toValidate.day() < today.day())
-  ) {
-    return "Data não pode ser inferior a hoje";
-  }
-
-  return true;
+  return toValidate.isBefore(today) ? "Data não pode ser inferior a hoje" : true;
 };

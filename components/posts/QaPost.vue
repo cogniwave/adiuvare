@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="`posts/${post.slug}`">
     <!-- click event just to give it the nice ripple and hover effect xD -->
-    <v-card flat variant="text" class="post" rounded="xl" @click="() => {}">
+    <v-card flat variant="text" class="post mb-3" rounded="xl" @click="() => {}">
       <v-card-item>
         <v-card-title class="d-flex align-start">
           <v-avatar size="64">

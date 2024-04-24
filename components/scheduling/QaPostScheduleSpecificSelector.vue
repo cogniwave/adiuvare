@@ -1,23 +1,29 @@
 <template>
-  <v-overlay v-model:model-value="calendarVisible" location-strategy="connected">
+  <v-overlay
+    v-model:model-value="calendarVisible"
+    :open-delay="0"
+    :close-delay="0"
+    location-strategy="connected"
+  >
     <template #activator="{ props }">
       <form-qa-input
         v-bind="props"
-        :model-value="date"
         placeholder="E.g.: 18/05/2023"
         icon="fa-solid fa-calendar-day"
         readonly
+        validate-on="input lazy"
+        :model-value="date"
         :rules="[required, validDate]"
       />
     </template>
 
     <v-date-picker
       :model-value="proxyDate"
+      :min="minDate"
       color="primary"
       hide-header
       show-adjacent-months
-      style="width: 512px"
-      :min="minDate"
+      width="512px"
       @update:model-value="onProxyChange"
     >
       <template v-slot:actions>

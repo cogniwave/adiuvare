@@ -9,6 +9,6 @@ export default {
   out: "./server/db/migrations",
   driver: "pg",
   dbCredentials: {
-    connectionString: process.env.POSTGRES_URI as string,
+    connectionString: process.env.POSTGRES_URL as string,
   },
 } satisfies Config;

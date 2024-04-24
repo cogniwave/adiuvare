@@ -47,6 +47,9 @@
       "descriptionPlaceholder": "E.g.: Precisa-se voluntário para ajudar com a distribuição de comida às sextas à noite",
       "location": "Área(s) de atuação",
       "locationPlaceholder": "E.g.: Barreiro; Bombarral; Lisboa",
+      "locationNoFilter": "Escreva para procurar morada",
+      "locationSearching": "Procurando...",
+      "locationNoResults": "Sem resultados",
       "category": "Que ajuda precisa",
       "schedule": {
         "title": "Horário",
@@ -154,7 +157,8 @@
       "deleteTitle": "Confirmação de remoção",
       "deleteDescription": "A publicação {0} será removida. Ainda terá acesso aos contactos relacionados, mas a publicação em si deixará de ser acessível",
       "deleteConfirm": "Apagar"
-    }
+    },
+    "created": "Publicação criada com sucesso! Uma vez aprovada ficará disponível para toda a gente"
   },
   "loading": "A carregar",
 

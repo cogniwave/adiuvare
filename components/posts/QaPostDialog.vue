@@ -1,9 +1,9 @@
 <template>
   <v-dialog
-    :model-value="$store.dialogVisible"
+    :model-value="$post.dialogVisible"
     width="65vw"
     persistent
-    @update:model-value="$store.closeDialog()"
+    @update:model-value="$post.closeDialog()"
   >
     <v-card>
       <v-card-title class="bg-primary">
@@ -20,7 +20,7 @@
             :label="$t('form.post.title')"
             :rules="[required]"
             :error="errors.title"
-            @update:model-value="(value) => $store.updatePost('title', value)"
+            @update:model-value="(value) => $post.updatePost('title', value)"
           />
 
           <!-- description -->
@@ -32,7 +32,7 @@
             :label="$t('form.post.description')"
             :rules="[required]"
             :error="errors.description"
-            @update:model-value="(value) => $store.updatePost('description', value)"
+            @update:model-value="(value) => $post.updatePost('description', value)"
           />
 
           <!-- locations -->
@@ -88,7 +88,7 @@
       <v-divider />
 
       <v-card-actions class="pa-5 d-flex align-center justify-end">
-        <v-btn :disable="submitting" @click="$store.closeDialog()">
+        <v-btn :disable="submitting" @click="$post.closeDialog()">
           {{ $t("posts.cancel") }}
         </v-btn>
 
@@ -113,8 +113,11 @@ import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "./QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/scheduling/QaPostSchedule.vue";
+import { useNotifyStore } from "@/stores/notify.store";
 
-const $store = usePostsStore();
+const $notify = useNotifyStore();
+const $post = usePostsStore();
+const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const title = ref<string>("");
@@ -122,21 +125,21 @@ const description = ref<string>("");
 const locationInput = ref<string[]>([]);
 const locations = ref<string[]>([]);
 const fetchingLocations = ref(false);
-const noDataText = ref("Escreva para procurar morada");
+const noDataText = ref(t("form.post.locationNoFilter"));
 
 const form = ref<VForm>();
 const categoryInput = ref<string[]>([]);
 const helpOptions = ref<SelectOption[]>([
-  { title: "Dinheiro", value: "money" },
-  { title: "Voluntários", value: "volunteers" },
-  { title: "Bens & comida", value: "goods" },
-  { title: "Outros", value: "other" },
+  { title: t("posts.needs.money"), value: "money" },
+  { title: t("posts.needs.people"), value: "volunteers" },
+  { title: t("posts.needs.volunteers"), value: "goods" },
+  { title: t("posts.needs.other"), value: "other" },
 ]);
 
 const submitting = ref<boolean>(false);
 
 watch(
-  () => $store.dialogVisible,
+  () => $post.dialogVisible,
   (val) => {
     if (!val) {
       return;
@@ -154,24 +157,24 @@ watch(
 const fetchLocations = (text: string) => {
   debounce(() => {
     if (fetchingLocations.value) {
-      noDataText.value = "Procurando...";
+      noDataText.value = t("form.post.locationSearching");
       return;
     }
 
     if (text?.length <= 2) {
       locations.value = [];
       fetchingLocations.value = false;
-      noDataText.value = "Escreva para procurar morada";
+      noDataText.value = t("form.post.locationNoFilter");
       return;
     }
 
     fetchingLocations.value = true;
-    noDataText.value = "Procurando...";
+    noDataText.value = t("form.post.locationSearching");
     getCities(text)
       .then((cities) => {
         if (!cities?.length) {
           locations.value = [];
-          noDataText.value = "Sem resultados";
+          noDataText.value = t("form.post.locationNoFilter");
         } else {
           locations.value = cities as string[];
         }
@@ -186,7 +189,7 @@ const onRemoveLocation = (location: string) => {
 };
 
 const onLocationUpdate = () => {
-  $store.updatePost("locations", locationInput.value);
+  $post.updatePost("locations", locationInput.value);
 };
 
 const removeNeed = (category: string) => {
@@ -195,7 +198,7 @@ const removeNeed = (category: string) => {
 };
 
 const onCategoryUpdate = () => {
-  $store.updatePost("needs", categoryInput.value);
+  $post.updatePost("needs", categoryInput.value);
 };
 
 const submit = async () => {
@@ -211,8 +214,9 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  $store
+  $post
     .createPost()
+    .then(() => $notify.notifySuccess(t("posts.created")))
     .catch(handleErrors)
     .finally(() => (submitting.value = false));
 };
