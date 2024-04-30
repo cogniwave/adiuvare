@@ -18,3 +18,5 @@ export const logout = () => $fetch("/api/v1/auth/logout");
 export const confirmAccount = (token: string) => {
   return $fetch("/api/v1/auth/confirm", { method: "post", body: { token } });
 };
+
+export const getUsers = (slug: string) => $fetch();

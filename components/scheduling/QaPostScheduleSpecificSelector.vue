@@ -55,9 +55,8 @@ import dayjs from "@/services/dayjs.service";
 import { required, validDate } from "@/utils/validators";
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
-import { usePostsStore } from "@/stores/posts.store";
 
-const $store = usePostsStore();
+const { currPost } = usePosts();
 
 const calendarVisible = ref(false);
 const date = ref("");
@@ -91,7 +90,10 @@ const onTimesUpdate = (payload: ScheduleTime[]) => {
 };
 
 const onUpdate = (payload: SpecificSchedule) => {
-  $store.updatePost("schedule", { type: "recurring", payload });
+  currPost.value = {
+    ...currPost.value,
+    schedule: { type: "recurring", payload },
+  };
 };
 
 const onProxyChange = (proxy: Dayjs) => {
@@ -109,4 +111,3 @@ const onProxyChange = (proxy: Dayjs) => {
   justify-content: center;
 }
 </style>
-@/stores/posts.store

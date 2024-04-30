@@ -1,10 +1,10 @@
 import { getPosts, getTotalPosts } from "~/server/db/posts";
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
   try {
-    const query = getQuery(event);
+    const [posts, total] = await Promise.all([getPosts(), getTotalPosts()]);
 
-    return await (query.total ? getTotalPosts() : getPosts());
+    return { posts, total };
   } catch (err) {
     useBugsnag().notify({
       name: "failed to get posts",

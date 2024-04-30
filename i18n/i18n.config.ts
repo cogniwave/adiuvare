@@ -22,4 +22,11 @@ export default defineI18nConfig(() => ({
     cookieKey: "i18n_redirected",
     redirectOn: "root", // recommended
   },
+
+  locales: [
+    { code: "pt", iso: "pt-PT", file: "pt.json" },
+    { code: "en", iso: "en-GB", file: "en.json" },
+  ],
+
+  langDir: "i18n",
 }));

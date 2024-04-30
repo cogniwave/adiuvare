@@ -1,6 +1,5 @@
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
-import { usePostsStore } from "@/stores/posts.store";
 import { useNotifyStore } from "@/stores/notify.store";
 
 import type { FormErrors } from "@/types/form";
@@ -13,7 +12,6 @@ export function useFormErrors() {
 
   const { t } = useI18n();
   const $notifyStore = useNotifyStore();
-  const $postsStore = usePostsStore();
 
   const handleErrors = (err: NuxtError) => {
     if (err.statusCode === 422) {
@@ -34,18 +32,6 @@ export function useFormErrors() {
     errors.value = {};
     hasErrors.value = false;
   };
-
-  watch(
-    () => $postsStore.formErrors,
-    (formErrors) => {
-      if (!Object.keys(formErrors)) {
-        return clearErrors();
-      }
-
-      hasErrors.value = true;
-      errors.value = formErrors;
-    },
-  );
 
   return { errors, hasErrors, handleErrors, clearErrors };
 }

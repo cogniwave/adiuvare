@@ -1,17 +1,18 @@
 <template>
+  <nuxt-loading-indicator></nuxt-loading-indicator>
+
   <qa-feed />
 
-  <qa-post-dialog v-if="store.dialogRendered" />
+  <qa-post-dialog v-if="dialogRendered" />
 </template>
 
 <script setup lang="ts">
 import QaFeed from "@/components/feed/QaFeed.vue";
-import { usePostsStore } from "@/stores/posts.store";
 
 definePageMeta({
   path: "/",
   auth: { unauthenticatedOnly: false },
 });
 
-const store = usePostsStore();
+const { dialogRendered } = usePosts();
 </script>

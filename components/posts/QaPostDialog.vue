@@ -1,9 +1,9 @@
 <template>
   <v-dialog
-    :model-value="$post.dialogVisible"
+    :model-value="dialogVisible"
     width="65vw"
     persistent
-    @update:model-value="$post.closeDialog()"
+    @update:model-value="dialogVisible = false"
   >
     <v-card>
       <v-card-title class="bg-primary">
@@ -20,7 +20,7 @@
             :label="$t('form.post.title')"
             :rules="[required]"
             :error="errors.title"
-            @update:model-value="(value) => $post.updatePost('title', value)"
+            @update:model-value="(value) => updatePost('title', value)"
           />
 
           <!-- description -->
@@ -32,7 +32,7 @@
             :label="$t('form.post.description')"
             :rules="[required]"
             :error="errors.description"
-            @update:model-value="(value) => $post.updatePost('description', value)"
+            @update:model-value="(value) => updatePost('description', value)"
           />
 
           <!-- locations -->
@@ -52,7 +52,7 @@
             :items="locations"
             :loading="fetchingLocations"
             @update:search="fetchLocations"
-            @update:model-value="onLocationUpdate"
+            @update:model-value="updatePost('locations', $event)"
             @click:remove-chip="onRemoveLocation"
           />
 
@@ -69,7 +69,7 @@
             :rules="[required]"
             :error="errors.category"
             :items="helpOptions"
-            @update:model-value="onCategoryUpdate"
+            @update:model-value="updatePost('needs', $event)"
           >
             <template v-slot:chip="{ item }">
               <qa-post-dialog-need
@@ -88,7 +88,7 @@
       <v-divider />
 
       <v-card-actions class="pa-5 d-flex align-center justify-end">
-        <v-btn :disable="submitting" @click="$post.closeDialog()">
+        <v-btn :disable="submitting" @click="dialogVisible = false">
           {{ $t("posts.cancel") }}
         </v-btn>
 
@@ -108,17 +108,17 @@ import type { SelectOption } from "@/types/form";
 
 import { required } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { usePostsStore } from "@/stores/posts.store";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "./QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/scheduling/QaPostSchedule.vue";
 import { useNotifyStore } from "@/stores/notify.store";
+import type { Post, PostSchedule } from "@/types/post";
 
 const $notify = useNotifyStore();
-const $post = usePostsStore();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
+const { dialogVisible, currPost, posts } = usePosts();
 
 const title = ref<string>("");
 const description = ref<string>("");
@@ -139,7 +139,7 @@ const helpOptions = ref<SelectOption[]>([
 const submitting = ref<boolean>(false);
 
 watch(
-  () => $post.dialogVisible,
+  () => dialogVisible.value,
   (val) => {
     if (!val) {
       return;
@@ -185,20 +185,16 @@ const fetchLocations = (text: string) => {
 
 const onRemoveLocation = (location: string) => {
   locationInput.value = locationInput.value.filter((l) => l !== location);
-  onLocationUpdate();
+  updatePost("location", locationInput.value);
 };
 
-const onLocationUpdate = () => {
-  $post.updatePost("locations", locationInput.value);
+const updatePost = (prop: string, val: string | string[] | PostSchedule) => {
+  currPost.value = { ...currPost.value, [prop]: val };
 };
 
 const removeNeed = (category: string) => {
   categoryInput.value = categoryInput.value.filter((c) => category !== c);
-  onCategoryUpdate();
-};
-
-const onCategoryUpdate = () => {
-  $post.updatePost("needs", categoryInput.value);
+  updatePost("needs", categoryInput.value);
 };
 
 const submit = async () => {
@@ -214,11 +210,19 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  $post
-    .createPost()
-    .then(() => $notify.notifySuccess(t("posts.created")))
-    .catch(handleErrors)
-    .finally(() => (submitting.value = false));
+  try {
+    const post = await $fetch<Post>("/api/v1/posts", { body: currPost, method: "post" });
+
+    if (post) {
+      posts.value.push(post);
+    }
+    $notify.notifySuccess(t("posts.created"));
+  } catch (errs: any) {
+    handleErrors(errs);
+  } finally {
+    submitting.value = false;
+    dialogVisible.value = false;
+  }
 };
 </script>
 

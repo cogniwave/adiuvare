@@ -4,7 +4,7 @@ import { version } from "./package.json";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: import.meta.env.NODE_ENV === "development" },
 
   app: {
     head: {
@@ -86,13 +86,5 @@ export default defineNuxtConfig({
 
   i18n: {
     vueI18n: "./i18n/i18n.config.ts", // if you are using custom path, default
-    locales: [
-      { code: "pt", iso: "pt-PT", file: "pt.json" },
-      { code: "en", iso: "en-GB", file: "en.json" },
-    ],
-    defaultDirection: "ltr",
-    defaultLocale: "pt",
-    lazy: true,
-    langDir: "i18n",
   },
 });

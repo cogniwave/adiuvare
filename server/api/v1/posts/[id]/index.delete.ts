@@ -1,6 +1,5 @@
-import { getPostByOwner } from "~/server/db/posts";
+import { deletePost, getPostByOwner } from "~/server/db/posts";
 import { getSessionUser } from "~/server/utils/request";
-import { deletePost } from "~/services/posts.service";
 
 export default defineEventHandler(async (event) => {
   const postId = getRouterParam(event, "id") as string;

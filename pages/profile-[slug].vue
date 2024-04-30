@@ -1,5 +1,5 @@
 <template>
-  <template v-if="$store.loading">
+  <template v-if="true">
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
@@ -7,39 +7,51 @@
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
   </template>
 
-  <!-- render posts -->
-  <template v-else-if="$store.posts.length">
-    <v-avatar></v-avatar>
-
-    <v-virtual-scroll item-height="264" :items="$store.posts">
-      <template v-slot:default="{ item }">
-        <qa-post :post="item" class="mb-5" />
-      </template>
-    </v-virtual-scroll>
-
-    <!-- there aren't enough posts to show pagination -->
-    <v-pagination v-if="$store.totalPosts > PER_PAGE" v-model="page" length="5" />
-  </template>
+  <!-- render users -->
+  <!-- <template v-else-if="$users.users.length">
+    <v-avatar size="64">
+      <v-img :alt="$t('users.logoAlt')" lazy-src="/assets/post-profile-placeholder.png">
+        <template v-slot:error>
+          {{ post.createdBy[0] }}
+        </template>
+      </v-img>
+    </v-avatar>
+  </template> -->
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "vue-router";
-import { usePostsStore } from "@/stores/posts.store";
+import { useRoute, useRouter } from "vue-router";
+import { useNotifyStore } from "@/stores/notify.store";
 
 definePageMeta({
+  layout: "sidebar",
   path: "/profile/:slug",
-  auth: { unauthenticatedOnly: false },
 });
 
+const $router = useRouter();
 const $route = useRoute();
-const $store = usePostsStore();
+const $notify = useNotifyStore();
+const { t } = useI18n();
 const { data } = useAuth();
 
 const canEdit = ref(false);
 
 onBeforeMount(() => {
-  if ($route.params.slug === data.value?.slug) {
-    canEdit.value = true;
-  }
+  // $users.loading = true;
+  // const slug = $route.params.slug as string;
+  // if (slug === data.value?.slug) {
+  //   canEdit.value = true;
+  // }
+  // $users
+  //   .getUserBySlug(slug)
+  //   .catch((err) => {
+  //     if (err.status === 404) {
+  //       $router.push("/not-found");
+  //     } else {
+  //       $notify.notifyError(t("errors.unexpected"));
+  //       $router.back();
+  //     }
+  //   })
+  //   .finally(() => ($users.loading = false));
 });
 </script>

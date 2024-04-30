@@ -150,7 +150,6 @@ import type {
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 import { toHumanDay } from "@/utils/scheduling";
-import { usePostsStore } from "@/stores/posts.store";
 
 // setup
 
@@ -169,7 +168,7 @@ const props = defineProps({
   },
 });
 
-const $store = usePostsStore();
+const { currPost } = usePosts();
 
 // data
 const selected = ref<RecurringSchedule>(props.modelValue);
@@ -213,12 +212,15 @@ const setupTimeGroups = (updated: RecurringSchedule) => {
 };
 
 const onUpdate = (payload: RecurringSchedule) => {
-  $store.updatePost("schedule", {
-    type: "recurring",
-    payload: Object.fromEntries(
-      Object.entries(payload).filter(([_, value]) => value !== null),
-    ) as RecurringSchedule,
-  });
+  currPost.value = {
+    ...currPost.value,
+    schedule: {
+      type: "recurring",
+      payload: Object.fromEntries(
+        Object.entries(payload).filter(([_, value]) => value !== null),
+      ) as RecurringSchedule,
+    },
+  };
 };
 </script>
 
@@ -236,4 +238,3 @@ const onUpdate = (payload: RecurringSchedule) => {
   }
 }
 </style>
-@/stores/posts.store

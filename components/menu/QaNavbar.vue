@@ -41,7 +41,7 @@
               rounded="md"
               variant="plain"
               class="ml-auto btn-contact"
-              @click="$postsStore.openDialog()"
+              @click="openDialog()"
             >
               {{ $t("posts.submit") }}
             </v-btn>
@@ -79,11 +79,11 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router";
-import { usePostsStore } from "@/stores/posts.store";
 // import { useNotificationsStore } from "@/stores/notifications.store";
 
 const { loggedIn, data } = useAuth();
-const $postsStore = usePostsStore();
+const { openDialog } = usePosts();
+
 // const $notifStore = useNotificationsStore();
 const $route = useRoute();
 

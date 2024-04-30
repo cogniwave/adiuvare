@@ -1,36 +1,44 @@
 <template>
   <qa-confirm-dialog
-    :model-value="$store.disableDialogVisible"
+    :model-value="disableDialogVisible"
     :title="$t('posts.confirm.disableTitle')"
     :confirm-text="$t('posts.confirm.disableConfirm')"
     :cancel-text="$t('posts.confirm.cancel')"
     :loading="submitting"
     @click:submit="submit"
-    @click:close="$store.toggleDisableDialog(false)"
+    @click:close="disableDialogVisible = false"
   >
     <i18n-t scope="global" keypath="posts.confirm.disableDescription" tag="span">
-      <b class="font-italic">{{ $store.post.title }}</b>
+      <b class="font-italic">{{ currPost.title }}</b>
     </i18n-t>
   </qa-confirm-dialog>
 </template>
 
 <script setup lang="ts">
-import { usePostsStore } from "@/stores/posts.store";
 import { useNotifyStore } from "@/stores/notify.store";
-import type { PostStateTogglePayload } from "@/types/post";
+import type { Post } from "@/types/post";
 
-const $store = usePostsStore();
 const $notifyStore = useNotifyStore();
+const { disableDialogVisible, currPost, posts } = usePosts();
 
 const submitting = ref<boolean>(false);
 
-const submit = () => {
+const submit = async () => {
   submitting.value = true;
 
-  $store
-    .disablePost(($store.post as PostStateTogglePayload).id)
-    .catch($notifyStore.notifyError)
-    .finally(() => (submitting.value = false));
+  try {
+    await $fetch<Post>(`/api/v1/posts/${currPost.value.id}`, {
+      body: { action: "disable" },
+      method: "patch",
+    });
+
+    posts.value = posts.value.filter((p) => p.id !== currPost.value.id);
+  } catch (err: any) {
+    $notifyStore.notifyError(err);
+  } finally {
+    submitting.value = false;
+    disableDialogVisible.value = false;
+  }
 };
 </script>
 
