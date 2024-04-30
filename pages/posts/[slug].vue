@@ -22,7 +22,6 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from "vue-router";
 
-import { useNotifyStore } from "@/stores/notify.store";
 import type { Post } from "@/types/post";
 
 definePageMeta({ layout: "sidebar", path: "/posts/:slug" });
@@ -30,8 +29,8 @@ definePageMeta({ layout: "sidebar", path: "/posts/:slug" });
 const { currPost, posts } = usePosts<Post>();
 const $router = useRouter();
 const $route = useRoute();
-const $notify = useNotifyStore();
 const { data } = useAuth();
+const { notifyError } = useNotify();
 
 const canEdit = ref(false);
 const loading = ref(false);
@@ -50,7 +49,7 @@ onBeforeMount(async () => {
     if (err.status === 404) {
       $router.push("/not-found");
     } else {
-      $notify.notifyError("Could not fetch post");
+      notifyError("Could not fetch post");
       $router.back();
     }
   }

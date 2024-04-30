@@ -16,7 +16,6 @@
   "dependencies": {
     "@date-io/dayjs": "^3.0.0",
     "@nuxtjs/robots": "^3.0.0",
-    "@pinia/nuxt": "^0.5.1",
     "@quasar/extras": "^1.16.11",
     "@vercel/postgres": "^0.8.0",
     "bcrypt": "^5.1.1",

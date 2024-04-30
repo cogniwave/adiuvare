@@ -62,7 +62,6 @@ import type { VForm } from "vuetify/lib/components/index.mjs";
 
 import { required, isEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { useNotifyStore } from "@/stores/notify.store";
 
 definePageMeta({
   auth: {
@@ -80,8 +79,7 @@ const visibilityIcon = ref<"eye" | "eye-slash">("eye");
 const submitting = ref<boolean>(false);
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
-
-const $notifyStore = useNotifyStore();
+const { notifyError, notifyWarning } = useNotify();
 const $route = useRoute();
 const $router = useRouter();
 const { t } = useI18n();
@@ -89,7 +87,7 @@ const { login } = useAuth();
 
 onMounted(() => {
   if ($route.query?.requireAuth) {
-    $notifyStore.notifyWarning(t("login.actionRequiresAuth"));
+    notifyWarning(t("login.actionRequiresAuth"));
     $router.replace({
       path: "/login",
       query: { ...$route.query, requireAuth: undefined },
@@ -126,7 +124,7 @@ const submit = async () => {
 
   login({ email: email.value, password: password.value }).catch((errs) => {
     if (errs.statusCode === 401) {
-      $notifyStore.notifyError("Email ou palavra-passe errados");
+      notifyError("Email ou palavra-passe errados");
     } else {
       handleErrors(errs);
     }

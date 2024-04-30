@@ -1,7 +1,5 @@
 import { ref } from "vue";
 
-import { useNotifyStore } from "@/stores/notify.store";
-
 import type { FormErrors } from "@/types/form";
 import type { NuxtError } from "@/exceptions";
 
@@ -11,7 +9,7 @@ export function useFormErrors() {
   const hasErrors = ref(false);
 
   const { t } = useI18n();
-  const $notifyStore = useNotifyStore();
+  const { notifyError } = useNotify();
 
   const handleErrors = (err: NuxtError) => {
     if (err.statusCode === 422) {
@@ -25,7 +23,7 @@ export function useFormErrors() {
       hasErrors.value = false;
     }
 
-    $notifyStore.notifyError(t("errors.unexpected"));
+    notifyError(t("errors.unexpected"));
   };
 
   const clearErrors = () => {

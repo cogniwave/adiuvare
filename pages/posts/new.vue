@@ -103,12 +103,11 @@ import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/scheduling/QaPostSchedule.vue";
-import { useNotifyStore } from "@/stores/notify.store";
 import type { Post, PostSchedule } from "@/types/post";
 
 definePageMeta({ path: "/posts/new", auth: { authenticatedOnly: true } });
 
-const $notify = useNotifyStore();
+const { notifySuccess } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { currPost, posts } = usePosts();
@@ -193,7 +192,7 @@ const submit = async () => {
     if (post) {
       posts.value.push(post);
     }
-    $notify.notifySuccess(t("posts.created"));
+    notifySuccess(t("posts.created"));
   } catch (errs: any) {
     handleErrors(errs);
   } finally {

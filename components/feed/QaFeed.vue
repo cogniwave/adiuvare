@@ -49,13 +49,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import { useNotifyStore } from "@/stores/notify.store";
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 import QaPost from "@/components/posts/QaPost.vue";
 
 const PER_PAGE = 30;
 
-const $notifyStore = useNotifyStore();
+const { notifyError } = useNotify();
 const { data: user } = useAuth();
 const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
 const { openDialog: _openReportDialog } = useReport();
@@ -108,7 +107,7 @@ const onDelete = async (id: string) => {
     await $fetch<Post>(`/api/v1/posts/${id}`, { method: "delete" });
     refresh();
   } catch (err: any) {
-    $notifyStore.notifyError(err);
+    notifyError(err);
   } finally {
     disableDialogVisible.value = false;
   }

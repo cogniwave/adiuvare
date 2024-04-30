@@ -60,13 +60,12 @@ import type { VForm } from "vuetify/lib/components/index.mjs";
 
 import { required } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { useNotifyStore } from "@/stores/notify.store";
 
-const $notifyStore = useNotifyStore();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { data, loggedIn } = useAuth();
 const { t } = useI18n();
 const { dialogVisible, post } = useReport();
+const { notifySuccess } = useNotify();
 
 const reason = ref("");
 const email = ref(data.value?.email || "");
@@ -106,7 +105,7 @@ const submit = async () => {
     body: { post: post.value, user: email.value, reason: reason.value },
   })
     .then(() => {
-      $notifyStore.notifySuccess(t("posts.report.success"));
+      notifySuccess(t("posts.report.success"));
       dialogVisible.value = false;
     })
     .catch(handleErrors)

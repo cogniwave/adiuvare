@@ -15,10 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { useNotifyStore } from "@/stores/notify.store";
 import type { Post } from "@/types/post";
 
-const $notifyStore = useNotifyStore();
+const { notifyError } = useNotify();
 const { disableDialogVisible, currPost, posts } = usePosts();
 
 const submitting = ref<boolean>(false);
@@ -34,7 +33,7 @@ const submit = async () => {
 
     posts.value = posts.value.filter((p) => p.id !== currPost.value.id);
   } catch (err: any) {
-    $notifyStore.notifyError(err);
+    notifyError(err);
   } finally {
     submitting.value = false;
     disableDialogVisible.value = false;

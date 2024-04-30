@@ -44,7 +44,6 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxtjs/robots",
-    "@pinia/nuxt",
     "@nuxtjs/eslint-module",
     "nuxt-bugsnag",
     "@nuxtjs/i18n",
@@ -65,10 +64,6 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
-  },
-
-  pinia: {
-    storesDirs: ["~/stores"],
   },
 
   bugsnag: {
