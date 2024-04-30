@@ -4,7 +4,7 @@ type AnyPost = Post | PostStateTogglePayload | PostDeletePayload;
 
 export const usePosts = <T = AnyPost>() => {
   const posts = useState<Post[]>("posts:posts", () => []);
-  const currPost = useState<T>("posts:current", () => ({}) as T);
+  const currPost = useState<T>("posts:current", () => null as T);
   const disableDialogVisible = useState<boolean>("posts:dialogVisible", () => true);
   const deleteDialogVisible = useState<boolean>("posts:dialogVisible", () => true);
 

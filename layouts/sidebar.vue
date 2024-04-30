@@ -13,7 +13,7 @@
           <v-list>
             <v-list-item :title="$t('menu.home')" to="/"></v-list-item>
             <v-list-item :title="$t('menu.orgs')" to="/organizations"></v-list-item>
-            <v-list-item :title="$t('menu.posts')" to="/organizations/:id"></v-list-item>
+            <v-list-item :title="$t('menu.posts')" to="/posts/:id"></v-list-item>
           </v-list>
         </v-col>
 

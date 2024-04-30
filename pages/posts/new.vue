@@ -111,6 +111,7 @@ const { notifySuccess } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { currPost, posts } = usePosts();
+const $router = useRouter();
 
 const title = ref<string>("");
 const description = ref<string>("");
@@ -187,11 +188,14 @@ const submit = async () => {
   submitting.value = true;
 
   try {
-    const post = await $fetch<Post>("/api/v1/posts", { body: currPost, method: "post" });
+    const post = await $fetch<Post>("/api/v1/posts", { body: currPost.value, method: "post" });
 
     if (post) {
       posts.value.push(post);
     }
+
+    currPost.value = {} as Post;
+    $router.push("/");
     notifySuccess(t("posts.created"));
   } catch (errs: any) {
     handleErrors(errs);

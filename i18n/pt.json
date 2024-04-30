@@ -158,7 +158,13 @@
       "deleteDescription": "A publicação {0} será removida. Ainda terá acesso aos contactos relacionados, mas a publicação em si deixará de ser acessível",
       "deleteConfirm": "Apagar"
     },
-    "created": "Publicação criada com sucesso! Uma vez aprovada ficará disponível para toda a gente"
+    "created": "Publicação criada com sucesso! Uma vez aprovada ficará disponível para toda a gente",
+    "schedule": {
+      "from": "Desde",
+      "to": "até",
+      "anytime": "Não existe hora determinada para este pedido"
+    },
+    "lastUpdatedAt": "Publicação atualizada a "
   },
   "loading": "A carregar",
 

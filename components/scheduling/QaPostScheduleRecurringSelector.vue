@@ -120,12 +120,7 @@
   <br />
   <br />
 
-  <v-virtual-scroll
-    :items="timeGroups"
-    class="time-group"
-    item-height="264"
-    transition="fade-transition"
-  >
+  <v-virtual-scroll :items="timeGroups" class="time-group" item-height="264">
     <template v-slot:default="{ item }">
       <span>{{ toHumanDay(item.day) }}</span>
 

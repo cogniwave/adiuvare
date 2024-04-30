@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 import type { UserContact } from "./user";
 
 export type Day =
@@ -26,7 +24,7 @@ export interface RecurringScheduleTimeGroup {
 export type RecurringSchedule = Record<Day, ScheduleTime[] | null>;
 
 export interface SpecificSchedule {
-  day: Dayjs;
+  day: string;
   times: ScheduleTime[];
 }
 
@@ -57,8 +55,9 @@ export interface Post extends EmptyPost {
   logo: string;
   state: PostState;
   createdBy: string;
-  createdAt: Date;
+  createdAt: string;
   createdBySlug: string;
+  updatedAt: string;
   slug: string;
   contacts: UserContact[];
 }

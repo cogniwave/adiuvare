@@ -114,6 +114,7 @@ export const getPostBySlug = async (slug: string) => {
       needs: posts.needs,
       schedule: posts.schedule,
       createdAt: posts.createdAt,
+      updatedAt: posts.updatedAt,
       slug: posts.slug,
       createdBy: users.slug,
       contacts: users.contacts,
