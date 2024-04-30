@@ -1,9 +1,9 @@
 <template>
   <v-dialog
-    :model-value="$store.dialogVisible"
+    :model-value="dialogVisible"
     width="65vw"
     persistent
-    @update:model-value="$store.toggleDialog(false)"
+    @update:model-value="dialogVisible = false"
   >
     <v-card>
       <v-card-title class="bg-primary">
@@ -13,11 +13,11 @@
       <v-card-text>
         <p v-html="$t('posts.report.description')" />
 
-        <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
+        <v-form ref="form" class="px-4 pt-4" validate-on="input lazy" @submit.prevent="submit">
           <!-- email -->
           <v-text-field
             v-model:model-value="email"
-            class="mb-5"
+            class="mb-10"
             type="email"
             prepend-icon="fa-solid fa-at"
             :readonly="loggedIn"
@@ -42,7 +42,7 @@
       <v-divider />
 
       <v-card-actions class="px-5 d-flex align-center justify-end">
-        <v-btn color="primary" :disable="submitting" @click="$store.toggleDialog(false)">
+        <v-btn color="primary" :disable="submitting" @click="dialogVisible = false">
           {{ $t("posts.report.cancel") }}
         </v-btn>
 
@@ -58,17 +58,15 @@
 import { ref, watch } from "vue";
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import { submitReport } from "@/services/report.service";
 import { required } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { useReportStore } from "@/stores/report.store";
 import { useNotifyStore } from "@/stores/notify.store";
 
-const $store = useReportStore();
 const $notifyStore = useNotifyStore();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { data, loggedIn } = useAuth();
 const { t } = useI18n();
+const { dialogVisible, post } = useReport();
 
 const reason = ref("");
 const email = ref(data.value?.email || "");
@@ -77,7 +75,7 @@ const submitting = ref(false);
 const form = ref<VForm>();
 
 watch(
-  () => $store.dialogVisible,
+  () => dialogVisible.value,
   (val) => {
     if (!val) {
       return;
@@ -103,10 +101,13 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  submitReport({ post: $store.post, user: email.value, reason: reason.value })
+  $fetch("/api/v1/reports", {
+    method: "post",
+    body: { post: post.value, user: email.value, reason: reason.value },
+  })
     .then(() => {
       $notifyStore.notifySuccess(t("posts.report.success"));
-      $store.toggleDialog(false);
+      dialogVisible.value = false;
     })
     .catch(handleErrors)
     .finally(() => (submitting.value = false));

@@ -53,7 +53,6 @@ import type { VForm } from "vuetify/lib/components/index.mjs";
 
 import { required, isEmail } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import { resetPassword } from "@/services/user.service";
 
 definePageMeta({
   auth: {
@@ -82,7 +81,9 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  resetPassword(email.value)
+  $fetch("/api/v1/auth/reset-password", {
+    body: { email: email.value },
+  })
     .then(() => (emailSent.value = true))
     .catch(handleErrors)
     .finally(() => (submitting.value = false));

@@ -28,8 +28,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import { confirmAccount } from "@/services/user.service";
-
 const submitting = ref<boolean>(true);
 const success = ref<boolean>(true);
 
@@ -50,7 +48,7 @@ onBeforeMount(() => {
     return (success.value = false);
   }
 
-  confirmAccount($route.params?.token)
+  $fetch("/api/v1/auth/confirm", { method: "post", body: { token } })
     .catch(() => (success.value = false))
     .finally(() => (submitting.value = false));
 });

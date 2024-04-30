@@ -21,6 +21,7 @@
           class="mb-5"
           @click:state="openDisableDialog"
           @click:delete="openDeleteDialog"
+          @click:report="openReportDialog"
         />
       </template>
     </v-virtual-scroll>
@@ -32,13 +33,13 @@
   <!-- no posts exist -->
   <template v-else>
     <i18n-t scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton">
-      <span @click="openDialog">
+      <nuxt-link to="/posts/new">
         {{ $t("feed.noPostsButton") }}
-      </span>
+      </nuxt-link>
     </i18n-t>
   </template>
 
-  <qa-post-report-dialog v-if="$reportStore.dialogRendered" />
+  <qa-post-report-dialog v-if="reportDialogRendered" />
 
   <qa-post-disable-confirm-dialog v-if="disableDialogRendered" />
 
@@ -51,16 +52,16 @@ import { ref } from "vue";
 import { useNotifyStore } from "@/stores/notify.store";
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 import QaPost from "@/components/posts/QaPost.vue";
-import { useReportStore } from "@/stores/report.store";
 
 const PER_PAGE = 30;
 
-const $reportStore = useReportStore();
 const $notifyStore = useNotifyStore();
 const { data: user } = useAuth();
-const { openDialog, currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
+const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
+const { openDialog: _openReportDialog } = useReport();
 
 const page = ref(0);
+const reportDialogRendered = ref(false);
 
 const { data, pending, execute, refresh } = useFetch<{ posts: Post[]; total: number }>(
   "/api/v1/posts",
@@ -92,6 +93,14 @@ const openDeleteDialog = (post: PostDeletePayload) => {
   } else {
     deleteDialogVisible.value = true;
   }
+};
+
+const openReportDialog = (post: PostDeletePayload) => {
+  if (!reportDialogRendered.value) {
+    reportDialogRendered.value = true;
+  }
+
+  _openReportDialog(post);
 };
 
 const onDelete = async (id: string) => {

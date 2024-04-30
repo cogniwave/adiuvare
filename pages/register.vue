@@ -115,10 +115,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { UserType } from "@/types/user";
+import type { User, UserType } from "@/types/user";
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import { register } from "@/services/user.service";
 import { required, isEmail, isValidPassword, match } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 
@@ -169,11 +168,14 @@ const submit = async () => {
 
   submitting.value = true;
 
-  register({
-    email: email.value,
-    password: password.value,
-    name: name.value,
-    type: type.value,
+  await $fetch<User>("/api/v1/auth/register", {
+    method: "post",
+    body: {
+      email: email.value,
+      password: password.value,
+      name: name.value,
+      type: type.value,
+    },
   })
     .then(() => (userCreated.value = true))
     .catch(handleErrors)

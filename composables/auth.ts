@@ -1,7 +1,6 @@
 import { useRouter } from "vue-router";
 
-import type { LoginPayload, TokenUser } from "@/types/user";
-import sessionService from "@/services/session.service";
+import type { LoginPayload, LoginResult, TokenUser } from "@/types/user";
 
 const REFRESH_INTERVAL = 240000; // 4 minutes, 1 less than token duration
 
@@ -63,7 +62,10 @@ export const useAuth = () => {
     }
 
     try {
-      const accesToken = await sessionService.refresh(refreshToken.value);
+      const accesToken = await $fetch<string>("/api/v1/auth/refresh", {
+        method: "post",
+        body: { token: refreshToken.value },
+      });
 
       token.value = accesToken;
 
@@ -76,7 +78,10 @@ export const useAuth = () => {
 
   const login = async (payload: LoginPayload) => {
     loading.value = true;
-    const result = await sessionService.login(payload);
+    const result = await $fetch<LoginResult>("/api/v1/auth/login", {
+      method: "post",
+      body: payload,
+    });
 
     token.value = result.accessToken;
     refreshToken.value = result.refreshToken;
@@ -94,14 +99,15 @@ export const useAuth = () => {
 
     _reset();
     try {
-      await sessionService.logout();
+      await $fetch("/api/v1/auth/logout", { method: "delete" });
       loading.value = false;
 
       if ($router.currentRoute.value.path !== "/") {
         $router.replace("/");
       }
     } catch (err) {
-      window.location.reload();
+      console.warn("failed to fresh", err);
+      // window.location.reload();
     }
   };
 

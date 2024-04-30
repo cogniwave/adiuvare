@@ -94,7 +94,6 @@
             </v-btn>
           </template>
 
-          aq {{ user }}
           <v-list density="compact" class="py-2">
             <template v-if="post.createdBySlug === user">
               <!-- edit post -->
@@ -184,14 +183,13 @@
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 
 import QaPostNeed from "@/components/posts/QaPostNeed.vue";
-import { useReportStore } from "@/stores/report.store";
 
 const MAX_DESC = 1300;
 const NUM_VISIBLE_LOCATIONS = 3;
 
 const $emit = defineEmits<{
   (e: "click:state", payload: PostStateTogglePayload): void;
-  (e: "click:delete", payload: PostDeletePayload): void;
+  (e: "click:delete" | "click:report", payload: PostDeletePayload): void;
 }>();
 
 const props = defineProps({
@@ -200,7 +198,6 @@ const props = defineProps({
 });
 
 const $router = useRouter();
-const $reportStore = useReportStore();
 const { setPost } = usePosts();
 
 const desc = ref(props.post.description);
@@ -230,7 +227,7 @@ const viewAllDesc = () => {
 
 const onLocationClick = () => {};
 
-const onReport = () => $reportStore.openDialog(props.post);
+const onReport = () => $emit("click:report", props.post);
 
 const openPost = () => {
   setPost(props.post);
