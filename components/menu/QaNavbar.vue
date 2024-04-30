@@ -41,7 +41,7 @@
               rounded="md"
               variant="plain"
               class="ml-auto btn-contact"
-              @click="openDialog()"
+              to="/posts/new"
             >
               {{ $t("posts.submit") }}
             </v-btn>
@@ -82,7 +82,6 @@ import { useRoute } from "vue-router";
 // import { useNotificationsStore } from "@/stores/notifications.store";
 
 const { loggedIn, data } = useAuth();
-const { openDialog } = usePosts();
 
 // const $notifStore = useNotificationsStore();
 const $route = useRoute();

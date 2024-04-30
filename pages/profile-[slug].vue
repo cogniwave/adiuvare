@@ -20,21 +20,21 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute, useRouter } from "vue-router";
-import { useNotifyStore } from "@/stores/notify.store";
+// import { useRoute, useRouter } from "vue-router";
+// import { useNotifyStore } from "@/stores/notify.store";
 
 definePageMeta({
   layout: "sidebar",
   path: "/profile/:slug",
 });
 
-const $router = useRouter();
-const $route = useRoute();
-const $notify = useNotifyStore();
-const { t } = useI18n();
-const { data } = useAuth();
+// const $router = useRouter();
+// const $route = useRoute();
+// const $notify = useNotifyStore();
+// const { t } = useI18n();
+// const { data } = useAuth();
 
-const canEdit = ref(false);
+// const canEdit = ref(false);
 
 onBeforeMount(() => {
   // $users.loading = true;

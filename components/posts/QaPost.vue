@@ -94,8 +94,9 @@
             </v-btn>
           </template>
 
+          aq {{ user }}
           <v-list density="compact" class="py-2">
-            <template v-if="post.createdBySlug !== user">
+            <template v-if="post.createdBySlug === user">
               <!-- edit post -->
               <v-list-item
                 class="pl-2 pr-2"

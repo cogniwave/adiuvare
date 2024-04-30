@@ -1,44 +1,25 @@
 <template>
-  <v-overlay
-    v-model:model-value="calendarVisible"
-    :open-delay="0"
-    :close-delay="0"
-    location-strategy="connected"
-  >
-    <template #activator="{ props }">
-      <form-qa-input
-        v-bind="props"
-        placeholder="E.g.: 18/05/2023"
-        icon="fa-solid fa-calendar-day"
-        readonly
-        validate-on="input lazy"
-        :model-value="date"
-        :rules="[required, validDate]"
-      />
-    </template>
+  <v-text-field
+    placeholder="E.g.: 18/05/2023"
+    prepend-icon="fa-solid fa-calendar-day"
+    readonly
+    validate-on="input lazy"
+    :model-value="date"
+    :rules="[required, validDate]"
+  />
 
+  <suspense>
     <v-date-picker
-      :model-value="proxyDate"
+      v-model:model-value="proxyDate"
       :min="minDate"
+      landscape
       color="primary"
+      class="mx-auto mt-5 bg-white"
       hide-header
-      show-adjacent-months
       width="512px"
       @update:model-value="onProxyChange"
-    >
-      <template v-slot:actions>
-        <div class="row items-center justify-end q-gutter-sm">
-          <v-btn flat @click="calendarVisible = false">
-            {{ $t("posts.cancel") }}
-          </v-btn>
-
-          <v-btn color="primary" variant="flat" @click="onSave">
-            {{ $t("posts.chooseSchedule") }}
-          </v-btn>
-        </div>
-      </template>
-    </v-date-picker>
-  </v-overlay>
+    />
+  </suspense>
 
   <div v-if="date" class="time-group mt-2">
     <qa-post-schedule-recurring-time :model-value="times" @update:model-value="onTimesUpdate" />
@@ -58,7 +39,6 @@ import { getNewGroupTimes } from "@/utils/scheduling";
 
 const { currPost } = usePosts();
 
-const calendarVisible = ref(false);
 const date = ref("");
 const proxyDate = ref<Dayjs>(dayjs());
 const times = ref<ScheduleTime[]>([]);
@@ -66,18 +46,11 @@ const d = new Date();
 d.setDate(d.getDate() - 1);
 const minDate = ref(d.toISOString());
 
-const onSave = () => {
-  date.value = proxyDate.value.format("DD/MM/YYYY");
-
-  if (!times.value.length) {
-    times.value = [getNewGroupTimes()];
-    onUpdate({
-      day: dayjs(date.value, "DD/MM/YYYY"),
-      times: times.value,
-    });
-  }
-
-  calendarVisible.value = false;
+const onUpdate = (payload: SpecificSchedule) => {
+  currPost.value = {
+    ...currPost.value,
+    schedule: { type: "recurring", payload },
+  };
 };
 
 const onTimesUpdate = (payload: ScheduleTime[]) => {
@@ -89,16 +62,16 @@ const onTimesUpdate = (payload: ScheduleTime[]) => {
   });
 };
 
-const onUpdate = (payload: SpecificSchedule) => {
-  currPost.value = {
-    ...currPost.value,
-    schedule: { type: "recurring", payload },
-  };
-};
-
 const onProxyChange = (proxy: Dayjs) => {
-  proxyDate.value = proxy;
   date.value = proxy.format("DD/MM/YYYY");
+
+  if (!times.value.length) {
+    times.value = [getNewGroupTimes()];
+    onUpdate({
+      day: dayjs(date.value, "DD/MM/YYYY"),
+      times: times.value,
+    });
+  }
 };
 </script>
 

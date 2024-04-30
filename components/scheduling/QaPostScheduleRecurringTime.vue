@@ -1,6 +1,6 @@
 <template>
   <div class="w-100 item-group">
-    <template v-for="(time, idx) in times" :key="idx">
+    <template v-for="(time, idx) in times" :key="time.id">
       <div class="picker-group mb-3">
         <qa-time-picker
           :model-value="time.start"
@@ -21,6 +21,7 @@
             :text="$t('form.post.schedule.addRecurring')"
             location="bottom"
             close-on-content-click
+            close-delay="0"
           >
             <template v-slot:activator="{ props }">
               <v-btn
@@ -53,7 +54,6 @@
                 variant="tonal"
                 size="xs"
                 icon="fa-solid fa-circle-plus"
-                class="q-ml-sm"
                 color="primary"
                 @click="onAdd"
               />
@@ -146,8 +146,7 @@ const onChange = (val: string, field: "start" | "end", item: ScheduleTime) => {
 
     &:first-child {
       .button-group {
-        justify-content: flex-end;
-        padding-right: 4px;
+        padding-left: 18px;
       }
     }
 
@@ -158,6 +157,4 @@ const onChange = (val: string, field: "start" | "end", item: ScheduleTime) => {
     }
   }
 }
-
-// .text-error
 </style>

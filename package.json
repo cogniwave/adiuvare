@@ -53,7 +53,7 @@
     "vite-plugin-vuetify": "^2.0.3",
     "vue": "^3.4.25",
     "vue-router": "^4.3.2",
-    "vuetify": "^3.5.17"
+    "vuetify": "^3.6.1"
   },
   "packageManager": "yarn@4.0.2"
 }

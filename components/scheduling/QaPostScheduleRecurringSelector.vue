@@ -120,20 +120,21 @@
   <br />
   <br />
 
-  <div
-    v-for="({ day, times }, idx) in timeGroups"
-    :key="day"
-    :class="{ 'mt-2': idx !== 0 }"
+  <v-virtual-scroll
+    :items="timeGroups"
     class="time-group"
+    item-height="264"
     transition="fade-transition"
   >
-    <span>{{ toHumanDay(day) }}</span>
+    <template v-slot:default="{ item }">
+      <span>{{ toHumanDay(item.day) }}</span>
 
-    <qa-post-schedule-recurring-time
-      :model-value="times"
-      @update:model-value="onTimesUpdate(day, $event)"
-    />
-  </div>
+      <qa-post-schedule-recurring-time
+        :model-value="item.times"
+        @update:model-value="onTimesUpdate(item.day, $event)"
+      />
+    </template>
+  </v-virtual-scroll>
 </template>
 
 <script setup lang="ts">
@@ -226,9 +227,9 @@ const onUpdate = (payload: RecurringSchedule) => {
 
 <style lang="scss" scoped>
 .time-group {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  width: 90%;
+  display: block;
+  margin: auto;
 
   span {
     width: 150px;

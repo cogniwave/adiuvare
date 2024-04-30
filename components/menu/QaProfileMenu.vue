@@ -14,7 +14,7 @@
     </v-list>
   </v-menu>
 
-  <v-btn v-else variant="plain" to="login"> {{ $t("login.title") }} </v-btn>
+  <v-btn v-else variant="plain" to="/login"> {{ $t("login.title") }} </v-btn>
 </template>
 
 <script setup lang="ts">

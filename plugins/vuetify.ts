@@ -38,6 +38,37 @@ export default defineNuxtPlugin((app) => {
         VIcon: {
           size: "x-small",
         },
+        VTextField: {
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
+          validateOn: "blur",
+          variant: "underlined",
+        },
+        VTextarea: {
+          variant: "underlined",
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
+        },
+        VAutocomplete: {
+          variant: "underlined",
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
+          autoGrow: true,
+          autoSelectFirst: true,
+        },
+        VSelect: {
+          variant: "underlined",
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
+        },
       },
       ssr: true,
       icons: {

@@ -40,6 +40,10 @@ declare module "vue-router" {
 }
 
 export default defineNuxtRouteMiddleware((to) => {
+  if (import.meta.client) {
+    return;
+  }
+
   const metaAuth: MiddlewareMeta = to.meta.auth;
 
   if (!metaAuth) {
@@ -48,7 +52,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const { loggedIn } = useAuth();
 
-  if (loggedIn) {
+  if (!loggedIn.value) {
     // the page is only for users that are not logged in (e.g.: login page)
     if (metaAuth.unauthenticatedOnly) {
       return navigateTo(metaAuth.navigateAuthenticatedTo ?? "/");

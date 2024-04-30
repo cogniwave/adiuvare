@@ -1,24 +1,24 @@
 <template>
-  <v-card class="shadow-24 pb-3 bg-white">
+  <v-card class="pb-3 bg-white">
     <v-card-title class="bg-primary">
       <h2 class="text-h5 text-white">{{ $t("login.title") }}</h2>
     </v-card-title>
 
     <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
       <v-card-text>
-        <form-qa-input
+        <v-text-field
           v-model:model-value="email"
           type="email"
-          icon="fa-solid fa-at"
+          prepend-icon="fa-solid fa-at"
           :label="$t('form.name')"
           :rules="[required, isEmail]"
-          :error="errors.email"
+          :error-messages="errors.email"
         />
 
-        <form-qa-input
+        <v-text-field
           v-model:model-value="password"
-          icon="fa-solid fa-lock"
-          class="mt-3"
+          prepend-icon="fa-solid fa-lock"
+          class="mt-10"
           autocorrect="off"
           autocapitalize="off"
           autocomplete="off"
@@ -26,14 +26,14 @@
           :label="$t('form.password')"
           :type="passwordFieldType"
           :rules="[required, isValidPassword]"
-          :error="errors.password"
+          :error-messages="errors.password"
         >
-          <template v-slot:append>
+          <template v-slot:append-inner>
             <v-icon class="cursor-pointer" @click="switchVisibility">
               fa-solid fa-{{ visibilityIcon }}
             </v-icon>
           </template>
-        </form-qa-input>
+        </v-text-field>
       </v-card-text>
 
       <v-card-actions class="px-5 d-flex align-center justify-end">
@@ -67,7 +67,6 @@ import { useNotifyStore } from "@/stores/notify.store";
 definePageMeta({
   auth: {
     unauthenticatedOnly: true,
-    navigateAuthenticatedTo: "/",
   },
 });
 

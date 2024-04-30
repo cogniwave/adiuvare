@@ -1,32 +1,28 @@
 <template>
-  <v-row align-content="center">
-    <v-col cols="4" offset="4" md="6" offset-md="3" sm="8" offset-sm="2">
-      <v-card class="shadow-24 q-pb-md" :loading="submitting">
-        <v-card-title>{{ $t("register.confirmation.title") }}</v-card-title>
+  <v-card class="shadow-24" :loading="submitting">
+    <v-card-title>{{ $t("register.confirmation.title") }}</v-card-title>
 
-        <v-card-item>
-          <template v-if="submitting">
-            <template v-if="success">
-              <p class="mb-3">
-                {{ $t("register.confirmation.confirmSuccess") }}
-                <nuxt-link to="login" class="text-blue-grey pb-1">
-                  {{ $t("login.title") }}
-                </nuxt-link>
-              </p>
-            </template>
+    <v-card-item>
+      <template v-if="submitting">
+        <template v-if="success">
+          <p class="mb-3">
+            {{ $t("register.confirmation.confirmSuccess") }}
+            <nuxt-link to="login" class="text-blue-grey pb-1">
+              {{ $t("login.title") }}
+            </nuxt-link>
+          </p>
+        </template>
 
-            <template v-else>
-              <p class="mb-3">
-                {{ $t("register.confirmation.confirmError") }}
-              </p>
-            </template>
-          </template>
+        <template v-else>
+          <p class="mb-3">
+            {{ $t("register.confirmation.confirmError") }}
+          </p>
+        </template>
+      </template>
 
-          <p>{{ $t("register.confirmation.confirmLoading") }}</p>
-        </v-card-item>
-      </v-card>
-    </v-col>
-  </v-row>
+      <p>{{ $t("register.confirmation.confirmLoading") }}</p>
+    </v-card-item>
+  </v-card>
 </template>
 
 <script setup lang="ts">

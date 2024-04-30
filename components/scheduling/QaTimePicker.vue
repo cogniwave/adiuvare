@@ -1,7 +1,6 @@
 <template>
-  <form-qa-select
+  <v-select
     v-model="selectedTime"
-    variant="underlined"
     :error="error"
     :items="times"
     @update:model-value="(val) => onUpdate(val as string)"
@@ -122,13 +121,3 @@ const times = ref<string[]>([
 
 const onUpdate = (value: string) => $emit("update:model-value", value);
 </script>
-
-<style lang="scss" scoped>
-.q-field {
-  width: 70px;
-
-  :deep(.q-field__native) {
-    justify-content: center !important;
-  }
-}
-</style>

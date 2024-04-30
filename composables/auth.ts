@@ -6,6 +6,7 @@ import sessionService from "@/services/session.service";
 const REFRESH_INTERVAL = 240000; // 4 minutes, 1 less than token duration
 
 let interval: NodeJS.Timeout | null = null;
+let init = true;
 
 export const useAuth = () => {
   const $router = useRouter();
@@ -37,33 +38,6 @@ export const useAuth = () => {
   const token = useState("auth:access", () => _accessTokenCookie.value);
 
   const refreshToken = useState("auth:refresh", () => _refreshTokenCookie.value);
-
-  onMounted(async () => {
-    // When the page is cached on a server, set the token on the client
-    if (_accessTokenCookie.value && !token.value) {
-      token.value = _accessTokenCookie.value;
-      refreshToken.value = _refreshTokenCookie.value;
-    } else if (_refreshTokenCookie.value && !refreshToken.value) {
-      await refresh();
-    }
-
-    if (token.value) {
-      const storageUser = localStorage.getItem("user");
-
-      if (!storageUser) {
-        return _reset();
-      }
-
-      const user: TokenUser = JSON.parse(storageUser);
-
-      data.value = user;
-
-      // refresh token every REFRESH_INTERVAL
-      interval = setInterval(refresh, REFRESH_INTERVAL);
-    }
-
-    loading.value = false;
-  });
 
   const _reset = () => {
     data.value = null;
@@ -134,6 +108,38 @@ export const useAuth = () => {
   watch(token, () => (_accessTokenCookie.value = token.value));
 
   watch(refreshToken, () => (_refreshTokenCookie.value = token.value));
+
+  if (init) {
+    (async (refresh, _reset) => {
+      // When the page is cached on a server, set the token on the client
+      if (_accessTokenCookie.value && !token.value) {
+        token.value = _accessTokenCookie.value;
+        refreshToken.value = _refreshTokenCookie.value;
+      } else if (_refreshTokenCookie.value && !refreshToken.value) {
+        await refresh();
+      }
+
+      if (token.value) {
+        const storageUser = localStorage.getItem("user");
+
+        if (!storageUser) {
+          return _reset();
+        }
+
+        const user: TokenUser = JSON.parse(storageUser);
+
+        data.value = user;
+
+        // refresh token every REFRESH_INTERVAL
+        interval = setInterval(refresh, REFRESH_INTERVAL);
+        loading.value = false;
+      }
+
+      init = false;
+    })(refresh, _reset);
+  } else {
+    loading.value = false;
+  }
 
   return { data, loggedIn, token, refreshToken, logout, login, refresh };
 };

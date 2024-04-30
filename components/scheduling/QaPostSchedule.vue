@@ -10,11 +10,11 @@
     <v-radio :label="$t('form.post.schedule.recurring')" value="recurring" />
   </v-radio-group>
 
-  <div v-if="scheduleType === 'recurring'" class="q-mx-auto text-center">
+  <div v-if="scheduleType === 'recurring'" class="text-center">
     <qa-post-schedule-recurring-selector />
   </div>
 
-  <div v-if="scheduleType === 'specific'" class="q-mx-auto text-center">
+  <div v-if="scheduleType === 'specific'" class="text-center">
     <qa-post-schedule-specific-selector />
   </div>
 </template>

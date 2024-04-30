@@ -15,26 +15,26 @@
 
         <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
           <!-- email -->
-          <form-qa-input
+          <v-text-field
             v-model:model-value="email"
             class="mb-5"
             type="email"
-            icon="fa-solid fa-at"
+            prepend-icon="fa-solid fa-at"
             :readonly="loggedIn"
             :label="$t('form.report.email')"
             :placeholder="$t('form.report.emailPlaceholder')"
             :rules="[required, isEmail]"
-            :error="errors.email"
+            :error-messages="errors.email"
           />
 
           <!-- reason -->
-          <form-qa-textarea
+          <v-textarea
             v-model:model-value="reason"
-            icon="fa-solid fa-comment"
+            prepend-icon="fa-solid fa-comment"
             :placeholder="$t('form.report.reasonPlaceholder')"
             :label="$t('form.report.reason')"
             :rules="[required]"
-            :error="errors.reason"
+            :error-messages="errors.reason"
           />
         </v-form>
       </v-card-text>
