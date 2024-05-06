@@ -40,10 +40,6 @@ declare module "vue-router" {
 }
 
 export default defineNuxtRouteMiddleware((to) => {
-  if (import.meta.client) {
-    return;
-  }
-
   const metaAuth: MiddlewareMeta = to.meta.auth;
 
   if (!metaAuth) {

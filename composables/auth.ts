@@ -21,7 +21,7 @@ export const useAuth = () => {
     secure: true,
   });
 
-  const _refreshTokenCookie = useCookie<string | null>("auth:access", {
+  const _refreshTokenCookie = useCookie<string | null>("auth:refresh", {
     default: () => null,
     maxAge: 300,
     sameSite: "strict",
@@ -111,9 +111,9 @@ export const useAuth = () => {
     }
   };
 
-  watch(token, () => (_accessTokenCookie.value = token.value));
+  watch(token, (val) => (_accessTokenCookie.value = val));
 
-  watch(refreshToken, () => (_refreshTokenCookie.value = token.value));
+  watch(refreshToken, (val) => (_refreshTokenCookie.value = val));
 
   if (init) {
     (async (refresh, _reset) => {
