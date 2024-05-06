@@ -1,9 +1,23 @@
 <template>
   <template v-if="pending">
-    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
+    <v-skeleton-loader type="card" class="rounded-xl mt-5" />
+    <v-skeleton-loader type="list-item@3" class="rounded-xl mt-5" />
   </template>
 
   <template v-if="currPost && Object.keys(currPost)">
+    <div class="d-flex justify-end mb-1">
+      <v-btn
+        v-if="canEdit"
+        variant="text"
+        size="small"
+        rounded="md"
+        :to="`/posts/${currPost.slug}/edit`"
+      >
+        <v-icon class="mr-1">fa-solid fa-pencil</v-icon>
+        {{ $t("form.edit") }}
+      </v-btn>
+    </div>
+
     <div class="bg-white rounded pa-5">
       <div class="d-flex">
         <v-avatar size="64">
@@ -133,8 +147,6 @@ const { data: user } = useAuth();
 const { notifyError } = useNotify();
 const { d, t } = useI18n();
 
-const canEdit = ref(false);
-
 const WEEK_DAY_TO_HUMAN = [
   t("form.post.schedule.day.sunday"),
   t("form.post.schedule.day.monday"),
@@ -185,13 +197,7 @@ const {
   execute,
 } = useFetch<Post>(`/api/v1/posts/${slug}`, { lazy: true, immediate: false });
 
-onBeforeMount(() => {
-  execute();
-
-  if (slug === user.value?.slug) {
-    canEdit.value = true;
-  }
-});
+onBeforeMount(execute);
 
 const recurringTimes = computed<MappedRecurringTimes[]>(() => {
   if (currPost.value.schedule.type !== "recurring") {
@@ -209,6 +215,8 @@ const recurringTimes = computed<MappedRecurringTimes[]>(() => {
     }, [])
     .toSorted((a, b) => b.order - a.order);
 });
+
+const canEdit = computed(() => post.value?.createdBy === user.value?.slug);
 
 const formatSpecificDay = () => {
   const day = (currPost.value.schedule.payload as SpecificSchedule).day;

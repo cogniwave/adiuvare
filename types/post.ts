@@ -56,7 +56,6 @@ export interface Post extends EmptyPost {
   state: PostState;
   createdBy: string;
   createdAt: string;
-  createdBySlug: string;
   updatedAt: string;
   slug: string;
   contacts: UserContact[];

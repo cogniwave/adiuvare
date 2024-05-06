@@ -83,7 +83,9 @@
       "reasonPlaceholder": "Qual é a motivo por estar a reportar esta publicação?",
       "email": "Email",
       "emailPlaceholder": "Qual o seu email para entrarmos em contacto se necessário"
-    }
+    },
+
+    "edit": "Editar"
   },
 
   "notFound": {
