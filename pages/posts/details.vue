@@ -35,8 +35,7 @@
             {{ currPost.createdBy }}
           </nuxt-link>
 
-          {{ currPost.updatedAt }}
-          <!-- <v-tooltip
+          <v-tooltip
             v-if="currPost.updatedAt"
             location="bottom"
             close-on-content-click
@@ -48,7 +47,7 @@
             </template>
           </v-tooltip>
 
-          <small v-else>¬ {{ $d(new Date(currPost.createdAt)) }}</small> -->
+          <small v-else>¬ {{ $d(new Date(currPost.createdAt)) }}</small>
         </div>
       </div>
 
@@ -251,7 +250,7 @@ watch(
     if (err.statusCode === 404) {
       $router.push("/not-found");
     } else {
-      notifyError("Could not fetch post");
+      notifyError(t("errors.fetchPost"));
       $router.push("/");
     }
   },

@@ -78,6 +78,13 @@
       "when": 1715090147227,
       "tag": "0010_brainy_wrecking_crew",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1715189842162,
+      "tag": "0011_rich_stick",
+      "breakpoints": true
     }
   ]
 }

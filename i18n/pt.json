@@ -130,7 +130,9 @@
     "invalidPassword": "Tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
     "emailExists": "Já existe uma conta com este email",
     "invalidEmail": "Não é um email válido",
-    "invalidField": "Invalid field"
+    "invalidField": "Invalid field",
+    "fetchPost": "Could not fetch organization",
+    "fetchOrg": "Could not fetch organization"
   },
 
   "posts": {

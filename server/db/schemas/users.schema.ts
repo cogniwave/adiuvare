@@ -28,6 +28,9 @@ export const users = pgTable(
     verified: boolean("verified").notNull(),
     token: varchar("token", { length: 128 }),
     contacts: json("contacts").$type<UserContact[]>(),
+    bio: text("bio"),
+    photo: text("photo"),
+    photoThumbnail: text("photo_thumbnail"),
   },
   (users) => ({
     idIdx: uniqueIndex("user_id_idx").on(users.id),

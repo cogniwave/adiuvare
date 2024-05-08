@@ -17,14 +17,11 @@
               :aspect-ratio="16 / 9"
               :src="org.photo || '-'"
               cover
+              lazy-src="/assets/profile-placeholder.png"
               referrerpolicy="same-origin"
             >
               <template v-slot:error>
-                <v-img
-                  src="https://picsum.photos/500/300?image=232"
-                  cover
-                  referrerpolicy="same-origin"
-                />
+                <v-img src="/assets/profile-placeholder.png" cover referrerpolicy="same-origin" />
               </template>
 
               <v-expand-transition>

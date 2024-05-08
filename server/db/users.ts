@@ -61,6 +61,7 @@ export const verifyUser = async (token: string): Promise<boolean> => {
   return (result.rowCount || 0) > 0;
 };
 
+// org specific stuffs
 export const getOrgs = async () => {
   const result = await db
     .select({
@@ -85,4 +86,21 @@ export const getTotalOrgs = async () => {
   } catch (_) {
     return 0;
   }
+};
+
+export const getUserBySlug = async (slug: string) => {
+  const result = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      bio: users.bio,
+      slug: users.slug,
+      photo: users.photo,
+      photoThumbnail: users.photoThumbnail,
+    })
+    .from(users)
+    .where(and(eq(users.slug, slug), eq(users.verified, true)))
+    .limit(1);
+
+  return result.length === 1 ? result[0] : null;
 };
