@@ -1,6 +1,6 @@
 <template>
   <!-- click event just to give it the nice ripple and hover effect xD -->
-  <v-card flat variant="text" class="post mb-3" rounded="xl" :to="`/posts/${post.slug}`">
+  <v-card flat variant="text" class="post mb-3" rounded="xl">
     <v-card-item>
       <v-card-title class="d-flex align-start">
         <v-avatar size="64">
@@ -16,12 +16,14 @@
         </v-avatar>
 
         <div class="text-subtitle ml-3">
-          <nuxt-link :to="`/profile/${post.createdBy}`" @click.stop>
+          <nuxt-link :to="`/organizations/${post.createdBy}`" @click.stop>
             {{ post.createdBy }}
           </nuxt-link>
 
           <span class="text-subtitle-2 d-block">
-            {{ $d(String(post.createdAt)) }}
+            <!-- otherwise vue will complain because $t only "accepts"
+             date and number but passing a string also works  -->
+            {{ $d(post.createdAt as any) }}
           </span>
         </div>
 
@@ -95,7 +97,7 @@
           </template>
 
           <v-list density="compact" class="py-2">
-            <template v-if="post.createdBySlug === user">
+            <template v-if="post.createdBy === user">
               <!-- edit post -->
               <v-list-item
                 class="pl-2 pr-2"
@@ -106,7 +108,7 @@
 
               <!-- enable post -->
               <v-list-item
-                v-if="post.state === 'hidden'"
+                v-if="post.state === 'active'"
                 class="pl-2 pr-2"
                 prepend-icon="fa-solid fa-check-double"
                 :title="$t('posts.options.enable')"
@@ -174,6 +176,16 @@
             </template>
           </v-list>
         </v-menu>
+
+        <v-btn
+          variant="outlined"
+          size="small"
+          rounded="md"
+          class="ml-3 btn-contact"
+          :to="`/posts/${post.slug}`"
+        >
+          {{ $t("posts.viewMore") }}
+        </v-btn>
       </v-card-actions>
     </v-card-item>
   </v-card>
@@ -239,10 +251,6 @@ const openPost = () => {
 .post {
   background-color: rgb(var(--v-theme-surface));
 
-  // &:hover {
-  //   background-color: rgba(var(--v-theme-accent), 0.01);
-  // }
-
   :deep(.v-img__error) {
     color: rgb(var(--v-theme-primary));
     background-color: rgb(var(--v-theme-background));
@@ -280,6 +288,20 @@ const openPost = () => {
     cursor: pointer;
     color: rgb(var(--v-theme-primary));
     font-weight: bold;
+  }
+
+  .text-subtitle {
+    a {
+      color: rgb(var(--v-theme-primary));
+      font-weight: bold;
+      opacity: 1;
+      transition: 100ms;
+
+      &:hover {
+        opacity: 0.7;
+        transition: 100ms;
+      }
+    }
   }
 }
 </style>

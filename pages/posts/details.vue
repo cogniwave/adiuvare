@@ -35,19 +35,21 @@
             {{ currPost.createdBy }}
           </nuxt-link>
 
-          <v-tooltip
-            v-if="currPost.updatedAt"
-            location="bottom"
-            close-on-content-click
-            close-delay="0"
-            :text="`${$t('posts.lastUpdatedAt')} ${$d(new Date(currPost.updatedAt))}`"
-          >
-            <template v-slot:activator="{ props }">
-              <small v-bind="props">¬ {{ $d(new Date(currPost.createdAt)) }}</small>
-            </template>
-          </v-tooltip>
+          <template v-if="currPost.updatedAt && currPost.createdAt">
+            <v-tooltip
+              v-if="currPost.updatedAt"
+              location="bottom"
+              close-on-content-click
+              close-delay="0"
+              :text="`${$t('posts.lastUpdatedAt')} ${$d(currPost.updatedAt as any)}`"
+            >
+              <template v-slot:activator="{ props }">
+                <small v-bind="props">¬ {{ $d(currPost.createdAt as any) }}</small>
+              </template>
+            </v-tooltip>
 
-          <small v-else>¬ {{ $d(new Date(currPost.createdAt)) }}</small>
+            <small v-else>¬ {{ $d(currPost.createdAt as any) }}</small>
+          </template>
         </div>
       </div>
 
@@ -80,44 +82,60 @@
       <code v-html="currPost.description" />
     </div>
 
-    <!-- anytime time -->
-    <template v-if="currPost.schedule">
-      <div v-if="currPost.schedule.type === 'anytime'" class="bg-white rounded px-10 py-5 mt-5">
-        <v-row>
-          <v-col align="center">
-            <span>{{ $t("posts.schedule.anytime") }}</span>
-          </v-col>
-        </v-row>
-      </div>
+    <div v-if="currPost.schedule" class="bg-white rounded px-10 py-5 mt-5">
+      <!-- contacts -->
+      <v-list v-if="currPost.contacts?.length" flat bg-color="transparent">
+        <div v-for="(c, idx) in currPost.contacts" :key="idx">
+          <v-list-item v-if="c.type === 'email'" icon="fa-solid fa-phone">
+            <a :href="`mailto:${c.contact}`">{{ c.contact }}</a>
+          </v-list-item>
+
+          <v-list-item v-else-if="c.type === 'phone'" icon="fa-solid fa-phone">
+            <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
+          </v-list-item>
+
+          <v-list-item
+            v-else
+            :key="c.contact"
+            icon="fa-solid fa-file-signature"
+            :title="c.contact"
+          />
+        </div>
+      </v-list>
+
+      <!-- anytime time -->
+      <v-row v-if="currPost.schedule.type === 'anytime'">
+        <v-col align="center">
+          <span>{{ $t("posts.schedule.anytime") }}</span>
+        </v-col>
+      </v-row>
 
       <!-- specific -->
-      <div v-if="currPost.schedule.type === 'specific'" class="bg-white rounded px-10 py-5 mt-5">
-        <v-row>
-          <v-col align="center" cols="6">
-            <span>{{ formatSpecificDay() }}</span>
-          </v-col>
+      <v-row v-if="currPost.schedule.type === 'specific'">
+        <v-col align="center" cols="6">
+          <span>{{ formatSpecificDay() }}</span>
+        </v-col>
 
-          <v-col align="center" cols="6">
-            <span
-              v-for="time in (currPost.schedule.payload as SpecificSchedule).times"
-              :key="time.id"
-              class="d-block"
-            >
-              {{ $t("posts.schedule.from") }}
-              {{ time.start }}
-              {{ $t("posts.schedule.to") }}
-              {{ time.end }}
-            </span>
-          </v-col>
-        </v-row>
-      </div>
+        <v-col align="center" cols="6">
+          <span
+            v-for="time in (currPost.schedule.payload as SpecificSchedule).times"
+            :key="time.id"
+            class="d-block"
+          >
+            {{ $t("posts.schedule.from") }}
+            {{ time.start }}
+            {{ $t("posts.schedule.to") }}
+            {{ time.end }}
+          </span>
+        </v-col>
+      </v-row>
 
       <!-- recurring -->
-      <div v-if="currPost.schedule.type === 'recurring'" class="bg-white rounded px-10 py-5 mt-10">
+      <template v-if="currPost.schedule.type === 'recurring'">
         <v-row>
-          <v-col v-for="time in recurringTimes" :key="time.day" align="center">{{
-            time.day
-          }}</v-col>
+          <v-col v-for="time in recurringTimes" :key="time.day" align="center">
+            {{ time.day }}
+          </v-col>
         </v-row>
 
         <v-row>
@@ -125,8 +143,8 @@
             <p v-for="t in time.times" :key="t.id" class="mb-2">{{ t.start }} - {{ t.end }}</p>
           </v-col>
         </v-row>
-      </div>
-    </template>
+      </template>
+    </div>
   </template>
 </template>
 

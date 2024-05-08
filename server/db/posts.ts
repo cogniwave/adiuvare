@@ -61,7 +61,7 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
     // update post
     await tx
       .update(posts)
-      .set({ ...payload, updatedBy: userId })
+      .set({ ...payload, updatedBy: userId, updatedAt: new Date() })
       .where(eq(posts.slug, slug));
 
     try {
@@ -119,7 +119,7 @@ export const getPostBySlug = async (slug: string) => {
       state: posts.state,
       slug: posts.slug,
       createdBy: users.slug,
-      contacts: users.contacts,
+      contacts: users.contacts || [],
     })
     .from(posts)
     .where(and(eq(posts.slug, slug)))
