@@ -35,7 +35,8 @@
             {{ currPost.createdBy }}
           </nuxt-link>
 
-          <v-tooltip
+          {{ currPost.updatedAt }}
+          <!-- <v-tooltip
             v-if="currPost.updatedAt"
             location="bottom"
             close-on-content-click
@@ -47,7 +48,7 @@
             </template>
           </v-tooltip>
 
-          <small v-else>¬ {{ $d(new Date(currPost.createdAt)) }}</small>
+          <small v-else>¬ {{ $d(new Date(currPost.createdAt)) }}</small> -->
         </div>
       </div>
 
@@ -81,48 +82,52 @@
     </div>
 
     <!-- anytime time -->
-    <div v-if="currPost.schedule.type === 'anytime'" class="bg-white rounded px-10 py-5 mt-5">
-      <v-row>
-        <v-col align="center">
-          <span>{{ $t("posts.schedule.anytime") }}</span>
-        </v-col>
-      </v-row>
-    </div>
+    <template v-if="currPost.schedule">
+      <div v-if="currPost.schedule.type === 'anytime'" class="bg-white rounded px-10 py-5 mt-5">
+        <v-row>
+          <v-col align="center">
+            <span>{{ $t("posts.schedule.anytime") }}</span>
+          </v-col>
+        </v-row>
+      </div>
 
-    <!-- specific -->
-    <div v-if="currPost.schedule.type === 'specific'" class="bg-white rounded px-10 py-5 mt-5">
-      <v-row>
-        <v-col align="center" cols="6">
-          <span>{{ formatSpecificDay() }}</span>
-        </v-col>
+      <!-- specific -->
+      <div v-if="currPost.schedule.type === 'specific'" class="bg-white rounded px-10 py-5 mt-5">
+        <v-row>
+          <v-col align="center" cols="6">
+            <span>{{ formatSpecificDay() }}</span>
+          </v-col>
 
-        <v-col align="center" cols="6">
-          <span
-            v-for="time in (currPost.schedule.payload as SpecificSchedule).times"
-            :key="time.id"
-            class="d-block"
-          >
-            {{ $t("posts.schedule.from") }}
-            {{ time.start }}
-            {{ $t("posts.schedule.to") }}
-            {{ time.end }}
-          </span>
-        </v-col>
-      </v-row>
-    </div>
+          <v-col align="center" cols="6">
+            <span
+              v-for="time in (currPost.schedule.payload as SpecificSchedule).times"
+              :key="time.id"
+              class="d-block"
+            >
+              {{ $t("posts.schedule.from") }}
+              {{ time.start }}
+              {{ $t("posts.schedule.to") }}
+              {{ time.end }}
+            </span>
+          </v-col>
+        </v-row>
+      </div>
 
-    <!-- recurring -->
-    <div v-if="currPost.schedule.type === 'recurring'" class="bg-white rounded px-10 py-5 mt-10">
-      <v-row>
-        <v-col v-for="time in recurringTimes" :key="time.day" align="center">{{ time.day }}</v-col>
-      </v-row>
+      <!-- recurring -->
+      <div v-if="currPost.schedule.type === 'recurring'" class="bg-white rounded px-10 py-5 mt-10">
+        <v-row>
+          <v-col v-for="time in recurringTimes" :key="time.day" align="center">{{
+            time.day
+          }}</v-col>
+        </v-row>
 
-      <v-row>
-        <v-col v-for="time in recurringTimes" :key="time.day" align="center">
-          <p v-for="t in time.times" :key="t.id" class="mb-2">{{ t.start }} - {{ t.end }}</p>
-        </v-col>
-      </v-row>
-    </div>
+        <v-row>
+          <v-col v-for="time in recurringTimes" :key="time.day" align="center">
+            <p v-for="t in time.times" :key="t.id" class="mb-2">{{ t.start }} - {{ t.end }}</p>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
   </template>
 </template>
 
@@ -140,7 +145,7 @@ interface MappedRecurringTimes {
   day: string;
 }
 
-const { currPost } = usePosts<Post>();
+const { currPost, setPost } = usePosts<Post>();
 const $router = useRouter();
 const $route = useRoute();
 const { data: user } = useAuth();
@@ -197,7 +202,12 @@ const {
   execute,
 } = useFetch<Post>(`/api/v1/posts/${slug}`, { lazy: true, immediate: false });
 
-onBeforeMount(execute);
+onBeforeMount(() => {
+  if (slug !== currPost.value.slug) {
+    setPost(null);
+    execute();
+  }
+});
 
 const recurringTimes = computed<MappedRecurringTimes[]>(() => {
   if (currPost.value.schedule.type !== "recurring") {

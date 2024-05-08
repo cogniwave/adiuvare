@@ -14,13 +14,18 @@ export default eventHandler(async (event) => {
   const user = validateToken(body.token);
 
   if (!user) {
+    deleteCookie(event, "auth:access");
+    deleteCookie(event, "auth:refresh");
+
     throw createError({
-      statusCode: 403,
+      statusCode: 401,
       statusMessage: "errors.invalidRefreshToken",
     });
   }
 
   const accessToken = signToken(user, "access");
+
+  console.log("aqui, acces", accessToken);
 
   setCookie(event, "auth:access", accessToken, {
     maxAge: 300, // 5 minutes

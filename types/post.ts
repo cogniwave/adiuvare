@@ -48,7 +48,7 @@ export interface EmptyPost {
   locations: string[];
 }
 
-export type PostState = "pending" | "visible" | "hidden" | "unapproved";
+export type PostState = "pending" | "active" | "inactive" | "rejected";
 
 export interface Post extends EmptyPost {
   id: string;

@@ -61,3 +61,15 @@ p {
     }
   }
 }
+
+.reverse-label {
+  .v-selection-control {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+  }
+
+  .v-selection-control__wrapper {
+    margin-left: 8px;
+  }
+}

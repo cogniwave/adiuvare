@@ -4,9 +4,9 @@
     class="cursor-pointer"
     variant="flat"
     rounded="lg"
+    density="comfortable"
     :prepend-icon="details.icon"
     :color="details.color"
-    :closable="closable"
     @click.prevent="emit('click', need)"
     @click:close.prevent="emit('click:remove', need)"
   >
@@ -22,7 +22,6 @@ import type { PostCategory } from "@/types/post";
 
 const props = defineProps({
   need: { type: String as PropType<PostCategory>, required: true },
-  closable: { type: Boolean, default: false },
 });
 
 const emit = defineEmits<{

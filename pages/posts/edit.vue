@@ -5,20 +5,37 @@
   </template>
 
   <template v-else>
-    <h2 class="text-h5 mb-5">{{ $t("posts.title") }}</h2>
+    <h2 class="text-h5 mb-5">{{ $t("posts.editPostTitle") }}</h2>
 
-    <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
+    <v-form v-if="post" ref="form" validate-on="submit lazy" @submit.prevent="submit">
       <div class="bg-white rounded px-10 py-5">
         <!-- title -->
         <v-text-field
           v-model:model-value="title"
           prepend-icon="fa-solid fa-heading"
-          class="mb-10"
+          class="mb-8"
+          counter="264"
+          persistent-counter
           :placeholder="$t('form.post.titlePlaceholder')"
           :label="$t('form.post.title')"
-          :rules="[required]"
+          :rules="[required, maxLength(264)]"
           :error-messages="errors.title"
           @update:model-value="(value) => updatePost('title', value)"
+        />
+
+        <!-- slug -->
+        <v-text-field
+          v-model:model-value="slug"
+          prepend-icon="fa-solid fa-id-badge"
+          class="mb-8"
+          persistent-counter
+          counter="264"
+          :hint="$t('form.post.slugHint')"
+          :placeholder="$t('form.post.slugPlaceholder')"
+          :label="$t('form.post.slug')"
+          :rules="[required]"
+          :error-messages="errors.slug"
+          @blur="onSlugBlur"
         />
 
         <!-- description -->
@@ -32,6 +49,57 @@
           :error-messages="errors.description"
           @update:model-value="(value) => updatePost('description', value)"
         />
+
+        <!-- state -->
+        <v-input prepend-icon="fa-solid fa-film" hide-details class="mt-10">
+          <v-label class="mr-2"> State </v-label>
+          <v-btn-toggle
+            v-if="['active', 'inactive'].includes(post.state)"
+            v-model:model-value="state"
+            divided
+            color="primary"
+            density="compact"
+            class="ml-auto"
+          >
+            <v-tooltip :text="$t('form.post.state.activeTooltip')">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  size="x-small"
+                  value="active"
+                  @update:model-value="updatePost('state', 'active')"
+                >
+                  {{ $t("form.post.state.active") }}
+                </v-btn>
+              </template>
+            </v-tooltip>
+
+            <v-tooltip :text="$t('form.post.state.inactiveTooltip')">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  size="x-small"
+                  value="inactive"
+                  @update:model-value="updatePost('state', 'inactive')"
+                >
+                  {{ $t("form.post.state.inactive") }}
+                </v-btn>
+              </template>
+            </v-tooltip>
+          </v-btn-toggle>
+
+          <template v-else>
+            <v-tooltip :text="$t(`form.post.state.${post.state}Tooltip`)">
+              <template v-slot:activator="{ props }">
+                {{ $t(`form.post.state.${post.state}`) }}
+
+                <v-icon v-bind="props" color="primary" class="ml-1">
+                  fa-solid fa-circle-question
+                </v-icon>
+              </template>
+            </v-tooltip>
+          </template>
+        </v-input>
       </div>
 
       <div class="bg-white rounded px-10 py-5 my-5">
@@ -57,17 +125,16 @@
 
         <!-- category -->
         <v-select
-          v-model:model-value="categoryInput"
+          v-model:model-value="needs"
           multiple
-          options-dense
           use-chips
-          hide-hint
           prepend-icon="fa-solid fa-parachute-box"
+          clearable
           class="mt-10"
           :label="$t('form.post.category')"
           :rules="[required]"
           :error-messages="errors.category"
-          :items="helpOptions"
+          :items="needOptions"
           @update:model-value="updatePost('needs', $event)"
         >
           <template v-slot:chip="{ item }">
@@ -92,7 +159,7 @@
       </v-btn>
 
       <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-        {{ $t("posts.submit") }}
+        {{ $t("posts.update") }}
       </v-btn>
     </div>
   </template>
@@ -104,31 +171,30 @@ import type { VForm } from "vuetify/lib/components/index.mjs";
 
 import type { SelectOption } from "@/types/form";
 
-import { required } from "@/utils/validators";
+import { required, maxLength } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/scheduling/QaPostSchedule.vue";
-import type { Post, PostSchedule } from "@/types/post";
+import type { Post, PostSchedule, PostState } from "@/types/post";
 
 definePageMeta({ path: "/posts/:slug/edit", auth: { authenticatedOnly: true } });
 
 const { notifySuccess } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
-const { currPost, posts } = usePosts();
+const { currPost, posts, setPost } = usePosts<Post>();
 const $route = useRoute();
 const $router = useRouter();
 
-const slug = $route.params.slug as string;
+const _slug = $route.params.slug as string;
 
 const {
   data: post,
   pending,
-  error,
   execute,
-} = useFetch<Post>(`/api/v1/posts/${slug}`, { lazy: true, immediate: false });
+} = useFetch<Post>(`/api/v1/posts/${_slug}`, { lazy: true, immediate: false });
 
 onBeforeMount(execute);
 
@@ -138,10 +204,11 @@ const locationInput = ref<string[]>([]);
 const locations = ref<string[]>([]);
 const fetchingLocations = ref(false);
 const noDataText = ref(t("form.post.locationNoFilter"));
-
 const form = ref<VForm>();
-const categoryInput = ref<string[]>([]);
-const helpOptions = ref<SelectOption[]>([
+const slug = ref<string>(_slug);
+const state = ref<PostState>("pending");
+const needs = ref<string[]>([]);
+const needOptions = ref<SelectOption[]>([
   { title: t("posts.needs.money"), value: "money" },
   { title: t("posts.needs.volunteers"), value: "volunteers" },
   { title: t("posts.needs.goods"), value: "goods" },
@@ -189,8 +256,8 @@ const updatePost = (prop: string, val: string | string[] | PostSchedule) => {
 };
 
 const removeNeed = (category: string) => {
-  categoryInput.value = categoryInput.value.filter((c) => category !== c);
-  updatePost("needs", categoryInput.value);
+  needs.value = needs.value.filter((c) => category !== c);
+  updatePost("needs", needs.value);
 };
 
 const submit = async () => {
@@ -207,24 +274,50 @@ const submit = async () => {
   submitting.value = true;
 
   try {
-    const post = await $fetch<Post>("/api/v1/posts", { body: currPost.value, method: "post" });
+    const post = await $fetch<Post>(`/api/v1/posts/${_slug}`, {
+      body: currPost.value,
+      method: "patch",
+    });
+
+    console.log("p", post);
 
     if (post) {
-      posts.value.push(post);
+      posts.value = posts.value.map((p) => (p.id === currPost.value.id ? currPost.value : p));
     }
 
-    currPost.value = {} as Post;
-    $router.push("/");
-    notifySuccess(t("posts.created"));
+    $router.push(`/posts/${_slug}`);
+    notifySuccess(t("posts.updated"));
   } catch (errs: any) {
     handleErrors(errs);
   } finally {
     submitting.value = false;
   }
 };
+
+const onSlugBlur = () => {
+  slug.value = slug.value.replaceAll(/[^A-Za-z0-9]/g, "-");
+  updatePost("slug", slug.value);
+};
+
+watch(
+  () => post.value,
+  (post) => {
+    if (post) {
+      title.value = post.title;
+      description.value = post.description;
+      slug.value = post.slug;
+      state.value = post.state;
+      locationInput.value = post.locations;
+      locations.value = post.locations;
+      needs.value = post.needs;
+      setPost({ ...post });
+    }
+  },
+  { immediate: true },
+);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 :deep(.v-card) {
   background-color: rgba(var(--v-theme-surface));
 }

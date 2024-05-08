@@ -7,7 +7,7 @@ export const getSessionUser = (event: H3Event<EventHandlerRequest>) => {
   const user = validateToken(event);
 
   if (!user) {
-    throw createError({ statusCode: 403, message: "User not found" });
+    return null;
   }
 
   return user;

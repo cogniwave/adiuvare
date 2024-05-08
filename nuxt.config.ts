@@ -47,6 +47,7 @@ export default defineNuxtConfig({
     "@nuxtjs/eslint-module",
     "nuxt-bugsnag",
     "@nuxtjs/i18n",
+    "@vueuse/nuxt",
     (_, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         config.plugins?.push(vuetify({ autoImport: true }));

@@ -22,10 +22,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { ScheduleType } from "@/types/post";
+import type { Post, ScheduleType } from "@/types/post";
 
 import QaPostScheduleRecurringSelector from "./QaPostScheduleRecurringSelector.vue";
 import QaPostScheduleSpecificSelector from "./QaPostScheduleSpecificSelector.vue";
 
-const scheduleType = ref<ScheduleType>("anytime");
+const { currPost } = usePosts<Post>();
+
+const scheduleType = ref<ScheduleType>(currPost.value?.schedule.type || "anytime");
 </script>

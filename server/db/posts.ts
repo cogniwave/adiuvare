@@ -6,10 +6,10 @@ import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
 
 import type { InsertPost } from "./schemas/posts.schema";
-import type { Post, UpdatePostPayload } from "~/types/post";
+import type { UpdatePostPayload } from "~/types/post";
 
 export const getPosts = async () => {
-  const result = (await db
+  const result = await db
     .select({
       id: posts.id,
       title: posts.title,
@@ -24,10 +24,10 @@ export const getPosts = async () => {
       createdBySlug: users.slug,
     })
     .from(posts)
-    .where(eq(posts.state, "visible"))
+    .where(eq(posts.state, "active"))
     .innerJoin(users, eq(posts.createdUserId, users.id))
     .orderBy(desc(posts.createdAt))
-    .limit(50)) as Post[];
+    .limit(50);
 
   return result || [];
 };
@@ -46,15 +46,15 @@ export const createPost = async (payload: InsertPost) => {
   return await db.insert(posts).values(payload);
 };
 
-export const updatePost = async (postId: string, payload: UpdatePostPayload, userId: string) => {
-  const old = await getPost(postId);
+export const updatePost = async (slug: string, payload: UpdatePostPayload, userId: string) => {
+  const old = await getPostBySlug(slug);
 
   if (!old) {
     return null;
   }
 
-  if (old.createdUserId !== userId) {
-    return { old, updated: old };
+  if (old.createdBy !== userId) {
+    return { ...old, updated: old };
   }
 
   await db.transaction(async (tx) => {
@@ -62,11 +62,12 @@ export const updatePost = async (postId: string, payload: UpdatePostPayload, use
     await tx
       .update(posts)
       .set({ ...payload, updatedBy: userId })
-      .where(eq(posts.id, postId));
+      .where(eq(posts.slug, slug));
+
     try {
       // add entry to history
       await tx.insert(postHistory).values({
-        postId: postId,
+        postId: old.id,
         userId: userId,
         updatedAt: new Date(),
         state: old.state,
@@ -81,7 +82,7 @@ export const updatePost = async (postId: string, payload: UpdatePostPayload, use
     }
   });
 
-  return { old, updated: { ...old, ...payload } };
+  return { ...old, ...payload };
 };
 
 export const deletePost = async (id: string) => {
@@ -115,6 +116,7 @@ export const getPostBySlug = async (slug: string) => {
       schedule: posts.schedule,
       createdAt: posts.createdAt,
       updatedAt: posts.updatedAt,
+      state: posts.state,
       slug: posts.slug,
       createdBy: users.slug,
       contacts: users.contacts,

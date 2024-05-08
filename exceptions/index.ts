@@ -35,5 +35,3 @@ export interface NuxtError {
     data?: Record<string, string>;
   };
 }
-
-export class InvalidToken extends Error {}

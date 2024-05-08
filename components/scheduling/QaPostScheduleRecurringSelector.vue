@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip :text="$t('form.post.schedule.day.monday')" location="top">
+  <v-tooltip :text="$t('form.post.schedule.day.monday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -15,7 +15,7 @@
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.tuesday')" location="top">
+  <v-tooltip :text="$t('form.post.schedule.day.tuesday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -32,7 +32,7 @@
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.wednesday')" location="top">
+  <v-tooltip :text="$t('form.post.schedule.day.wednesday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -49,7 +49,7 @@
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.thursday')" location="top">
+  <v-tooltip :text="$t('form.post.schedule.day.thursday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -66,7 +66,7 @@
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.friday')" location="top">
+  <v-tooltip :text="$t('form.post.schedule.day.friday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -83,7 +83,7 @@
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.saturday')" location="top">
+  <v-tooltip :text="$t('form.post.schedule.day.saturday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -100,7 +100,7 @@
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.sunday')" location="top">
+  <v-tooltip :text="$t('form.post.schedule.day.sunday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"

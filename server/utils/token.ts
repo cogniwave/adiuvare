@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 
 import type { H3Event, EventHandlerRequest } from "h3";
 import type { TokenUser } from "~/types/user";
-import { InvalidToken } from "~/exceptions";
 
 type VerifiedToken = (jwt.JwtPayload & { user: TokenUser }) | null;
 
@@ -26,18 +25,23 @@ export const validateToken = (context: H3Event<EventHandlerRequest> | string) =>
   }
 
   if (!token) {
-    throw new InvalidToken();
+    return null;
   }
 
-  const verified = jwt.verify(token, process.env.JWT_KEY as string, {
-    audience: ["qaweb", "qaapp"],
-    subject: "queroajudaraut",
-    issuer: "queroajudar",
-  }) as VerifiedToken;
+  try {
+    const verified = jwt.verify(token, process.env.JWT_KEY as string, {
+      audience: ["qaweb", "qaapp"],
+      subject: "queroajudaraut",
+      issuer: "queroajudar",
+    }) as VerifiedToken;
 
-  if (!verified) {
-    throw new InvalidToken();
+    if (!verified) {
+      return null;
+    }
+
+    return verified.user;
+  } catch (err) {
+    console.warn("failed to validate token", err);
+    return null;
   }
-
-  return verified.user;
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip location="top" :text="$t(details.description)">
+  <v-tooltip :text="$t(details.description)">
     <template v-slot:activator="{ props }">
       <v-chip
         v-bind="props"

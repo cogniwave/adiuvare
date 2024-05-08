@@ -7,8 +7,5 @@
 <script setup lang="ts">
 import QaFeed from "@/components/feed/QaFeed.vue";
 
-definePageMeta({
-  path: "/",
-  auth: { unauthenticatedOnly: false },
-});
+definePageMeta({ path: "/" });
 </script>

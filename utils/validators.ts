@@ -32,3 +32,7 @@ export const validDate = (val: string) => {
 
   return toValidate.isBefore(today) ? "Data não pode ser inferior a hoje" : true;
 };
+
+export const maxLength = (max: number) => (val: string) => {
+  return val.length < max || `Campo só pode ter até ${max} caracteres`;
+};

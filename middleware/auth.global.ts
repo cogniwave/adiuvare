@@ -40,20 +40,27 @@ declare module "vue-router" {
 }
 
 export default defineNuxtRouteMiddleware((to) => {
+  // if (import.meta.server) {
+  //   return;
+  // }
+
   const metaAuth: MiddlewareMeta = to.meta.auth;
 
   if (!metaAuth) {
     return;
   }
 
-  const { loggedIn } = useAuth();
+  const { loggedIn, data } = useAuth();
 
-  if (!loggedIn.value) {
+  console.log(loggedIn.value, data.value, to, metaAuth);
+  if (loggedIn.value) {
+    console.log(metaAuth.unauthenticatedOnly);
     // the page is only for users that are not logged in (e.g.: login page)
     if (metaAuth.unauthenticatedOnly) {
       return navigateTo(metaAuth.navigateAuthenticatedTo ?? "/");
     }
 
+    console.log("aqui?");
     return;
   }
 
@@ -71,8 +78,10 @@ export default defineNuxtRouteMiddleware((to) => {
     return;
   }
 
-  //  user is not logged in, check if he can access page
-  if (metaAuth.authenticatedOnly) {
-    return navigateTo(metaAuth.navigateUnauthenticatedTo ?? "/login");
-  }
+  // if (!loggedIn.value) {
+  // // user is not logged in, check if he can access page
+  //   if (metaAuth.authenticatedOnly) {
+  //     return navigateTo(metaAuth.navigateUnauthenticatedTo ?? "/login");
+  //   }
+  // }
 });

@@ -75,7 +75,20 @@
         "addRecurring": "Remover horário",
         "removeRecurring": "Adicionar outro horário",
         "anytimeBreakdown": "sads"
-      }
+      },
+      "state": {
+        "active": "Ativo",
+        "activeTooltip": "Uma publicação ativa está disponível a qualquer pessoa",
+        "inactive": "Inativo",
+        "inactiveTooltip": "Uma publicação inativa não pode ser acedida ou vista por ninguém",
+        "pending": "Pendente",
+        "pendingTooltip": "Publicação a ser aprovada pela equipa. Até lá ninguém conseguirá vê-la. Quando for aprovada receberá uma notificação",
+        "rejected": "Rejeitado",
+        "rejectedTooltip": "Publicacão foi rejeitada porque não adere às políticas da plataforma"
+      },
+      "slug": "Slug",
+      "slugPlaceholder": "o-meu-post",
+      "slugHint": "Slug é usado para a definição do link da publição. É único e quanto mais legível for melhor é a partilha"
     },
 
     "report": {
@@ -100,6 +113,7 @@
 
   "errors": {
     "unexpected": "Erro inesperado",
+    "unauthenticated": "É necessário iniciar sessão para esta ação",
     "post": {
       "endHourHigherThanStart": "Hora inicio tem que ser antes de hora de fim",
       "empty": "Não pode ser vazio"
@@ -120,8 +134,10 @@
   },
 
   "posts": {
-    "title": "Nova publicação",
+    "newPostTitle": "Nova publicação",
+    "editPostTitle": "Editar publicação",
     "submit": "Criar publicação",
+    "update": "Atualizar publicação",
     "cancel": "Cancelar",
     "chooseSchedule": "Escolher",
     "expandDesc": "Ver mais",
@@ -161,6 +177,7 @@
       "deleteConfirm": "Apagar"
     },
     "created": "Publicação criada com sucesso! Uma vez aprovada ficará disponível para toda a gente",
+    "updated": "Publicação atualizada! Uma vez aprovada ficará disponível para toda a gente",
     "schedule": {
       "from": "Desde",
       "to": "até",

@@ -9,6 +9,13 @@ let init = true;
 
 export const useAuth = () => {
   const $router = useRouter();
+  const storageUser = useLocalStorage<TokenUser>("qa:user", null, {
+    writeDefaults: false,
+    serializer: {
+      read: (val) => (val ? JSON.parse(val) : null),
+      write: (val) => JSON.stringify(val),
+    },
+  });
 
   const loggedIn = computed<boolean>(() => !loading.value && !!data.value);
 
@@ -44,7 +51,7 @@ export const useAuth = () => {
     refreshToken.value = null;
     _accessTokenCookie.value = null;
     _refreshTokenCookie.value = null;
-    localStorage.removeItem("user");
+    storageUser.value = null;
 
     if (interval) {
       clearInterval(interval);
@@ -58,6 +65,7 @@ export const useAuth = () => {
     if (!refreshToken.value) {
       _reset();
       $router.push("/");
+      loading.value = false;
       return false;
     }
 
@@ -68,11 +76,14 @@ export const useAuth = () => {
       });
 
       token.value = accesToken;
+      _accessTokenCookie.value = accesToken;
 
       return true;
     } catch (err) {
       logout();
       return false;
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -87,8 +98,11 @@ export const useAuth = () => {
     refreshToken.value = result.refreshToken;
     data.value = result.user;
     loading.value = false;
+    storageUser.value = result.user;
 
-    localStorage.setItem("user", JSON.stringify(result.user));
+    // refresh token every REFRESH_INTERVAL
+    interval = setInterval(refresh, REFRESH_INTERVAL);
+    loading.value = false;
 
     $router.replace("/");
   };
@@ -111,30 +125,28 @@ export const useAuth = () => {
     }
   };
 
-  watch(token, (val) => (_accessTokenCookie.value = val));
+  watch(token, (tkn: Ref<string | null>) => (_accessTokenCookie.value = tkn.value));
 
-  watch(refreshToken, (val) => (_refreshTokenCookie.value = val));
+  watch(refreshToken, (tkn: Ref<string | null>) => tkn && (_refreshTokenCookie.value = tkn.value));
 
   if (init) {
-    (async (refresh, _reset) => {
+    (async () => {
+      console.log(
+        _accessTokenCookie.value,
+        token.value,
+        _refreshTokenCookie.value,
+        refreshToken.value,
+      );
       // When the page is cached on a server, set the token on the client
       if (_accessTokenCookie.value && !token.value) {
         token.value = _accessTokenCookie.value;
         refreshToken.value = _refreshTokenCookie.value;
-      } else if (_refreshTokenCookie.value && !refreshToken.value) {
+      } else if (_refreshTokenCookie.value && (!refreshToken.value || !token.value)) {
         await refresh();
       }
 
-      if (token.value) {
-        const storageUser = localStorage.getItem("user");
-
-        if (!storageUser) {
-          return _reset();
-        }
-
-        const user: TokenUser = JSON.parse(storageUser);
-
-        data.value = user;
+      if (token.value && storageUser.value) {
+        data.value = storageUser.value;
 
         // refresh token every REFRESH_INTERVAL
         interval = setInterval(refresh, REFRESH_INTERVAL);
@@ -142,7 +154,7 @@ export const useAuth = () => {
       }
 
       init = false;
-    })(refresh, _reset);
+    })();
   } else {
     loading.value = false;
   }

@@ -68,6 +68,10 @@ export default defineNuxtPlugin((app) => {
           class: "pl-0 pr-0",
           rounded: "4px",
           hideDetails: "auto",
+          hideHint: true,
+        },
+        VTooltip: {
+          location: "top",
         },
       },
       ssr: true,

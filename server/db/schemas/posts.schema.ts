@@ -16,9 +16,9 @@ import type { PostSchedule } from "~/types/post";
 
 export const POST_STATES: Readonly<[string, ...string[]]> = [
   "pending",
-  "visible",
-  "hidden",
-  "unapproved",
+  "active",
+  "inactive",
+  "rejected",
 ];
 
 export const POST_NEEDS: Readonly<[string, ...string[]]> = [
