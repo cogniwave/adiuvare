@@ -1,5 +1,5 @@
 <template>
-  <v-card class="w-75 bg-white mx-auto">
+  <v-card class="w-100 bg-white mx-auto">
     <v-card-title class="bg-primary">
       <h2 class="text-h5 text-white">{{ $t("reset.title") }}</h2>
     </v-card-title>
@@ -55,6 +55,8 @@ import { required, isEmail } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 
 definePageMeta({
+  layout: "auth",
+  path: "/reset-password",
   auth: {
     unauthenticatedOnly: true,
     navigateAuthenticatedTo: "/",

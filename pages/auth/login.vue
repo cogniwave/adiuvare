@@ -64,6 +64,8 @@ import { required, isEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 
 definePageMeta({
+  layout: "auth",
+  path: "/login",
   auth: {
     unauthenticatedOnly: true,
   },
