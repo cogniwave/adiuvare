@@ -12,6 +12,7 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
     password: users.password,
     slug: users.slug,
     id: users.id,
+    verified: users.verified,
   });
 
   if (!user || !compareSync(password, user.password as string)) {
@@ -22,7 +23,6 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
   }
 
   if (!user.verified) {
-    console.log("aquio");
     throw createError({
       statusCode: 400,
       message: "errors.unverifiedUser",
