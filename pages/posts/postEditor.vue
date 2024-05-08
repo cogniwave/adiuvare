@@ -52,7 +52,7 @@
 
         <!-- state -->
         <v-input prepend-icon="fa-solid fa-film" hide-details class="mt-10">
-          <v-label class="mr-2"> State </v-label>
+          <v-label class="mr-2"> {{ $t("form.post.state.title") }} </v-label>
           <v-btn-toggle
             v-if="['active', 'inactive'].includes(post.state)"
             v-model:model-value="state"
