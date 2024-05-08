@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto";
 import { hashSync } from "bcrypt";
-import { eq, or } from "drizzle-orm";
+import { and, asc, count, eq, or } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
 
 import { db } from "./";
@@ -59,4 +59,30 @@ export const verifyUser = async (token: string): Promise<boolean> => {
     .where(eq(users.token, token));
 
   return (result.rowCount || 0) > 0;
+};
+
+export const getOrgs = async () => {
+  const result = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      slug: users.slug,
+      email: users.email,
+    })
+    .from(users)
+    .where(and(eq(users.type, "org"), eq(users.verified, true)))
+    .orderBy(asc(users.name))
+    .limit(50);
+
+  return result || [];
+};
+
+export const getTotalOrgs = async () => {
+  const result = await db.select({ total: count() }).from(users).where(eq(users.type, "org"));
+
+  try {
+    return result[0].total ?? 0;
+  } catch (_) {
+    return 0;
+  }
 };

@@ -137,7 +137,7 @@ import { useRoute, useRouter } from "vue-router";
 import dayjs from "@/services/dayjs.service";
 import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "@/types/post";
 
-definePageMeta({ layout: "sidebar", path: "/posts/:slug" });
+definePageMeta({ path: "/posts/:slug" });
 
 interface MappedRecurringTimes {
   times: ScheduleTime[];

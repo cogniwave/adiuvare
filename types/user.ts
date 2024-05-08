@@ -9,6 +9,9 @@ export interface BaseUser {
 
 export interface User extends Omit<BaseUser, "password"> {
   id: string;
+  slug: string;
+  bio?: string;
+  photo?: string;
 }
 
 export interface LoginPayload {
@@ -45,4 +48,11 @@ export interface LoginResult {
   user: TokenUser;
   accessToken: string;
   refreshToken: string;
+}
+
+// type == org
+
+export interface GetOrganizationsResult {
+  organizations: User[];
+  total: number;
 }

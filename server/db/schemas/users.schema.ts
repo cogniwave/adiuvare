@@ -11,7 +11,9 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { posts } from "./posts.schema";
-import type { UserContact } from "~/types/user";
+import type { UserContact, UserType } from "~/types/user";
+
+export const USER_TYPES: Readonly<[UserType, ...UserType[]]> = ["org", "volunteer"];
 
 export const users = pgTable(
   "users",
@@ -20,7 +22,7 @@ export const users = pgTable(
     name: text("name").notNull(),
     email: text("email").unique().notNull(),
     password: text("password").notNull(),
-    type: text("type").notNull(),
+    type: text("type").notNull().$type<UserType>(),
     slug: text("slug").unique(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     verified: boolean("verified").notNull(),

@@ -199,8 +199,12 @@
   "menu": {
     "home": "Início",
     "orgs": "Organizações",
-    "posts": "Publicações"
+    "posts": "Publicações do mesmo autor"
   },
 
-  "users": {}
+  "users": {},
+
+  "org": {
+    "learnMore": "Ver mais"
+  }
 }
