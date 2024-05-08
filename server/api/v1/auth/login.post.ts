@@ -8,7 +8,7 @@ import { getValidatedInput } from "~/server/utils/request";
 import { users } from "~/server/db/schemas/users.schema";
 
 const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
-  const user = await getUser<TokenUser & { password?: string }>(email, [["verified", true]], {
+  const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
     password: users.password,
     slug: users.slug,
     id: users.id,
@@ -21,7 +21,16 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
     });
   }
 
+  if (!user.verified) {
+    console.log("aquio");
+    throw createError({
+      statusCode: 400,
+      message: "errors.unverifiedUser",
+    });
+  }
+
   delete user.password;
+  delete user.verified;
   return user;
 };
 

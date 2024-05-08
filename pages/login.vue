@@ -85,12 +85,9 @@ const $router = useRouter();
 const { t } = useI18n();
 const { login } = useAuth();
 
-let redirects = false;
-
 onMounted(() => {
   if ($route.query?.requireAuth) {
     notifyWarning(t("login.actionRequiresAuth"));
-    redirects = true;
     $router.replace({
       path: "/login",
       query: { ...$route.query, requireAuth: undefined },
@@ -125,9 +122,11 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  login({ email: email.value, password: password.value }, redirects).catch((errs) => {
+  login({ email: email.value, password: password.value }).catch((errs) => {
     if (errs.statusCode === 401) {
-      notifyError("Email ou palavra-passe errados");
+      notifyError(t("errors.invalidCredentials"));
+    } else if (errs.statusCode === 400) {
+      notifyWarning(t("errors.unverifiedUser"));
     } else {
       handleErrors(errs);
     }

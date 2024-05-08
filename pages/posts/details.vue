@@ -21,7 +21,7 @@
     <div class="bg-white rounded pa-5">
       <div class="d-flex">
         <v-avatar size="64">
-          <v-img :alt="$t('posts.logoAlt')" lazy-src="/assets/post-profile-placeholder.png">
+          <v-img :alt="$t('posts.logoAlt')" lazy-src="/assets/profile-placeholder.png">
             <template v-slot:error>
               {{ currPost.createdBy }}
             </template>

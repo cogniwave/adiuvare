@@ -7,7 +7,7 @@
           <v-img
             :alt="$t('posts.logoAlt')"
             src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
-            lazy-src="/assets/post-profile-placeholder.png"
+            lazy-src="/assets/profile-placeholder.png"
           >
             <template v-slot:error>
               {{ post.createdBy[0] }}
@@ -16,12 +16,12 @@
         </v-avatar>
 
         <div class="text-subtitle ml-3">
-          <nuxt-link :to="`/profile/${post.createdBySlug}`" @click.stop>
+          <nuxt-link :to="`/profile/${post.createdBy}`" @click.stop>
             {{ post.createdBy }}
           </nuxt-link>
 
           <span class="text-subtitle-2 d-block">
-            {{ $d(post.createdAt) }}
+            {{ $d(String(post.createdAt)) }}
           </span>
         </div>
 

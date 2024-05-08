@@ -10,7 +10,7 @@
   <!-- render users -->
   <!-- <template v-else-if="$users.users.length">
     <v-avatar size="64">
-      <v-img :alt="$t('users.logoAlt')" lazy-src="/assets/post-profile-placeholder.png">
+      <v-img :alt="$t('users.logoAlt')" lazy-src="/assets/profile-placeholder.png">
         <template v-slot:error>
           {{ post.createdBy[0] }}
         </template>

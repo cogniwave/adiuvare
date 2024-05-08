@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto";
 import { hashSync } from "bcrypt";
-import { and, asc, count, eq, or } from "drizzle-orm";
+import { and, asc, count, eq } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
 
 import { db } from "./";
@@ -24,7 +24,7 @@ export const getUser = async <T = SelectUser>(
       ...fields,
     })
     .from(users)
-    .where(or(eq(users.email, email), ...filter.map(([key, value]) => eq(key, value))))
+    .where(and(eq(users.email, email), ...filter.map(([key, value]) => eq(key, value))))
     .limit(1);
 
   return result.length ? (result[0] as T) : undefined;

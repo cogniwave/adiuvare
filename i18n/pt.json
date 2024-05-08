@@ -118,7 +118,7 @@
       "endHourHigherThanStart": "Hora inicio tem que ser antes de hora de fim",
       "empty": "Não pode ser vazio"
     },
-    "invalidCredentials": "Credenciais inválidas",
+    "invalidCredentials": "Email ou palavra-passe errados",
     "empty": "Não pode ser",
     "invalidConfirmToken": "Token invalido",
     "emptyRefreshToken": "No refresh token",
@@ -132,7 +132,8 @@
     "invalidEmail": "Não é um email válido",
     "invalidField": "Invalid field",
     "fetchPost": "Could not fetch organization",
-    "fetchOrg": "Could not fetch organization"
+    "fetchOrg": "Could not fetch organization",
+    "unverifiedUser": "Utilizador não confirmado. Siga os passos do email enviado quando a conta foi criada"
   },
 
   "posts": {
