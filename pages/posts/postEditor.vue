@@ -53,6 +53,7 @@
         <!-- state -->
         <v-input prepend-icon="fa-solid fa-film" hide-details class="mt-10">
           <v-label class="mr-2"> {{ $t("form.post.state.title") }} </v-label>
+
           <v-btn-toggle
             v-if="['active', 'inactive'].includes(post.state)"
             v-model:model-value="state"
@@ -148,6 +149,9 @@
       </div>
 
       <div class="bg-white rounded px-10 py-5">
+        <!-- contacts -->
+        <qa-post-contacts />
+
         <!-- horarios -->
         <qa-post-schedule />
       </div>
@@ -176,7 +180,7 @@ import { useFormErrors } from "@/composables/formErrors";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
-import QaPostSchedule from "@/components/scheduling/QaPostSchedule.vue";
+import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
 import type { Post, PostSchedule, PostState } from "@/types/post";
 
 definePageMeta({ path: "/posts/:slug/edit", auth: { authenticatedOnly: true } });

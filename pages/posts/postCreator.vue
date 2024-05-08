@@ -102,7 +102,7 @@ import { useFormErrors } from "@/composables/formErrors";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
-import QaPostSchedule from "@/components/scheduling/QaPostSchedule.vue";
+import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
 import type { Post, PostSchedule } from "@/types/post";
 
 definePageMeta({ path: "/posts/new", auth: { authenticatedOnly: true } });

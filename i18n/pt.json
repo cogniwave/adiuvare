@@ -99,6 +99,10 @@
       "emailPlaceholder": "Qual o seu email para entrarmos em contacto se necessário"
     },
 
+    "contacts": {
+      "title": "Contactos"
+    },
+
     "edit": "Editar"
   },
 
