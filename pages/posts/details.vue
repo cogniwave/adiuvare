@@ -205,8 +205,9 @@ const {
 onBeforeMount(() => {
   if (slug !== currPost.value.slug) {
     setPost(null);
-    execute();
   }
+
+  execute();
 });
 
 const recurringTimes = computed<MappedRecurringTimes[]>(() => {
