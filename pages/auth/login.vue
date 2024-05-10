@@ -11,7 +11,7 @@
           type="email"
           prepend-icon="fa-solid fa-at"
           :label="$t('form.name')"
-          :rules="[required($t), isEmail($t)]"
+          :rules="[required($t), isValidEmail($t)]"
           :error-messages="errors.email"
         />
 
@@ -60,7 +60,7 @@ import { ref } from "vue";
 
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import { required, isEmail, isValidPassword } from "@/utils/validators";
+import { required, isValidEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 
 definePageMeta({

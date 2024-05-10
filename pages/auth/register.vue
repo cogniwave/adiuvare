@@ -29,7 +29,7 @@
           prepend-icon="fa-solid fa-at"
           :label="$t('form.email')"
           :error-messages="errors.email"
-          :rules="[required($t), isEmail($t)]"
+          :rules="[required($t), isValidEmail($t)]"
         />
 
         <v-text-field
@@ -38,7 +38,7 @@
           prepend-icon="fa-solid fa-at"
           class="mt-3"
           :label="$t('form.emailRepeat')"
-          :rules="[required($t), isEmail($t), match($t, email, $t('form.emailDuplicateKey'))]"
+          :rules="[required($t), isValidEmail($t), match($t, email, $t('form.emailDuplicateKey'))]"
         />
 
         <v-text-field
@@ -122,7 +122,7 @@ import { ref } from "vue";
 import type { User, UserType } from "@/types/user";
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import { required, isEmail, isValidPassword, match } from "@/utils/validators";
+import { required, isValidEmail, isValidPassword, match } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 
 definePageMeta({

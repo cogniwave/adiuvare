@@ -23,7 +23,7 @@
             :readonly="loggedIn"
             :label="$t('form.report.email')"
             :placeholder="$t('form.report.emailPlaceholder')"
-            :rules="[required($t), isEmail($t)]"
+            :rules="[required($t), isValidEmail($t)]"
             :error-messages="errors.email"
           />
 
