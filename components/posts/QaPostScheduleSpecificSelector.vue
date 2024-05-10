@@ -11,7 +11,6 @@
   <suspense>
     <v-date-picker
       v-model:model-value="proxyDate"
-      :min="minDate"
       landscape
       color="primary"
       class="mx-auto mt-5 bg-white"
@@ -29,7 +28,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { ScheduleTime, SpecificSchedule } from "@/types/post";
+import type { Post, ScheduleTime, SpecificSchedule } from "@/types/post";
 import type { Dayjs } from "@/services/dayjs.service";
 
 import dayjs from "@/services/dayjs.service";
@@ -37,14 +36,13 @@ import { required, validDate } from "@/utils/validators";
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 
-const { currPost } = usePosts();
+const { currPost } = usePosts<Post>();
 
-const date = ref("");
-const proxyDate = ref<Dayjs>(dayjs());
-const times = ref<ScheduleTime[]>([]);
-const d = new Date();
-d.setDate(d.getDate() - 1);
-const minDate = ref(d.toISOString());
+const date = ref((currPost.value.schedule?.payload as SpecificSchedule).day || "");
+const proxyDate = ref<Dayjs>(date.value ? dayjs(date.value) : dayjs());
+const times = ref<ScheduleTime[]>(
+  (currPost.value.schedule?.payload as SpecificSchedule).times || [],
+);
 
 const onUpdate = (payload: SpecificSchedule) => {
   currPost.value = {
