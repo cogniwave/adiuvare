@@ -120,23 +120,20 @@ export const useAuth = () => {
         $router.replace("/");
       }
     } catch (err) {
-      console.warn("failed to fresh", err);
-      // window.location.reload();
+      console.warn("failed to refresh", err);
+      window.location.reload();
     }
   };
 
-  watch(token, (tkn: Ref<string | null>) => (_accessTokenCookie.value = tkn.value));
+  watch(token, (tkn: Ref<string | null>) => tkn.value && (_accessTokenCookie.value = tkn.value));
 
-  watch(refreshToken, (tkn: Ref<string | null>) => tkn && (_refreshTokenCookie.value = tkn.value));
+  watch(
+    refreshToken,
+    (tkn: Ref<string | null>) => tkn.value && (_refreshTokenCookie.value = tkn.value),
+  );
 
   if (init) {
     (async () => {
-      console.log(
-        _accessTokenCookie.value,
-        token.value,
-        _refreshTokenCookie.value,
-        refreshToken.value,
-      );
       // When the page is cached on a server, set the token on the client
       if (_accessTokenCookie.value && !token.value) {
         token.value = _accessTokenCookie.value;

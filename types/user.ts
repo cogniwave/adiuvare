@@ -39,7 +39,7 @@ export interface TokenUser {
 export type ContactType = "email" | "phone" | "other";
 
 export interface UserContact {
-  label: string;
+  // label: string;
   type: ContactType;
   contact: string;
 }

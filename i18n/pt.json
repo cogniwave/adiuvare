@@ -100,7 +100,14 @@
     },
 
     "contacts": {
-      "title": "Contactos"
+      "title": "Contactos",
+      "phone": "Telefone",
+      "email": "Email",
+      "other": "Outro",
+      "type": "Tipo",
+      "label": "Contacto",
+      "add": "Adicionar outro contacto",
+      "remove": "Remover"
     },
 
     "edit": "Editar"
@@ -138,7 +145,8 @@
     "invalidField": "Invalid field",
     "fetchPost": "Could not fetch organization",
     "fetchOrg": "Could not fetch organization",
-    "unverifiedUser": "Utilizador não confirmado. Siga os passos do email enviado quando a conta foi criada"
+    "unverifiedUser": "Utilizador não confirmado. Siga os passos do email enviado quando a conta foi criada",
+    "contactExists": "Contacto já existe"
   },
 
   "posts": {

@@ -57,7 +57,7 @@ const onTimesUpdate = (payload: ScheduleTime[]) => {
   times.value = payload;
 
   onUpdate({
-    day: dayjs(date.value, "DD/MM/YYYY"),
+    day: dayjs(date.value, "DD/MM/YYYY").toString(),
     times: payload,
   });
 };
@@ -68,7 +68,7 @@ const onProxyChange = (proxy: Dayjs) => {
   if (!times.value.length) {
     times.value = [getNewGroupTimes()];
     onUpdate({
-      day: dayjs(date.value, "DD/MM/YYYY"),
+      day: dayjs(date.value, "DD/MM/YYYY").toString(),
       times: times.value,
     });
   }
