@@ -6819,6 +6819,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"libphonenumber-js@npm:^1.11.1":
+  version: 1.11.1
+  resolution: "libphonenumber-js@npm:1.11.1"
+  checksum: 003b0b39f9d4b246985723e93b744bafa0d6d12a6f393fe3b883add8db1c5189bad33d330550517aee0670c1c371573bda35a0950f0d0d54b6a7bab1a5f64466
+  languageName: node
+  linkType: hard
+
 "lilconfig@npm:^3.1.1":
   version: 3.1.1
   resolution: "lilconfig@npm:3.1.1"
@@ -8921,6 +8928,7 @@ __metadata:
     eslint-plugin-vue: "npm:^9.25.0"
     joi: "npm:^17.13.0"
     jsonwebtoken: "npm:^9.0.2"
+    libphonenumber-js: "npm:^1.11.1"
     material-design-icons-iconfont: "npm:^6.7.0"
     nodemailer: "npm:^6.9.13"
     nuxt: "npm:^3.11.2"

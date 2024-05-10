@@ -9,16 +9,24 @@
         :model-value="c.type"
         :items="options"
         :label="$t('form.contacts.type')"
-        @update:model-value="onUpdate($event, 'type', c.id)"
+        @update:model-value="onUpdate($event, c.contact, c.id)"
+        @blur="persistUpdate"
       />
 
       <v-text-field
         :model-value="c.contact"
         type="text"
+        :hint="c.type === 'phone' ? $t('form.contacts.phoneHint') : undefined"
         :label="$t('form.contacts.label')"
         :error-messages="errors[c.id]"
-        :rules="[required($t), contactExists(c.id)]"
-        @update:model-value="onUpdate($event, 'contact', c.id)"
+        :rules="[
+          required($t),
+          contactExists(c.id),
+          ...(c.type === 'email' ? [isValidEmail($t)] : []),
+          ...(c.type === 'phone' ? [isValidPhone($t)] : []),
+        ]"
+        @update:model-value="onUpdate(c.type, $event, c.id)"
+        @blur="persistUpdate"
       />
 
       <div class="button-group">
@@ -91,20 +99,29 @@ const options = ref([
   { title: t("form.contacts.other"), value: "other" },
 ]);
 
-const onUpdate = (value: ContactType | string, key: "type" | "contact", id: number) => {
-  contacts.value = contacts.value.map((c) => (c.id === id ? { ...c, [key]: value } : c));
+const contactEdits = ref<Record<number, Contact>>({});
+
+const onUpdate = (type: ContactType, contact: string, id: number) => {
+  contactEdits.value[id] = { id, type, contact };
 };
 
 const contactExists = (id: number) => (val: string) => {
-  return contacts.value.every((c) => c.id === id && c.contact !== val) || t("errors.contactExists");
+  return !contacts.value.some((c) => c.id !== id && c.contact === val) || t("errors.contactExists");
 };
 
 const onRemove = (id: number) => {
   contacts.value = contacts.value.filter((c) => c.id !== id);
+  delete contactEdits.value[id];
 };
 
 const onAdd = () => {
   contacts.value.push({ contact: "", type: "phone", id: contacts.value.length });
+};
+
+const persistUpdate = () => {
+  contacts.value = contacts.value.map((c) => {
+    return contactEdits.value[c.id] ? contactEdits.value[c.id] : c;
+  });
 };
 </script>
 
@@ -129,6 +146,7 @@ const onAdd = () => {
     display: flex;
     justify-content: end;
     width: 50px;
+    align-items: center;
   }
 }
 </style>

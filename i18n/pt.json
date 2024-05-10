@@ -109,7 +109,8 @@
       "type": "Tipo",
       "label": "Contacto",
       "add": "Adicionar outro contacto",
-      "remove": "Remover"
+      "remove": "Remover",
+      "phoneHint": "Se não for um número português adicione também o indicativo"
     },
 
     "edit": "Editar"
@@ -143,7 +144,7 @@
     "invalidUserType": "Tem que ser \"org\" ou \"voluntário\"",
     "invalidPassword": "Tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
     "emailExists": "Já existe uma conta com este email",
-    "invalidEmail": "Não é um email válido",
+    "invalidEmail": "Email inválido",
     "invalidField": "Invalid field",
     "fetchPost": "Could not fetch organization",
     "fetchOrg": "Could not fetch organization",
@@ -151,8 +152,9 @@
     "contactExists": "Contacto já existe",
     "requiredField": "Campo obrigatório",
     "mismatchValues": "{0} não são iguais",
-    "invalidDate": "Não é uma data válida",
-    "outdatedDate": "Data não pode ser inferior a hoje"
+    "invalidDate": "Data inválida",
+    "outdatedDate": "Data não pode ser inferior a hoje",
+    "invalidPhone": "Número de telefone inválido"
   },
 
   "posts": {
