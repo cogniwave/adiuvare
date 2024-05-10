@@ -19,7 +19,7 @@
           prepend-icon="fa-solid fa-user"
           :label="$t('form.name')"
           :error-messages="errors.name"
-          :rules="[required]"
+          :rules="[required($t)]"
         />
 
         <v-text-field
@@ -29,7 +29,7 @@
           prepend-icon="fa-solid fa-at"
           :label="$t('form.email')"
           :error-messages="errors.email"
-          :rules="[required, isEmail]"
+          :rules="[required($t), isEmail($t)]"
         />
 
         <v-text-field
@@ -38,7 +38,7 @@
           prepend-icon="fa-solid fa-at"
           class="mt-3"
           :label="$t('form.emailRepeat')"
-          :rules="[required, isEmail, match(email, 'Emails')]"
+          :rules="[required($t), isEmail($t), match($t, email, $t('form.emailDuplicateKey'))]"
         />
 
         <v-text-field
@@ -52,7 +52,7 @@
           :label="$t('form.password')"
           :error-messages="errors.password"
           :type="passwordFieldType"
-          :rules="[required, isValidPassword]"
+          :rules="[required($t), isValidPassword($t)]"
         >
           <template v-slot:append-inner>
             <v-icon class="cursor-pointer" @click="switchVisibility">
@@ -71,7 +71,11 @@
           spellcheck="false"
           :label="$t('form.passwordRepeat')"
           :type="passwordFieldType"
-          :rules="[required, isValidPassword, match(password, 'Palavras passe')]"
+          :rules="[
+            required($t),
+            isValidPassword($t),
+            match($t, password, $t('form.passwordDuplicateKey')),
+          ]"
         >
           <template v-slot:append-inner>
             <v-icon class="cursor-pointer" @click="switchVisibility">

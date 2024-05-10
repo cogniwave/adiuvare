@@ -14,7 +14,7 @@
             prepend-icon="fa-solid fa-at"
             :label="$t('form.email')"
             :error-messages="errors.email"
-            :rules="[required, isEmail]"
+            :rules="[required($t), isEmail($t)]"
           />
         </v-form>
       </v-card-item>

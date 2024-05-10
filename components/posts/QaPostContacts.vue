@@ -17,7 +17,7 @@
         type="text"
         :label="$t('form.contacts.label')"
         :error-messages="errors[c.id]"
-        :rules="[required, contactExists(c.id)]"
+        :rules="[required($t), contactExists(c.id)]"
         @update:model-value="onUpdate($event, 'contact', c.id)"
       />
 

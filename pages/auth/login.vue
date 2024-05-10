@@ -11,7 +11,7 @@
           type="email"
           prepend-icon="fa-solid fa-at"
           :label="$t('form.name')"
-          :rules="[required, isEmail]"
+          :rules="[required($t), isEmail($t)]"
           :error-messages="errors.email"
         />
 
@@ -25,7 +25,7 @@
           spellcheck="false"
           :label="$t('form.password')"
           :type="passwordFieldType"
-          :rules="[required, isValidPassword]"
+          :rules="[required($t), isValidPassword($t)]"
           :error-messages="errors.password"
         >
           <template v-slot:append-inner>

@@ -18,10 +18,15 @@
           persistent-counter
           :placeholder="$t('form.post.titlePlaceholder')"
           :label="$t('form.post.title')"
-          :rules="[required, maxLength(264)]"
+          :rules="[required($t), maxLength($t, 264)]"
           :error-messages="errors.title"
           @update:model-value="(value) => updatePost('title', value)"
         />
+
+        {{ errors }}
+        <template v-if="errors.title">
+          {{ $t(errors.title) }}
+        </template>
 
         <!-- slug -->
         <v-text-field
@@ -33,7 +38,7 @@
           :hint="$t('form.post.slugHint')"
           :placeholder="$t('form.post.slugPlaceholder')"
           :label="$t('form.post.slug')"
-          :rules="[required]"
+          :rules="[required($t)]"
           :error-messages="errors.slug"
           @blur="onSlugBlur"
         />
@@ -45,7 +50,7 @@
           prepend-icon="fa-solid fa-quote-left"
           :placeholder="$t('form.post.descriptionPlaceholder')"
           :label="$t('form.post.description')"
-          :rules="[required]"
+          :rules="[required($t)]"
           :error-messages="errors.description"
           @update:model-value="(value) => updatePost('description', value)"
         />
@@ -115,7 +120,7 @@
           :label="$t('form.post.location')"
           :placeholder="$t('form.post.locationPlaceholder')"
           :no-data-text="noDataText"
-          :rules="[required]"
+          :rules="[required($t)]"
           :error-messages="errors.locations"
           :items="locations"
           :loading="fetchingLocations"
@@ -133,8 +138,8 @@
           clearable
           class="mt-10"
           :label="$t('form.post.category')"
-          :rules="[required]"
-          :error-messages="errors.category"
+          :rules="[required($t)]"
+          :error-messages="errors.category && t(errors.category)"
           :items="needOptions"
           @update:model-value="updatePost('needs', $event)"
         >
@@ -184,7 +189,6 @@ import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
 import type { Post, PostSchedule, PostState } from "@/types/post";
 
 definePageMeta({ path: "/posts/:slug/edit", auth: { authenticatedOnly: true } });
-
 const { notifySuccess } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
@@ -270,7 +274,11 @@ const submit = async () => {
     return;
   }
 
-  if (!(await form.value.validate()).valid) {
+  console.log(form.value.$i18n);
+
+  const result = await form.value.validate();
+  if (!result.valid) {
+    console.log(result.errors);
     return;
   }
 
@@ -282,8 +290,6 @@ const submit = async () => {
       body: currPost.value,
       method: "patch",
     });
-
-    console.log("p", post);
 
     if (post) {
       posts.value = posts.value.map((p) => (p.id === currPost.value.id ? currPost.value : p));

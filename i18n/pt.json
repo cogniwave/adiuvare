@@ -30,8 +30,10 @@
   "form": {
     "name": "Nome",
     "email": "Email",
+    "emailDuplicateKey": "Emails",
     "emailRepeat": "Repita o email",
     "password": "Palavra-passe",
+    "passwordDuplicateKey": "Palavras-passe",
     "passwordRepeat": "Repita a palavra-passe",
 
     "userType": {
@@ -131,7 +133,7 @@
       "empty": "Não pode ser vazio"
     },
     "invalidCredentials": "Email ou palavra-passe errados",
-    "empty": "Não pode ser",
+    "empty": "Não pode ser vazio",
     "invalidConfirmToken": "Token invalido",
     "emptyRefreshToken": "No refresh token",
     "noRefreshToken": "Unauthorized, no refreshToken in payload",
@@ -146,7 +148,11 @@
     "fetchPost": "Could not fetch organization",
     "fetchOrg": "Could not fetch organization",
     "unverifiedUser": "Utilizador não confirmado. Siga os passos do email enviado quando a conta foi criada",
-    "contactExists": "Contacto já existe"
+    "contactExists": "Contacto já existe",
+    "requiredField": "Campo obrigatório",
+    "mismatchValues": "{0} não são iguais",
+    "invalidDate": "Não é uma data válida",
+    "outdatedDate": "Data não pode ser inferior a hoje"
   },
 
   "posts": {

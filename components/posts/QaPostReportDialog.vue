@@ -23,7 +23,7 @@
             :readonly="loggedIn"
             :label="$t('form.report.email')"
             :placeholder="$t('form.report.emailPlaceholder')"
-            :rules="[required, isEmail]"
+            :rules="[required($t), isEmail($t)]"
             :error-messages="errors.email"
           />
 
@@ -33,7 +33,7 @@
             prepend-icon="fa-solid fa-comment"
             :placeholder="$t('form.report.reasonPlaceholder')"
             :label="$t('form.report.reason')"
-            :rules="[required]"
+            :rules="[required($t)]"
             :error-messages="errors.reason"
           />
         </v-form>
