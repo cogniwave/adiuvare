@@ -5,7 +5,7 @@
     readonly
     validate-on="input lazy"
     :model-value="date"
-    :rules="[required($t), validDate($t)]"
+    :rules="[required($t), validDate($t), ...(initValue && [futureDate($t)])]"
   />
 
   <suspense>
@@ -32,13 +32,16 @@ import type { Post, ScheduleTime, SpecificSchedule } from "@/types/post";
 import type { Dayjs } from "@/services/dayjs.service";
 
 import dayjs from "@/services/dayjs.service";
-import { required, validDate } from "@/utils/validators";
+import { required, validDate, futureDate } from "@/utils/validators";
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 
 const { currPost } = usePosts<Post>();
+const { d } = useI18n();
 
-const date = ref((currPost.value.schedule?.payload as SpecificSchedule).day || "");
+const initValue = ref((currPost.value.schedule?.payload as SpecificSchedule).day);
+
+const date = ref(d((currPost.value.schedule?.payload as SpecificSchedule).day || ""));
 const proxyDate = ref<Dayjs>(date.value ? dayjs(date.value) : dayjs());
 const times = ref<ScheduleTime[]>(
   (currPost.value.schedule?.payload as SpecificSchedule).times || [],
@@ -61,7 +64,7 @@ const onTimesUpdate = (payload: ScheduleTime[]) => {
 };
 
 const onProxyChange = (proxy: Dayjs) => {
-  date.value = proxy.format("DD/MM/YYYY");
+  date.value = d(proxy.toISOString());
 
   if (!times.value.length) {
     times.value = [getNewGroupTimes()];

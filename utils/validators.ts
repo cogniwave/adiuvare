@@ -25,15 +25,11 @@ export const match = (t: TranslatorFunction, valToMatch: string, key: string) =>
 };
 
 export const validDate = (t: TranslatorFunction) => (val: string) => {
-  const toValidate = dayjs(val, "DD/MM/YYYY");
+  return dayjs(val, "DD/MM/YYYY").isValid() || t("errors.invalidDate");
+};
 
-  if (!toValidate.isValid()) {
-    return t("errors.invalidDate");
-  }
-
-  const today = dayjs();
-
-  return toValidate.isBefore(today) ? t("errors.outdatedDate") : true;
+export const futureDate = (t: TranslatorFunction) => (val: string) => {
+  return dayjs(val, "DD/MM/YYYY").isBefore(dayjs()) ? t("errors.outdatedDate") : true;
 };
 
 export const maxLength = (t: TranslatorFunction, max: number) => (val: string) => {

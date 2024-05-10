@@ -23,11 +23,6 @@
           @update:model-value="(value) => updatePost('title', value)"
         />
 
-        {{ errors }}
-        <template v-if="errors.title">
-          {{ $t(errors.title) }}
-        </template>
-
         <!-- slug -->
         <v-text-field
           v-model:model-value="slug"

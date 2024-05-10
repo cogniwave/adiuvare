@@ -9,29 +9,44 @@
       density="compact"
       class="ml-auto"
     >
-      <!-- <v-tooltip :text="$t('form.post.schedule.anytime')">
-      <template v-slot:activator="{ props }"> -->
-      <v-btn size="x-small" value="anytime" @update:model-value="scheduleType = 'anytime'">
-        {{ $t("form.post.schedule.anytime") }}
-      </v-btn>
-      <!-- </template>
-    </v-tooltip> -->
+      <v-tooltip :text="$t('form.post.schedule.anytime')">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            size="x-small"
+            value="anytime"
+            @update:model-value="scheduleType = 'anytime'"
+          >
+            {{ $t("form.post.schedule.anytime") }}
+          </v-btn>
+        </template>
+      </v-tooltip>
 
-      <!-- <v-tooltip :text="$t('form.post.schedule.specific')">
-      <template v-slot:activator="{ props }"> -->
-      <v-btn size="x-small" value="specific" @update:model-value="scheduleType = 'specific'">
-        {{ $t("form.post.schedule.specific") }}
-      </v-btn>
-      <!-- </template>
-    </v-tooltip> -->
+      <v-tooltip :text="$t('form.post.schedule.specific')">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            size="x-small"
+            value="specific"
+            @update:model-value="scheduleType = 'specific'"
+          >
+            {{ $t("form.post.schedule.specific") }}
+          </v-btn>
+        </template>
+      </v-tooltip>
 
-      <!-- <v-tooltip :text="$t('form.post.schedule.recurringTooltip')">
-      <template v-slot:activator="{ props }"> -->
-      <v-btn size="x-small" value="recurring" @update:model-value="scheduleType = 'recurring'">
-        {{ $t("form.post.schedule.recurring") }}
-      </v-btn>
-      <!-- </template>
-     </v-tooltip> -->
+      <v-tooltip :text="$t('form.post.schedule.recurringTooltip')">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            size="x-small"
+            value="recurring"
+            @update:model-value="scheduleType = 'recurring'"
+          >
+            {{ $t("form.post.schedule.recurring") }}
+          </v-btn>
+        </template>
+      </v-tooltip>
     </v-btn-toggle>
   </v-input>
 
