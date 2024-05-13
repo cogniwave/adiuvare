@@ -34,6 +34,7 @@ export interface TokenUser {
   email: string;
   slug: string;
   type: UserType;
+  contacts: UserContact[];
 }
 
 export type ContactType = "email" | "phone" | "other";

@@ -164,10 +164,15 @@
     "submit": "Criar publicação",
     "update": "Atualizar publicação",
     "cancel": "Cancelar",
+    "back": "Voltar",
     "chooseSchedule": "Escolher",
     "expandDesc": "Ver mais",
     "logoAlt": "Logo de quem criou a publicação",
-    "contact": "Contactar",
+    "contacts": {
+      "contact": "Contactar",
+      "detailsTitle": "Como contactar",
+      "copyTooltip": "Copiar contacto"
+    },
     "needs": {
       "money": "Dinheiro",
       "moneyDescription": "São necessárias doações monetárias",
@@ -206,11 +211,13 @@
     "schedule": {
       "from": "Desde",
       "to": "até",
-      "anytime": "Não existe hora determinada para este pedido"
+      "anytime": "Não existe hora determinada para este pedido",
+      "detailsTitle": "Horário"
     },
     "lastUpdatedAt": "Publicação atualizada a ",
     "viewMore": "Ver mais"
   },
+
   "loading": "A carregar",
 
   "feed": {
@@ -232,5 +239,7 @@
 
   "org": {
     "learnMore": "Ver mais"
-  }
+  },
+
+  "copied": "Copiado"
 }

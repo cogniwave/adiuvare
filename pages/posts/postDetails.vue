@@ -84,26 +84,19 @@
 
     <div v-if="currPost.schedule" class="bg-white rounded px-10 py-5 mt-5">
       <!-- contacts -->
-      <v-list v-if="currPost.contacts?.length" flat bg-color="transparent">
-        <div v-for="(c, idx) in currPost.contacts" :key="idx">
-          <v-list-item v-if="c.type === 'email'" icon="fa-solid fa-phone">
-            <a :href="`mailto:${c.contact}`">{{ c.contact }}</a>
-          </v-list-item>
+      {{ $t("posts.contacts.detailsTitle") }}
 
-          <v-list-item v-else-if="c.type === 'phone'" icon="fa-solid fa-phone">
-            <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
-          </v-list-item>
-
-          <v-list-item
-            v-else
-            :key="c.contact"
-            icon="fa-solid fa-file-signature"
-            :title="c.contact"
-          />
-        </div>
-      </v-list>
+      <qa-post-contacts-list
+        v-if="currPost.contacts?.length"
+        :contacts="currPost.contacts"
+        bg-color="transparent"
+      />
 
       <!-- anytime time -->
+      <div class="my-3">
+        {{ $t("posts.schedule.detailsTitle") }}
+      </div>
+
       <v-row v-if="currPost.schedule.type === 'anytime'">
         <v-col align="center">
           <span>{{ $t("posts.schedule.anytime") }}</span>
@@ -144,6 +137,12 @@
           </v-col>
         </v-row>
       </template>
+    </div>
+
+    <div class="pt-3 d-flex align-center justify-end">
+      <v-btn @click="$router.go(-1)">
+        {{ $t("posts.back") }}
+      </v-btn>
     </div>
   </template>
 </template>

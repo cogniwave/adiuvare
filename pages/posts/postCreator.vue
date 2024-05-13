@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-h5 mb-5">{{ $t("posts.title") }}</h2>
+  <h2 class="text-h5 mb-5">{{ $t("posts.newPostTitle") }}</h2>
 
   <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
     <div class="bg-white rounded px-10 py-5">
@@ -75,6 +75,9 @@
     </div>
 
     <div class="bg-white rounded px-10 py-5">
+      <!-- contacts -->
+      <qa-post-contacts />
+
       <!-- horarios -->
       <qa-post-schedule />
     </div>

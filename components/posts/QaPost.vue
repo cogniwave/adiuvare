@@ -142,7 +142,7 @@
           </v-list>
         </v-menu>
 
-        <v-menu>
+        <v-menu :close-on-content-click="false">
           <template v-slot:activator="{ props }">
             <v-btn
               v-bind="props"
@@ -152,29 +152,11 @@
               class="ml-auto btn-contact"
               @click.stop.prevent
             >
-              {{ $t("posts.contact") }}
+              {{ $t("posts.contacts.contact") }}
             </v-btn>
           </template>
 
-          <v-list density="compact">
-            <template v-for="(c, idx) in post.contacts" :key="idx">
-              <v-list-item v-if="c.type === 'email'" icon="fa-solid fa-phone">
-                <a :href="`mailto:${c.contact}`">{{ c.contact }}</a>
-              </v-list-item>
-
-              <v-list-item v-else-if="c.type === 'phone'" icon="fa-solid fa-phone">
-                <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
-              </v-list-item>
-
-              <v-list-item
-                v-else
-                :key="c.contact"
-                icon="fa-solid fa-file-signature"
-                :title="c.contact"
-              >
-              </v-list-item>
-            </template>
-          </v-list>
+          <qa-post-contacts-list v-if="post.contacts?.length" :contacts="post.contacts" />
         </v-menu>
 
         <v-btn

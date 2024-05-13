@@ -1,4 +1,4 @@
-type NotifyType = "success" | "error" | "warning";
+type NotifyType = "success" | "error" | "warning" | "info";
 
 const DEFAULT_TIMEOUT = 5000;
 
@@ -27,5 +27,9 @@ export const useNotify = () => {
     _notify(text, "warning", timeout);
   };
 
-  return { notifyError, notifySuccess, notifyWarning, text, visible, timeout, type };
+  const notifyInfo = (text: string, timeout: number = DEFAULT_TIMEOUT) => {
+    _notify(text, "info", timeout);
+  };
+
+  return { notifyInfo, notifyError, notifySuccess, notifyWarning, text, visible, timeout, type };
 };

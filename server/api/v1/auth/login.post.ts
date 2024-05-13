@@ -11,6 +11,7 @@ const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
   const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
     password: users.password,
     slug: users.slug,
+    contacts: users.contacts,
     id: users.id,
     verified: users.verified,
   });

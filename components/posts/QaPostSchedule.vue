@@ -69,5 +69,5 @@ import QaPostScheduleSpecificSelector from "./QaPostScheduleSpecificSelector.vue
 
 const { currPost } = usePosts<Post>();
 
-const scheduleType = ref<ScheduleType>(currPost.value?.schedule.type || "anytime");
+const scheduleType = ref<ScheduleType>(currPost.value?.schedule?.type || "anytime");
 </script>
