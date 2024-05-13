@@ -3,8 +3,6 @@ import Joi from "joi";
 import type { CreatePostPayload } from "~/types/post";
 import { POST_NEEDS } from "~/server/db/schemas/posts.schema";
 import { createPost } from "~/server/db/posts";
-import { getUser } from "~/server/db/users";
-import { users } from "~/server/db/schemas/users.schema";
 import { getValidatedInput } from "~/server/utils/request";
 import { genSlugToken } from "~/server/utils";
 
@@ -28,11 +26,12 @@ export default defineEventHandler(async (event) => {
 
   // validate and add token to event
   try {
-    const tknUser = validateToken(event);
-    const user = await getUser(tknUser.email, [], { id: users.id });
+    const user = getSessionUser(event);
 
     if (!user) {
-      throw createError({ statusCode: 403, message: "User not found" });
+      setResponseStatus(event, 401);
+      sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));
+      return;
     }
 
     return await createPost({

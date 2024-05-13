@@ -25,8 +25,6 @@ export default eventHandler(async (event) => {
 
   const accessToken = signToken(user, "access");
 
-  console.log("aqui, acces", accessToken);
-
   setCookie(event, "auth:access", accessToken, {
     maxAge: 300, // 5 minutes
     sameSite: "strict",

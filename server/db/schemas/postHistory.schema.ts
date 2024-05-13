@@ -13,6 +13,7 @@ import { relations } from "drizzle-orm";
 import { users } from "./users.schema";
 import { needsEnum, posts, stateEnum } from "./posts.schema";
 import type { PostSchedule } from "~/types/post";
+import type { UserContact } from "~/types/user";
 
 export const postHistory = pgTable(
   "postHistory",
@@ -30,6 +31,8 @@ export const postHistory = pgTable(
     state: stateEnum("state").notNull().default("pending"),
     locations: text("locations").array().notNull(),
     schedule: json("schdule").notNull().$type<PostSchedule>(),
+    contacts: json("contacts").notNull().$type<UserContact[]>(),
+    slug: text("slug"),
     needs: needsEnum("needs").array().notNull(),
   },
   (postHistory) => ({

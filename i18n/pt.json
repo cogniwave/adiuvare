@@ -140,7 +140,6 @@
     "noRefreshToken": "Unauthorized, no refreshToken in payload",
     "invalidRefreshToken": "Unauthorized, refreshToken can`t be verified",
     "max": "Não pode ter mais que {max} caracteres",
-    "between": "Não pode ter mais que {min} caracteres",
     "invalidUserType": "Tem que ser \"org\" ou \"voluntário\"",
     "invalidPassword": "Tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
     "emailExists": "Já existe uma conta com este email",
@@ -154,7 +153,9 @@
     "mismatchValues": "{0} não são iguais",
     "invalidDate": "Data inválida",
     "outdatedDate": "Data não pode ser inferior a hoje",
-    "invalidPhone": "Número de telefone inválido"
+    "invalidPhone": "Número de telefone inválido",
+    "invalidContact": "Contacto inválido",
+    "invalidContactType": "Tipo de contacto inválido."
   },
 
   "posts": {

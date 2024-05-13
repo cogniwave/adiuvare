@@ -19,8 +19,8 @@ export const getPosts = async () => {
       schedule: posts.schedule,
       createdAt: posts.createdAt,
       slug: posts.slug,
+      contacts: posts.contacts,
       createdBy: users.slug,
-      contacts: users.contacts,
       createdBySlug: users.slug,
     })
     .from(posts)
@@ -47,24 +47,24 @@ export const createPost = async (payload: InsertPost) => {
 };
 
 export const updatePost = async (slug: string, payload: UpdatePostPayload, userId: string) => {
-  const old = await getPostBySlug(slug);
+  const old = await getPostBySlug(slug, true);
 
   if (!old) {
     return null;
   }
 
-  if (old.createdBy !== userId) {
+  if (old.createdById !== userId) {
     return { ...old, updated: old };
   }
 
   await db.transaction(async (tx) => {
     // update post
-    await tx
-      .update(posts)
-      .set({ ...payload, updatedBy: userId, updatedAt: new Date() })
-      .where(eq(posts.slug, slug));
-
     try {
+      await tx
+        .update(posts)
+        .set({ ...payload, updatedBy: userId, updatedAt: new Date() })
+        .where(eq(posts.slug, slug));
+
       // add entry to history
       await tx.insert(postHistory).values({
         postId: old.id,
@@ -76,6 +76,8 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
         schedule: old.schedule,
         needs: old.needs,
         title: old.title,
+        slug: old.slug,
+        contacts: old.contacts,
       });
     } catch (err) {
       tx.rollback();
@@ -105,7 +107,7 @@ export const getPostByOwner = async (postId: string, userId: string) => {
   return result.length === 1 ? result[0] : null;
 };
 
-export const getPostBySlug = async (slug: string) => {
+export const getPostBySlug = async (slug: string, getId = false) => {
   const result = await db
     .select({
       id: posts.id,
@@ -118,8 +120,9 @@ export const getPostBySlug = async (slug: string) => {
       updatedAt: posts.updatedAt,
       state: posts.state,
       slug: posts.slug,
+      contacts: posts.contacts,
       createdBy: users.slug,
-      contacts: users.contacts || [],
+      ...(getId && { createdById: posts.createdUserId }),
     })
     .from(posts)
     .where(and(eq(posts.slug, slug)))

@@ -14,8 +14,9 @@
       />
 
       <v-text-field
-        :model-value="c.contact"
         type="text"
+        class="w-100"
+        :model-value="c.contact"
         :hint="c.type === 'phone' ? $t('form.contacts.phoneHint') : undefined"
         :label="$t('form.contacts.label')"
         :error-messages="errors[c.id]"
@@ -90,7 +91,10 @@ const { t } = useI18n();
 
 const errors = ref<Record<string, string>>({});
 const contacts = ref<Contact[]>(
-  (currPost.value.contacts || [{ contact: "", type: "phone" }]).map((c, i) => ({ ...c, id: i })),
+  (currPost.value.contacts || [{ contact: "", type: "phone" }]).map((c, i) => ({
+    ...c,
+    id: i,
+  })),
 );
 
 const options = ref([
@@ -122,13 +126,14 @@ const persistUpdate = () => {
   contacts.value = contacts.value.map((c) => {
     return contactEdits.value[c.id] ? contactEdits.value[c.id] : c;
   });
+
+  currPost.value.contacts = contacts.value.map((c) => ({ contact: c.contact, type: c.type }));
 };
 </script>
 
 <style lang="scss">
 .contact-group {
   display: flex;
-  align-items: top;
   width: 100%;
   margin-bottom: 12px;
 

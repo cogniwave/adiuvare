@@ -67,6 +67,7 @@ export interface CreatePostPayload {
   schedule: PostSchedule;
   needs: PostCategory[];
   title: string;
+  contacts: UserContact[];
 }
 
 export interface PostDeletePayload {

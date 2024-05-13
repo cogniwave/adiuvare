@@ -33,6 +33,21 @@ export default defineEventHandler(async (event) => {
       .messages({ "strings.empty": "errors.empty" }),
 
     schedule: Joi.object().required().messages({ "strings.empty": "errors.empty" }),
+
+    contacts: Joi.array()
+      .items(
+        Joi.object().keys({
+          type: Joi.string().valid("phone", "other", "email").required(),
+          contact: Joi.string().min(5).max(264).required(),
+        }),
+      )
+      .required()
+      .min(1)
+      .messages({
+        "array.min": "errors.empty",
+        "any.required": "errors.invalidContact",
+        "any.only": "errors.invalidContactType",
+      }),
   });
 
   const slug = getRouterParam(event, "slug") as string;
@@ -53,7 +68,6 @@ export default defineEventHandler(async (event) => {
 
     sendError(event, createError({ statusCode: 500, statusMessage: "errors.unexpected" }));
   } catch (err: any) {
-    console.log("err", typeof err);
     if (err.statusCode === 401) {
       throw createError({ statusCode: 401, statusMessage: "errors.unexpected" });
     }

@@ -13,6 +13,7 @@ import { relations } from "drizzle-orm";
 
 import { users } from "./users.schema";
 import type { PostSchedule } from "~/types/post";
+import type { UserContact } from "~/types/user";
 
 export const POST_STATES: Readonly<[string, ...string[]]> = [
   "pending",
@@ -46,6 +47,7 @@ export const posts = pgTable(
       .notNull()
       .references(() => users.id),
     slug: text("slug"),
+    contacts: json("contacts").notNull().$type<UserContact[]>(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedBy: uuid("updated_by").references(() => users.id),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),

@@ -269,11 +269,8 @@ const submit = async () => {
     return;
   }
 
-  console.log(form.value.$i18n);
-
   const result = await form.value.validate();
   if (!result.valid) {
-    console.log(result.errors);
     return;
   }
 
