@@ -5,12 +5,13 @@
         <a :href="`mailto:${c.contact}`">{{ c.contact }}</a>
 
         <template v-slot:append>
-          <v-tooltip>
+          <v-tooltip :text="t('posts.contacts.copyTooltip')">
             <template v-slot:activator="{ props }">
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
                 size="x-small"
+                base-color="transparent"
                 flat
                 class="ml-2"
                 @click="onCopy(c.contact)"
@@ -24,12 +25,13 @@
         <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
 
         <template v-slot:append>
-          <v-tooltip :text="$t('posts.contacts.copyTooltip')">
+          <v-tooltip :text="t('posts.contacts.copyTooltip')">
             <template v-slot:activator="{ props }">
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
                 size="x-small"
+                base-color="transparent"
                 flat
                 class="ml-2"
                 @click="onCopy(c.contact)"
@@ -41,12 +43,13 @@
 
       <v-list-item v-else prepend-icon="fa-solid fa-file-signature" :title="c.contact">
         <template v-slot:append>
-          <v-tooltip :text="$t('posts.contacts.copyTooltip')">
+          <v-tooltip :text="t('posts.contacts.copyTooltip')">
             <template v-slot:activator="{ props }">
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
                 size="x-small"
+                base-color="transparent"
                 flat
                 class="ml-2"
                 @click="onCopy(c.contact)"
