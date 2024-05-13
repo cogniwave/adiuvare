@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-h5 mb-5">{{ $t("posts.newPostTitle") }}</h2>
+  <h2 class="text-h5 mb-5">{{ t("posts.newPostTitle") }}</h2>
 
   <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
     <div class="bg-white rounded px-10 py-5">
@@ -8,9 +8,9 @@
         v-model:model-value="title"
         prepend-icon="fa-solid fa-heading"
         class="mb-10"
-        :placeholder="$t('form.post.titlePlaceholder')"
-        :label="$t('form.post.title')"
-        :rules="[required($t)]"
+        :placeholder="t('form.post.titlePlaceholder')"
+        :label="t('form.post.title')"
+        :rules="[required(t)]"
         :error-messages="errors.title"
         @update:model-value="(value) => updatePost('title', value)"
       />
@@ -20,9 +20,9 @@
         v-model:model-value="description"
         class="mt-10"
         prepend-icon="fa-solid fa-quote-left"
-        :placeholder="$t('form.post.descriptionPlaceholder')"
-        :label="$t('form.post.description')"
-        :rules="[required($t)]"
+        :placeholder="t('form.post.descriptionPlaceholder')"
+        :label="t('form.post.description')"
+        :rules="[required(t)]"
         :error-messages="errors.description"
         @update:model-value="(value) => updatePost('description', value)"
       />
@@ -37,10 +37,10 @@
         prepend-icon="fa-solid fa-location-dot"
         chips
         closable-chips
-        :label="$t('form.post.location')"
-        :placeholder="$t('form.post.locationPlaceholder')"
+        :label="t('form.post.location')"
+        :placeholder="t('form.post.locationPlaceholder')"
         :no-data-text="noDataText"
-        :rules="[required($t)]"
+        :rules="[required(t)]"
         :error-messages="errors.locations"
         :items="locations"
         :loading="fetchingLocations"
@@ -58,8 +58,8 @@
         hide-hint
         prepend-icon="fa-solid fa-parachute-box"
         class="mt-10"
-        :label="$t('form.post.category')"
-        :rules="[required($t)]"
+        :label="t('form.post.category')"
+        :rules="[required(t)]"
         :error-messages="errors.category"
         :items="helpOptions"
         @update:model-value="updatePost('needs', $event)"
@@ -85,11 +85,11 @@
 
   <div class="py-5 d-flex align-center justify-end">
     <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
-      {{ $t("posts.cancel") }}
+      {{ t("posts.cancel") }}
     </v-btn>
 
     <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-      {{ $t("posts.submit") }}
+      {{ t("posts.submit") }}
     </v-btn>
   </div>
 </template>
@@ -108,7 +108,7 @@ import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
 import type { Post, PostSchedule } from "@/types/post";
 
-definePageMeta({ path: "/posts/new", auth: { authenticatedOnly: true, onlyOrg: true } });
+definePageMeta({ path: "/posts/new", middleware: "orgOnly" });
 
 const { notifySuccess } = useNotify();
 const { t } = useI18n();

@@ -14,14 +14,14 @@
         :to="`/posts/${currPost.slug}/edit`"
       >
         <v-icon class="mr-1">fa-solid fa-pencil</v-icon>
-        {{ $t("form.edit") }}
+        {{ t("form.edit") }}
       </v-btn>
     </div>
 
     <div class="bg-white rounded pa-5">
       <div class="d-flex">
         <v-avatar size="64">
-          <v-img :alt="$t('posts.logoAlt')" lazy-src="/assets/profile-placeholder.png">
+          <v-img :alt="t('posts.logoAlt')" lazy-src="/assets/profile-placeholder.png">
             <template v-slot:error>
               {{ currPost.createdBy }}
             </template>
@@ -41,7 +41,7 @@
               location="bottom"
               close-on-content-click
               close-delay="0"
-              :text="`${$t('posts.lastUpdatedAt')} ${$d(currPost.updatedAt as any)}`"
+              :text="`${t('posts.lastUpdatedAt')} ${$d(currPost.updatedAt as any)}`"
             >
               <template v-slot:activator="{ props }">
                 <small v-bind="props">¬ {{ $d(currPost.createdAt as any) }}</small>
@@ -84,7 +84,7 @@
 
     <div v-if="currPost.schedule" class="bg-white rounded px-10 py-5 mt-5">
       <!-- contacts -->
-      {{ $t("posts.contacts.detailsTitle") }}
+      {{ t("posts.contacts.detailsTitle") }}
 
       <qa-post-contacts-list
         v-if="currPost.contacts?.length"
@@ -94,12 +94,12 @@
 
       <!-- anytime time -->
       <div class="my-3">
-        {{ $t("posts.schedule.detailsTitle") }}
+        {{ t("posts.schedule.detailsTitle") }}
       </div>
 
       <v-row v-if="currPost.schedule.type === 'anytime'">
         <v-col align="center">
-          <span>{{ $t("posts.schedule.anytime") }}</span>
+          <span>{{ t("posts.schedule.anytime") }}</span>
         </v-col>
       </v-row>
 
@@ -115,9 +115,9 @@
             :key="time.id"
             class="d-block"
           >
-            {{ $t("posts.schedule.from") }}
+            {{ t("posts.schedule.from") }}
             {{ time.start }}
-            {{ $t("posts.schedule.to") }}
+            {{ t("posts.schedule.to") }}
             {{ time.end }}
           </span>
         </v-col>
@@ -141,7 +141,7 @@
 
     <div class="pt-3 d-flex align-center justify-end">
       <v-btn @click="$router.go(-1)">
-        {{ $t("posts.back") }}
+        {{ t("posts.back") }}
       </v-btn>
     </div>
   </template>

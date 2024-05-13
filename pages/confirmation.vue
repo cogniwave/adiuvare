@@ -1,26 +1,26 @@
 <template>
   <v-card class="shadow-24" :loading="submitting">
-    <v-card-title>{{ $t("register.confirmation.title") }}</v-card-title>
+    <v-card-title>{{ t("register.confirmation.title") }}</v-card-title>
 
     <v-card-item>
       <template v-if="submitting">
         <template v-if="success">
           <p class="mb-3">
-            {{ $t("register.confirmation.confirmSuccess") }}
+            {{ t("register.confirmation.confirmSuccess") }}
             <nuxt-link to="login" class="text-blue-grey pb-1">
-              {{ $t("login.title") }}
+              {{ t("login.title") }}
             </nuxt-link>
           </p>
         </template>
 
         <template v-else>
           <p class="mb-3">
-            {{ $t("register.confirmation.confirmError") }}
+            {{ t("register.confirmation.confirmError") }}
           </p>
         </template>
       </template>
 
-      <p>{{ $t("register.confirmation.confirmLoading") }}</p>
+      <p>{{ t("register.confirmation.confirmLoading") }}</p>
     </v-card-item>
   </v-card>
 </template>
@@ -36,9 +36,7 @@ const { t } = useI18n();
 
 useHead({ title: t("register.confirmation.seoTitle") });
 
-definePageMeta({
-  auth: { unauthenticatedOnly: false },
-});
+definePageMeta({ middleware: "unauthed", layout: "auth", path: "/confirmation" });
 
 onBeforeMount(() => {
   const token = $route.params.token;

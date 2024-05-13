@@ -5,7 +5,7 @@
   </template>
 
   <template v-else>
-    <h2 class="text-h5 mb-5">{{ $t("posts.editPostTitle") }}</h2>
+    <h2 class="text-h5 mb-5">{{ t("posts.editPostTitle") }}</h2>
 
     <v-form v-if="post" ref="form" validate-on="submit lazy" @submit.prevent="submit">
       <div class="bg-white rounded px-10 py-5">
@@ -16,9 +16,9 @@
           class="mb-8"
           counter="264"
           persistent-counter
-          :placeholder="$t('form.post.titlePlaceholder')"
-          :label="$t('form.post.title')"
-          :rules="[required($t), maxLength($t, 264)]"
+          :placeholder="t('form.post.titlePlaceholder')"
+          :label="t('form.post.title')"
+          :rules="[required(t), maxLength($t, 264)]"
           :error-messages="errors.title"
           @update:model-value="(value) => updatePost('title', value)"
         />
@@ -30,10 +30,10 @@
           class="mb-8"
           persistent-counter
           counter="264"
-          :hint="$t('form.post.slugHint')"
-          :placeholder="$t('form.post.slugPlaceholder')"
-          :label="$t('form.post.slug')"
-          :rules="[required($t)]"
+          :hint="t('form.post.slugHint')"
+          :placeholder="t('form.post.slugPlaceholder')"
+          :label="t('form.post.slug')"
+          :rules="[required(t)]"
           :error-messages="errors.slug"
           @blur="onSlugBlur"
         />
@@ -43,16 +43,16 @@
           v-model:model-value="description"
           class="mt-10"
           prepend-icon="fa-solid fa-quote-left"
-          :placeholder="$t('form.post.descriptionPlaceholder')"
-          :label="$t('form.post.description')"
-          :rules="[required($t)]"
+          :placeholder="t('form.post.descriptionPlaceholder')"
+          :label="t('form.post.description')"
+          :rules="[required(t)]"
           :error-messages="errors.description"
           @update:model-value="(value) => updatePost('description', value)"
         />
 
         <!-- state -->
         <v-input prepend-icon="fa-solid fa-film" hide-details class="mt-10">
-          <v-label class="mr-2"> {{ $t("form.post.state.title") }} </v-label>
+          <v-label class="mr-2"> {{ t("form.post.state.title") }} </v-label>
 
           <v-btn-toggle
             v-if="['active', 'inactive'].includes(post.state)"
@@ -62,7 +62,7 @@
             density="compact"
             class="ml-auto"
           >
-            <v-tooltip :text="$t('form.post.state.activeTooltip')">
+            <v-tooltip :text="t('form.post.state.activeTooltip')">
               <template v-slot:activator="{ props }">
                 <v-btn
                   v-bind="props"
@@ -70,12 +70,12 @@
                   value="active"
                   @update:model-value="updatePost('state', 'active')"
                 >
-                  {{ $t("form.post.state.active") }}
+                  {{ t("form.post.state.active") }}
                 </v-btn>
               </template>
             </v-tooltip>
 
-            <v-tooltip :text="$t('form.post.state.inactiveTooltip')">
+            <v-tooltip :text="t('form.post.state.inactiveTooltip')">
               <template v-slot:activator="{ props }">
                 <v-btn
                   v-bind="props"
@@ -83,16 +83,16 @@
                   value="inactive"
                   @update:model-value="updatePost('state', 'inactive')"
                 >
-                  {{ $t("form.post.state.inactive") }}
+                  {{ t("form.post.state.inactive") }}
                 </v-btn>
               </template>
             </v-tooltip>
           </v-btn-toggle>
 
           <template v-else>
-            <v-tooltip :text="$t(`form.post.state.${post.state}Tooltip`)">
+            <v-tooltip :text="t(`form.post.state.${post.state}Tooltip`)">
               <template v-slot:activator="{ props }">
-                {{ $t(`form.post.state.${post.state}`) }}
+                {{ t(`form.post.state.${post.state}`) }}
 
                 <v-icon v-bind="props" color="primary" class="ml-1">
                   fa-solid fa-circle-question
@@ -112,10 +112,10 @@
           prepend-icon="fa-solid fa-location-dot"
           chips
           closable-chips
-          :label="$t('form.post.location')"
-          :placeholder="$t('form.post.locationPlaceholder')"
+          :label="t('form.post.location')"
+          :placeholder="t('form.post.locationPlaceholder')"
           :no-data-text="noDataText"
-          :rules="[required($t)]"
+          :rules="[required(t)]"
           :error-messages="errors.locations"
           :items="locations"
           :loading="fetchingLocations"
@@ -132,8 +132,8 @@
           prepend-icon="fa-solid fa-parachute-box"
           clearable
           class="mt-10"
-          :label="$t('form.post.category')"
-          :rules="[required($t)]"
+          :label="t('form.post.category')"
+          :rules="[required(t)]"
           :error-messages="errors.category && t(errors.category)"
           :items="needOptions"
           @update:model-value="updatePost('needs', $event)"
@@ -159,11 +159,11 @@
 
     <div class="py-5 d-flex align-center justify-end">
       <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
-        {{ $t("posts.cancel") }}
+        {{ t("posts.cancel") }}
       </v-btn>
 
       <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-        {{ $t("posts.update") }}
+        {{ t("posts.update") }}
       </v-btn>
     </div>
   </template>
@@ -183,7 +183,8 @@ import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
 import type { Post, PostSchedule, PostState } from "@/types/post";
 
-definePageMeta({ path: "/posts/:slug/edit", auth: { authenticatedOnly: true } });
+definePageMeta({ path: "/posts/:slug/edit", middleware: "is-owner" });
+
 const { notifySuccess } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();

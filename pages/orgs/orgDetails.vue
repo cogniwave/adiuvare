@@ -14,14 +14,14 @@
         :to="`/organiations/${currOrg.slug}/edit`"
       >
         <v-icon class="mr-1">fa-solid fa-pencil</v-icon>
-        {{ $t("form.edit") }}
+        {{ t("form.edit") }}
       </v-btn>
     </div>
 
     <div class="bg-white rounded pa-5">
       <div class="d-flex align-center">
         <v-avatar size="100">
-          <v-img :alt="$t('posts.logoAlt')" lazy-src="/assets/profile-placeholder.png">
+          <v-img :alt="t('posts.logoAlt')" lazy-src="/assets/profile-placeholder.png">
             <template v-slot:error>
               <v-img src="/assets/profile-placeholder.png" cover referrerpolicy="same-origin" />
             </template>

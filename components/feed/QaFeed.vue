@@ -34,7 +34,7 @@
   <template v-else>
     <i18n-t scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton">
       <nuxt-link to="/posts/new">
-        {{ $t("feed.noPostsButton") }}
+        {{ t("feed.noPostsButton") }}
       </nuxt-link>
     </i18n-t>
   </template>
@@ -58,6 +58,7 @@ const { notifyError } = useNotify();
 const { data: user } = useAuth();
 const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
 const { openDialog: _openReportDialog } = useReport();
+const { t } = useI18n();
 
 const page = ref(0);
 const reportDialogRendered = ref(false);

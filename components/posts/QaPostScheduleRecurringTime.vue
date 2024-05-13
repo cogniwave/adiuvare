@@ -18,7 +18,7 @@
 
         <div class="button-group ml-3">
           <v-tooltip
-            :text="$t('form.post.schedule.addRecurring')"
+            :text="t('form.post.schedule.addRecurring')"
             location="bottom"
             close-on-content-click
             close-delay="0"
@@ -40,7 +40,7 @@
           </v-tooltip>
 
           <v-tooltip
-            :text="$t('form.post.schedule.removeRecurring')"
+            :text="t('form.post.schedule.removeRecurring')"
             location="bottom"
             close-on-content-click
             close-delay="0"
@@ -63,7 +63,7 @@
       </div>
 
       <small v-if="time.error" class="text-error text-start d-block mt-2">
-        {{ $t("errors.post.endHourHigherThanStart") }}
+        {{ t("errors.post.endHourHigherThanStart") }}
       </small>
     </template>
   </div>
@@ -84,6 +84,8 @@ const props = defineProps({
 const $emit = defineEmits<{
   (e: "update:model-value", payload: ScheduleTime[]): void;
 }>();
+
+const { t } = useI18n();
 
 const times = ref<ScheduleTime[]>(props.modelValue);
 

@@ -5,7 +5,7 @@
     readonly
     validate-on="input lazy"
     :model-value="date"
-    :rules="[required($t), validDate($t), ...(!initValue ? [futureDate($t)] : [])]"
+    :rules="[required(t), validDate(t), ...(!initValue ? [futureDate(t)] : [])]"
   />
 
   <suspense>
@@ -37,7 +37,7 @@ import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 
 const { currPost } = usePosts<Post>();
-const { d } = useI18n();
+const { d, t } = useI18n();
 
 const initValue = ref((currPost.value.schedule?.payload as SpecificSchedule).day);
 

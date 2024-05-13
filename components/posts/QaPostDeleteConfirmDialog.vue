@@ -1,9 +1,9 @@
 <template>
   <qa-confirm-dialog
     :model-value="deleteDialogVisible"
-    :title="$t('posts.confirm.deleteTitle')"
-    :confirm-text="$t('posts.confirm.deleteConfirm')"
-    :cancel-text="$t('posts.confirm.cancel')"
+    :title="t('posts.confirm.deleteTitle')"
+    :confirm-text="t('posts.confirm.deleteConfirm')"
+    :cancel-text="t('posts.confirm.cancel')"
     :loading="submitting"
     @click:submit="submit"
     @click:close="deleteDialogVisible = false"
@@ -21,6 +21,7 @@ const $emit = defineEmits<{
   (e: "delete", id: string): void;
 }>();
 
+const { t } = useI18n();
 const { deleteDialogVisible, currPost } = usePosts();
 
 const submitting = ref<boolean>(false);

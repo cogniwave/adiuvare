@@ -10,7 +10,7 @@
     @click.prevent="emit('click', need)"
     @click:close.prevent="emit('click:remove', need)"
   >
-    {{ $t(details.label) }}
+    {{ t(details.label) }}
   </v-chip>
 </template>
 
@@ -29,6 +29,7 @@ const emit = defineEmits<{
 }>();
 
 const { getNeedDetails } = useNeed();
+const { t } = useI18n();
 
 const details = ref(getNeedDetails(props.need));
 </script>

@@ -3,15 +3,13 @@
     <template v-slot:title>
       <v-row no-gutters>
         <v-col cols="1">
-          <ClientOnly fallback-tag="img">
-            <v-img
-              src="/assets/logo.png"
-              aspect-ratio="1"
-              width="48px"
-              eager
-              @click="$router.push('/')"
-            />
-          </ClientOnly>
+          <v-img
+            src="/assets/logo.png"
+            aspect-ratio="1"
+            width="48px"
+            eager
+            @click="$router.push('/')"
+          />
         </v-col>
 
         <v-col cols="3" offset="2" align-self="center">
@@ -25,7 +23,7 @@
               rounded="lx"
               density="compact"
               hide-details
-              :placeholder="$t('filter.placeholder')"
+              :placeholder="t('filter.placeholder')"
               @click:append-inner="search"
             />
           </form>
@@ -40,7 +38,7 @@
             class="ml-auto btn-contact"
             to="/posts/new"
           >
-            {{ $t("posts.submit") }}
+            {{ t("posts.submit") }}
           </v-btn>
         </v-col>
 
@@ -73,8 +71,11 @@
 
 <script lang="ts" setup>
 // import { useNotificationsStore } from "@/stores/notifications.store";
+import { useRouter } from "vue-router";
 
 const { loggedIn, data } = useAuth();
+const { t } = useI18n();
+const $router = useRouter();
 
 // const $notifStore = useNotificationsStore();
 const query = ref("");

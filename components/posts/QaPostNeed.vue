@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip :text="$t(details.description)">
+  <v-tooltip :text="t(details.description)">
     <template v-slot:activator="{ props }">
       <v-chip
         v-bind="props"
@@ -12,7 +12,7 @@
         :prepend-icon="details.icon"
         :color="details.color"
       >
-        {{ $t(details.label) }}
+        {{ t(details.label) }}
       </v-chip>
     </template>
   </v-tooltip>
@@ -33,6 +33,7 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
 const { getNeedDetails } = useNeed();
 
 const details = ref(getNeedDetails(props.need));

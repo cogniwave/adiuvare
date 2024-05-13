@@ -33,7 +33,7 @@
                   <span v-if="org.bio"> {{ org.bio }}</span>
 
                   <v-btn flat class="text-secondary mb-3" :to="`/organizations/${org.slug}`">
-                    {{ $t("org.learnMore") }}
+                    {{ t("org.learnMore") }}
                   </v-btn>
                 </div>
               </v-expand-transition>

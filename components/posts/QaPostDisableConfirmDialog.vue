@@ -1,9 +1,9 @@
 <template>
   <qa-confirm-dialog
     :model-value="disableDialogVisible"
-    :title="$t('posts.confirm.disableTitle')"
-    :confirm-text="$t('posts.confirm.disableConfirm')"
-    :cancel-text="$t('posts.confirm.cancel')"
+    :title="t('posts.confirm.disableTitle')"
+    :confirm-text="t('posts.confirm.disableConfirm')"
+    :cancel-text="t('posts.confirm.cancel')"
     :loading="submitting"
     @click:submit="submit"
     @click:close="disableDialogVisible = false"
@@ -18,6 +18,7 @@
 import type { Post } from "@/types/post";
 
 const { notifyError } = useNotify();
+const { t } = useI18n();
 const { disableDialogVisible, currPost, posts } = usePosts();
 
 const submitting = ref<boolean>(false);

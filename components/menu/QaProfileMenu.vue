@@ -8,18 +8,19 @@
     </template>
 
     <v-list>
-      <v-list-item :title="$t('nav.profile')" append-icon="person" @click="goToProfile" />
+      <v-list-item :title="t('nav.profile')" append-icon="person" @click="goToProfile" />
 
-      <v-list-item :title="$t('nav.logout')" append-icon="logout" @click="logout" />
+      <v-list-item :title="t('nav.logout')" append-icon="logout" @click="logout" />
     </v-list>
   </v-menu>
 
-  <v-btn v-else variant="plain" to="/login"> {{ $t("login.title") }} </v-btn>
+  <v-btn v-else variant="plain" to="/login"> {{ t("login.title") }} </v-btn>
 </template>
 
 <script setup lang="ts">
 const $router = useRouter();
 const { logout, loggedIn, data } = useAuth();
+const { t } = useI18n();
 
 const goToProfile = () => $router.push(`/profile/${data.value?.slug}`);
 </script>

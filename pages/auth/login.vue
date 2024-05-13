@@ -66,9 +66,7 @@ import { useFormErrors } from "@/composables/formErrors";
 definePageMeta({
   layout: "auth",
   path: "/login",
-  auth: {
-    unauthenticatedOnly: true,
-  },
+  middleware: "unauthed",
 });
 
 const email = ref<string>("");

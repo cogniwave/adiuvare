@@ -11,10 +11,10 @@
       <v-row no-gutters class="py-10">
         <v-col cols="2">
           <v-list bg-color="transparent">
-            <v-list-item :title="$t('menu.home')" to="/" prepend-icon="fa-solid fa-house" />
+            <v-list-item :title="t('menu.home')" to="/" prepend-icon="fa-solid fa-house" />
 
             <v-list-item
-              :title="$t('menu.orgs')"
+              :title="t('menu.orgs')"
               to="/organizations"
               prepend-icon="fa-solid fa-building-ngo"
             />
@@ -22,7 +22,7 @@
             <v-list-item
               v-if="!['/', '/organizations'].includes($route.path)"
               prepend-icon="fa-solid fa-file-lines"
-              :title="$t('menu.posts')"
+              :title="t('menu.posts')"
               :to="{ path: '/', query: { createdBy: $route.params.slug } }"
             />
           </v-list>
@@ -44,7 +44,7 @@
 import { useRoute } from "vue-router";
 
 const { loading } = useAuth();
-const { t: $t } = useI18n();
+const { t } = useI18n();
 const $route = useRoute();
 </script>
 

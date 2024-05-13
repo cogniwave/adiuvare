@@ -1,6 +1,6 @@
 <template>
   <v-input prepend-icon="fa-solid fa-address-book">
-    <v-label class="mr-2"> {{ $t("form.contacts.title") }} </v-label>
+    <v-label class="mr-2"> {{ t("form.contacts.title") }} </v-label>
   </v-input>
 
   <div class="d-flex flex-column w-100 mb-10">
@@ -8,7 +8,7 @@
       <v-select
         :model-value="c.type"
         :items="options"
-        :label="$t('form.contacts.type')"
+        :label="t('form.contacts.type')"
         @update:model-value="onUpdate($event, c.contact, c.id)"
         @blur="persistUpdate"
       />
@@ -17,14 +17,14 @@
         type="text"
         class="w-100"
         :model-value="c.contact"
-        :hint="c.type === 'phone' ? $t('form.contacts.phoneHint') : undefined"
-        :label="$t('form.contacts.label')"
+        :hint="c.type === 'phone' ? t('form.contacts.phoneHint') : undefined"
+        :label="t('form.contacts.label')"
         :error-messages="errors[c.id]"
         :rules="[
-          required($t),
+          required(t),
           contactExists(c.id),
-          ...(c.type === 'email' ? [isValidEmail($t)] : []),
-          ...(c.type === 'phone' ? [isValidPhone($t)] : []),
+          ...(c.type === 'email' ? [isValidEmail(t)] : []),
+          ...(c.type === 'phone' ? [isValidPhone(t)] : []),
         ]"
         @update:model-value="onUpdate(c.type, $event, c.id)"
         @blur="persistUpdate"
@@ -32,7 +32,7 @@
 
       <div class="button-group">
         <v-tooltip
-          :text="$t('form.contacts.remove')"
+          :text="t('form.contacts.remove')"
           location="bottom"
           close-on-content-click
           close-delay="0"
@@ -53,7 +53,7 @@
         </v-tooltip>
 
         <v-tooltip
-          :text="$t('form.contacts.add')"
+          :text="t('form.contacts.add')"
           location="bottom"
           close-on-content-click
           close-delay="0"

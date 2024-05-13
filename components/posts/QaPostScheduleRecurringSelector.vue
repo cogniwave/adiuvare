@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip :text="$t('form.post.schedule.day.monday')">
+  <v-tooltip :text="t('form.post.schedule.day.monday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -10,12 +10,12 @@
         color="primary"
         @click="toggleDay('monday')"
       >
-        {{ $t("form.post.schedule.day.mondayShort") }}
+        {{ t("form.post.schedule.day.mondayShort") }}
       </v-btn>
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.tuesday')">
+  <v-tooltip :text="t('form.post.schedule.day.tuesday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -27,12 +27,12 @@
         color="primary"
         @click="toggleDay('tuesday')"
       >
-        {{ $t("form.post.schedule.day.tuesdayShort") }}
+        {{ t("form.post.schedule.day.tuesdayShort") }}
       </v-btn>
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.wednesday')">
+  <v-tooltip :text="t('form.post.schedule.day.wednesday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -44,12 +44,12 @@
         color="primary"
         @click="toggleDay('wednesday')"
       >
-        {{ $t("form.post.schedule.day.wednesdayShort") }}
+        {{ t("form.post.schedule.day.wednesdayShort") }}
       </v-btn>
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.thursday')">
+  <v-tooltip :text="t('form.post.schedule.day.thursday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -61,12 +61,12 @@
         color="primary"
         @click="toggleDay('thursday')"
       >
-        {{ $t("form.post.schedule.day.thursdayShort") }}
+        {{ t("form.post.schedule.day.thursdayShort") }}
       </v-btn>
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.friday')">
+  <v-tooltip :text="t('form.post.schedule.day.friday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -78,12 +78,12 @@
         color="primary"
         @click="toggleDay('friday')"
       >
-        {{ $t("form.post.schedule.day.fridayShort") }}
+        {{ t("form.post.schedule.day.fridayShort") }}
       </v-btn>
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.saturday')">
+  <v-tooltip :text="t('form.post.schedule.day.saturday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -95,12 +95,12 @@
         color="primary"
         @click="toggleDay('saturday')"
       >
-        {{ $t("form.post.schedule.day.saturdayShort") }}
+        {{ t("form.post.schedule.day.saturdayShort") }}
       </v-btn>
     </template>
   </v-tooltip>
 
-  <v-tooltip :text="$t('form.post.schedule.day.sunday')">
+  <v-tooltip :text="t('form.post.schedule.day.sunday')">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"
@@ -112,7 +112,7 @@
         color="primary"
         @click="toggleDay('sunday')"
       >
-        {{ $t("form.post.schedule.day.sundayShort") }}
+        {{ t("form.post.schedule.day.sundayShort") }}
       </v-btn>
     </template>
   </v-tooltip>
@@ -165,6 +165,7 @@ const props = defineProps({
 });
 
 const { currPost } = usePosts();
+const { t } = useI18n();
 
 // data
 const selected = ref<RecurringSchedule>(props.modelValue);

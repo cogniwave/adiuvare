@@ -1,7 +1,7 @@
 <template>
   <v-card class="w-100 bg-white mx-auto">
     <v-card-title class="bg-primary">
-      <h2 class="text-h5 text-white">{{ $t("reset.title") }}</h2>
+      <h2 class="text-h5 text-white">{{ t("reset.title") }}</h2>
     </v-card-title>
 
     <template v-if="!emailSent">
@@ -12,9 +12,9 @@
             class="mt-3"
             type="email"
             prepend-icon="fa-solid fa-at"
-            :label="$t('form.email')"
+            :label="t('form.email')"
             :error-messages="errors.email"
-            :rules="[required($t), isValidEmail($t)]"
+            :rules="[required(t), isValidEmail(t)]"
           />
         </v-form>
       </v-card-item>
@@ -23,25 +23,25 @@
 
       <v-card-actions class="px-5 d-flex align-center justify-end">
         <nuxt-link to="register" class="text-blue-grey">
-          {{ $t("register.link") }}
+          {{ t("register.link") }}
         </nuxt-link>
 
         <span class="text-blue-grey mx-2">|</span>
 
         <nuxt-link to="login" class="text-blue-grey mr-auto">
-          {{ $t("login.title") }}
+          {{ t("login.title") }}
         </nuxt-link>
 
         <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-          {{ $t("reset.submit") }}
+          {{ t("reset.submit") }}
         </v-btn>
       </v-card-actions>
     </template>
 
     <v-card-item v-else class="py-5">
-      <h3>{{ $t("reset.success") }}</h3>
+      <h3>{{ t("reset.success") }}</h3>
 
-      <span> {{ $t("reset.successExtended") }} </span>
+      <span> {{ t("reset.successExtended") }} </span>
     </v-card-item>
   </v-card>
 </template>
@@ -57,10 +57,7 @@ import { useFormErrors } from "@/composables/formErrors";
 definePageMeta({
   layout: "auth",
   path: "/reset-password",
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: "/",
-  },
+  middleware: "unauthed",
 });
 
 const email = ref<string>("");
@@ -69,6 +66,7 @@ const form = ref<VForm>();
 const submitting = ref<boolean>(false);
 const emailSent = ref<boolean>(false);
 const { errors, handleErrors, clearErrors } = useFormErrors();
+const { t } = useI18n();
 
 const submit = async () => {
   // won't really happen, but keeps linter happy

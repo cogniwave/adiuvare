@@ -1,7 +1,7 @@
 <template>
   <v-card class="shadow-24">
     <v-card-title class="bg-primary">
-      <h1 class="text-h5 text-white">{{ $t("register.title") }}</h1>
+      <h1 class="text-h5 text-white">{{ t("register.title") }}</h1>
     </v-card-title>
 
     <v-card-item class="bg-white">
@@ -17,9 +17,9 @@
           type="text"
           class="mt-3"
           prepend-icon="fa-solid fa-user"
-          :label="$t('form.name')"
+          :label="t('form.name')"
           :error-messages="errors.name"
-          :rules="[required($t)]"
+          :rules="[required(t)]"
         />
 
         <v-text-field
@@ -27,9 +27,9 @@
           type="email"
           class="mt-3"
           prepend-icon="fa-solid fa-at"
-          :label="$t('form.email')"
+          :label="t('form.email')"
           :error-messages="errors.email"
-          :rules="[required($t), isValidEmail($t)]"
+          :rules="[required(t), isValidEmail(t)]"
         />
 
         <v-text-field
@@ -37,8 +37,8 @@
           type="email"
           prepend-icon="fa-solid fa-at"
           class="mt-3"
-          :label="$t('form.emailRepeat')"
-          :rules="[required($t), isValidEmail($t), match($t, email, $t('form.emailDuplicateKey'))]"
+          :label="t('form.emailRepeat')"
+          :rules="[required(t), isValidEmail(t), match(t, email, t('form.emailDuplicateKey'))]"
         />
 
         <v-text-field
@@ -49,10 +49,10 @@
           autocapitalize="off"
           autocomplete="off"
           spellcheck="false"
-          :label="$t('form.password')"
+          :label="t('form.password')"
           :error-messages="errors.password"
           :type="passwordFieldType"
-          :rules="[required($t), isValidPassword($t)]"
+          :rules="[required(t), isValidPassword(t)]"
         >
           <template v-slot:append-inner>
             <v-icon class="cursor-pointer" @click="switchVisibility">
@@ -69,12 +69,12 @@
           autocapitalize="off"
           autocomplete="off"
           spellcheck="false"
-          :label="$t('form.passwordRepeat')"
+          :label="t('form.passwordRepeat')"
           :type="passwordFieldType"
           :rules="[
-            required($t),
-            isValidPassword($t),
-            match($t, password, $t('form.passwordDuplicateKey')),
+            required(t),
+            isValidPassword(t),
+            match(t, password, t('form.passwordDuplicateKey')),
           ]"
         >
           <template v-slot:append-inner>
@@ -88,29 +88,29 @@
           v-model:model-value="type"
           inline
           class="mt-3"
-          :label="$t('form.userType.title')"
+          :label="t('form.userType.title')"
         >
-          <v-radio :label="$t('form.userType.volunteer')" value="volunteer" />
-          <v-radio :label="$t('form.userType.org')" value="org" />
+          <v-radio :label="t('form.userType.volunteer')" value="volunteer" />
+          <v-radio :label="t('form.userType.org')" value="org" />
         </v-radio-group>
 
         <v-divider />
 
         <v-card-actions class="px-5 d-flex align-center justify-end">
           <nuxt-link to="login" class="text-blue-grey mr-auto">
-            {{ $t("login.title") }}
+            {{ t("login.title") }}
           </nuxt-link>
 
           <v-btn type="submit" color="primary" :loading="submitting">
-            {{ $t("register.register") }}
+            {{ t("register.register") }}
           </v-btn>
         </v-card-actions>
       </v-form>
 
       <div v-else>
-        <h2 class="my-4 text-center">{{ $t("register.success") }}</h2>
+        <h2 class="my-4 text-center">{{ t("register.success") }}</h2>
 
-        <p class="mb-3">{{ $t("register.successMessage") }}</p>
+        <p class="mb-3">{{ t("register.successMessage") }}</p>
       </div>
     </v-card-item>
   </v-card>
@@ -128,10 +128,7 @@ import { useFormErrors } from "@/composables/formErrors";
 definePageMeta({
   layout: "auth",
   path: "/register",
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: "/",
-  },
+  middleware: "unauthed",
 });
 
 useHead({ title: "Criar conta" });
@@ -145,6 +142,7 @@ const type = ref<UserType>("org");
 const userCreated = ref<boolean>(false);
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
+const { t } = useI18n();
 
 const form = ref<VForm>();
 const passwordFieldType = ref<"text" | "password">("password");

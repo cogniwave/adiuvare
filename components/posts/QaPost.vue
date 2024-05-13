@@ -5,7 +5,7 @@
       <v-card-title class="d-flex align-start">
         <v-avatar size="64">
           <v-img
-            :alt="$t('posts.logoAlt')"
+            :alt="t('posts.logoAlt')"
             src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
             lazy-src="/assets/profile-placeholder.png"
           >
@@ -42,7 +42,7 @@
             {{ desc }}
 
             <span v-if="descTooLong && !descVisible" class="expand-desc" @click="viewAllDesc">
-              {{ $t("posts.expandDesc") }}
+              {{ t("posts.expandDesc") }}
             </span>
           </v-col>
         </v-row>
@@ -102,7 +102,7 @@
               <v-list-item
                 class="pl-2 pr-2"
                 prepend-icon="fa-solid fa-pencil"
-                :title="$t('posts.options.edit')"
+                :title="t('posts.options.edit')"
                 @click.stop.prevent="openPost()"
               />
 
@@ -111,7 +111,7 @@
                 v-if="post.state === 'active'"
                 class="pl-2 pr-2"
                 prepend-icon="fa-solid fa-check-double"
-                :title="$t('posts.options.enable')"
+                :title="t('posts.options.enable')"
                 @click="$emit('click:state', { enable: true, title: post.title, id: post.id })"
               />
 
@@ -120,14 +120,14 @@
                 v-else
                 class="pl-2 pr-2"
                 prepend-icon="fa-solid fa-ban"
-                :title="$t('posts.options.disable')"
+                :title="t('posts.options.disable')"
                 @click="$emit('click:state', { enable: false, title: post.title, id: post.id })"
               />
 
               <v-list-item
                 class="pl-2 pr-2"
                 prepend-icon="fa-solid fa-trash"
-                :title="$t('posts.options.delete')"
+                :title="t('posts.options.delete')"
                 @click="$emit('click:delete', post)"
               />
             </template>
@@ -136,7 +136,7 @@
               v-else
               class="pl-2 pr-2"
               prepend-icon="fa-solid fa-bullhorn"
-              :title="$t('posts.options.report')"
+              :title="t('posts.options.report')"
               @click="onReport"
             />
           </v-list>
@@ -152,7 +152,7 @@
               class="ml-auto btn-contact"
               @click.stop.prevent
             >
-              {{ $t("posts.contacts.contact") }}
+              {{ t("posts.contacts.contact") }}
             </v-btn>
           </template>
 
@@ -166,7 +166,7 @@
           class="ml-3 btn-contact"
           :to="`/posts/${post.slug}`"
         >
-          {{ $t("posts.viewMore") }}
+          {{ t("posts.viewMore") }}
         </v-btn>
       </v-card-actions>
     </v-card-item>
@@ -192,6 +192,7 @@ const props = defineProps({
 });
 
 const $router = useRouter();
+const { t } = useI18n();
 const { setPost } = usePosts();
 
 const desc = ref(props.post.description);

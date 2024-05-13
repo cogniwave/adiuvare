@@ -7,11 +7,11 @@
   >
     <v-card>
       <v-card-title class="bg-primary">
-        {{ $t("posts.report.title") }}
+        {{ t("posts.report.title") }}
       </v-card-title>
 
       <v-card-text>
-        <p v-html="$t('posts.report.description')" />
+        <p v-html="t('posts.report.description')" />
 
         <v-form ref="form" class="px-4 pt-4" validate-on="input lazy" @submit.prevent="submit">
           <!-- email -->
@@ -21,9 +21,9 @@
             type="email"
             prepend-icon="fa-solid fa-at"
             :readonly="loggedIn"
-            :label="$t('form.report.email')"
-            :placeholder="$t('form.report.emailPlaceholder')"
-            :rules="[required($t), isValidEmail($t)]"
+            :label="t('form.report.email')"
+            :placeholder="t('form.report.emailPlaceholder')"
+            :rules="[required(t), isValidEmail(t)]"
             :error-messages="errors.email"
           />
 
@@ -31,9 +31,9 @@
           <v-textarea
             v-model:model-value="reason"
             prepend-icon="fa-solid fa-comment"
-            :placeholder="$t('form.report.reasonPlaceholder')"
-            :label="$t('form.report.reason')"
-            :rules="[required($t)]"
+            :placeholder="t('form.report.reasonPlaceholder')"
+            :label="t('form.report.reason')"
+            :rules="[required(t)]"
             :error-messages="errors.reason"
           />
         </v-form>
@@ -43,11 +43,11 @@
 
       <v-card-actions class="px-5 d-flex align-center justify-end">
         <v-btn color="primary" :disable="submitting" @click="dialogVisible = false">
-          {{ $t("posts.report.cancel") }}
+          {{ t("posts.report.cancel") }}
         </v-btn>
 
         <v-btn type="submit" :loading="submitting" @click="submit">
-          {{ $t("posts.report.submit") }}
+          {{ t("posts.report.submit") }}
         </v-btn>
       </v-card-actions>
     </v-card>
