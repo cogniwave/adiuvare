@@ -5,7 +5,7 @@
     readonly
     validate-on="input lazy"
     :model-value="date"
-    :rules="[required($t), validDate($t), ...(initValue && [futureDate($t)])]"
+    :rules="[required($t), validDate($t), ...(!initValue ? [futureDate($t)] : [])]"
   />
 
   <suspense>
