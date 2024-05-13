@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ADD COLUMN "contacts" json NOT NULL;
