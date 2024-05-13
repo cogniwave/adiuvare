@@ -15,7 +15,7 @@
         </v-col>
 
         <ClientOnly fallback-tag="div">
-          <v-col v-show="isFeed" cols="3" offset="2" align-self="center">
+          <v-col cols="3" offset="2" align-self="center">
             <form @submit.prevent="search">
               <v-text-field
                 v-model:model-value="query"
@@ -34,7 +34,7 @@
         </ClientOnly>
 
         <ClientOnly fallback-tag="div">
-          <v-col v-show="isFeed" cols="3" align-self="center" align="end">
+          <v-col cols="3" align-self="center" align="end">
             <v-btn
               v-if="loggedIn && isOrg"
               size="small"
@@ -48,7 +48,7 @@
           </v-col>
         </ClientOnly>
 
-        <v-col cols="3" :offset="isFeed ? 0 : 8" align-self="center" align="end">
+        <v-col cols="3" align-self="center" align="end">
           <ClientOnly fallback-tag="span" :fallback="$t('loading')">
             <!-- todo: readd when we actually have notifications -->
             <!-- <v-btn
@@ -78,17 +78,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "vue-router";
 // import { useNotificationsStore } from "@/stores/notifications.store";
 
 const { loggedIn, data } = useAuth();
 
 // const $notifStore = useNotificationsStore();
-const $route = useRoute();
-
 const query = ref("");
 
-const isFeed = computed(() => $route.path === "/");
 const isOrg = computed(() => data.value?.type === "org");
 
 const search = () => console.log("searching");
