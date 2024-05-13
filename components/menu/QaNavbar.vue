@@ -14,44 +14,39 @@
           </ClientOnly>
         </v-col>
 
-        <ClientOnly fallback-tag="div">
-          <v-col cols="3" offset="2" align-self="center">
-            <form @submit.prevent="search">
-              <v-text-field
-                v-model:model-value="query"
-                variant="solo"
-                flat
-                clearable
-                append-inner-icon="fa-solid fa-magnifying-glass"
-                rounded="lx"
-                density="compact"
-                hide-details
-                :placeholder="$t('filter.placeholder')"
-                @click:append-inner="search"
-              />
-            </form>
-          </v-col>
-        </ClientOnly>
-
-        <ClientOnly fallback-tag="div">
-          <v-col cols="3" align-self="center" align="end">
-            <v-btn
-              v-if="loggedIn && isOrg"
-              size="small"
-              rounded="md"
-              variant="plain"
-              class="ml-auto btn-contact"
-              to="/posts/new"
-            >
-              {{ $t("posts.submit") }}
-            </v-btn>
-          </v-col>
-        </ClientOnly>
+        <v-col cols="3" offset="2" align-self="center">
+          <form @submit.prevent="search">
+            <v-text-field
+              v-model:model-value="query"
+              variant="solo"
+              flat
+              clearable
+              append-inner-icon="fa-solid fa-magnifying-glass"
+              rounded="lx"
+              density="compact"
+              hide-details
+              :placeholder="$t('filter.placeholder')"
+              @click:append-inner="search"
+            />
+          </form>
+        </v-col>
 
         <v-col cols="3" align-self="center" align="end">
-          <ClientOnly fallback-tag="span" :fallback="$t('loading')">
-            <!-- todo: readd when we actually have notifications -->
-            <!-- <v-btn
+          <v-btn
+            v-if="loggedIn && isOrg"
+            size="small"
+            rounded="md"
+            variant="plain"
+            class="ml-auto btn-contact"
+            to="/posts/new"
+          >
+            {{ $t("posts.submit") }}
+          </v-btn>
+        </v-col>
+
+        <v-col cols="3" align-self="center" align="end">
+          <!-- todo: readd when we actually have notifications -->
+          <!-- <v-btn
               v-if="authed"
               class="text-none"
               stacked
@@ -69,8 +64,7 @@
               <v-icon v-else size="x-small"> fa-solid fa-bell </v-icon>
             </v-btn> -->
 
-            <qa-profile-menu />
-          </ClientOnly>
+          <qa-profile-menu />
         </v-col>
       </v-row>
     </template>

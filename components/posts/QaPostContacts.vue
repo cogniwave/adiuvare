@@ -88,10 +88,11 @@ interface Contact extends UserContact {
 
 const { currPost } = usePosts<Post>();
 const { t } = useI18n();
+const { data: user } = useAuth();
 
 const errors = ref<Record<string, string>>({});
 const contacts = ref<Contact[]>(
-  (currPost.value.contacts || [{ contact: "", type: "phone" }]).map((c, i) => ({
+  (currPost.value.contacts || (user.value ? user.value.contacts : [])).map((c, i) => ({
     ...c,
     id: i,
   })),

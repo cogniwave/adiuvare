@@ -1,7 +1,7 @@
 <template>
   <v-card class="pb-3 bg-white">
     <v-card-title class="bg-primary">
-      <h2 class="text-h5 text-white">{{ $t("login.title") }}</h2>
+      <h2 class="text-h5 text-white">{{ t("login.title") }}</h2>
     </v-card-title>
 
     <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
@@ -10,8 +10,8 @@
           v-model:model-value="email"
           type="email"
           prepend-icon="fa-solid fa-at"
-          :label="$t('form.name')"
-          :rules="[required($t), isValidEmail($t)]"
+          :label="t('form.name')"
+          :rules="[required(t), isValidEmail(t)]"
           :error-messages="errors.email"
         />
 
@@ -23,9 +23,9 @@
           autocapitalize="off"
           autocomplete="off"
           spellcheck="false"
-          :label="$t('form.password')"
+          :label="t('form.password')"
           :type="passwordFieldType"
-          :rules="[required($t), isValidPassword($t)]"
+          :rules="[required(t), isValidPassword(t)]"
           :error-messages="errors.password"
         >
           <template v-slot:append-inner>
@@ -38,17 +38,17 @@
 
       <v-card-actions class="px-5 d-flex align-center justify-end">
         <nuxt-link to="register" class="text-blue-grey">
-          {{ $t("register.link") }}
+          {{ t("register.link") }}
         </nuxt-link>
 
         <span class="text-blue-grey mx-2">| </span>
 
         <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
-          {{ $t("reset.link") }}
+          {{ t("reset.link") }}
         </nuxt-link>
 
         <v-btn type="submit" color="primary" :loading="submitting">
-          {{ $t("login.title") }}
+          {{ t("login.title") }}
         </v-btn>
       </v-card-actions>
     </v-form>

@@ -24,6 +24,18 @@ type MiddlewareMeta = null | {
    * @default undefined
    */
   navigateUnauthenticatedTo?: string;
+
+  /** Whether to only allow users of type === org to access this page
+   *
+   * @default undefined
+   */
+  onlyOrg?: boolean;
+
+  /** Where to redirect non orgs if the page is org only
+   *
+   * @default undefined
+   */
+  navigateNonOrgTo?: string;
 };
 
 // @ts-expect-error - #app not defined
@@ -52,12 +64,17 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const { loggedIn, data } = useAuth();
 
-  console.log(loggedIn.value, data.value, to, metaAuth);
+  // console.log(loggedIn.value, data.value, to, metaAuth);
   if (loggedIn.value) {
-    console.log(metaAuth.unauthenticatedOnly);
+    // console.log(metaAuth.unauthenticatedOnly);
     // the page is only for users that are not logged in (e.g.: login page)
     if (metaAuth.unauthenticatedOnly) {
       return navigateTo(metaAuth.navigateAuthenticatedTo ?? "/");
+    }
+
+    if (metaAuth.onlyOrg && data.value?.type !== "org") {
+      console.log(metaAuth.onlyOrg, data.value);
+      // return navigateTo(metaAuth.navigateNonOrgTo ?? "/");
     }
 
     console.log("aqui?");

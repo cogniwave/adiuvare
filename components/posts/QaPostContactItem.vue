@@ -25,7 +25,7 @@
       <!-- </template>
     </v-tooltip> -->
 
-      <!-- <v-tooltip :text="$t('form.post.schedule.recurringTooltip')">
+      <!-- <v-tooltip :text="$t('form.post.schedule.recurring')">
       <template v-slot:activator="{ props }"> -->
       <v-btn size="x-small" value="recurring" @update:model-value="scheduleType = 'recurring'">
         {{ $t("form.post.schedule.recurring") }}

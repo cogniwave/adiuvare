@@ -108,7 +108,7 @@ import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
 import type { Post, PostSchedule } from "@/types/post";
 
-definePageMeta({ path: "/posts/new", auth: { authenticatedOnly: true } });
+definePageMeta({ path: "/posts/new", auth: { authenticatedOnly: true, onlyOrg: true } });
 
 const { notifySuccess } = useNotify();
 const { t } = useI18n();

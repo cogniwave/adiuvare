@@ -5,7 +5,6 @@ import type { LoginPayload, LoginResult, TokenUser } from "@/types/user";
 const REFRESH_INTERVAL = 240000; // 4 minutes, 1 less than token duration
 
 let interval: NodeJS.Timeout | null = null;
-let init = true;
 
 export const useAuth = () => {
   const $router = useRouter();
@@ -70,13 +69,18 @@ export const useAuth = () => {
     }
 
     try {
-      const accesToken = await $fetch<string>("/api/v1/auth/refresh", {
+      const { data: result } = await useFetch<string>("/api/v1/auth/refresh", {
         method: "post",
         body: { token: refreshToken.value },
       });
 
-      token.value = accesToken;
-      _accessTokenCookie.value = accesToken;
+      if (!result.value) {
+        logout();
+        return false;
+      }
+
+      token.value = result.value;
+      _accessTokenCookie.value = result.value;
 
       return true;
     } catch (err) {
@@ -89,16 +93,20 @@ export const useAuth = () => {
 
   const login = async (payload: LoginPayload) => {
     loading.value = true;
-    const result = await $fetch<LoginResult>("/api/v1/auth/login", {
+    const { data: result } = await useFetch<LoginResult>("/api/v1/auth/login", {
       method: "post",
       body: payload,
     });
 
-    token.value = result.accessToken;
-    refreshToken.value = result.refreshToken;
-    data.value = result.user;
+    if (!result.value) {
+      return;
+    }
+
+    token.value = result.value.accessToken;
+    refreshToken.value = result.value.refreshToken;
+    data.value = result.value.user;
     loading.value = false;
-    storageUser.value = result.user;
+    storageUser.value = result.value.user;
 
     // refresh token every REFRESH_INTERVAL
     interval = setInterval(refresh, REFRESH_INTERVAL);
@@ -125,36 +133,25 @@ export const useAuth = () => {
     }
   };
 
-  watch(token, (tkn: Ref<string | null>) => tkn.value && (_accessTokenCookie.value = tkn.value));
+  watch(token, (tkn) => tkn.value && (_accessTokenCookie.value = tkn.value));
 
-  watch(
-    refreshToken,
-    (tkn: Ref<string | null>) => tkn.value && (_refreshTokenCookie.value = tkn.value),
-  );
+  watch(refreshToken, (tkn) => tkn.value && (_refreshTokenCookie.value = tkn.value));
 
-  if (init) {
-    (async () => {
-      // When the page is cached on a server, set the token on the client
-      if (_accessTokenCookie.value && !token.value) {
-        token.value = _accessTokenCookie.value;
-        refreshToken.value = _refreshTokenCookie.value;
-      } else if (_refreshTokenCookie.value && (!refreshToken.value || !token.value)) {
-        await refresh();
-      }
+  // When the page is cached on a server, set the token on the client
+  if (_accessTokenCookie.value && !token.value) {
+    token.value = _accessTokenCookie.value;
+    refreshToken.value = _refreshTokenCookie.value;
+  } else if (_refreshTokenCookie.value && (!refreshToken.value || !token.value)) {
+    refresh();
+  }
 
-      if (token.value && storageUser.value) {
-        data.value = storageUser.value;
+  if (!interval && token.value && storageUser.value) {
+    data.value = storageUser.value;
 
-        // refresh token every REFRESH_INTERVAL
-        interval = setInterval(refresh, REFRESH_INTERVAL);
-        loading.value = false;
-      }
-
-      init = false;
-    })();
-  } else {
+    // refresh token every REFRESH_INTERVAL
+    interval = setInterval(refresh, REFRESH_INTERVAL);
     loading.value = false;
   }
 
-  return { data, loggedIn, token, refreshToken, logout, login, refresh };
+  return { data, loggedIn, token, refreshToken, loading, logout, login, refresh };
 };
