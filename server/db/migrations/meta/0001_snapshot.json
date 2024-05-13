@@ -1,10 +1,8 @@
 {
-  "id": "928db61c-b563-49ca-b283-90c1d6d3236e",
-  "prevId": "8bd4c341-e47a-4b3e-a8a4-912bfa4150d6",
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "tables": {
-    "posts": {
+    "public.posts": {
       "name": "posts",
       "schema": "",
       "columns": {
@@ -93,29 +91,29 @@
         "posts_created_user_id_users_id_fk": {
           "name": "posts_created_user_id_users_id_fk",
           "tableFrom": "posts",
-          "tableTo": "users",
           "columnsFrom": [
             "created_user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "posts_id_unique": {
           "name": "posts_id_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -182,45 +180,49 @@
       "uniqueConstraints": {
         "users_id_unique": {
           "name": "users_id_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "id"
-          ]
+          ],
+          "nullsNotDistinct": false
         },
         "users_email_unique": {
           "name": "users_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     }
   },
   "enums": {
-    "needs": {
+    "public.needs": {
       "name": "needs",
-      "values": {
-        "money": "money",
-        "volunteers": "volunteers",
-        "goods": "goods",
-        "other": "other"
-      }
+      "schema": "public",
+      "values": [
+        "money",
+        "volunteers",
+        "goods",
+        "other"
+      ]
     },
-    "state": {
+    "public.state": {
       "name": "state",
-      "values": {
-        "pending": "pending",
-        "visible": "visible",
-        "hidden": "hidden",
-        "unapproved": "unapproved"
-      }
+      "schema": "public",
+      "values": [
+        "pending",
+        "visible",
+        "hidden",
+        "unapproved"
+      ]
     }
   },
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "928db61c-b563-49ca-b283-90c1d6d3236e",
+  "prevId": "8bd4c341-e47a-4b3e-a8a4-912bfa4150d6"
 }
