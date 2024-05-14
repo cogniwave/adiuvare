@@ -3,9 +3,9 @@ import { compareSync } from "bcrypt";
 
 import { getUser } from "@/server/db/users";
 import type { LoginPayload, TokenUser } from "@/types/user";
-import { signToken } from "@/server/utils/token";
 import { getValidatedInput } from "@/server/utils/request";
 import { users } from "@/server/db/schemas/users.schema";
+import { setupTokens } from "@/server/utils/token";
 
 const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
   const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
@@ -44,24 +44,7 @@ export default defineEventHandler(async (event) => {
   try {
     const user = await login(body);
 
-    const accessToken = signToken(user, "access");
-    const refreshToken = signToken(user, "refresh");
-
-    setCookie(event, "auth:access", accessToken, {
-      // maxAge: 300, // 5 minutes
-      sameSite: "strict",
-      httpOnly: true,
-      secure: true,
-    });
-
-    setCookie(event, "auth:refresh", refreshToken, {
-      // maxAge: 21600, // 6 hours
-      sameSite: "strict",
-      httpOnly: true,
-      secure: true,
-    });
-
-    return { user, accessToken, refreshToken };
+    return { user, ...setupTokens(event, user) };
   } catch (err) {
     console.log(err);
     throw createError(err as any);

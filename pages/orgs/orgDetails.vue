@@ -21,9 +21,9 @@
     <div class="bg-white rounded pa-5">
       <div class="d-flex align-center">
         <v-avatar size="100">
-          <v-img :alt="t('posts.logoAlt')" lazy-src="/assets/profile-placeholder.png">
+          <v-img :alt="t('posts.logoAlt')" :lazy-src="currOrg.photoThumbnail">
             <template v-slot:error>
-              <v-img src="/assets/profile-placeholder.png" cover referrerpolicy="same-origin" />
+              <v-img :src="currOrg.photoThumbnail" cover referrerpolicy="same-origin" />
             </template>
           </v-img>
         </v-avatar>

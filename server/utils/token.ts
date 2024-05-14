@@ -45,3 +45,24 @@ export const validateToken = (context: H3Event<EventHandlerRequest> | string) =>
     return null;
   }
 };
+
+export const setupTokens = (event: H3Event<EventHandlerRequest>, user: TokenUser) => {
+  const accessToken = signToken(user, "access");
+  const refreshToken = signToken(user, "refresh");
+
+  setCookie(event, "auth:access", accessToken, {
+    // maxAge: 300, // 5 minutes
+    sameSite: "strict",
+    httpOnly: true,
+    secure: true,
+  });
+
+  setCookie(event, "auth:refresh", refreshToken, {
+    // maxAge: 21600, // 6 hours
+    sameSite: "strict",
+    httpOnly: true,
+    secure: true,
+  });
+
+  return { accessToken, refreshToken };
+};

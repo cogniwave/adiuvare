@@ -1,7 +1,13 @@
 export default defineNuxtRouteMiddleware(() => {
-  const { loggedIn } = useAuth();
+  const { loggedIn, loading } = useAuth();
 
-  if (!loggedIn.value) {
-    return navigateTo("/login");
-  }
+  watch(
+    () => loading.value,
+    (loading) => {
+      if (!loading && !loggedIn.value) {
+        return navigateTo("/login");
+      }
+    },
+    { immediate: true },
+  );
 });

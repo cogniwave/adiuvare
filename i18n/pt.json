@@ -113,6 +113,21 @@
       "phoneHint": "Se não for um número português adicione também o indicativo"
     },
 
+    "user": {
+      "update": "Atualizar perfil",
+      "delete": "Apagar conta",
+      "updated": "Perfil atualizado",
+      "namePlaceholder": "Qual é o seu nome ?",
+      "name": "Nome",
+      "slug": "Slug",
+      "slugPlaceholder": "joao-32195",
+      "slugHint": "Slug é usado para a definição do link do seu perfil público",
+      "bioPlaceholder": "Um pequeno texto para os outros utilizadores / organizações conheçam um pouco mais sobre si",
+      "bio": "Biografia",
+      "editDetails": "Perfil"
+    },
+
+    "cancel": "Cancelar",
     "edit": "Editar"
   },
 
@@ -145,8 +160,9 @@
     "emailExists": "Já existe uma conta com este email",
     "invalidEmail": "Email inválido",
     "invalidField": "Invalid field",
-    "fetchPost": "Could not fetch organization",
-    "fetchOrg": "Could not fetch organization",
+    "fetchPost": "Publicação não encontrada",
+    "fetchOrg": "Organização não encontrada",
+    "fetchUser": "Utilizador não encontrado",
     "unverifiedUser": "Utilizador não confirmado. Siga os passos do email enviado quando a conta foi criada",
     "contactExists": "Contacto já existe",
     "requiredField": "Campo obrigatório",
@@ -232,10 +248,8 @@
   "menu": {
     "home": "Início",
     "orgs": "Organizações",
-    "posts": "Publicações do mesmo autor"
+    "posts": "Publicações do autor"
   },
-
-  "users": {},
 
   "org": {
     "learnMore": "Ver mais"

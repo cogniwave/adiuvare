@@ -12,6 +12,8 @@ export interface User extends Omit<BaseUser, "password"> {
   slug: string;
   bio?: string;
   photo?: string;
+  photoThumbnail?: string;
+  contacts?: UserContact[];
 }
 
 export interface LoginPayload {
@@ -40,7 +42,6 @@ export interface TokenUser {
 export type ContactType = "email" | "phone" | "other";
 
 export interface UserContact {
-  // label: string;
   type: ContactType;
   contact: string;
 }
@@ -49,6 +50,15 @@ export interface LoginResult {
   user: TokenUser;
   accessToken: string;
   refreshToken: string;
+}
+
+export interface UpdateUserPayload {
+  id: string;
+  name: string;
+  slug: string;
+  bio?: string;
+  photo?: string;
+  contacts?: UserContact[];
 }
 
 // type == org

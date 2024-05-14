@@ -58,7 +58,7 @@ export const useAuth = () => {
   };
 
   // make request to refresh, update tokens
-  const refresh = async (init = false) => {
+  const refresh = async () => {
     loading.value = true;
 
     if (!refreshToken.value) {
@@ -82,7 +82,7 @@ export const useAuth = () => {
       token.value = result.value;
       _accessTokenCookie.value = result.value;
 
-      if (init && storageUser.value) {
+      if (storageUser.value && !data.value) {
         data.value = storageUser.value;
 
         // refresh token every REFRESH_INTERVAL
@@ -141,17 +141,24 @@ export const useAuth = () => {
     }
   };
 
-  watch(token, (tkn) => tkn?.value && (_accessTokenCookie.value = tkn.value));
+  watch(token, (tkn) => tkn && (_accessTokenCookie.value = tkn), { immediate: true });
 
-  watch(refreshToken, (tkn) => tkn?.value && (_refreshTokenCookie.value = tkn.value));
+  watch(refreshToken, (tkn) => tkn && (_refreshTokenCookie.value = tkn), { immediate: true });
 
   // When the page is cached on a server, set the token on the client
   if (_accessTokenCookie.value && !token.value) {
     token.value = _accessTokenCookie.value;
     refreshToken.value = _refreshTokenCookie.value;
   } else if (_refreshTokenCookie.value && (!refreshToken.value || !token.value)) {
-    refresh(true);
+    refresh();
   } else {
+    if (storageUser.value && !data.value) {
+      data.value = storageUser.value;
+
+      // refresh token every REFRESH_INTERVAL
+      interval = setInterval(refresh, REFRESH_INTERVAL);
+    }
+
     loading.value = false;
   }
 

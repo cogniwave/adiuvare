@@ -6,7 +6,7 @@ import { PgColumn } from "drizzle-orm/pg-core";
 import { db } from "./";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, User } from "@/types/user";
+import type { BaseUser, User, UpdateUserPayload } from "@/types/user";
 import { genSlugToken } from "@/server/utils";
 
 const SALT = 10;
@@ -61,6 +61,29 @@ export const verifyUser = async (token: string): Promise<boolean> => {
   return (result.rowCount || 0) > 0;
 };
 
+export const updateUser = async (payload: UpdateUserPayload, userId: string) => {
+  const old = await db.select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
+
+  if (!old) {
+    return null;
+  }
+
+  if (payload.id !== userId) {
+    return old;
+  }
+
+  const updated = db.update(users).set(payload).where(eq(users.id, userId)).returning({
+    id: users.id,
+    slug: users.slug,
+    contacts: users.contacts,
+    name: users.name,
+    email: users.email,
+    type: users.type,
+  });
+
+  return updated;
+};
+
 // org specific stuffs
 export const getOrgs = async () => {
   const result = await db
@@ -97,6 +120,7 @@ export const getUserBySlug = async (slug: string) => {
       slug: users.slug,
       photo: users.photo,
       photoThumbnail: users.photoThumbnail,
+      contacts: users.contacts,
     })
     .from(users)
     .where(and(eq(users.slug, slug), eq(users.verified, true)))
