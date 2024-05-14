@@ -150,7 +150,7 @@
 
       <div class="bg-white rounded px-10 py-5">
         <!-- contacts -->
-        <qa-post-contacts />
+        <qa-contacts />
 
         <!-- horarios -->
         <qa-post-schedule />

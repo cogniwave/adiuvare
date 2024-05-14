@@ -86,7 +86,7 @@
       <!-- contacts -->
       {{ t("posts.contacts.detailsTitle") }}
 
-      <qa-post-contacts-list
+      <qa-contacts-list
         v-if="currPost.contacts?.length"
         :contacts="currPost.contacts"
         bg-color="transparent"

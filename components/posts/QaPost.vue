@@ -156,7 +156,7 @@
             </v-btn>
           </template>
 
-          <qa-post-contacts-list v-if="post.contacts?.length" :contacts="post.contacts" />
+          <qa-contacts-list v-if="post.contacts?.length" :contacts="post.contacts" />
         </v-menu>
 
         <v-btn
