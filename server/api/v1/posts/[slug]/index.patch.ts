@@ -1,9 +1,9 @@
 import Joi from "joi";
 
-import { POST_NEEDS, POST_STATES } from "~/server/db/schemas/posts.schema";
-import { updatePost } from "~/server/db/posts";
-import { getSessionUser, getValidatedInput } from "~/server/utils/request";
-import { UpdatePostPayload } from "~/types/post";
+import { POST_NEEDS, POST_STATES } from "@/server/db/schemas/posts.schema";
+import { updatePost } from "@/server/db/posts";
+import { getSessionUser, getValidatedInput } from "@/server/utils/request";
+import type { UpdatePostPayload } from "@/types/post";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<UpdatePostPayload>(event, {

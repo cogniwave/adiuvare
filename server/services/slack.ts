@@ -1,4 +1,4 @@
-import { Report } from "~/types/report";
+import type { Report } from "@/types/report";
 
 const sendToSlack = (message: string) => {
   const webhook = process.env.SLACK_WEBHOOK_URL;

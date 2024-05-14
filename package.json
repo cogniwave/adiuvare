@@ -39,8 +39,8 @@
     "@types/nodemailer": "^6",
     "@types/pg": "^8",
     "@types/uuid": "^9",
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
     "@vueuse/core": "^10.9.0",
     "@vueuse/nuxt": "^10.9.0",
     "drizzle-kit": "^0.21.1",
@@ -55,7 +55,7 @@
     "vite-plugin-vuetify": "^2.0.3",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
-    "vuetify": "^3.6.5"
+    "vuetify": "^3.6.6"
   },
   "packageManager": "yarn@4.0.2"
 }

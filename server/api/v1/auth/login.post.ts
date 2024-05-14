@@ -1,11 +1,11 @@
 import Joi from "joi";
 import { compareSync } from "bcrypt";
 
-import { getUser } from "~/server/db/users";
-import { LoginPayload, TokenUser } from "~/types/user";
-import { signToken } from "~/server/utils/token";
-import { getValidatedInput } from "~/server/utils/request";
-import { users } from "~/server/db/schemas/users.schema";
+import { getUser } from "@/server/db/users";
+import type { LoginPayload, TokenUser } from "@/types/user";
+import { signToken } from "@/server/utils/token";
+import { getValidatedInput } from "@/server/utils/request";
+import { users } from "@/server/db/schemas/users.schema";
 
 const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
   const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {

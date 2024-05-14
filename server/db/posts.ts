@@ -6,7 +6,7 @@ import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
 
 import type { InsertPost } from "./schemas/posts.schema";
-import type { UpdatePostPayload } from "~/types/post";
+import type { UpdatePostPayload } from "@/types/post";
 
 export const getPosts = async () => {
   const result = await db

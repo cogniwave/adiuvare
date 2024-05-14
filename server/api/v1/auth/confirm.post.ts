@@ -1,7 +1,7 @@
 import Joi from "joi";
 
-import { verifyUser } from "~/server/db/users";
-import { getValidatedInput } from "~/server/utils/request";
+import { verifyUser } from "@/server/db/users";
+import { getValidatedInput } from "@/server/utils/request";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<{ token: string }>(event, {

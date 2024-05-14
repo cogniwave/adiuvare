@@ -11,7 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { posts } from "./posts.schema";
-import type { UserContact, UserType } from "~/types/user";
+import type { UserContact, UserType } from "@/types/user";
 
 export const USER_TYPES: Readonly<[UserType, ...UserType[]]> = ["org", "volunteer"];
 

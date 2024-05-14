@@ -12,8 +12,8 @@ import {
 import { relations } from "drizzle-orm";
 
 import { users } from "./users.schema";
-import type { PostSchedule } from "~/types/post";
-import type { UserContact } from "~/types/user";
+import type { PostSchedule } from "@/types/post";
+import type { UserContact } from "@/types/user";
 
 export const POST_STATES: Readonly<[string, ...string[]]> = [
   "pending",

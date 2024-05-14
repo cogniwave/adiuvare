@@ -12,8 +12,8 @@ import { relations } from "drizzle-orm";
 
 import { users } from "./users.schema";
 import { needsEnum, posts, stateEnum } from "./posts.schema";
-import type { PostSchedule } from "~/types/post";
-import type { UserContact } from "~/types/user";
+import type { PostSchedule } from "@/types/post";
+import type { UserContact } from "@/types/user";
 
 export const postHistory = pgTable(
   "postHistory",

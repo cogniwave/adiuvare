@@ -1,10 +1,10 @@
 import Joi from "joi";
 
-import { addUser } from "~/server/db/users";
-import { sendMail } from "~/server/services/mail";
-import { getValidatedInput } from "~/server/utils/request";
-import type { BaseUser, User } from "~/types/user";
-import type { DrizzleError } from "~/server/types/drizzle";
+import { addUser } from "@/server/db/users";
+import { sendMail } from "@/server/services/mail";
+import { getValidatedInput } from "@/server/utils/request";
+import type { BaseUser, User } from "@/types/user";
+import type { DrizzleError } from "@/server/types/drizzle";
 
 const sendVerificationEmail = (email: string, name: string) => {
   sendMail("Confirmação de conta", email, "foo", { name });

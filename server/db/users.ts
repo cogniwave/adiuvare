@@ -6,8 +6,8 @@ import { PgColumn } from "drizzle-orm/pg-core";
 import { db } from "./";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, User } from "~/types/user";
-import { genSlugToken } from "~/server/utils";
+import type { BaseUser, User } from "@/types/user";
+import { genSlugToken } from "@/server/utils";
 
 const SALT = 10;
 

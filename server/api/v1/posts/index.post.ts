@@ -1,10 +1,10 @@
 import Joi from "joi";
 
-import type { CreatePostPayload } from "~/types/post";
-import { POST_NEEDS } from "~/server/db/schemas/posts.schema";
-import { createPost } from "~/server/db/posts";
-import { getValidatedInput } from "~/server/utils/request";
-import { genSlugToken } from "~/server/utils";
+import type { CreatePostPayload } from "@/types/post";
+import { POST_NEEDS } from "@/server/db/schemas/posts.schema";
+import { createPost } from "@/server/db/posts";
+import { getValidatedInput } from "@/server/utils/request";
+import { genSlugToken } from "@/server/utils";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<CreatePostPayload>(event, {

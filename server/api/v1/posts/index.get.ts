@@ -1,4 +1,4 @@
-import { getPosts, getTotalPosts } from "~/server/db/posts";
+import { getPosts, getTotalPosts } from "@/server/db/posts";
 
 export default defineEventHandler(async () => {
   try {

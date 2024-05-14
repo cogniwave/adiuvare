@@ -1,9 +1,9 @@
 import Joi from "joi";
 
-import type { Report } from "~/types/report";
-import { createReport } from "~/server/db/reports";
-import { notifyNewReport } from "~/server/services/slack";
-import { getValidatedInput } from "~/server/utils/request";
+import type { Report } from "@/types/report";
+import { createReport } from "@/server/db/reports";
+import { notifyNewReport } from "@/server/services/slack";
+import { getValidatedInput } from "@/server/utils/request";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<Report>(event, {

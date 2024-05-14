@@ -1,8 +1,8 @@
 import Joi from "joi";
 
-import { getUser } from "~/server/db/users";
-import type { LoginPayload } from "~/types/user";
-import { getValidatedInput } from "~/server/utils/request";
+import { getUser } from "@/server/db/users";
+import type { LoginPayload } from "@/types/user";
+import { getValidatedInput } from "@/server/utils/request";
 import type { H3Event, EventHandlerRequest } from "h3";
 
 const sendEmail = console.log;

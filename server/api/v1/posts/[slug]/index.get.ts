@@ -1,4 +1,4 @@
-import { getPostBySlug } from "~/server/db/posts";
+import { getPostBySlug } from "@/server/db/posts";
 
 export default defineEventHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
