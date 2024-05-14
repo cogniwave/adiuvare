@@ -24,8 +24,8 @@
 // import { useNotifyStore } from "@/stores/notify.store";
 
 definePageMeta({
-  layout: "sidebar",
-  path: "/profile/:slug",
+  layout: "default",
+  path: "/profile/:slug/edit",
 });
 
 // const $router = useRouter();
