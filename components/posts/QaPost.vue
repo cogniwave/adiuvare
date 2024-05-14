@@ -23,7 +23,7 @@
           <span class="text-subtitle-2 d-block">
             <!-- otherwise vue will complain because $t only "accepts"
              date and number but passing a string also works  -->
-            {{ $d(post.createdAt as any) }}
+            {{ d(post.createdAt as any) }}
           </span>
         </div>
 
@@ -192,7 +192,7 @@ const props = defineProps({
 });
 
 const $router = useRouter();
-const { t } = useI18n();
+const { t, d } = useI18n();
 const { setPost } = usePosts();
 
 const desc = ref(props.post.description);

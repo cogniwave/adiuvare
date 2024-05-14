@@ -106,14 +106,14 @@ import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
-import type { Post, PostSchedule } from "@/types/post";
+import type { EmptyPost, Post, PostSchedule } from "@/types/post";
 
-definePageMeta({ path: "/posts/new", middleware: "orgOnly" });
+definePageMeta({ path: "/posts/new", middleware: "org-only" });
 
 const { notifySuccess } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
-const { currPost, posts } = usePosts();
+const { currPost, posts, setPost } = usePosts();
 const $router = useRouter();
 
 const title = ref<string>("");
@@ -133,6 +133,8 @@ const helpOptions = ref<SelectOption[]>([
 ]);
 
 const submitting = ref<boolean>(false);
+
+onBeforeMount(() => setPost({} as EmptyPost));
 
 const fetchLocations = (text: string) => {
   debounce(() => {

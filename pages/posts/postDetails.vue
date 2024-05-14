@@ -41,14 +41,14 @@
               location="bottom"
               close-on-content-click
               close-delay="0"
-              :text="`${t('posts.lastUpdatedAt')} ${$d(currPost.updatedAt as any)}`"
+              :text="`${t('posts.lastUpdatedAt')} ${d(currPost.updatedAt as any)}`"
             >
               <template v-slot:activator="{ props }">
-                <small v-bind="props">¬ {{ $d(currPost.createdAt as any) }}</small>
+                <small v-bind="props">¬ {{ d(currPost.createdAt as any) }}</small>
               </template>
             </v-tooltip>
 
-            <small v-else>¬ {{ $d(currPost.createdAt as any) }}</small>
+            <small v-else>¬ {{ d(currPost.createdAt as any) }}</small>
           </template>
         </div>
       </div>
