@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 import type { CreatePostPayload } from "@/types/post";
+import { getSessionUser } from "@/server/utils/request";
 import { POST_NEEDS } from "@/server/db/schemas/posts.schema";
 import { createPost } from "@/server/db/posts";
 import { getValidatedInput } from "@/server/utils/request";

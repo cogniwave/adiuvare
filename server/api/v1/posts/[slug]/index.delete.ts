@@ -6,7 +6,14 @@ export default defineEventHandler(async (event) => {
 
   // delete post
   try {
-    const user = await getSessionUser(event);
+    const user = getSessionUser(event);
+
+    if (!user) {
+      setResponseStatus(event, 401);
+      sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));
+      return;
+    }
+
     // make sure post exists and belongs to logged in user
     const post = await getPostByOwner(postId, user.id);
 
