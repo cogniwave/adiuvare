@@ -173,15 +173,16 @@
 import { ref } from "vue";
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import type { SelectOption } from "@/types/form";
-
 import { required, maxLength } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 import { debounce } from "@/utils";
 import { getCities } from "@/services/geoapify.service";
 import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
+import { useNotify } from "@/store/notify";
+import { usePosts } from "@/store/posts";
 import type { Post, PostSchedule, PostState } from "@/types/post";
+import type { SelectOption } from "@/types/form";
 
 definePageMeta({ path: "/posts/:slug/edit", middleware: "is-owner" });
 

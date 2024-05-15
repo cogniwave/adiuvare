@@ -62,10 +62,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { Post, ScheduleType } from "@/types/post";
-
+import { usePosts } from "@/store/posts";
 import QaPostScheduleRecurringSelector from "./QaPostScheduleRecurringSelector.vue";
 import QaPostScheduleSpecificSelector from "./QaPostScheduleSpecificSelector.vue";
+import type { Post, ScheduleType } from "@/types/post";
 
 const { currPost } = usePosts<Post>();
 const { t } = useI18n();

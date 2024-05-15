@@ -75,6 +75,8 @@ export interface PostDeletePayload {
   title: string;
 }
 
+export type PostDisablePayload = PostDeletePayload;
+
 export interface PostStateTogglePayload extends PostDeletePayload {
   enable: boolean;
 }

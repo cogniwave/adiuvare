@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { usePosts } from "@/store/posts";
 import type { PostDeletePayload } from "@/types/post";
 
 const $emit = defineEmits<{

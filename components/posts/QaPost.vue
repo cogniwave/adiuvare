@@ -174,9 +174,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
-
+import { usePosts } from "@/store/posts";
 import QaPostNeed from "@/components/posts/QaPostNeed.vue";
+import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 
 const MAX_DESC = 1300;
 const NUM_VISIBLE_LOCATIONS = 3;

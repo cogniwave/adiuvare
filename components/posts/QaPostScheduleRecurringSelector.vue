@@ -134,15 +134,15 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
-
 import type { PropType } from "vue";
+
 import type {
   Day,
   RecurringSchedule,
   ScheduleTime,
   RecurringScheduleTimeGroup,
 } from "@/types/post";
-
+import { usePosts } from "@/store/posts";
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 import { toHumanDay } from "@/utils/scheduling";

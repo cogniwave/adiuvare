@@ -15,11 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Post } from "@/types/post";
+import { usePosts } from "@/store/posts";
+import { useNotify } from "@/store/notify";
+import type { Post, PostDisablePayload } from "@/types/post";
 
 const { notifyError } = useNotify();
 const { t } = useI18n();
-const { disableDialogVisible, currPost, posts } = usePosts();
+const { disableDialogVisible, currPost, posts } = usePosts<PostDisablePayload>();
 
 const submitting = ref<boolean>(false);
 

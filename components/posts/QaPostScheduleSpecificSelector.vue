@@ -28,13 +28,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { Post, ScheduleTime, SpecificSchedule } from "@/types/post";
-import type { Dayjs } from "@/services/dayjs.service";
-
 import dayjs from "@/services/dayjs.service";
 import { required, validDate, futureDate } from "@/utils/validators";
 import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
+import { usePosts } from "@/store/posts";
+import type { Post, ScheduleTime, SpecificSchedule } from "@/types/post";
+import type { Dayjs } from "@/services/dayjs.service";
 
 const { currPost } = usePosts<Post>();
 const { d, t } = useI18n();

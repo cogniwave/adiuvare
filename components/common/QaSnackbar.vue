@@ -5,5 +5,7 @@
 </template>
 
 <script setup lang="ts">
+import { useNotify } from "@/store/notify";
+
 const { visible, timeout, type, text } = useNotify();
 </script>

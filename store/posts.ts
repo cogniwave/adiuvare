@@ -1,6 +1,12 @@
-import type { Post, PostDeletePayload, PostStateTogglePayload, EmptyPost } from "@/types/post";
+import type {
+  Post,
+  PostDeletePayload,
+  PostStateTogglePayload,
+  PostDisablePayload,
+  EmptyPost,
+} from "@/types/post";
 
-type AnyPost = Post | PostStateTogglePayload | PostDeletePayload | EmptyPost;
+type AnyPost = Post | PostStateTogglePayload | PostDeletePayload | PostDisablePayload | EmptyPost;
 
 export const usePosts = <T = AnyPost>() => {
   const posts = useState<Post[]>("posts:posts", () => []);

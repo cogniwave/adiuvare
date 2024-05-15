@@ -64,6 +64,8 @@
 
 <script setup lang="ts">
 import type { PropType } from "vue";
+
+import { useNotify } from "@/store/notify";
 import type { UserContact } from "@/types/user";
 
 defineProps({

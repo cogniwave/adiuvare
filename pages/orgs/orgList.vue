@@ -56,12 +56,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useNotify } from "@/store/notify";
+import { useOrganizations } from "@/store/organizations";
 import type { GetOrganizationsResult } from "@/types/user";
 
 definePageMeta({ path: "/organizations" });
 
 const { orgs, setOrgs } = useOrganizations();
 const { notifyError } = useNotify();
+const { t } = useI18n();
 
 const { data, pending, error, execute } = useFetch<GetOrganizationsResult>(
   "/api/v1/organizations",
