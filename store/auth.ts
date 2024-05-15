@@ -8,6 +8,7 @@ let interval: NodeJS.Timeout | null = null;
 
 export const useAuth = () => {
   const $router = useRouter();
+
   const storageUser = useLocalStorage<TokenUser>("qa:user", null, {
     writeDefaults: false,
     serializer: {
@@ -16,40 +17,21 @@ export const useAuth = () => {
     },
   });
 
-  const loggedIn = computed<boolean>(() => !loading.value && !!data.value);
-
-  // Re-construct state from cookie, also setup a cross-component sync via a useState hack, see https://github.com/nuxt/nuxt/issues/13020#issuecomment-1397282717
-  const _accessTokenCookie = useCookie<string | null>("auth:access", {
-    default: () => null,
-    maxAge: 300,
-    sameSite: "strict",
-    httpOnly: true,
-    secure: true,
-  });
-
-  const _refreshTokenCookie = useCookie<string | null>("auth:refresh", {
-    default: () => null,
-    maxAge: 300,
-    sameSite: "strict",
-    httpOnly: true,
-    secure: true,
-  });
-
-  const data = useState<TokenUser | undefined | null>("auth:data", () => undefined);
+  const data = useState<TokenUser | null>("auth:data", () => null);
 
   // If session exists, initialize as not loading
   const loading = useState<boolean>("auth:loading", () => true);
 
-  const token = useState("auth:access", () => _accessTokenCookie.value);
+  const token = useState<string | null>("auth:access", () => null);
 
-  const refreshToken = useState("auth:refresh", () => _refreshTokenCookie.value);
+  const refreshToken = useState<string | null>("auth:refresh", () => null);
+
+  const loggedIn = computed<boolean>(() => !loading.value && !!data.value);
 
   const _reset = () => {
     data.value = null;
     token.value = null;
     refreshToken.value = null;
-    _accessTokenCookie.value = null;
-    _refreshTokenCookie.value = null;
     storageUser.value = null;
 
     if (interval) {
@@ -81,12 +63,11 @@ export const useAuth = () => {
       }
 
       token.value = result;
-      _accessTokenCookie.value = result;
 
       if (storageUser.value && !data.value) {
         data.value = storageUser.value;
 
-        startInterval();
+        startInterval(true);
       }
 
       return true;
@@ -140,32 +121,28 @@ export const useAuth = () => {
     }
   };
 
-  const startInterval = () => {
-    if (!interval) {
-      // refresh token every REFRESH_INTERVAL
+  const setData = () => {
+    if (storageUser.value) {
+      data.value = storageUser.value;
+    }
+  };
+
+  const startInterval = (reset: boolean = false) => {
+    if (!interval || reset) {
       interval = setInterval(refresh, REFRESH_INTERVAL);
     }
   };
 
-  watch(token, (tkn) => tkn && (_accessTokenCookie.value = tkn), { immediate: true });
-
-  watch(refreshToken, (tkn) => tkn && (_refreshTokenCookie.value = tkn), { immediate: true });
-
-  // When the page is cached on a server, set the token on the client
-  if (_accessTokenCookie.value && !token.value) {
-    token.value = _accessTokenCookie.value;
-    refreshToken.value = _refreshTokenCookie.value;
-  } else if (_refreshTokenCookie.value && (!refreshToken.value || !token.value)) {
-    refresh();
-  } else {
-    if (storageUser.value && !data.value) {
-      data.value = storageUser.value;
-
-      startInterval();
-    }
-
-    loading.value = false;
-  }
-
-  return { data, loggedIn, token, refreshToken, loading, logout, login, refresh };
+  return {
+    data,
+    loggedIn,
+    token,
+    refreshToken,
+    loading,
+    logout,
+    login,
+    refresh,
+    setData,
+    startInterval,
+  };
 };
