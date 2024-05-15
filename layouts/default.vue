@@ -20,7 +20,7 @@
             />
 
             <v-list-item
-              v-if="!['/', '/organizations'].includes($route.path)"
+              v-if="showUserPosts"
               prepend-icon="fa-solid fa-file-lines"
               :title="t('menu.posts')"
               :to="{ path: '/', query: { createdBy: $route.params.slug } }"
@@ -46,6 +46,19 @@ import { useRoute } from "vue-router";
 const { loading } = useAuth();
 const { t } = useI18n();
 const $route = useRoute();
+const { data } = useAuth();
+
+const showUserPosts = computed(() => {
+  if (!["/", "/organizations"].includes($route.path)) {
+    if ($route.path === "/profile") {
+      return data.value?.type === "org";
+    }
+
+    return true;
+  }
+
+  return false;
+});
 </script>
 
 <style lang="scss" scoped>
