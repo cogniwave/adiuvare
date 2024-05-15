@@ -44,7 +44,8 @@
 import { useRoute } from "vue-router";
 
 import QaContactsList from "@/components/contacts/QaContactsList.vue";
-import { useUsers } from "@/composables/users";
+import { useUsers } from "@/store/users";
+import { useAuth } from "@/store/auth";
 
 import type { User } from "@/types/user";
 

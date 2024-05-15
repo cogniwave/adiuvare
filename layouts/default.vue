@@ -43,10 +43,11 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 
-const { loading } = useAuth();
+import { useAuth } from "@/store/auth";
+
+const { data, loading } = useAuth();
 const { t } = useI18n();
 const $route = useRoute();
-const { data } = useAuth();
 
 const showUserPosts = computed(() => {
   if (!["/", "/organizations"].includes($route.path)) {

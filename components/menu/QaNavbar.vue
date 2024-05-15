@@ -73,6 +73,8 @@
 // import { useNotificationsStore } from "@/stores/notifications.store";
 import { useRouter } from "vue-router";
 
+import { useAuth } from "@/store/auth";
+
 const { loggedIn, data } = useAuth();
 const { t } = useI18n();
 const $router = useRouter();

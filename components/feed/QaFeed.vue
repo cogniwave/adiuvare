@@ -49,6 +49,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+import { useAuth } from "@/store/auth";
+import { useNotify } from "@/store/notify";
+import { usePosts } from "@/store/posts";
+import { useReport } from "@/store/report";
+
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 import QaPost from "@/components/posts/QaPost.vue";
 

@@ -41,6 +41,9 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from "vue-router";
 
+import { useAuth } from "@/store/auth";
+import { useNotify } from "@/store/notify";
+import { useOrganizations } from "@/store/organizations";
 import type { User } from "@/types/user";
 
 definePageMeta({ path: "/organizations/:slug" });

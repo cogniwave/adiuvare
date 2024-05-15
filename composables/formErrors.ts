@@ -1,6 +1,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+import { useAuth } from "@/store/auth";
+import { useNotify } from "@/store/notify";
 import type { NuxtError } from "@/exceptions";
 
 export function useFormErrors() {

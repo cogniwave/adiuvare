@@ -1,3 +1,5 @@
+import { useAuth } from "@/store/auth";
+
 export default defineNuxtRouteMiddleware((to) => {
   const { data } = useAuth();
 
@@ -5,7 +7,7 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo("/login");
   }
 
-  if (data.value.slug !== to.slug) {
+  if (data.value.slug !== to.params.slug) {
     return navigateTo("/");
   }
 });

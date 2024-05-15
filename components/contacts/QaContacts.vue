@@ -79,6 +79,9 @@
 </template>
 
 <script setup lang="ts">
+import { useAuth } from "@/store/auth";
+import { usePosts } from "@/store/posts";
+
 import type { Post } from "@/types/post";
 import type { ContactType, UserContact } from "@/types/user";
 

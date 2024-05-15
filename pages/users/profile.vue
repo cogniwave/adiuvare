@@ -107,7 +107,9 @@ import { useRouter } from "vue-router";
 import type { VForm } from "vuetify/components";
 
 import { fileSize, fileType } from "@/utils/validators";
-import { useUsers } from "@/composables/users";
+import { useUsers } from "@/store/users";
+import { useAuth } from "@/store/auth";
+import { useNotify } from "@/store/notify";
 import type { User } from "@/types/user";
 
 definePageMeta({ layout: "default", path: "/profile", middleware: "protected" });

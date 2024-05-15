@@ -57,9 +57,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
+import { useAuth } from "@/store/auth";
+import { useNotify } from "@/store/notify";
 import { required, isValidEmail, isValidPassword } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 

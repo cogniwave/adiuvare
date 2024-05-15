@@ -58,6 +58,10 @@
 import { ref, watch } from "vue";
 import type { VForm } from "vuetify/lib/components/index.mjs";
 
+import { useAuth } from "@/store/auth";
+import { useReport } from "@/store/report";
+import { useNotify } from "@/store/notify";
+
 import { required } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 

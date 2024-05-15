@@ -24,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+import { useAuth } from "@/store/auth";
+
 const $router = useRouter();
 const { logout, loggedIn, data, loading } = useAuth();
 const { t } = useI18n();

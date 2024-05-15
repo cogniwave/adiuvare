@@ -150,6 +150,9 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from "vue-router";
 
+import { useAuth } from "@/store/auth";
+import { usePosts } from "@/store/posts";
+import { useNotify } from "@/store/notify";
 import dayjs from "@/services/dayjs.service";
 import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "@/types/post";
 
