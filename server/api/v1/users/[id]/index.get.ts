@@ -1,10 +1,12 @@
-import { getUserBySlug } from "@/server/db/users";
+import { getUserById } from "@/server/db/users";
 
 export default defineEventHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
-  const slug = getRouterParam(event, "slug") as string;
+  const id = getRouterParam(event, "id") as string;
 
   const user = getSessionUser(event);
+
+  console.log(user);
 
   if (!user) {
     setResponseStatus(event, 401);
@@ -13,7 +15,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const user = await getUserBySlug(slug);
+    const user = await getUserById(id);
 
     if (user) {
       return user;

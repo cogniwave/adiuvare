@@ -3,7 +3,6 @@ import Joi from "joi";
 import { updateUser } from "@/server/db/users";
 import { getSessionUser, getValidatedInput } from "@/server/utils/request";
 import type { UpdateUserPayload } from "@/types/user";
-import { setupTokens } from "@/server/utils/token";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<UpdateUserPayload>(event, {
@@ -32,8 +31,6 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id") as string;
   const user = getSessionUser(event);
 
-  console.log(user);
-
   if (!user || user.id !== id) {
     setResponseStatus(event, 401);
     sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));
@@ -41,7 +38,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const updatedUser = await updateUser(body, user.id);
+    const updatedUser = await updateUser(user.id, body);
 
     if (!updatedUser) {
       sendError(event, createError({ statusCode: 500, statusMessage: "errors.unexpected" }));

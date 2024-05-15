@@ -6,8 +6,8 @@ import { PgColumn } from "drizzle-orm/pg-core";
 import { db } from "./";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, User, UpdateUserPayload } from "@/types/user";
-import { genSlugToken } from "@/server/utils";
+import type { BaseUser, User, UpdateUserPayload, UpdatePhotoPayload } from "@/types/user";
+import { genToken } from "@/server/utils";
 
 const SALT = 10;
 
@@ -38,7 +38,7 @@ export const addUser = async (payload: BaseUser): Promise<User | null> => {
       password: hashSync(payload.password as string, SALT),
       name: payload.name,
       type: payload.type,
-      slug: `${payload.email.split("@")[0]}-${genSlugToken()}`,
+      slug: `${payload.email.split("@")[0]}-${genToken()}`,
       token: randomBytes(32).toString("hex"),
       verified: false,
     })
@@ -61,14 +61,17 @@ export const verifyUser = async (token: string): Promise<boolean> => {
   return (result.rowCount || 0) > 0;
 };
 
-export const updateUser = async (payload: UpdateUserPayload, userId: string) => {
+export const updateUser = async (
+  userId: string,
+  payload: UpdateUserPayload | UpdatePhotoPayload,
+) => {
   const old = await db.select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
 
-  if (!old) {
+  if (!old?.length) {
     return null;
   }
 
-  if (payload.id !== userId) {
+  if (old[0].id !== userId) {
     return old;
   }
 
@@ -82,6 +85,24 @@ export const updateUser = async (payload: UpdateUserPayload, userId: string) => 
   });
 
   return updated;
+};
+
+export const getUserById = async (id: string) => {
+  const result = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      bio: users.bio,
+      slug: users.slug,
+      photo: users.photo,
+      photoThumbnail: users.photoThumbnail,
+      contacts: users.contacts,
+    })
+    .from(users)
+    .where(and(eq(users.id, id), eq(users.verified, true)))
+    .limit(1);
+
+  return result.length === 1 ? result[0] : null;
 };
 
 // org specific stuffs

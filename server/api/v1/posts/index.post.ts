@@ -5,7 +5,7 @@ import { getSessionUser } from "@/server/utils/request";
 import { POST_NEEDS } from "@/server/db/schemas/posts.schema";
 import { createPost } from "@/server/db/posts";
 import { getValidatedInput } from "@/server/utils/request";
-import { genSlugToken } from "@/server/utils";
+import { genToken } from "@/server/utils";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<CreatePostPayload>(event, {
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
     return await createPost({
       ...body,
       createdUserId: user.id,
-      slug: `${body.title.trim().slice(0, 20).replaceAll(" ", "_")}-${genSlugToken(10)}`,
+      slug: `${body.title.trim().slice(0, 20).replaceAll(" ", "_")}-${genToken(10)}`,
     });
   } catch (err) {
     console.log(err);

@@ -1,8 +1,8 @@
 import { isPossiblePhoneNumber, isValidPhoneNumber } from "libphonenumber-js";
+import type { NamedValue } from "@intlify/core-base";
 
 import dayjs from "@/services/dayjs.service";
-
-import type { NamedValue } from "@intlify/core-base";
+import { FILE_SIZE } from "@/server/utils";
 
 type TranslatorFunction = (k: string, named?: NamedValue, defaultMsg?: string) => string;
 
@@ -42,4 +42,12 @@ export const isValidPhone = (t: TranslatorFunction) => (val: string) => {
   return (
     (isPossiblePhoneNumber(val, "PT") && isValidPhoneNumber(val, "PT")) || t("errors.invalidPhone")
   );
+};
+
+export const fileType = (t: TranslatorFunction) => (val: File) => {
+  return true || t("form.errors.fileType");
+};
+
+export const fileSize = (t: TranslatorFunction) => (val: File) => {
+  return !val || val.size < FILE_SIZE || t("form.errors.fileLarge");
 };

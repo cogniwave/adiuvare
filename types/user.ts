@@ -57,8 +57,12 @@ export interface UpdateUserPayload {
   name: string;
   slug: string;
   bio?: string;
-  photo?: string;
   contacts?: UserContact[];
+}
+
+export interface UpdatePhotoPayload {
+  photo?: string;
+  photoThumbnail?: string;
 }
 
 // type == org

@@ -73,9 +73,6 @@ export default defineNuxtPlugin((app) => {
         VTooltip: {
           location: "top",
         },
-        VList: {
-          bgColor: "transparent",
-        },
       },
       ssr: true,
       icons: {

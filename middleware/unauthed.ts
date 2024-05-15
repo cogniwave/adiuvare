@@ -1,7 +1,8 @@
 export default defineNuxtRouteMiddleware(() => {
-  const { loggedIn } = useAuth();
+  const { loggedIn, loading } = useAuth();
+  console.log("foo", loading.value, loggedIn.value);
 
-  if (loggedIn.value) {
+  if (!loading.value && loggedIn.value) {
     return navigateTo("/");
   }
 });

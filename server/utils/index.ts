@@ -1,4 +1,4 @@
-export const genSlugToken = (length = 6) => {
+export const genToken = (length = 6) => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   let token = "";
@@ -8,3 +8,9 @@ export const genSlugToken = (length = 6) => {
 
   return token;
 };
+
+export const genImgHash = () => {};
+
+export const FILE_SIZE: number = 1024 * 1024 * 5; // 4MB
+
+export const ACCEPT_FILE_TYPES = ["image/png", "image/jpeg"];

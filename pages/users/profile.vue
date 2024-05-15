@@ -1,7 +1,6 @@
 <template>
   <template v-if="pending || !currUser || !Object.keys(currUser).length">
-    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
-    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
+    <v-skeleton-loader type="article@5" class="rounded-xl" />
   </template>
 
   <!-- render users -->
@@ -10,6 +9,35 @@
 
     <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
       <div class="bg-white rounded px-10 py-5">
+        <v-input :error="!fileErrors" :error-messages="fileErrors">
+          <v-hover v-slot="{ isHovering, props }">
+            <div v-bind="props" class="pic-wrapper" @click="fileInput?.click()">
+              <input
+                ref="fileInput"
+                id="avatar"
+                type="file"
+                accept="image/png, image/jpeg"
+                class="d-none"
+                @change="onFileChange"
+              />
+
+              <qa-img
+                height="128px"
+                width="128px"
+                :alt="t('form.user.picAlt')"
+                :src="pic"
+                :lazy-src="currUser.photoThumbnail"
+              />
+
+              <v-fade-transition>
+                <div v-show="isHovering" class="camera-wrapper">
+                  <v-icon color="white" size="large"> fa-solid fa-camera </v-icon>
+                </div>
+              </v-fade-transition>
+            </div>
+          </v-hover>
+        </v-input>
+
         <!-- name -->
         <v-text-field
           v-model:model-value="name"
@@ -78,12 +106,13 @@
 import { useRouter } from "vue-router";
 import type { VForm } from "vuetify/components";
 
+import { fileSize, fileType } from "@/utils/validators";
 import { useUsers } from "@/composables/users";
 import type { User } from "@/types/user";
 
 definePageMeta({ layout: "default", path: "/profile", middleware: "protected" });
 
-const { data: auth } = useAuth();
+const { data: auth, logout } = useAuth();
 
 const { t } = useI18n();
 const $router = useRouter();
@@ -91,30 +120,55 @@ const { users, currUser, setUser } = useUsers();
 const { notifyError, notifySuccess } = useNotify();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
-const _slug = computed(() => auth.value?.slug || "");
+const userId = computed(() => auth.value?.id || "");
 
-const { data, error, pending, execute } = useFetch<User>(`/api/v1/users/${currUser.value.id}`, {
+const { data, error, pending, execute } = useFetch<User>(`/api/v1/users/${userId.value}`, {
   lazy: true,
   immediate: false,
 });
 
 const name = ref<string>("");
 const bio = ref<string>("");
+const slug = ref<string>("");
+const pic = ref<string>("");
+
+const fileInput = ref<InstanceType<typeof HTMLInputElement> | null>(null);
+
+const fileErrors = ref("");
 const form = ref<VForm>();
-const slug = ref<string>(_slug.value);
 
 const submitting = ref<boolean>(false);
 
-onBeforeMount(() => {
-  const usr = (users.value || []).find(({ slug }) => slug === _slug.value);
+onBeforeMount(() => userId.value && init());
 
-  if (usr) {
-    setUser(usr);
-    pending.value = false;
-  } else {
-    execute().catch();
+const _updateUser = async () => {
+  return await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
+    body: {
+      id: currUser.value.id,
+      slug: currUser.value.slug,
+      bio: currUser.value.bio,
+      name: currUser.value.name,
+      contacts: currUser.value.contacts,
+    },
+    method: "patch",
+  });
+};
+
+const _uploadFile = async () => {
+  const formData = new FormData();
+
+  if (!fileInput.value) {
+    return;
   }
-});
+
+  // @ts-expect-error TS will complain that files is not the correct type
+  formData.append("file", fileInput.value.files?.[0]);
+
+  return await $fetch<User>(`/api/v1/users/${currUser.value.id}/photo`, {
+    body: formData,
+    method: "post",
+  });
+};
 
 const submit = async () => {
   // won't really happen, but keeps linter happy
@@ -131,22 +185,21 @@ const submit = async () => {
   submitting.value = true;
 
   try {
-    const user = await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
-      body: {
-        id: currUser.value.id,
-        slug: currUser.value.slug,
-        bio: currUser.value.bio,
-        name: currUser.value.name,
-        contacts: currUser.value.contacts,
-      },
-      method: "patch",
-    });
+    const requests: any[] = [_updateUser()];
 
-    if (user) {
-      users.value = users.value.map((p) => (p.id === currUser.value.id ? currUser.value : p));
+    if (pic.value !== currUser.value.photo) {
+      requests.push(_uploadFile());
     }
 
-    notifySuccess(t("users.updated"));
+    const [user, urls] = await Promise.allSettled(requests);
+
+    if (user) {
+      users.value = users.value.map((p) => {
+        return p.id === currUser.value.id ? { ...currUser.value, ...urls } : p;
+      });
+    }
+
+    notifySuccess(t("form.user.updated"));
   } catch (errs: any) {
     handleErrors(errs);
   } finally {
@@ -163,6 +216,41 @@ const onSlugBlur = () => {
   updateUser("slug", slug.value);
 };
 
+const onFileChange = (e: Event) => {
+  const files = (e.target as HTMLInputElement).files;
+
+  if (!files?.length) {
+    return t("errors.required");
+  }
+
+  const f = files[0];
+  const typeResult = fileType(t)(f);
+  if (typeof typeResult === "boolean") {
+    const sizeResult = fileSize(t)(f);
+
+    if (typeof sizeResult === "boolean") {
+      fileErrors.value = "";
+
+      pic.value = URL.createObjectURL(f);
+    } else {
+      fileErrors.value = sizeResult;
+    }
+  } else {
+    fileErrors.value = typeResult;
+  }
+};
+
+const init = () => {
+  const usr = (users.value || []).find(({ id }) => id === userId.value);
+
+  if (usr) {
+    setUser(usr);
+    pending.value = false;
+  } else {
+    execute().catch();
+  }
+};
+
 watch(
   () => data.value,
   (usr) => {
@@ -173,6 +261,7 @@ watch(
     name.value = usr.name;
     bio.value = usr.bio || "";
     slug.value = usr.slug;
+    pic.value = usr.photo || "";
 
     users.value.push(usr);
     setUser(usr);
@@ -188,6 +277,8 @@ watch(
 
     if (err.statusCode === 404) {
       $router.push("/not-found");
+    } else if (err.statusCode === 401) {
+      logout().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
     } else {
       notifyError(t("errors.fetchUser"));
       $router.push("/");
@@ -195,4 +286,32 @@ watch(
   },
   { immediate: true },
 );
+
+watch(userId, init);
 </script>
+
+<style scoped lang="scss">
+.pic-wrapper {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border-radius: 100px;
+  width: 128px;
+  display: block;
+  margin: auto;
+
+  .camera-wrapper {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+}
+</style>

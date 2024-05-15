@@ -63,30 +63,30 @@ export const useAuth = () => {
 
     if (!refreshToken.value) {
       _reset();
+      console.log("aqui?");
       $router.push("/");
       loading.value = false;
       return false;
     }
 
     try {
-      const { data: result } = await useFetch<string>("/api/v1/auth/refresh", {
+      const result = await $fetch<string>("/api/v1/auth/refresh", {
         method: "post",
         body: { token: refreshToken.value },
       });
 
-      if (!result.value) {
+      if (!result) {
         logout();
         return false;
       }
 
-      token.value = result.value;
-      _accessTokenCookie.value = result.value;
+      token.value = result;
+      _accessTokenCookie.value = result;
 
       if (storageUser.value && !data.value) {
         data.value = storageUser.value;
 
-        // refresh token every REFRESH_INTERVAL
-        interval = setInterval(refresh, REFRESH_INTERVAL);
+        startInterval();
       }
 
       return true;
@@ -100,24 +100,23 @@ export const useAuth = () => {
 
   const login = async (payload: LoginPayload) => {
     loading.value = true;
-    const { data: result } = await useFetch<LoginResult>("/api/v1/auth/login", {
+    const result = await $fetch<LoginResult>("/api/v1/auth/login", {
       method: "post",
       body: payload,
     });
 
-    if (!result.value) {
+    if (!result) {
       loading.value = false;
       return;
     }
 
-    token.value = result.value.accessToken;
-    refreshToken.value = result.value.refreshToken;
-    data.value = result.value.user;
+    token.value = result.accessToken;
+    refreshToken.value = result.refreshToken;
+    data.value = result.user;
     loading.value = false;
-    storageUser.value = result.value.user;
+    storageUser.value = result.user;
 
-    // refresh token every REFRESH_INTERVAL
-    interval = setInterval(refresh, REFRESH_INTERVAL);
+    startInterval();
     loading.value = false;
 
     $router.replace("/");
@@ -141,6 +140,13 @@ export const useAuth = () => {
     }
   };
 
+  const startInterval = () => {
+    if (!interval) {
+      // refresh token every REFRESH_INTERVAL
+      interval = setInterval(refresh, REFRESH_INTERVAL);
+    }
+  };
+
   watch(token, (tkn) => tkn && (_accessTokenCookie.value = tkn), { immediate: true });
 
   watch(refreshToken, (tkn) => tkn && (_refreshTokenCookie.value = tkn), { immediate: true });
@@ -155,8 +161,7 @@ export const useAuth = () => {
     if (storageUser.value && !data.value) {
       data.value = storageUser.value;
 
-      // refresh token every REFRESH_INTERVAL
-      interval = setInterval(refresh, REFRESH_INTERVAL);
+      startInterval();
     }
 
     loading.value = false;

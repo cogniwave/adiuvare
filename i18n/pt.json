@@ -124,7 +124,8 @@
       "slugHint": "Slug é usado para a definição do link do seu perfil público",
       "bioPlaceholder": "Um pequeno texto para os outros utilizadores / organizações conheçam um pouco mais sobre si",
       "bio": "Biografia",
-      "editDetails": "Perfil"
+      "editDetails": "Perfil",
+      "picAlt": "Foto de utilizador"
     },
 
     "cancel": "Cancelar",
@@ -171,7 +172,10 @@
     "outdatedDate": "Data não pode ser inferior a hoje",
     "invalidPhone": "Número de telefone inválido",
     "invalidContact": "Contacto inválido",
-    "invalidContactType": "Tipo de contacto inválido."
+    "invalidContactType": "Tipo de contacto inválido.",
+    "fileTooBig": "Ficheiro demasiado grande, tem que ser inferior a 4mb",
+    "invalidFileType": "Ficheiro inválido. Tem que ser JPG, JPEG, ou PNG",
+    "validationError": "Erro a validar dados"
   },
 
   "posts": {
