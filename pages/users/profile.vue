@@ -9,7 +9,7 @@
 
     <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
       <div class="bg-white rounded px-10 py-5">
-        <v-input :error="!fileErrors" :error-messages="fileErrors">
+        <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
           <v-hover v-slot="{ isHovering, props }">
             <div v-bind="props" class="pic-wrapper" @click="fileInput?.click()">
               <input
@@ -134,7 +134,6 @@ const pic = ref<string>("");
 
 const fileInput = ref<InstanceType<typeof HTMLInputElement> | null>(null);
 
-const fileErrors = ref("");
 const form = ref<VForm>();
 
 const submitting = ref<boolean>(false);
@@ -177,7 +176,7 @@ const submit = async () => {
   }
 
   const result = await form.value.validate();
-  if (!result.valid) {
+  if (!result.valid || !!errors.value.file) {
     return;
   }
 
@@ -191,7 +190,7 @@ const submit = async () => {
       requests.push(_uploadFile());
     }
 
-    const [user, urls] = await Promise.allSettled(requests);
+    const [user, urls] = await Promise.all(requests);
 
     if (user) {
       users.value = users.value.map((p) => {
@@ -229,14 +228,14 @@ const onFileChange = (e: Event) => {
     const sizeResult = fileSize(t)(f);
 
     if (typeof sizeResult === "boolean") {
-      fileErrors.value = "";
+      clearErrors();
 
       pic.value = URL.createObjectURL(f);
     } else {
-      fileErrors.value = sizeResult;
+      errors.value.file = sizeResult;
     }
   } else {
-    fileErrors.value = typeResult;
+    errors.value.file = typeResult;
   }
 };
 

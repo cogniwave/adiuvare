@@ -28,8 +28,8 @@ export interface NuxtError {
   data: {
     message: string;
     statusCode: number;
-    statusMessage?: string;
     url: string;
+    statusMessage?: string;
     // only exists in dev
     stack?: string;
     data?: Record<string, string>;

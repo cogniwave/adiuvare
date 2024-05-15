@@ -1,7 +1,3 @@
-import type { GenericObject } from "./";
-
-export type FormErrors = GenericObject<string>;
-
 export interface SelectOption {
   title: string;
   value: string;

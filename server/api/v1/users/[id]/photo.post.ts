@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
   if (!ACCEPT_FILE_TYPES.includes(file.type)) {
     throw createError({
       statusCode: 422,
-      data: { file: "errors.invalidFileType " },
+      data: { file: "errors.invalidFileType" },
       statusMessage: "errors.validationError",
     });
   }

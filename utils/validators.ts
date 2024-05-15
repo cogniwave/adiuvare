@@ -2,7 +2,7 @@ import { isPossiblePhoneNumber, isValidPhoneNumber } from "libphonenumber-js";
 import type { NamedValue } from "@intlify/core-base";
 
 import dayjs from "@/services/dayjs.service";
-import { FILE_SIZE } from "@/server/utils";
+import { FILE_SIZE, ACCEPT_FILE_TYPES } from "@/server/utils";
 
 type TranslatorFunction = (k: string, named?: NamedValue, defaultMsg?: string) => string;
 
@@ -45,7 +45,7 @@ export const isValidPhone = (t: TranslatorFunction) => (val: string) => {
 };
 
 export const fileType = (t: TranslatorFunction) => (val: File) => {
-  return !ACCEPT_FILE_TYPES.includes(val.type) || t("errors.invalidFileType");
+  return ACCEPT_FILE_TYPES.includes(val.type) || t("errors.invalidFileType");
 };
 
 export const fileSize = (t: TranslatorFunction) => (val: File) => {
