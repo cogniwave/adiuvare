@@ -45,9 +45,9 @@ export const isValidPhone = (t: TranslatorFunction) => (val: string) => {
 };
 
 export const fileType = (t: TranslatorFunction) => (val: File) => {
-  return true || t("form.errors.fileType");
+  return !ACCEPT_FILE_TYPES.includes(val.type) || t("errors.invalidFileType");
 };
 
 export const fileSize = (t: TranslatorFunction) => (val: File) => {
-  return !val || val.size < FILE_SIZE || t("form.errors.fileLarge");
+  return !val || val.size < FILE_SIZE || t("errors.fileLarge");
 };
