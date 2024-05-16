@@ -184,7 +184,7 @@ import { usePosts } from "@/store/posts";
 import type { Post, PostSchedule, PostState } from "@/types/post";
 import type { SelectOption } from "@/types/form";
 
-definePageMeta({ path: "/posts/:slug/edit", middleware: "is-owner" });
+definePageMeta({ path: "/posts/:slug/edit", middleware: "protected" });
 
 const { notifySuccess } = useNotify();
 const { t } = useI18n();
