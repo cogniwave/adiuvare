@@ -5,9 +5,7 @@
 </template>
 
 <script setup lang="ts">
-const { isLoading, start } = useLoadingIndicator();
-
-onBeforeMount(() => start());
+const { isLoading } = useLoadingIndicator();
 </script>
 
 <style lang="scss" scoped>
@@ -15,9 +13,9 @@ onBeforeMount(() => start());
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   position: absolute;
-  width: 100%;
+  width: 100vw;
   z-index: 99999999;
   background: #f7f7f7;
   top: 0;

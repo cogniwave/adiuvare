@@ -25,12 +25,12 @@ export default eventHandler(async (event) => {
 
   const accessToken = signToken(user, "access");
 
-  setCookie(event, "auth:access", accessToken, {
-    maxAge: 300, // 5 minutes
-    sameSite: "strict",
-    httpOnly: true,
-    secure: true,
-  });
+  // setCookie(event, "auth:access", accessToken, {
+  //   maxAge: 300, // 5 minutes
+  //   sameSite: "strict",
+  //   httpOnly: true,
+  //   secure: true,
+  // });
 
   return accessToken;
 });

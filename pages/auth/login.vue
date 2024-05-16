@@ -123,17 +123,19 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  login({ email: email.value, password: password.value }).catch((errs) => {
-    if (errs.statusCode === 401) {
-      notifyError(t("errors.invalidCredentials"));
-    } else if (errs.statusCode === 400) {
-      notifyWarning(t("errors.unverifiedUser"));
-    } else {
-      handleErrors(errs);
-    }
+  login({ email: email.value, password: password.value })
+    .then(() => $router.replace("/"))
+    .catch((errs) => {
+      if (errs.statusCode === 401) {
+        notifyError(t("errors.invalidCredentials"));
+      } else if (errs.statusCode === 400) {
+        notifyWarning(t("errors.unverifiedUser"));
+      } else {
+        handleErrors(errs);
+      }
 
-    submitting.value = false;
-  });
+      submitting.value = false;
+    });
 };
 </script>
 
