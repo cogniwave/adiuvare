@@ -158,7 +158,7 @@
     </v-form>
 
     <div class="py-5 d-flex align-center justify-end">
-      <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
+      <v-btn :disable="submitting" class="mr-2" @click="goBack">
         {{ t("posts.cancel") }}
       </v-btn>
 
@@ -302,6 +302,8 @@ const onSlugBlur = () => {
   slug.value = slug.value.replaceAll(/[^A-Za-z0-9]/g, "-");
   updatePost("slug", slug.value);
 };
+
+const goBack = () => $router.push(`/posts/${_slug}/`);
 
 watch(
   () => post.value,

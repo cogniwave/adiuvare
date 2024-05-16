@@ -31,7 +31,7 @@
         <div class="ml-2">
           <h2>{{ currPost.title }}</h2>
 
-          <nuxt-link class="text-subtitle mr-1" :to="`/profile/${currPost.createdBy}`">
+          <nuxt-link class="text-subtitle mr-1" :to="`/users/${currPost.createdBy}`">
             {{ currPost.createdBy }}
           </nuxt-link>
 
