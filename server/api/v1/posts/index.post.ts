@@ -55,14 +55,16 @@ export default defineEventHandler(async (event) => {
       return;
     }
 
+    const scheduleType = sanitizeInput(body.schedule.type);
+
     return await createPost({
       title: sanitizeInput(body.title),
       description: sanitizeInput(body.description),
       needs: body.needs.map((n) => sanitizeInput(n)),
       locations: body.locations.map((l) => sanitizeInput(l)),
       schedule: {
-        type: sanitizeInput(body.schedule.type),
-        payload: body.schedule.payload,
+        type: scheduleType,
+        ...(scheduleType !== "anytime" && { payload: body.schedule.payload }),
       },
       contacts: body.contacts.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
       createdUserId: user.id,

@@ -60,6 +60,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const scheduleType = sanitizeInput(body.schedule.type);
+
     const result = await updatePost(
       slug,
       {
@@ -69,8 +71,8 @@ export default defineEventHandler(async (event) => {
         needs: body.needs.map((n) => sanitizeInput(n)),
         locations: body.locations.map((l) => sanitizeInput(l)),
         schedule: {
-          type: sanitizeInput(body.schedule.type),
-          payload: body.schedule.payload,
+          type: scheduleType,
+          ...(scheduleType !== "anytime" && { payload: body.schedule.payload }),
         },
         contacts: body.contacts.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
       },
