@@ -150,7 +150,7 @@
 
       <div class="bg-white rounded px-10 py-5">
         <!-- contacts -->
-        <qa-contacts />
+        <qa-contacts :contacts="post.contacts" @update="updatePost('contacts', $event)" />
 
         <!-- horarios -->
         <qa-post-schedule />
@@ -183,6 +183,7 @@ import { useNotify } from "@/store/notify";
 import { usePosts } from "@/store/posts";
 import type { Post, PostSchedule, PostState } from "@/types/post";
 import type { SelectOption } from "@/types/form";
+import type { UserContact } from "~/types/user";
 
 definePageMeta({ path: "/posts/:slug/edit", middleware: "protected" });
 
@@ -257,7 +258,7 @@ const onRemoveLocation = (location: string) => {
   updatePost("location", locationInput.value);
 };
 
-const updatePost = (prop: string, val: string | string[] | PostSchedule) => {
+const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
   currPost.value = { ...currPost.value, [prop]: val };
 };
 

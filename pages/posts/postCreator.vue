@@ -76,7 +76,7 @@
 
     <div class="bg-white rounded px-10 py-5">
       <!-- contacts -->
-      <qa-contacts />
+      <qa-contacts v-if="user" :contacts="user.contacts" @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
       <qa-post-schedule />
@@ -106,8 +106,11 @@ import QaPostDialogNeed from "@/components/posts/QaPostDialogNeed.vue";
 import QaPostSchedule from "@/components/posts/QaPostSchedule.vue";
 import { useNotify } from "@/store/notify";
 import { usePosts } from "@/store/posts";
+import { useAuth } from "@/store/auth";
+
 import type { SelectOption } from "@/types/form";
 import type { EmptyPost, Post, PostSchedule } from "@/types/post";
+import type { User, UserContact } from "@/types/user";
 
 definePageMeta({ path: "/posts/new", middleware: "org-only" });
 
@@ -116,6 +119,8 @@ const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { currPost, posts, setPost } = usePosts();
 const $router = useRouter();
+const { data: user } = useAuth();
+
 const { $csrfFetch } = useNuxtApp();
 
 const title = ref<string>("");
@@ -136,7 +141,9 @@ const helpOptions = ref<SelectOption[]>([
 
 const submitting = ref<boolean>(false);
 
-onBeforeMount(() => setPost({} as EmptyPost));
+onBeforeMount(() => {
+  setPost({ contacts: (user.value as User).contacts, schedule: { type: "anytime" } } as EmptyPost);
+});
 
 const fetchLocations = (text: string) => {
   debounce(() => {
@@ -172,7 +179,7 @@ const onRemoveLocation = (location: string) => {
   updatePost("location", locationInput.value);
 };
 
-const updatePost = (prop: string, val: string | string[] | PostSchedule) => {
+const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
   currPost.value = { ...currPost.value, [prop]: val };
 };
 

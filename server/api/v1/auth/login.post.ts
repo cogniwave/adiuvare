@@ -14,6 +14,7 @@ const login = async (email: string, password: string): Promise<TokenUser> => {
     slug: users.slug,
     contacts: users.contacts,
     id: users.id,
+    logo: users.photo,
     verified: users.verified,
   });
 

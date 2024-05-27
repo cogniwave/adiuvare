@@ -45,6 +45,7 @@ export interface EmptyPost {
   description: string;
   title: string;
   needs: PostCategory[];
+  contacts: UserContact[];
   locations: string[];
 }
 
@@ -58,7 +59,6 @@ export interface Post extends EmptyPost {
   createdAt: string;
   updatedAt: string;
   slug: string;
-  contacts: UserContact[];
 }
 
 export interface CreatePostPayload {
@@ -94,5 +94,11 @@ export interface PostHistory {
   locations: string[];
   schedule: PostSchedule;
   needs: PostCategory[];
+  title: string;
+}
+
+export interface NotifyPost {
+  id: string;
+  createdBy: string;
   title: string;
 }

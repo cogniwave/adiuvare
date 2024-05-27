@@ -4,7 +4,7 @@
   </v-input>
 
   <div class="d-flex flex-column w-100 mb-10">
-    <div v-for="(c, idx) in contacts" :key="c.contact" class="contact-group">
+    <div v-for="(c, idx) in proxyContacts" :key="c.contact" class="contact-group">
       <v-select
         :model-value="c.type"
         :items="options"
@@ -60,7 +60,7 @@
         >
           <template v-slot:activator="{ props }">
             <v-btn
-              v-show="idx === contacts.length - 1"
+              v-show="idx === proxyContacts.length - 1"
               v-bind="props"
               rounded="xl"
               density="compact"
@@ -79,23 +79,26 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from "@/store/auth";
-import { usePosts } from "@/store/posts";
-
-import type { Post } from "@/types/post";
 import type { ContactType, UserContact } from "@/types/user";
+import type { PropType } from "vue";
 
 interface Contact extends UserContact {
   id: number;
 }
 
-const { currPost } = usePosts<Post>();
+const $emit = defineEmits<{
+  (e: "update", payload: UserContact[]): void;
+}>();
+
+const props = defineProps({
+  contacts: { type: Array as PropType<UserContact[]>, default: () => [] },
+});
+
 const { t } = useI18n();
-const { data: user } = useAuth();
 
 const errors = ref<Record<string, string>>({});
-const contacts = ref<Contact[]>(
-  (currPost.value.contacts || (user.value ? user.value.contacts : [])).map((c, i) => ({
+const proxyContacts = ref<Contact[]>(
+  props.contacts.map((c, i) => ({
     ...c,
     id: i,
   })),
@@ -114,24 +117,29 @@ const onUpdate = (type: ContactType, contact: string, id: number) => {
 };
 
 const contactExists = (id: number) => (val: string) => {
-  return !contacts.value.some((c) => c.id !== id && c.contact === val) || t("errors.contactExists");
+  return (
+    !proxyContacts.value.some((c) => c.id !== id && c.contact === val) || t("errors.contactExists")
+  );
 };
 
 const onRemove = (id: number) => {
-  contacts.value = contacts.value.filter((c) => c.id !== id);
+  proxyContacts.value = proxyContacts.value.filter((c) => c.id !== id);
   delete contactEdits.value[id];
 };
 
 const onAdd = () => {
-  contacts.value.push({ contact: "", type: "phone", id: contacts.value.length });
+  proxyContacts.value.push({ contact: "", type: "phone", id: proxyContacts.value.length });
 };
 
 const persistUpdate = () => {
-  contacts.value = contacts.value.map((c) => {
+  proxyContacts.value = proxyContacts.value.map((c) => {
     return contactEdits.value[c.id] ? contactEdits.value[c.id] : c;
   });
 
-  currPost.value.contacts = contacts.value.map((c) => ({ contact: c.contact, type: c.type }));
+  $emit(
+    "update",
+    proxyContacts.value.map((c) => ({ contact: c.contact, type: c.type })),
+  );
 };
 </script>
 

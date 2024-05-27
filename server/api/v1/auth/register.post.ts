@@ -3,6 +3,7 @@ import Joi from "joi";
 import { addUser } from "@/server/db/users";
 import { sendMail } from "@/server/services/mail";
 import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
+import { notifyNewUser } from "@/server/services/slack";
 
 import type { BaseUser, User } from "@/types/user";
 import type { DrizzleError } from "@/server/types/drizzle";
@@ -68,12 +69,16 @@ export default defineEventHandler(async (event) => {
   });
 
   try {
-    return await register({
+    const user = await register({
       name: sanitizeInput(body.name),
       password: sanitizeInput(body.password),
       type: sanitizeInput(body.type),
       email: sanitizeInput(body.email),
     });
+
+    notifyNewUser(user);
+
+    return user;
   } catch (err: any) {
     // console.log(err);
     // throw createError(err);

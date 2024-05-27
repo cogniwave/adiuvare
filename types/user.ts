@@ -36,6 +36,7 @@ export interface TokenUser {
   email: string;
   slug: string;
   type: UserType;
+  logo: string;
   contacts: UserContact[];
 }
 

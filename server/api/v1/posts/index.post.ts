@@ -5,6 +5,7 @@ import { POST_NEEDS } from "@/server/db/schemas/posts.schema";
 import { createPost } from "@/server/db/posts";
 import { getValidatedInput } from "@/server/utils/request";
 import { genToken } from "@/server/utils";
+import { notifyNewPost } from "@/server/services/slack";
 
 import type { CreatePostPayload } from "@/types/post";
 
@@ -27,7 +28,9 @@ export default defineEventHandler(async (event) => {
       .required()
       .messages({ "strings.empty": "errors.empty" }),
 
-    schedule: Joi.object().required().messages({ "strings.empty": "errors.empty" }),
+    schedule: Joi.object()
+      .required()
+      .messages({ "any.required": "errors.requiredField", "strings.empty": "errors.empty" }),
 
     contacts: Joi.array()
       .items(
@@ -40,7 +43,7 @@ export default defineEventHandler(async (event) => {
       .min(1)
       .messages({
         "array.min": "errors.empty",
-        "any.required": "errors.invalidContact",
+        "any.required": "errors.requiredField",
         "any.only": "errors.invalidContactType",
       }),
   });
@@ -57,7 +60,7 @@ export default defineEventHandler(async (event) => {
 
     const scheduleType = sanitizeInput(body.schedule.type);
 
-    return await createPost({
+    const result = await createPost({
       title: sanitizeInput(body.title),
       description: sanitizeInput(body.description),
       needs: body.needs.map((n) => sanitizeInput(n)),
@@ -70,6 +73,10 @@ export default defineEventHandler(async (event) => {
       createdUserId: user.id,
       slug: `${body.title.trim().slice(0, 20).replaceAll(" ", "_")}-${genToken(10)}`,
     });
+
+    notifyNewPost({ id: result.id, createdBy: user.id, title: user.id });
+
+    return { ...result, createdBy: user.slug, logo: user.logo };
   } catch (err) {
     console.log(err);
     useBugsnag().notify({

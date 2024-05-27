@@ -82,7 +82,7 @@
 
       <div class="bg-white rounded px-10 py-5">
         <!-- contacts -->
-        <qa-contacts />
+        <qa-contacts :contacts="contacts" @update="updateUser('contacts', $event)" />
       </div>
     </v-form>
 
@@ -112,7 +112,7 @@ import { fileSize, fileType } from "@/utils/validators";
 import { useUsers } from "@/store/users";
 import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
-import type { User } from "@/types/user";
+import type { User, UserContact } from "@/types/user";
 
 definePageMeta({ layout: "default", path: "/profile", middleware: "protected" });
 
@@ -135,6 +135,7 @@ const name = ref<string>("");
 const bio = ref<string>("");
 const slug = ref<string>("");
 const pic = ref<string>("");
+const contacts = ref<UserContact[]>([]);
 
 const fileInput = ref<InstanceType<typeof HTMLInputElement> | null>(null);
 
@@ -210,7 +211,7 @@ const submit = async () => {
   }
 };
 
-const updateUser = (prop: string, val: string) => {
+const updateUser = (prop: string, val: string | UserContact[]) => {
   currUser.value = { ...currUser.value, [prop]: val };
 };
 
@@ -265,6 +266,7 @@ watch(
     bio.value = usr.bio || "";
     slug.value = usr.slug;
     pic.value = usr.photo || "";
+    contacts.value = usr.contacts || [];
 
     users.value.push(usr);
     setUser(usr);

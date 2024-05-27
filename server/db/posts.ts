@@ -43,7 +43,21 @@ export const getTotalPosts = async () => {
 };
 
 export const createPost = async (payload: InsertPost) => {
-  return await db.insert(posts).values(payload);
+  const result = await db.insert(posts).values(payload).returning({
+    id: posts.id,
+    title: posts.title,
+    state: posts.state,
+    description: posts.description,
+    contacts: posts.contacts,
+    needs: posts.needs,
+    locations: posts.locations,
+    schedule: posts.schedule,
+    slug: posts.slug,
+    createdAt: posts.createdAt,
+    updatedAt: posts.updatedAt,
+  });
+
+  return result[0];
 };
 
 export const updatePost = async (slug: string, payload: UpdatePostPayload, userId: string) => {
