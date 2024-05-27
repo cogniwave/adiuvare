@@ -65,6 +65,7 @@ import { useNotify } from "@/store/notify";
 import { required } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 
+const { $csrfFetch } = useNuxtApp();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { data, loggedIn } = useAuth();
 const { t } = useI18n();
@@ -104,7 +105,7 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  $fetch("/api/v1/reports", {
+  $csrfFetch("/api/v1/reports", {
     method: "post",
     body: { post: post.value, user: email.value, reason: reason.value },
   })

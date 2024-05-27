@@ -60,13 +60,14 @@ definePageMeta({
   middleware: "unauthed",
 });
 
-const email = ref<string>("");
+const { $csrfFetch } = useNuxtApp();
+const { errors, handleErrors, clearErrors } = useFormErrors();
+const { t } = useI18n();
 
+const email = ref<string>("");
 const form = ref<VForm>();
 const submitting = ref<boolean>(false);
 const emailSent = ref<boolean>(false);
-const { errors, handleErrors, clearErrors } = useFormErrors();
-const { t } = useI18n();
 
 const submit = async () => {
   // won't really happen, but keeps linter happy
@@ -81,7 +82,8 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  $fetch("/api/v1/auth/reset-password", {
+  $csrfFetch("/api/v1/auth/reset-password", {
+    method: "post",
     body: { email: email.value },
   })
     .then(() => (emailSent.value = true))

@@ -28,11 +28,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const submitting = ref<boolean>(true);
-const success = ref<boolean>(true);
-
+const { $csrfFetch } = useNuxtApp();
 const $route = useRoute();
 const { t } = useI18n();
+
+const submitting = ref<boolean>(true);
+const success = ref<boolean>(true);
 
 useHead({ title: t("register.confirmation.seoTitle") });
 
@@ -46,7 +47,7 @@ onBeforeMount(() => {
     return (success.value = false);
   }
 
-  $fetch("/api/v1/auth/confirm", { method: "post", body: { token } })
+  $csrfFetch("/api/v1/auth/confirm", { method: "post", body: { token } })
     .catch(() => (success.value = false))
     .finally(() => (submitting.value = false));
 });

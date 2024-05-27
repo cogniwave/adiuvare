@@ -116,6 +116,7 @@ const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { currPost, posts, setPost } = usePosts();
 const $router = useRouter();
+const { $csrfFetch } = useNuxtApp();
 
 const title = ref<string>("");
 const description = ref<string>("");
@@ -194,7 +195,7 @@ const submit = async () => {
   submitting.value = true;
 
   try {
-    const post = await $fetch<Post>("/api/v1/posts", { body: currPost.value, method: "post" });
+    const post = await $csrfFetch<Post>("/api/v1/posts", { body: currPost.value, method: "post" });
 
     if (post) {
       posts.value.push(post);

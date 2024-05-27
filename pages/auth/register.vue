@@ -133,6 +133,10 @@ definePageMeta({
 
 useHead({ title: "Criar conta" });
 
+const { errors, handleErrors, clearErrors } = useFormErrors();
+const { t } = useI18n();
+const { $csrfFetch } = useNuxtApp();
+
 const email = ref<string>("");
 const email2 = ref<string>("");
 const password = ref<string>("");
@@ -140,9 +144,6 @@ const password2 = ref<string>("");
 const name = ref<string>("");
 const type = ref<UserType>("org");
 const userCreated = ref<boolean>(false);
-
-const { errors, handleErrors, clearErrors } = useFormErrors();
-const { t } = useI18n();
 
 const form = ref<VForm>();
 const passwordFieldType = ref<"text" | "password">("password");
@@ -172,7 +173,7 @@ const submit = async () => {
 
   submitting.value = true;
 
-  await $fetch<User>("/api/v1/auth/register", {
+  await $csrfFetch<User>("/api/v1/auth/register", {
     method: "post",
     body: {
       email: email.value,
