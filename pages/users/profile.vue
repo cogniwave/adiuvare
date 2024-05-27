@@ -126,7 +126,7 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const userId = computed(() => auth.value?.id || "");
 
-const { data, error, pending, execute } = useFetch<User>(`/api/v1/users/${userId.value}`, {
+const { data, error, pending, execute } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
   lazy: true,
   immediate: false,
 });
@@ -290,7 +290,7 @@ watch(
   { immediate: true },
 );
 
-watch(userId, init);
+watch(() => userId.value, init);
 </script>
 
 <style scoped lang="scss">

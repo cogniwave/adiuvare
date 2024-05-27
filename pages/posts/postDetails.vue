@@ -4,7 +4,7 @@
     <v-skeleton-loader type="list-item@3" class="rounded-xl mt-5" />
   </template>
 
-  <template v-if="currPost && Object.keys(currPost)">
+  <template v-else-if="currPost && Object.keys(currPost)">
     <div class="d-flex justify-end mb-1">
       <v-btn
         v-if="canEdit"
