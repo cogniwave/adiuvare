@@ -197,7 +197,7 @@
       "money": "Dinheiro",
       "moneyDescription": "São necessárias doações monetárias",
       "goods": "Bens & comida",
-      "goodsDescription": "São necessárias doações de quaisquera bens ou comidas",
+      "goodsDescription": "São necessárias doações de bens e/ou comidas",
       "volunteers": "Pessoas",
       "volunteersDescription": "É necessário voluntário humano",
       "other": "Outros",
@@ -256,7 +256,9 @@
   },
 
   "org": {
-    "learnMore": "Ver mais"
+    "learnMore": "Ver mais",
+    "bioPlaceholder": "Descreva a missão / objetivo da organização para melhor ajudar os voluntários à procura duma organização com a qual se identifiquem",
+    "bio": "Missão / objetivo"
   },
 
   "copied": "Copiado"

@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
   const user = validateToken(body.token);
 
   if (!user) {
-    deleteCookie(event, "auth:access");
+    deleteCookie(event, "auth:token");
     deleteCookie(event, "auth:refresh");
 
     throw createError({
@@ -25,7 +25,7 @@ export default eventHandler(async (event) => {
 
   const accessToken = signToken(user, "access");
 
-  // setCookie(event, "auth:access", accessToken, {
+  // setCookie(event, "auth:token", accessToken, {
   //   maxAge: 300, // 5 minutes
   //   sameSite: "strict",
   //   httpOnly: true,

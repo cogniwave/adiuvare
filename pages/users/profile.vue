@@ -72,8 +72,10 @@
           v-model:model-value="bio"
           class="mt-10"
           prepend-icon="fa-solid fa-quote-left"
-          :placeholder="t('form.user.bioPlaceholder')"
-          :label="t('form.user.bio')"
+          :placeholder="
+            t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')
+          "
+          :label="t(currUser.type === 'org' ? 'form.org.bio' : 'form.user.bio')"
           @update:model-value="(value) => updateUser('bio', value)"
         />
       </div>

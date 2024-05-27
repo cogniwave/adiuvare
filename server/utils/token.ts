@@ -19,10 +19,12 @@ export const validateToken = (context: H3Event<EventHandlerRequest> | string) =>
 
   if (typeof context !== "string") {
     const cookies = parseCookies(context);
-    token = cookies["auth:access"] as string;
+    console.log("coks", cookies);
+    token = cookies["auth:token"] as string;
   } else {
     token = context;
   }
+  console.log(token);
 
   if (!token) {
     return null;
@@ -50,7 +52,7 @@ export const setupTokens = (event: H3Event<EventHandlerRequest>, user: TokenUser
   const accessToken = signToken(user, "access");
   const refreshToken = signToken(user, "refresh");
 
-  // setCookie(event, "auth:access", accessToken, {
+  // setCookie(event, "auth:token", accessToken, {
   //   maxAge: 300, // 5 minutes
   //   sameSite: "lax",
   //   httpOnly: true,

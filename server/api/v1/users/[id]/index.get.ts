@@ -6,8 +6,6 @@ export default defineEventHandler(async (event) => {
 
   const user = getSessionUser(event);
 
-  console.log(user);
-
   if (!user) {
     setResponseStatus(event, 401);
     sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));

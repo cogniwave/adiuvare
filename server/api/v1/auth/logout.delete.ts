@@ -5,11 +5,11 @@ const TOKEN_BLACKLIST = [];
 
 export default eventHandler((event) => {
   // blacklist tokens
-  TOKEN_BLACKLIST.push(getCookie(event, "auth:access"));
+  TOKEN_BLACKLIST.push(getCookie(event, "auth:token"));
   TOKEN_BLACKLIST.push(getCookie(event, "auth:refresh"));
 
   // delete cookies
-  deleteCookie(event, "auth:access");
+  deleteCookie(event, "auth:token");
   deleteCookie(event, "auth:refresh");
   return { status: "OK" };
 });

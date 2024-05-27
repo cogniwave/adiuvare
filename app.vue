@@ -26,7 +26,7 @@ onBeforeMount(() => start());
 // // Re-construct state from cookie, also setup a cross-component sync via a useState hack, see https://github.com/nuxt/nuxt/issues/13020#issuecomment-1397282717
 // const accessExpire = new Date();
 // accessExpire.setMinutes(accessExpire.getMinutes() + 5);
-// const accessTokenCookie = useCookie<string | null>("auth:access", {
+// const accessTokenCookie = useCookie<string | null>("auth:token", {
 //   maxAge: 300, // 5 minutes
 //   // expires: accessExpire,
 //   sameSite: "strict",

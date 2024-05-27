@@ -22,7 +22,7 @@ export const useAuth = () => {
   // If session exists, initialize as not loading
   const loading = useState<boolean>("auth:loading", () => true);
 
-  const token = useState<string | null>("auth:access", () => null);
+  const token = useState<string | null>("auth:token", () => null);
 
   const refreshToken = useState<string | null>("auth:refresh", () => null);
 

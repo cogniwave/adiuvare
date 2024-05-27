@@ -124,8 +124,11 @@ const submit = async () => {
   submitting.value = true;
 
   login({ email: email.value, password: password.value })
-    .then(() => $router.replace("/"))
+    .then(() => {
+      navigateTo({ path: "/" });
+    })
     .catch((errs) => {
+      console.log(errs);
       if (errs.statusCode === 401) {
         notifyError(t("errors.invalidCredentials"));
       } else if (errs.statusCode === 400) {
