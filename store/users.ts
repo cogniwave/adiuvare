@@ -1,4 +1,4 @@
-import type { User } from "~/types/user";
+import type { User } from "@/types/user";
 
 // type AnyPost = Post | userstateTogglePayload | PostDeletePayload | EmptyPost;
 type AnyUser = User;

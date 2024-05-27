@@ -2,12 +2,13 @@ import Joi from "joi";
 import { compareSync } from "bcrypt";
 
 import { getUser } from "@/server/db/users";
-import type { LoginPayload, TokenUser } from "@/types/user";
-import { getValidatedInput } from "@/server/utils/request";
+import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 import { users } from "@/server/db/schemas/users.schema";
 import { setupTokens } from "@/server/utils/token";
 
-const login = async ({ email, password }: LoginPayload): Promise<TokenUser> => {
+import type { LoginPayload, TokenUser } from "@/types/user";
+
+const login = async (email: string, password: string): Promise<TokenUser> => {
   const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
     password: users.password,
     slug: users.slug,
@@ -42,7 +43,7 @@ export default defineEventHandler(async (event) => {
   });
 
   try {
-    const user = await login(body);
+    const user = await login(sanitizeInput(body.email), sanitizeInput(body.password));
 
     return { user, ...setupTokens(event, user) };
   } catch (err) {

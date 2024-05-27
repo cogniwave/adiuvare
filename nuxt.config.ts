@@ -88,8 +88,6 @@ export default defineNuxtConfig({
 
   csurf: {
     https: process.env.NODE_ENV === "production", // default true if in production
-    // @ts-expect-error typing complains that aes-256-cbc is not correct type for encryptAlgorithm
-    encryptAlgorithm: process.env.NODE_ENV === "development" ? "aes-256-cbc" : "AES-CBC", // by default 'aes-256-cbc' (node), 'AES-CBC' (serverless)
     addCsrfTokenToEventCtx: true, // default false, to run useCsrfFetch on server set it to true
   },
 });

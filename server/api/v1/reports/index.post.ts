@@ -3,7 +3,7 @@ import Joi from "joi";
 import type { Report } from "@/types/report";
 import { createReport } from "@/server/db/reports";
 import { notifyNewReport } from "@/server/services/slack";
-import { getValidatedInput } from "@/server/utils/request";
+import { getValidatedInput, sanitizeInput } from "@/server/utils/request";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<Report>(event, {
@@ -15,9 +15,9 @@ export default defineEventHandler(async (event) => {
   // validate and add token to event
   try {
     await createReport({
-      post: body.post,
-      reason: body.reason,
-      reportBy: body.user,
+      post: sanitizeInput(body.post),
+      reason: sanitizeInput(body.reason),
+      reportBy: sanitizeInput(body.user),
     });
 
     notifyNewReport(body);

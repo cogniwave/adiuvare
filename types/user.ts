@@ -53,7 +53,7 @@ export interface LoginResult {
 }
 
 export interface UpdateUserPayload {
-  id: string;
+  // id: string;
   name: string;
   slug: string;
   bio?: string;

@@ -39,3 +39,22 @@ export const getValidatedInput = async <T>(
 
   return value;
 };
+
+export const sanitizeInput = (input: any) => {
+  if (!input) {
+    return "";
+  }
+
+  input = input.toString().trim();
+
+  const map: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "/": "&#x2F;",
+  };
+
+  return input.replace(/[&<>"'/]/gi, (match: string) => map[match]);
+};

@@ -2,7 +2,8 @@ import Joi from "joi";
 
 import { addUser } from "@/server/db/users";
 import { sendMail } from "@/server/services/mail";
-import { getValidatedInput } from "@/server/utils/request";
+import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
+
 import type { BaseUser, User } from "@/types/user";
 import type { DrizzleError } from "@/server/types/drizzle";
 
@@ -20,8 +21,8 @@ const register = async (payload: BaseUser): Promise<User> => {
 
     sendVerificationEmail(payload.email, payload.name);
     return newUser;
-  } catch (err: DrizzleError) {
-    if (err.constraint === "users_email_unique") {
+  } catch (err: unknown) {
+    if ((err as DrizzleError).constraint === "users_email_unique") {
       throw createError({
         data: {
           email: "errors.emailExists",
@@ -67,7 +68,12 @@ export default defineEventHandler(async (event) => {
   });
 
   try {
-    return await register(body);
+    return await register({
+      name: sanitizeInput(body.name),
+      password: sanitizeInput(body.password),
+      type: sanitizeInput(body.type),
+      email: sanitizeInput(body.email),
+    });
   } catch (err: any) {
     // console.log(err);
     // throw createError(err);

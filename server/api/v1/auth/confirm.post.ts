@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 import { verifyUser } from "@/server/db/users";
-import { getValidatedInput } from "@/server/utils/request";
+import { getValidatedInput, sanitizeInput } from "@/server/utils/request";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<{ token: string }>(event, {
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   });
 
   try {
-    if (await verifyUser(body.token)) {
+    if (await verifyUser(sanitizeInput(body.token))) {
       return { success: true };
     }
   } catch (error) {

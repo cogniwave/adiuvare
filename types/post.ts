@@ -83,7 +83,7 @@ export interface PostStateTogglePayload extends PostDeletePayload {
 
 export interface UpdatePostPayload extends CreatePostPayload {
   state: PostState;
-  updatedBy: string;
+  // updatedBy: string;
 }
 
 export interface PostHistory {

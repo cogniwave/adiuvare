@@ -1,8 +1,8 @@
 import { deletePost, getPostByOwner } from "@/server/db/posts";
-import { getSessionUser } from "@/server/utils/request";
+import { sanitizeInput, getSessionUser } from "@/server/utils/request";
 
 export default defineEventHandler(async (event) => {
-  const postId = getRouterParam(event, "id") as string;
+  const postId = sanitizeInput(getRouterParam(event, "id"));
 
   // delete post
   try {

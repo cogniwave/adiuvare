@@ -2,7 +2,7 @@ import Joi from "joi";
 
 import { POST_NEEDS, POST_STATES } from "@/server/db/schemas/posts.schema";
 import { updatePost } from "@/server/db/posts";
-import { getSessionUser, getValidatedInput } from "@/server/utils/request";
+import { getSessionUser, getValidatedInput, sanitizeInput } from "@/server/utils/request";
 import type { UpdatePostPayload } from "@/types/post";
 
 export default defineEventHandler(async (event) => {
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
       }),
   });
 
-  const slug = getRouterParam(event, "slug") as string;
+  const slug = sanitizeInput(getRouterParam(event, "slug"));
   const user = getSessionUser(event);
 
   if (!user) {
@@ -60,7 +60,22 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const result = await updatePost(slug, body, user.id);
+    const result = await updatePost(
+      slug,
+      {
+        title: sanitizeInput(body.title),
+        description: sanitizeInput(body.description),
+        state: sanitizeInput(body.state),
+        needs: body.needs.map((n) => sanitizeInput(n)),
+        locations: body.locations.map((l) => sanitizeInput(l)),
+        schedule: {
+          type: sanitizeInput(body.schedule.type),
+          payload: body.schedule.payload,
+        },
+        contacts: body.contacts.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
+      },
+      user.id,
+    );
 
     if (result) {
       return result;

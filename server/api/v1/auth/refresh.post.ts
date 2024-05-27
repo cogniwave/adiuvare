@@ -2,7 +2,7 @@ import Joi from "joi";
 import { createError, eventHandler } from "h3";
 
 import { signToken, validateToken } from "@/server/utils/token";
-import { getValidatedInput } from "@/server/utils/request";
+import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 
 export default eventHandler(async (event) => {
   const body = await getValidatedInput<{ token: string }>(event, {
@@ -11,7 +11,7 @@ export default eventHandler(async (event) => {
 
   // todo: since refresh happens slightly before access token expires,
   // we need to invalidate previous access token as well.
-  const user = validateToken(body.token);
+  const user = validateToken(sanitizeInput(body.token));
 
   if (!user) {
     deleteCookie(event, "auth:token");

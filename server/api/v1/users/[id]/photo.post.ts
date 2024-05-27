@@ -1,7 +1,7 @@
 import { put } from "@vercel/blob";
 
 import { updateUser } from "@/server/db/users";
-import { getSessionUser } from "@/server/utils/request";
+import { getSessionUser, sanitizeInput } from "@/server/utils/request";
 import { ACCEPT_FILE_TYPES, FILE_SIZE, genToken } from "@/server/utils";
 
 const getExtension = (mime: string) => mime.split("image/");
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     return {};
   }
 
-  const id = getRouterParam(event, "id") as string;
+  const id = sanitizeInput(getRouterParam(event, "id"));
   const user = getSessionUser(event);
 
   if (!user || user.id !== id) {
