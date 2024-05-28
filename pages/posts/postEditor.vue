@@ -193,7 +193,6 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 const { currPost, posts, setPost } = usePosts<Post>();
 const $route = useRoute();
 const $router = useRouter();
-const { $csrfFetch } = useNuxtApp();
 
 const _slug = $route.params.slug as string;
 
@@ -282,7 +281,7 @@ const submit = async () => {
   submitting.value = true;
 
   try {
-    const post = await $csrfFetch<Post>(`/api/v1/posts/${_slug}`, {
+    const post = await $fetch<Post>(`/api/v1/posts/${_slug}`, {
       body: currPost.value,
       method: "patch",
     });

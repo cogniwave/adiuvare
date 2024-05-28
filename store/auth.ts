@@ -35,7 +35,6 @@ const startInterval = () => {
 // make request to refresh, update tokens
 const refresh = async () => {
   const { loading, refreshToken, data, setToken, refreshUser } = useAuth();
-  const { $csrfFetch } = useNuxtApp();
 
   loading.value = true;
 
@@ -45,7 +44,7 @@ const refresh = async () => {
   }
 
   try {
-    const result = await $csrfFetch<string>("/api/v1/auth/refresh", {
+    const result = await $fetch<string>("/api/v1/auth/refresh", {
       method: "post",
       body: { token: refreshToken.value },
     });
@@ -73,10 +72,9 @@ const refresh = async () => {
 
 const login = async (payload: LoginPayload) => {
   const { loading, setToken, setRefreshToken, setUser } = useAuth();
-  const { $csrfFetch } = useNuxtApp();
 
   loading.value = true;
-  const result = await $csrfFetch<LoginResult>("/api/v1/auth/login", {
+  const result = await $fetch<LoginResult>("/api/v1/auth/login", {
     method: "post",
     body: payload,
   });

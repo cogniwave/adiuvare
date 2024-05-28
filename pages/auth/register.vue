@@ -135,7 +135,6 @@ useHead({ title: "Criar conta" });
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
-const { $csrfFetch } = useNuxtApp();
 
 const email = ref<string>("");
 const email2 = ref<string>("");
@@ -173,7 +172,7 @@ const submit = async () => {
 
   submitting.value = true;
 
-  await $csrfFetch<User>("/api/v1/auth/register", {
+  await $fetch<User>("/api/v1/auth/register", {
     method: "post",
     body: {
       email: email.value,

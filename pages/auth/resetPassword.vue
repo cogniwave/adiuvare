@@ -60,7 +60,6 @@ definePageMeta({
   middleware: "unauthed",
 });
 
-const { $csrfFetch } = useNuxtApp();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
 
@@ -82,11 +81,11 @@ const submit = async () => {
   clearErrors();
   submitting.value = true;
 
-  $csrfFetch("/api/v1/auth/reset-password", {
+  $fetch("/api/v1/auth/reset", {
     method: "post",
     body: { email: email.value },
   })
-    .then(() => (emailSent.value = true))
+    // .then(() => (emailSent.value = true))
     .catch(handleErrors)
     .finally(() => (submitting.value = false));
 };

@@ -122,7 +122,6 @@ const $router = useRouter();
 const { users, currUser, setUser } = useUsers();
 const { notifyError, notifySuccess } = useNotify();
 const { errors, handleErrors, clearErrors } = useFormErrors();
-const { $csrfFetch } = useNuxtApp();
 
 const userId = computed(() => auth.value?.id || "");
 
@@ -146,7 +145,7 @@ const submitting = ref<boolean>(false);
 onBeforeMount(() => userId.value && init());
 
 const _updateUser = async () => {
-  return await $csrfFetch<User>(`/api/v1/users/${currUser.value.id}`, {
+  return await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
     body: {
       id: currUser.value.id,
       slug: currUser.value.slug,
@@ -168,7 +167,7 @@ const _uploadFile = async () => {
   // @ts-expect-error TS will complain that files is not the correct type
   formData.append("file", fileInput.value.files?.[0]);
 
-  return await $csrfFetch<User>(`/api/v1/users/${currUser.value.id}/photo`, {
+  return await $fetch<User>(`/api/v1/users/${currUser.value.id}/photo`, {
     body: formData,
     method: "post",
   });

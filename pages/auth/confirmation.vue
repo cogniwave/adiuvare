@@ -28,7 +28,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const { $csrfFetch } = useNuxtApp();
 const $route = useRoute();
 const { t } = useI18n();
 
@@ -47,7 +46,7 @@ onBeforeMount(() => {
     return (success.value = false);
   }
 
-  $csrfFetch("/api/v1/auth/confirm", { method: "post", body: { token } })
+  $fetch("/api/v1/auth/confirm", { method: "post", body: { token } })
     .catch(() => (success.value = false))
     .finally(() => (submitting.value = false));
 });

@@ -20,7 +20,6 @@ import { useNotify } from "@/store/notify";
 import type { Post, PostDisablePayload } from "@/types/post";
 
 const { notifyError } = useNotify();
-const { $csrfFetch } = useNuxtApp();
 const { t } = useI18n();
 const { disableDialogVisible, currPost, posts } = usePosts<PostDisablePayload>();
 
@@ -30,7 +29,7 @@ const submit = async () => {
   submitting.value = true;
 
   try {
-    await $csrfFetch<Post>(`/api/v1/posts/${currPost.value.id}`, {
+    await $fetch<Post>(`/api/v1/posts/${currPost.value.id}`, {
       body: { action: "disable" },
       method: "patch",
     });
