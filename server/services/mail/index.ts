@@ -4,7 +4,7 @@ import {
   TransactionalEmailsApiApiKeys,
 } from "@getbrevo/brevo";
 
-type Template = "resetPassword" | "confirmAccount";
+type Template = "userActionRequired" | "information";
 
 interface Receiver {
   name: string;
@@ -16,8 +16,8 @@ const brevo = new TransactionalEmailsApi();
 brevo.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
 
 const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
-  confirmAccount: 2,
-  resetPassword: 3,
+  userActionRequired: 1,
+  information: 6,
 };
 
 export const sendEmail = (

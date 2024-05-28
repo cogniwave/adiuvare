@@ -28,14 +28,19 @@ const sendResetEmail = async (event: H3Event<EventHandlerRequest>) => {
     const token = `${genToken(32)}-${Date.now()}`;
 
     if (await updateUserToken(user.id, token)) {
-      sendEmail(t("email.reset.subject"), { email: user.email, name: user.name }, "resetPassword", {
-        name: user.name,
-        body: t("email.reset.body"),
-        body2: t("email.reset.body2"),
-        buttonText: t("email.reset.buttonText"),
-        alternativeLinkText: t("email.reset.alternativeLinkText"),
-        link: `https://${process.env.APP_BASE_URL}/password?token=${token}&email=${user.email}`,
-      });
+      sendEmail(
+        t("email.reset.subject"),
+        { email: user.email, name: user.name },
+        "userActionRequired",
+        {
+          name: user.name,
+          body: t("email.reset.body"),
+          body2: t("email.reset.body2"),
+          buttonText: t("email.reset.buttonText"),
+          alternativeLinkText: t("email.reset.alternativeLinkText"),
+          link: `https://${process.env.APP_BASE_URL}/password?token=${token}&email=${user.email}`,
+        },
+      );
     }
   }
 
