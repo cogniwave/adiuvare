@@ -71,11 +71,7 @@ export const updateUser = async (
     return null;
   }
 
-  if (old[0].id !== userId) {
-    return old;
-  }
-
-  const updated = db.update(users).set(payload).where(eq(users.id, userId)).returning({
+  return db.update(users).set(payload).where(eq(users.id, userId)).returning({
     id: users.id,
     slug: users.slug,
     contacts: users.contacts,
@@ -83,8 +79,6 @@ export const updateUser = async (
     email: users.email,
     type: users.type,
   });
-
-  return updated;
 };
 
 export const getUserById = async (id: string) => {
@@ -148,4 +142,16 @@ export const getUserBySlug = async (slug: string) => {
     .limit(1);
 
   return result.length === 1 ? result[0] : null;
+};
+
+export const updateUserToken = async (userId: string, token: string) => {
+  const user = await db.select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
+
+  if (!user?.length) {
+    return false;
+  }
+
+  await db.update(users).set({ token }).where(eq(users.id, userId));
+
+  return true;
 };
