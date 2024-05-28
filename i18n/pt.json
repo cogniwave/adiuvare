@@ -261,5 +261,15 @@
     "bio": "Missão / objetivo"
   },
 
-  "copied": "Copiado"
+  "copied": "Copiado",
+
+  "email": {
+    "reset": {
+      "subject": "Recuperar palavra-passe",
+      "body": "Recebemos um pedido de recuperação de palavra-passe da sua. Se não fez nenhum pedido, ignore este email.",
+      "body2": "Este link é válido durante 12 horas. Se não recuperar durante este perído terá que fazer outro pedido.",
+      "buttonText": "Recuperar",
+      "alternativeLinkText": "Se não conseguir usar o link em cima, experimenta este"
+    }
+  }
 }

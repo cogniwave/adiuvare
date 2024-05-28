@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@date-io/dayjs": "^3.0.0",
+    "@getbrevo/brevo": "^2.1.1",
     "@nuxtjs/robots": "^3.0.0",
     "@quasar/extras": "^1.16.11",
     "@vercel/blob": "^0.23.2",
@@ -25,7 +26,6 @@
     "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.11.1",
-    "nodemailer": "^6.9.13",
     "nuxt-bugsnag": "^7.3.0",
     "pg": "^8.11.5",
     "uuid": "^9.0.1"

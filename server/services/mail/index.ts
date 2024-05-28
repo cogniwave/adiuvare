@@ -1,25 +1,37 @@
-import { createTransport } from "nodemailer";
+import {
+  SendSmtpEmail,
+  TransactionalEmailsApi,
+  TransactionalEmailsApiApiKeys,
+} from "@getbrevo/brevo";
 
-const transporter = createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: true,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASSWORD,
-  },
-});
+type Template = "resetPassword" | "confirmAccount";
 
-export const sendMail = (
+interface Receiver {
+  name: string;
+  email: string;
+}
+
+const brevo = new TransactionalEmailsApi();
+
+brevo.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
+
+const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
+  confirmAccount: 2,
+  resetPassword: 3,
+};
+
+export const sendEmail = (
   subject: string,
-  to: string,
-  template: string,
-  data?: any,
+  to: Receiver,
+  template: Template,
+  data?: Record<string, string>,
 ) => {
-  transporter.sendMail({
-    from: "Geral <geral@queroajudar.pt>",
-    to,
-    subject,
-    html: `<b>Hello world ${data} ?</b>`,
-  });
+  const mailer = new SendSmtpEmail();
+
+  mailer.subject = subject;
+  mailer.to = [to];
+  mailer.templateId = TEMPLATE_NAME_TO_ID[template];
+  mailer.params = data;
+
+  return brevo.sendTransacEmail(mailer);
 };
