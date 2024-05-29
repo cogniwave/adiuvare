@@ -22,7 +22,7 @@
           </nuxt-link>
         </i18n-t>
 
-        <p>{{ t("register.confirmation.error") }}</p>
+        <p v-else>{{ t("register.confirmation.error") }}</p>
       </template>
 
       <p v-else>{{ t("register.confirmation.loading") }}</p>
@@ -41,12 +41,12 @@ const { t } = useI18n();
 useHead({ title: t("pages.accountConfirm") });
 
 const loading = ref<boolean>(true);
-const success = ref(false);
+const success = ref(true);
 const invalidLink = ref(false);
 const expiredLink = ref(false);
 
 onBeforeMount(() => {
-  const { token, email } = $route.params;
+  const { token, email } = $route.query;
 
   if (!token || !email) {
     loading.value = false;
