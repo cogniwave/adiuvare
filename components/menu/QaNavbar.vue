@@ -13,7 +13,7 @@
         </v-col>
 
         <v-col cols="3" offset="2" align-self="center">
-          <form @submit.prevent="search">
+          <form @keypress.enter.prevent="search" @submit.prevent="search">
             <v-text-field
               v-model:model-value="query"
               variant="solo"

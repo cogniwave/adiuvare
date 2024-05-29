@@ -51,11 +51,11 @@ export const addUser = async (payload: BaseUser, token: string): Promise<User | 
   return result[0] as User;
 };
 
-export const verifyUser = async (token: string): Promise<boolean> => {
+export const verifyUser = async (token: string, email: string): Promise<boolean> => {
   const result = await db
     .update(users)
     .set({ verified: true, token: null })
-    .where(eq(users.token, token));
+    .where(and(eq(users.token, token), eq(users.email, email)));
 
   return (result.rowCount || 0) > 0;
 };

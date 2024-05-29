@@ -29,7 +29,11 @@
       </v-list>
     </v-menu>
 
-    <v-btn v-else variant="plain" to="/login"> {{ t("login.title") }} </v-btn>
+    <template v-else>
+      <v-btn variant="plain" class="px-0" to="/login"> {{ t("login.title") }} </v-btn>
+      <span class="mx-2 divider">|</span>
+      <v-btn variant="plain" class="px-0" to="/register"> {{ t("register.title") }} </v-btn>
+    </template>
   </template>
 </template>
 
@@ -40,3 +44,9 @@ const $router = useRouter();
 const { logout, loggedIn, data, loading } = useAuth();
 const { t } = useI18n();
 </script>
+
+<style scoped>
+span {
+  color: rgba(var(--v-theme-primary));
+}
+</style>

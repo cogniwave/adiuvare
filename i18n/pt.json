@@ -23,14 +23,15 @@
     "success": "Criado com sucesso",
     "successMessage": "Foi enviado um email para confirmar o registo",
     "register": "Criar conta",
-    "title": "Registar",
+    "title": "Criar conta",
     "link": "Criar conta",
     "confirmation": {
       "title": "Confirmação de conta",
-      "confirmSuccess": "A sua conta está confirmada, já pode",
-      "confirmError": "Não foi possível confirmar a sua conta, contacte o apoio ao cliente",
-      "confirmLoading": "Aguarde um momento enquanto confirmamos a conta",
-      "seoTitle": "Confirmação de conta"
+      "success": "A sua conta está confirmada, já pode {0}",
+      "error": "Não foi possível confirmar a sua conta, contacte o apoio ao cliente",
+      "loading": "Aguarde um momento enquanto confirmamos a conta",
+      "invalidLink": "O link está inválido. Confirme no email se o link está correto",
+      "expiredLink": "O link expirou. O link de recuperação de palavra passe só dura 48 horas. Contacte o apoio ao cliente"
     }
   },
 
@@ -298,6 +299,7 @@
 
   "pages": {
     "updatePassword": "Redefinir palavra-passe",
-    "login": "Iniciar sessão"
+    "login": "Iniciar sessão",
+    "accountConfirm": "Confirmação de conta"
   }
 }

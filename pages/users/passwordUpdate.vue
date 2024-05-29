@@ -4,7 +4,7 @@
       <h1 class="text-h5 text-white">{{ t("reset.updateTitle") }}</h1>
     </v-card-title>
 
-    <v-card-item class="bg-white">
+    <v-card-item>
       <template v-if="!loading">
         <i18n-t
           v-if="invalidLink"
