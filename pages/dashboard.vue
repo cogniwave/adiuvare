@@ -1,6 +1,4 @@
 <template>
-  <nuxt-loading-indicator></nuxt-loading-indicator>
-
   <qa-feed />
 </template>
 

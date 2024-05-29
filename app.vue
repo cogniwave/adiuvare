@@ -10,8 +10,6 @@
 
       <qa-snackbar />
 
-      <NuxtLoadingIndicator />
-
       <NuxtPage />
     </NuxtLayout>
   </v-app>
