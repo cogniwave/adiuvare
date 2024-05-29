@@ -1,11 +1,13 @@
 <template>
-  <div v-if="isLoading" class="loader-container">
+  <div v-if="loading" class="loader-container">
     <div class="loader" />
   </div>
 </template>
 
 <script setup lang="ts">
-const { isLoading } = useLoadingIndicator();
+defineProps({
+  loading: { type: Boolean, required: true },
+});
 </script>
 
 <style lang="scss" scoped>

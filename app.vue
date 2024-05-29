@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <qa-loading />
+    <qa-loading :loading="initLoading || isLoading" />
 
     <NuxtLayout>
       <qa-navbar />
@@ -18,7 +18,15 @@
 </template>
 
 <script lang="ts" setup>
-const { start } = useLoadingIndicator();
+const { isLoading, start, finish } = useLoadingIndicator();
+
+// show the loading screen on first render as loadingIndicator doesnt seem to be doing its job
+const initLoading = ref(true);
 
 onBeforeMount(() => start());
+
+onMounted(() => {
+  initLoading.value = false;
+  finish();
+});
 </script>
