@@ -1,7 +1,8 @@
 {
   "login": {
     "title": "Iniciar sessão",
-    "actionRequiresAuth": "É necessário iniciar sessão para essa ação"
+    "actionRequiresAuth": "É necessário iniciar sessão para essa ação",
+    "passwordReset": "Palavra-passe atualizada, já pode iniciar sessão"
   },
 
   "reset": {
@@ -9,7 +10,13 @@
     "title": "Recuperar palavra passe",
     "submit": "Recuperar",
     "success": "Pedido de recuperação enviado",
-    "successExtended": "Foi enviado um email com os passos seguintes do processo"
+    "successExtended": "Foi enviado um email com os passos seguintes do processo",
+    "updateInvalidTitle": "Link inválido",
+    "updateInvalidBody": "O link está inválido. Confirme se abriu o link enviado no email corretamente ou faça {0}",
+    "updateResetLink": "outro pedido de recuperação",
+    "updateTitle": "Redefinir palavra passe",
+    "updateExpiredBody": "O link expirou. O link de recuperação de palavra passe só dura 12 horas. Terá que fazer {0}",
+    "update": "Atualizar"
   },
 
   "register": {
@@ -175,7 +182,9 @@
     "invalidContactType": "Tipo de contacto inválido.",
     "fileTooBig": "Ficheiro demasiado grande, tem que ser inferior a 4mb",
     "invalidFileType": "Ficheiro inválido. Tem que ser JPG, JPEG, ou PNG",
-    "validationError": "Erro a validar dados"
+    "validationError": "Erro a validar dados",
+    "mismatchKeys": "{0} não coincidem",
+    "expiredResetLink": "Link expirado"
   },
 
   "posts": {
@@ -270,6 +279,15 @@
       "body2": "Este link é válido durante 12 horas. Se não recuperar durante este perído terá que fazer outro pedido.",
       "buttonText": "Recuperar",
       "alternativeLinkText": "Se não conseguir usar o link em cima, experimenta este"
+    },
+    "resetSuccess": {
+      "subject": "Alteração de palavra passe",
+      "body": "A sua palavra passe foi alterada. Se não foi você a fazer esta alteração entre em contacto connosco imediatamente. Se foi, pode ignorar este email"
     }
+  },
+
+  "pages": {
+    "updatePassword": "Redefinir palavra-passe",
+    "login": "Iniciar sessão"
   }
 }

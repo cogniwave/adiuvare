@@ -7,7 +7,7 @@ import {
 type Template = "userActionRequired" | "information";
 
 interface Receiver {
-  name: string;
+  name?: string;
   email: string;
 }
 

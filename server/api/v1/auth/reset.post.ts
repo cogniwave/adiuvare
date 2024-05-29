@@ -5,7 +5,6 @@ import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 import { sendEmail } from "@/server/services/mail";
 import { users } from "@/server/db/schemas/users.schema";
 
-import type { H3Event, EventHandlerRequest } from "h3";
 import type { LoginPayload } from "@/types/user";
 
 interface User {
@@ -15,7 +14,7 @@ interface User {
   id: string;
 }
 
-const sendResetEmail = async (event: H3Event<EventHandlerRequest>) => {
+export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<LoginPayload>(event, {
     email: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
   });
@@ -38,15 +37,11 @@ const sendResetEmail = async (event: H3Event<EventHandlerRequest>) => {
           body2: t("email.reset.body2"),
           buttonText: t("email.reset.buttonText"),
           alternativeLinkText: t("email.reset.alternativeLinkText"),
-          link: `https://${process.env.APP_BASE_URL}/password?token=${token}&email=${user.email}`,
+          link: `${process.env.APP_BASE_URL}/profile/password?token=${token}&email=${user.email}`,
         },
       );
     }
   }
 
   return { success: true };
-};
-
-export default defineEventHandler(async (event) => {
-  return sendResetEmail(event);
 });

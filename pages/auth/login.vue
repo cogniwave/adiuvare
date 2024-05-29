@@ -69,6 +69,9 @@ definePageMeta({
   path: "/login",
   middleware: "unauthed",
 });
+const { t } = useI18n();
+
+useHead({ title: t("pages.login") });
 
 const email = ref<string>("");
 const password = ref<string>("");
@@ -80,20 +83,26 @@ const visibilityIcon = ref<"eye" | "eye-slash">("eye");
 const submitting = ref<boolean>(false);
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
-const { notifyError, notifyWarning } = useNotify();
+const { notifyError, notifyInfo, notifyWarning } = useNotify();
 const $route = useRoute();
 const $router = useRouter();
-const { t } = useI18n();
 const { login } = useAuth();
 
 onMounted(() => {
   if ($route.query?.requireAuth) {
     notifyWarning(t("login.actionRequiresAuth"));
+
     $router.replace({
       path: "/login",
       query: { ...$route.query, requireAuth: undefined },
     });
-    return;
+  } else if ($route.query?.passwordReset) {
+    notifyInfo(t("login.passwordReset"));
+
+    $router.replace({
+      path: "/login",
+      query: { ...$route.query, passwordReset: undefined },
+    });
   }
 });
 

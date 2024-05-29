@@ -87,9 +87,10 @@
     </v-form>
 
     <div class="py-5 d-flex align-center justify-end">
-      <v-btn :disable="submitting" color="error" class="mr-2" @click="$router.go(-1)">
+      <!-- todo: implement this functionality -->
+      <!-- <v-btn :disable="submitting" color="error" class="mr-2" @click="$router.go(-1)">
         {{ t("form.user.delete") }}
-      </v-btn>
+      </v-btn> -->
 
       <v-spacer />
 

@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-row no-gutters class="py-10">
+    <v-row no-gutters class="py-10 mt-10">
       <v-col offset="3" cols="6">
         <slot />
       </v-col>

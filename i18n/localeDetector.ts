@@ -1,4 +1,3 @@
-console.log("locale detector running");
 // Detect based on query, cookie, header
 export default defineI18nLocaleDetector((event, config) => {
   // try to get locale from cookie

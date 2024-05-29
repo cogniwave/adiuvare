@@ -155,3 +155,10 @@ export const updateUserToken = async (userId: string, token: string) => {
 
   return true;
 };
+
+export const updatePassword = async (email: string, password: string, token: string) => {
+  return db
+    .update(users)
+    .set({ password: hashSync(password as string, SALT), token: null })
+    .where(and(eq(users.email, email), eq(users.token, token)));
+};

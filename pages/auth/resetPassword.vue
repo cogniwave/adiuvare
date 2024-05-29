@@ -6,7 +6,7 @@
 
     <template v-if="!emailSent">
       <v-card-item>
-        <v-form greedy no-error-focus no-reset-focus ref="form" @keydown.enter="submit">
+        <v-form greedy no-error-focus no-reset-focus ref="form" @submit.prevent="submit">
           <v-text-field
             v-model:model-value="email"
             class="mt-3"
@@ -85,7 +85,7 @@ const submit = async () => {
     method: "post",
     body: { email: email.value },
   })
-    // .then(() => (emailSent.value = true))
+    .then(() => (emailSent.value = true))
     .catch(handleErrors)
     .finally(() => (submitting.value = false));
 };
