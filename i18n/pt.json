@@ -277,16 +277,22 @@
 
   "email": {
     "greetings": "Olá",
+    "alternativeLinkText": "Se não conseguir usar o link em cima, experimenta este",
     "reset": {
       "subject": "Recuperar palavra-passe",
       "body": "Recebemos um pedido de recuperação de palavra-passe da sua. Se não fez nenhum pedido, ignore este email.",
       "body2": "Este link é válido durante 12 horas. Se não recuperar durante este perído terá que fazer outro pedido.",
-      "buttonText": "Recuperar",
-      "alternativeLinkText": "Se não conseguir usar o link em cima, experimenta este"
+      "buttonText": "Recuperar"
     },
     "resetSuccess": {
       "subject": "Alteração de palavra passe",
       "body": "A sua palavra passe foi alterada. Se não foi você a fazer esta alteração entre em contacto connosco imediatamente. Se foi, pode ignorar este email"
+    },
+    "accountConfirm": {
+      "subject": "Bem vindo - ativação de conta",
+      "body": "Resta apenas mais uma passo! Para poder iniciar sessão basta confirmar a sua conta com o link abaixo.",
+      "body2": "Este link é válido durante 48 horas.",
+      "buttonText": "Confirmar conta"
     }
   },
 

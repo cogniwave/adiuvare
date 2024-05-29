@@ -15,8 +15,12 @@ interface User {
 }
 
 export default defineEventHandler(async (event) => {
+  const t = await useTranslation(event);
+
   const body = await getValidatedInput<LoginPayload>(event, {
-    email: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    email: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
   });
 
   const user = await getUser<User>(sanitizeInput(body.email), [], { id: users.id });
@@ -37,7 +41,7 @@ export default defineEventHandler(async (event) => {
           body: t("email.reset.body"),
           body2: t("email.reset.body2"),
           buttonText: t("email.reset.buttonText"),
-          alternativeLinkText: t("email.reset.alternativeLinkText"),
+          alternativeLinkText: t("email.alternativeLinkText"),
           link: `${process.env.APP_BASE_URL}/profile/password?token=${token}&email=${user.email}`,
         },
       );

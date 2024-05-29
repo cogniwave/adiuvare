@@ -3,16 +3,25 @@ import Joi from "joi";
 import { updateUser } from "@/server/db/users";
 import { getSessionUser, getValidatedInput, sanitizeInput } from "@/server/utils/request";
 
-import type { UpdateProfilePayload, UpdateAccountPayload } from "@/types/user";
 import type { H3Event, EventHandlerRequest } from "h3";
+import type { UpdateProfilePayload, UpdateAccountPayload } from "@/types/user";
+import type { TranslationFunction } from "@/types";
 
 type UpdateAction = "account" | "profile";
 
-const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>) => {
+const updateProfile = async (
+  userId: string,
+  event: H3Event<EventHandlerRequest>,
+  t: TranslationFunction,
+) => {
   const body = await getValidatedInput<UpdateProfilePayload>(event, {
-    name: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    name: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
 
-    slug: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    slug: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
 
     bio: Joi.string().optional().allow(null),
 
@@ -26,9 +35,9 @@ const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>
       .required()
       .min(1)
       .messages({
-        "array.min": "errors.empty",
-        "any.required": "errors.invalidContact",
-        "any.only": "errors.invalidContactType",
+        "array.min": t("errors.empty"),
+        "any.required": t("errors.invalidContact"),
+        "any.only": t("errors.invalidContactType"),
       }),
   });
 
@@ -43,24 +52,30 @@ const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>
   ]);
 
   if (!updatedUser) {
-    sendError(event, createError({ statusCode: 500, statusMessage: "errors.unexpected" }));
+    sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));
     return;
   }
 
   return updatedUser;
 };
 
-const updateAccount = async (userId: string, event: H3Event<EventHandlerRequest>) => {
+const updateAccount = async (
+  userId: string,
+  event: H3Event<EventHandlerRequest>,
+  t: TranslationFunction,
+) => {
   const body = await getValidatedInput<UpdateAccountPayload>(event, {
-    email: Joi.string().email({}).messages({
-      "string.max": "errors.max_255",
-      "string.email": "errors.invalidEmail",
-    }),
+    email: Joi.string()
+      .email({})
+      .messages({
+        "string.max": t("errors.max_255"),
+        "string.email": t("errors.invalidEmail"),
+      }),
 
     password: Joi.string()
       .pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/)
       .messages({
-        "string.pattern.base": "errors.invalidPassword",
+        "string.pattern.base": t("errors.invalidPassword"),
       }),
   });
 
@@ -101,10 +116,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     if (action === "profile") {
-      return await updateProfile(user.id, event);
+      return await updateProfile(user.id, event, t);
     }
 
-    const email = await updateAccount(user.id, event);
+    const email = await updateAccount(user.id, event, t);
 
     if (email) {
       return setupTokens(event, { ...user, email });

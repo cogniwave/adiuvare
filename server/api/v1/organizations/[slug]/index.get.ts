@@ -20,6 +20,8 @@ export default defineEventHandler(async (event) => {
       message: JSON.stringify(err),
     });
 
-    throw createError({ statusCode: 500, statusMessage: "errors.unexpected" });
+    const t = await useTranslation(event);
+
+    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
   }
 });

@@ -10,27 +10,33 @@ import { notifyNewPost } from "@/server/services/slack";
 import type { CreatePostPayload } from "@/types/post";
 
 export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<CreatePostPayload>(event, {
-    title: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+  const t = await useTranslation(event);
 
-    description: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+  const body = await getValidatedInput<CreatePostPayload>(event, {
+    title: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
+
+    description: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
 
     needs: Joi.array()
       .items(Joi.string().valid(...POST_NEEDS))
       .required()
       .messages({
-        "strings.empty": "errors.empty",
-        "strings.valid": "errors.invalidField",
+        "strings.empty": t("errors.empty"),
+        "strings.valid": t("errors.invalidField"),
       }),
 
     locations: Joi.array()
       .items(Joi.string())
       .required()
-      .messages({ "strings.empty": "errors.empty" }),
+      .messages({ "strings.empty": t("errors.empty") }),
 
     schedule: Joi.object()
       .required()
-      .messages({ "any.required": "errors.requiredField", "strings.empty": "errors.empty" }),
+      .messages({ "any.required": t("errors.requiredField"), "strings.empty": t("errors.empty") }),
 
     contacts: Joi.array()
       .items(
@@ -42,9 +48,9 @@ export default defineEventHandler(async (event) => {
       .required()
       .min(1)
       .messages({
-        "array.min": "errors.empty",
-        "any.required": "errors.requiredField",
-        "any.only": "errors.invalidContactType",
+        "array.min": t("errors.empty"),
+        "any.required": t("errors.requiredField"),
+        "any.only": t("errors.invalidContactType"),
       }),
   });
 
@@ -54,7 +60,7 @@ export default defineEventHandler(async (event) => {
 
     if (!user) {
       setResponseStatus(event, 401);
-      sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));
+      sendError(event, createError({ statusCode: 401, statusMessage: t("errors.unexpected") }));
       return;
     }
 
@@ -86,7 +92,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: "errors.unexpected",
+      statusMessage: t("errors.unexpected"),
     });
   }
 });

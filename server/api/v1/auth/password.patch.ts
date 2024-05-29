@@ -14,22 +14,29 @@ interface PasswordUpdatePayload {
 }
 
 export default defineEventHandler(async (event) => {
+  const t = await useTranslation(event);
+
   const body = await getValidatedInput<PasswordUpdatePayload>(event, {
     password: Joi.string()
       .required()
       .pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/)
       .messages({
-        "string.empty": "errors.empty",
-        "string.pattern.base": "errors.invalidPassword",
+        "string.empty": t("errors.empty"),
+        "string.pattern.base": t("errors.invalidPassword"),
       }),
 
-    email: Joi.string().required().email({}).messages({
-      "string.empty": "errors.empty",
-      "string.max": "errors.max_255",
-      "string.email": "errors.invalidEmail",
-    }),
+    email: Joi.string()
+      .required()
+      .email({})
+      .messages({
+        "string.empty": t("errors.empty"),
+        "string.max": t("errors.max_255"),
+        "string.email": t("errors.invalidEmail"),
+      }),
 
-    token: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    token: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
   });
 
   if (dayjs(body.token.split("-")[1]).isAfter(dayjs().add(12, "hours"))) {
@@ -47,8 +54,6 @@ export default defineEventHandler(async (event) => {
     sanitizeInput(body.password),
     sanitizeInput(body.token),
   );
-
-  const t = await useTranslation(event);
 
   sendEmail(t("email.resetSuccess.subject"), { email: body.email }, "information", {
     greetings: t("email.greetings"),

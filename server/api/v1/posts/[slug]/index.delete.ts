@@ -4,13 +4,15 @@ import { sanitizeInput, getSessionUser } from "@/server/utils/request";
 export default defineEventHandler(async (event) => {
   const postId = sanitizeInput(getRouterParam(event, "id"));
 
+  const t = await useTranslation(event);
+
   // delete post
   try {
     const user = getSessionUser(event);
 
     if (!user) {
       setResponseStatus(event, 401);
-      sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));
+      sendError(event, createError({ statusCode: 401, statusMessage: t("errors.unexpected") }));
       return;
     }
 
@@ -31,6 +33,6 @@ export default defineEventHandler(async (event) => {
       message: JSON.stringify(err),
     });
 
-    throw createError({ statusCode: 500, statusMessage: "errors.unexpected" });
+    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
   }
 });

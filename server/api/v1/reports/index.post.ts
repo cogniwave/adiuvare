@@ -6,10 +6,18 @@ import { notifyNewReport } from "@/server/services/slack";
 import { getValidatedInput, sanitizeInput } from "@/server/utils/request";
 
 export default defineEventHandler(async (event) => {
+  const t = await useTranslation(event);
+
   const body = await getValidatedInput<Report>(event, {
-    post: Joi.object().required().messages({ "strings.empty": "errors.empty" }),
-    reason: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
-    user: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
+    post: Joi.object()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
+    reason: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
+    user: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
   });
 
   // validate and add token to event
@@ -33,7 +41,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: "errors.unexpected",
+      statusMessage: t("errors.unexpected"),
     });
   }
 });

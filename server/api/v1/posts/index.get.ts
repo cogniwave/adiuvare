@@ -1,6 +1,6 @@
 import { getPosts, getTotalPosts } from "@/server/db/posts";
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
     const [posts, total] = await Promise.all([getPosts(), getTotalPosts()]);
 
@@ -11,9 +11,11 @@ export default defineEventHandler(async () => {
       message: JSON.stringify(err),
     });
 
+    const t = await useTranslation(event);
+
     throw createError({
       statusCode: 500,
-      statusMessage: "errors.unexpected",
+      statusMessage: t("errors.unexpected"),
     });
   }
 });

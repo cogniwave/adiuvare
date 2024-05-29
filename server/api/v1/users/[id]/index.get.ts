@@ -7,9 +7,11 @@ export default defineEventHandler(async (event) => {
 
   const user = getSessionUser(event);
 
+  const t = await useTranslation(event);
+
   if (!user) {
     setResponseStatus(event, 401);
-    sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));
+    sendError(event, createError({ statusCode: 401, statusMessage: t("errors.unexpected") }));
     return;
   }
 
@@ -28,6 +30,6 @@ export default defineEventHandler(async (event) => {
       message: JSON.stringify(err),
     });
 
-    throw createError({ statusCode: 500, statusMessage: "errors.unexpected" });
+    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
   }
 });

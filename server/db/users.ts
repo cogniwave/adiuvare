@@ -1,4 +1,3 @@
-import { randomBytes } from "crypto";
 import { hashSync } from "bcrypt";
 import { and, asc, count, eq } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
@@ -30,7 +29,7 @@ export const getUser = async <T = SelectUser>(
   return result.length ? (result[0] as T) : undefined;
 };
 
-export const addUser = async (payload: BaseUser): Promise<User | null> => {
+export const addUser = async (payload: BaseUser, token: string): Promise<User | null> => {
   const result = await db
     .insert(users)
     .values({
@@ -39,7 +38,7 @@ export const addUser = async (payload: BaseUser): Promise<User | null> => {
       name: payload.name,
       type: payload.type,
       slug: `${payload.email.split("@")[0]}-${genToken()}`,
-      token: randomBytes(32).toString("hex"),
+      token,
       verified: false,
     })
     .returning({

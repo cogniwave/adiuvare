@@ -1,6 +1,6 @@
 import { getOrgs, getTotalOrgs } from "@/server/db/users";
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
     const [organizations, total] = await Promise.all([getOrgs(), getTotalOrgs()]);
 
@@ -11,6 +11,8 @@ export default defineEventHandler(async () => {
       message: JSON.stringify(err),
     });
 
-    throw createError({ statusCode: 500, statusMessage: "errors.unexpected" });
+    const t = await useTranslation(event);
+
+    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
   }
 });

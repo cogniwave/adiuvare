@@ -5,8 +5,12 @@ import { signToken, validateToken } from "@/server/utils/token";
 import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 
 export default eventHandler(async (event) => {
+  const t = await useTranslation(event);
+
   const body = await getValidatedInput<{ token: string }>(event, {
-    token: Joi.string().required().messages({ "strings.empty": "errors.emptyRefreshToken" }),
+    token: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.emptyRefreshToken") }),
   });
 
   // todo: since refresh happens slightly before access token expires,
@@ -19,7 +23,7 @@ export default eventHandler(async (event) => {
 
     throw createError({
       statusCode: 401,
-      statusMessage: "errors.invalidRefreshToken",
+      statusMessage: t("errors.invalidRefreshToken"),
     });
   }
 
