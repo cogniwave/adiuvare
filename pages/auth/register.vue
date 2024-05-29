@@ -1,119 +1,105 @@
 <template>
-  <v-card class="shadow-24">
-    <v-card-title class="bg-primary">
-      <h1 class="text-h5 text-white">{{ t("register.title") }}</h1>
-    </v-card-title>
+  <auth-form-card :title="t('register.title')" :show-form="!userCreated" @submit="submit">
+    <template #form>
+      <v-text-field
+        v-model:model-value="name"
+        type="text"
+        prepend-icon="fa-solid fa-user"
+        :label="t('form.name')"
+        :error-messages="errors.name"
+        :rules="[required(t)]"
+      />
 
-    <v-card-item class="bg-white">
-      <v-form
-        v-if="!userCreated"
-        ref="form"
-        class="px-4 pt-4"
-        validate-on="submit lazy"
-        @submit.prevent="submit"
+      <v-text-field
+        v-model:model-value="email"
+        type="email"
+        class="mt-6"
+        prepend-icon="fa-solid fa-at"
+        :label="t('form.email')"
+        :error-messages="errors.email"
+        :rules="[required(t), isValidEmail(t)]"
+      />
+
+      <v-text-field
+        v-model:model-value="email2"
+        type="email"
+        prepend-icon="fa-solid fa-at"
+        class="mt-6"
+        :label="t('form.emailRepeat')"
+        :rules="[required(t), isValidEmail(t), match(t, email, t('form.emailDuplicateKey'))]"
+      />
+
+      <v-text-field
+        v-model:model-value="password"
+        prepend-icon="fa-solid fa-lock"
+        class="mt-6"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        :label="t('form.password')"
+        :error-messages="errors.password"
+        :type="passwordFieldType"
+        :rules="[required(t), isValidPassword(t)]"
       >
-        <v-text-field
-          v-model:model-value="name"
-          type="text"
-          class="mt-3"
-          prepend-icon="fa-solid fa-user"
-          :label="t('form.name')"
-          :error-messages="errors.name"
-          :rules="[required(t)]"
-        />
+        <template v-slot:append-inner>
+          <v-icon class="cursor-pointer" @click="switchVisibility">
+            fa-solid fa-{{ visibilityIcon }}
+          </v-icon>
+        </template>
+      </v-text-field>
 
-        <v-text-field
-          v-model:model-value="email"
-          type="email"
-          class="mt-3"
-          prepend-icon="fa-solid fa-at"
-          :label="t('form.email')"
-          :error-messages="errors.email"
-          :rules="[required(t), isValidEmail(t)]"
-        />
+      <v-text-field
+        v-model:model-value="password2"
+        autocorrect="off"
+        class="mt-6"
+        prepend-icon="fa-solid fa-lock"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        :label="t('form.passwordRepeat')"
+        :type="passwordFieldType"
+        :rules="[
+          required(t),
+          isValidPassword(t),
+          match(t, password, t('form.passwordDuplicateKey')),
+        ]"
+      >
+        <template v-slot:append-inner>
+          <v-icon class="cursor-pointer" @click="switchVisibility">
+            fa-solid fa-{{ visibilityIcon }}
+          </v-icon>
+        </template>
+      </v-text-field>
 
-        <v-text-field
-          v-model:model-value="email2"
-          type="email"
-          prepend-icon="fa-solid fa-at"
-          class="mt-3"
-          :label="t('form.emailRepeat')"
-          :rules="[required(t), isValidEmail(t), match(t, email, t('form.emailDuplicateKey'))]"
-        />
-
-        <v-text-field
-          v-model:model-value="password"
-          prepend-icon="fa-solid fa-lock"
-          class="mt-3"
-          autocorrect="off"
-          autocapitalize="off"
-          autocomplete="off"
-          spellcheck="false"
-          :label="t('form.password')"
-          :error-messages="errors.password"
-          :type="passwordFieldType"
-          :rules="[required(t), isValidPassword(t)]"
-        >
-          <template v-slot:append-inner>
-            <v-icon class="cursor-pointer" @click="switchVisibility">
-              fa-solid fa-{{ visibilityIcon }}
-            </v-icon>
-          </template>
-        </v-text-field>
-
-        <v-text-field
-          v-model:model-value="password2"
-          autocorrect="off"
-          class="mt-3"
-          prepend-icon="fa-solid fa-lock"
-          autocapitalize="off"
-          autocomplete="off"
-          spellcheck="false"
-          :label="t('form.passwordRepeat')"
-          :type="passwordFieldType"
-          :rules="[
-            required(t),
-            isValidPassword(t),
-            match(t, password, t('form.passwordDuplicateKey')),
-          ]"
-        >
-          <template v-slot:append-inner>
-            <v-icon class="cursor-pointer" @click="switchVisibility">
-              fa-solid fa-{{ visibilityIcon }}
-            </v-icon>
-          </template>
-        </v-text-field>
-
+      <v-input hide-details prepend-icon="fa-solid fa-users">
         <v-radio-group
           v-model:model-value="type"
           inline
-          class="mt-3"
+          hide-details
+          class="mt-6"
           :label="t('form.userType.title')"
         >
-          <v-radio :label="t('form.userType.volunteer')" value="volunteer" />
           <v-radio :label="t('form.userType.org')" value="org" />
+          <v-radio :label="t('form.userType.volunteer')" value="volunteer" />
         </v-radio-group>
+      </v-input>
+    </template>
 
-        <v-divider />
+    <template #actions>
+      <nuxt-link to="login" class="text-blue-grey mr-auto">
+        {{ t("login.title") }}
+      </nuxt-link>
 
-        <v-card-actions class="px-5 d-flex align-center justify-end">
-          <nuxt-link to="login" class="text-blue-grey mr-auto">
-            {{ t("login.title") }}
-          </nuxt-link>
+      <v-btn type="submit" color="primary" :loading="submitting">
+        {{ t("register.register") }}
+      </v-btn>
+    </template>
 
-          <v-btn type="submit" color="primary" :loading="submitting">
-            {{ t("register.register") }}
-          </v-btn>
-        </v-card-actions>
-      </v-form>
-
-      <div v-else>
-        <h2 class="my-4 text-center">{{ t("register.success") }}</h2>
-
-        <p class="mb-3">{{ t("register.successMessage") }}</p>
-      </div>
-    </v-card-item>
-  </v-card>
+    <template #content>
+      <p class="mb-3">{{ t("register.successMessage") }}</p>
+    </template>
+  </auth-form-card>
 </template>
 
 <script setup lang="ts">
@@ -128,6 +114,7 @@ import { useFormErrors } from "@/composables/formErrors";
 definePageMeta({
   layout: "auth",
   middleware: "unauthed",
+  path: "/register",
   title: "pages.register",
 });
 
@@ -167,15 +154,3 @@ const submit = async () => {
     .finally(() => (submitting.value = false));
 };
 </script>
-
-<style lang="scss" scoped>
-a {
-  transition: 0.2s;
-  opacity: 0.6;
-
-  &:hover {
-    transition: 0.2s;
-    opacity: 1;
-  }
-}
-</style>

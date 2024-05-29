@@ -1,58 +1,52 @@
 <template>
-  <v-card class="pb-3 bg-white">
-    <v-card-title class="bg-primary">
-      <h2 class="text-h5 text-white">{{ t("login.title") }}</h2>
-    </v-card-title>
+  <auth-form-card :title="t('login.title')" @submit="submit">
+    <template #form>
+      <v-text-field
+        v-model:model-value="email"
+        type="email"
+        prepend-icon="fa-solid fa-at"
+        :label="t('form.name')"
+        :rules="[required(t), isValidEmail(t)]"
+        :error-messages="errors.email"
+      />
 
-    <v-form ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
-      <v-card-text>
-        <v-text-field
-          v-model:model-value="email"
-          type="email"
-          prepend-icon="fa-solid fa-at"
-          :label="t('form.name')"
-          :rules="[required(t), isValidEmail(t)]"
-          :error-messages="errors.email"
-        />
+      <v-text-field
+        v-model:model-value="password"
+        prepend-icon="fa-solid fa-lock"
+        class="mt-8"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        :label="t('form.password')"
+        :type="passwordFieldType"
+        :rules="[required(t), isValidPassword(t)]"
+        :error-messages="errors.password"
+      >
+        <template v-slot:append-inner>
+          <v-icon class="cursor-pointer" @click="switchVisibility">
+            fa-solid fa-{{ visibilityIcon }}
+          </v-icon>
+        </template>
+      </v-text-field>
+    </template>
 
-        <v-text-field
-          v-model:model-value="password"
-          prepend-icon="fa-solid fa-lock"
-          class="mt-10"
-          autocorrect="off"
-          autocapitalize="off"
-          autocomplete="off"
-          spellcheck="false"
-          :label="t('form.password')"
-          :type="passwordFieldType"
-          :rules="[required(t), isValidPassword(t)]"
-          :error-messages="errors.password"
-        >
-          <template v-slot:append-inner>
-            <v-icon class="cursor-pointer" @click="switchVisibility">
-              fa-solid fa-{{ visibilityIcon }}
-            </v-icon>
-          </template>
-        </v-text-field>
-      </v-card-text>
+    <template #actions>
+      <nuxt-link to="register" class="text-blue-grey">
+        {{ t("register.link") }}
+      </nuxt-link>
 
-      <v-card-actions class="px-5 d-flex align-center justify-end">
-        <nuxt-link to="register" class="text-blue-grey">
-          {{ t("register.link") }}
-        </nuxt-link>
+      <span class="text-blue-grey mx-2">| </span>
 
-        <span class="text-blue-grey mx-2">| </span>
+      <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
+        {{ t("reset.link") }}
+      </nuxt-link>
 
-        <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
-          {{ t("reset.link") }}
-        </nuxt-link>
-
-        <v-btn type="submit" color="primary" :loading="submitting">
-          {{ t("login.title") }}
-        </v-btn>
-      </v-card-actions>
-    </v-form>
-  </v-card>
+      <v-btn type="submit" color="primary" :loading="submitting">
+        {{ t("login.title") }}
+      </v-btn>
+    </template>
+  </auth-form-card>
 </template>
 
 <script setup lang="ts">
@@ -68,6 +62,7 @@ definePageMeta({
   layout: "auth",
   middleware: "unauthed",
   title: "pages.login",
+  path: "/login",
 });
 
 const { t } = useI18n();
@@ -131,15 +126,3 @@ const submit = async () => {
     });
 };
 </script>
-
-<style lang="scss" scoped>
-a {
-  transition: 0.2s;
-  opacity: 0.6;
-
-  &:hover {
-    transition: 0.2s;
-    opacity: 1;
-  }
-}
-</style>

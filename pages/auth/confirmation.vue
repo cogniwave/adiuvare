@@ -1,10 +1,6 @@
 <template>
-  <v-card class="shadow-24">
-    <v-card-title class="bg-primary">
-      <h1 class="text-h5 text-white">{{ t("register.confirmation.title") }}</h1>
-    </v-card-title>
-
-    <v-card-item class="py-5">
+  <auth-form-card :title="t('register.confirmation.title')">
+    <template #content>
       <template v-if="!loading">
         <p v-if="invalidLink">{{ t("register.confirmation.invalidLink") }}</p>
 
@@ -26,8 +22,8 @@
       </template>
 
       <p v-else>{{ t("register.confirmation.loading") }}</p>
-    </v-card-item>
-  </v-card>
+    </template>
+  </auth-form-card>
 </template>
 
 <script setup lang="ts">
