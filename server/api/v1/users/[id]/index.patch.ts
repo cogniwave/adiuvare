@@ -82,9 +82,11 @@ const updateAccount = async (userId: string, event: H3Event<EventHandlerRequest>
 export default defineEventHandler(async (event) => {
   const action: UpdateAction | undefined = getQuery(event)?.action as UpdateAction;
 
+  const t = await useTranslation(event);
+
   if (!["account", "profile"].includes(action)) {
     setResponseStatus(event, 500);
-    sendError(event, createError({ statusCode: 500, statusMessage: "errors.unexpected" }));
+    sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));
     return;
   }
 
@@ -93,7 +95,7 @@ export default defineEventHandler(async (event) => {
 
   if (!user || user.id !== id) {
     setResponseStatus(event, 401);
-    sendError(event, createError({ statusCode: 401, statusMessage: "errors.unexpected" }));
+    sendError(event, createError({ statusCode: 401, statusMessage: t("errors.unexpected") }));
     return;
   }
 
@@ -111,11 +113,19 @@ export default defineEventHandler(async (event) => {
     return { success: true };
   } catch (err: any) {
     if (err.statusCode === 401) {
-      throw createError({ statusCode: 401, statusMessage: "errors.unexpected" });
+      throw createError({ statusCode: 401, statusMessage: t("errors.unexpected") });
     }
 
     if (err.statusCode === 422) {
       throw createError(err);
+    }
+
+    if (err.message.startsWith("duplicate key")) {
+      throw createError({
+        statusCode: 422,
+        statusMessage: t("errors.validationError"),
+        data: { email: t("errors.emailExists") },
+      });
     }
 
     console.log(err);
@@ -124,6 +134,6 @@ export default defineEventHandler(async (event) => {
       message: JSON.stringify(err),
     });
 
-    throw createError({ statusCode: 500, statusMessage: "errors.unexpected" });
+    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
   }
 });

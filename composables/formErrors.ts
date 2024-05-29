@@ -23,14 +23,14 @@ export function useFormErrors() {
     if (err.statusCode === 422) {
       // show form errors
       for (const [field, error] of Object.entries(err.data.data || {})) {
-        errors.value[field] = t(error);
+        errors.value[field] = error;
       }
 
       hasErrors.value = true;
-    } else {
-      hasErrors.value = false;
+      return;
     }
 
+    hasErrors.value = false;
     notifyError(t(err.data?.statusMessage || "errors.unexpected"));
   };
 

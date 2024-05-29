@@ -6,7 +6,7 @@
   <template v-else>
     <h2 class="text-h5 mb-5">{{ t("form.user.accountTitle") }}</h2>
 
-    <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
+    <v-form ref="form" validate-on="submit lazy" @keydown.enter="submit" @submit.prevent="submit">
       <div class="bg-white rounded px-10 py-5">
         <v-text-field
           v-model:model-value="email"
