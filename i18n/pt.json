@@ -273,6 +273,7 @@
   "copied": "Copiado",
 
   "email": {
+    "greetings": "Olá",
     "reset": {
       "subject": "Recuperar palavra-passe",
       "body": "Recebemos um pedido de recuperação de palavra-passe da sua. Se não fez nenhum pedido, ignore este email.",

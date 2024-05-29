@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
         { email: user.email, name: user.name },
         "userActionRequired",
         {
+          greetings: t("email.greetings"),
           name: user.name,
           body: t("email.reset.body"),
           body2: t("email.reset.body2"),

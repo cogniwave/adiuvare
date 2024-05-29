@@ -51,6 +51,7 @@ export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   sendEmail(t("email.resetSuccess.subject"), { email: body.email }, "information", {
+    greetings: t("email.greetings"),
     body: t("email.resetSuccess.body"),
   });
 
