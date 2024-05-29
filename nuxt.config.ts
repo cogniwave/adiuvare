@@ -11,6 +11,7 @@ export default defineNuxtConfig({
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       title: "Adiuvare",
+      meta: [{ name: "google-adsense-account", content: "ca-pub-1091633097511683" }],
       link: [
         {
           rel: "stylesheet",
