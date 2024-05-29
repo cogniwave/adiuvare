@@ -66,24 +66,21 @@ import { useFormErrors } from "@/composables/formErrors";
 
 definePageMeta({
   layout: "auth",
-  path: "/login",
   middleware: "unauthed",
+  title: "pages.login",
 });
+
 const { t } = useI18n();
-
-useHead({ title: t("pages.login") });
-
-const email = ref<string>("");
-
-const form = ref<VForm>();
-const submitting = ref<boolean>(false);
-
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { notifyError, notifyInfo, notifyWarning } = useNotify();
 const $route = useRoute();
 const $router = useRouter();
 const { login } = useAuth();
 const { switchVisibility, password, passwordFieldType, visibilityIcon } = usePassword();
+
+const email = ref<string>("");
+const form = ref<VForm>();
+const submitting = ref<boolean>(false);
 
 onMounted(() => {
   if ($route.query?.requireAuth) {

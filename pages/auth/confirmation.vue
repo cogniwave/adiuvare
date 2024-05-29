@@ -33,12 +33,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-definePageMeta({ middleware: "unauthed", layout: "auth", path: "/confirmation" });
+definePageMeta({
+  middleware: "unauthed",
+  layout: "auth",
+  title: "pages.accountConfirm",
+});
 
 const $route = useRoute();
 const { t } = useI18n();
-
-useHead({ title: t("pages.accountConfirm") });
 
 const loading = ref<boolean>(true);
 const success = ref(true);

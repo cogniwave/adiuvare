@@ -56,8 +56,8 @@ import { useFormErrors } from "@/composables/formErrors";
 
 definePageMeta({
   layout: "auth",
-  path: "/reset-password",
   middleware: "unauthed",
+  title: "pages.resetPassword",
 });
 
 const { errors, handleErrors, clearErrors } = useFormErrors();

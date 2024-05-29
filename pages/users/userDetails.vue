@@ -50,7 +50,7 @@ import { useAuth } from "@/store/auth";
 import type { User } from "@/types/user";
 
 definePageMeta({
-  layout: "default",
+  title: "pages.userDetails",
   path: "/users/:slug",
 });
 

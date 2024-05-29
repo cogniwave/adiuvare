@@ -113,12 +113,10 @@ definePageMeta({
   layout: "auth",
   path: "/profile/password",
   middleware: "unauthed",
+  title: "pages.updatePassword",
 });
 
 const { t } = useI18n();
-
-useHead({ title: t("pages.updatePassword") });
-
 const $route = useRoute();
 const $router = useRouter();
 const { errors, handleErrors, clearErrors } = useFormErrors();

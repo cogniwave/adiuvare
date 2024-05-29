@@ -290,7 +290,7 @@
       "body": "A sua palavra passe foi alterada. Se não foi você a fazer esta alteração entre em contacto connosco imediatamente. Se foi, pode ignorar este email"
     },
     "accountConfirm": {
-      "subject": "Bem vindo - ativação de conta",
+      "subject": "Bem vindo à adiuvare!",
       "body": "Resta apenas mais uma passo! Para poder iniciar sessão basta confirmar a sua conta com o link abaixo.",
       "body2": "Este link é válido durante 48 horas.",
       "buttonText": "Confirmar conta"
@@ -300,6 +300,15 @@
   "pages": {
     "updatePassword": "Redefinir palavra-passe",
     "login": "Iniciar sessão",
-    "accountConfirm": "Confirmação de conta"
+    "accountConfirm": "Confirmação de conta",
+    "register": "Registar conta",
+    "resetPassword": "Recuperar password",
+    "orgDetails": "Detalhes da organização",
+    "orgList": "Organizações",
+    "postCreate": "Criar publicação",
+    "postDetails": "Detalhes da publicação",
+    "postEdit": "Editar publicação",
+    "account": "Conta",
+    "userDetails": "Detalhes do utilizador"
   }
 }

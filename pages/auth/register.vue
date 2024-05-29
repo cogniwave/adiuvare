@@ -127,11 +127,9 @@ import { useFormErrors } from "@/composables/formErrors";
 
 definePageMeta({
   layout: "auth",
-  path: "/register",
   middleware: "unauthed",
+  title: "pages.register",
 });
-
-useHead({ title: "Criar conta" });
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();

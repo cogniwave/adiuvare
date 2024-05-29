@@ -86,7 +86,7 @@ import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
 import type { TokenUser, Tokens } from "@/types/user";
 
-definePageMeta({ path: "/account", middleware: "protected" });
+definePageMeta({ path: "/account", middleware: "protected", title: "pages.account" });
 
 const { data: auth, updateUserAndTokens } = useAuth();
 const { t } = useI18n();

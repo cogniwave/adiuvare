@@ -44,9 +44,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
 import { useOrganizations } from "@/store/organizations";
-import type { User } from "@/types/user";
 
-definePageMeta({ path: "/organizations/:slug" });
+import type { User } from "@/types/user";
 
 const { currOrg, setOrg } = useOrganizations();
 const $router = useRouter();
@@ -56,6 +55,8 @@ const { notifyError } = useNotify();
 const { t } = useI18n();
 
 const slug = $route.params.slug as string;
+
+definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails" });
 
 const {
   data: org,

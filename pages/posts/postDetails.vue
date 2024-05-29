@@ -156,7 +156,7 @@ import { useNotify } from "@/store/notify";
 import dayjs from "@/services/dayjs.service";
 import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "@/types/post";
 
-definePageMeta({ path: "/posts/:slug" });
+definePageMeta({ path: "/posts/:slug", title: "pages.postDetails" });
 
 interface MappedRecurringTimes {
   times: ScheduleTime[];

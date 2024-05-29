@@ -108,7 +108,7 @@ import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
 import type { User, UserContact } from "@/types/user";
 
-definePageMeta({ layout: "default", path: "/profile", middleware: "protected" });
+definePageMeta({ path: "/profile", middleware: "protected", title: "pages.profile" });
 
 const { data: auth, logout } = useAuth();
 const { t } = useI18n();

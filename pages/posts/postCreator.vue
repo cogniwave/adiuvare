@@ -112,7 +112,7 @@ import type { SelectOption } from "@/types/form";
 import type { EmptyPost, Post, PostSchedule } from "@/types/post";
 import type { User, UserContact } from "@/types/user";
 
-definePageMeta({ path: "/posts/new", middleware: "org-only" });
+definePageMeta({ path: "/posts/new", middleware: "org-only", title: "pages.postCreate" });
 
 const { notifySuccess } = useNotify();
 const { t } = useI18n();

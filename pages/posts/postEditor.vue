@@ -185,7 +185,7 @@ import type { Post, PostSchedule, PostState } from "@/types/post";
 import type { SelectOption } from "@/types/form";
 import type { UserContact } from "~/types/user";
 
-definePageMeta({ path: "/posts/:slug/edit", middleware: "protected" });
+definePageMeta({ path: "/posts/:slug/edit", middleware: "protected", title: "pages.postEdit" });
 
 const { notifySuccess } = useNotify();
 const { t } = useI18n();
