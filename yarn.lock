@@ -3293,6 +3293,53 @@ __metadata:
   languageName: node
   linkType: hard
 
+"adiuvare@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "adiuvare@workspace:."
+  dependencies:
+    "@date-io/dayjs": "npm:^3.0.0"
+    "@fortawesome/fontawesome-free": "npm:^6.5.2"
+    "@getbrevo/brevo": "npm:^2.1.1"
+    "@nuxtjs/eslint-module": "npm:^4.1.0"
+    "@nuxtjs/i18n": "npm:^8.3.1"
+    "@nuxtjs/robots": "npm:^3.0.0"
+    "@quasar/extras": "npm:^1.16.11"
+    "@types/bcrypt": "npm:^5"
+    "@types/eslint": "npm:^8"
+    "@types/jsonwebtoken": "npm:^9"
+    "@types/pg": "npm:^8"
+    "@types/uuid": "npm:^9"
+    "@typescript-eslint/eslint-plugin": "npm:^7.9.0"
+    "@typescript-eslint/parser": "npm:^7.9.0"
+    "@vercel/blob": "npm:^0.23.2"
+    "@vercel/postgres": "npm:^0.8.0"
+    "@vueuse/core": "npm:^10.9.0"
+    "@vueuse/nuxt": "npm:^10.9.0"
+    bcrypt: "npm:^5.1.1"
+    dayjs: "npm:^1.11.11"
+    drizzle-kit: "npm:^0.21.1"
+    drizzle-orm: "npm:^0.30.10"
+    eslint: "npm:~8.56.0"
+    eslint-config-prettier: "npm:^9.1.0"
+    eslint-plugin-vue: "npm:^9.26.0"
+    joi: "npm:^17.13.1"
+    jsonwebtoken: "npm:^9.0.2"
+    libphonenumber-js: "npm:^1.11.1"
+    material-design-icons-iconfont: "npm:^6.7.0"
+    nuxt: "npm:^3.11.2"
+    nuxt-bugsnag: "npm:^7.3.0"
+    pg: "npm:^8.11.5"
+    prettier: "npm:^3.2.5"
+    sass: "npm:^1.77.1"
+    typescript: "npm:^5.4.5"
+    uuid: "npm:^9.0.1"
+    vite-plugin-vuetify: "npm:^2.0.3"
+    vue: "npm:^3.4.27"
+    vue-router: "npm:^4.3.2"
+    vuetify: "npm:^3.6.6"
+  languageName: unknown
+  linkType: soft
+
 "agent-base@npm:6":
   version: 6.0.2
   resolution: "agent-base@npm:6.0.2"
@@ -9235,53 +9282,6 @@ __metadata:
   checksum: 6631d4f2fa9d315e480662646745a4aa3a708817fbffe2cbdacec8ab9be130f92740c66191770fe9b704bc5fa9c1cc1f6596f55ad132fef7bd3ad1582f199eb0
   languageName: node
   linkType: hard
-
-"queroajudar@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "queroajudar@workspace:."
-  dependencies:
-    "@date-io/dayjs": "npm:^3.0.0"
-    "@fortawesome/fontawesome-free": "npm:^6.5.2"
-    "@getbrevo/brevo": "npm:^2.1.1"
-    "@nuxtjs/eslint-module": "npm:^4.1.0"
-    "@nuxtjs/i18n": "npm:^8.3.1"
-    "@nuxtjs/robots": "npm:^3.0.0"
-    "@quasar/extras": "npm:^1.16.11"
-    "@types/bcrypt": "npm:^5"
-    "@types/eslint": "npm:^8"
-    "@types/jsonwebtoken": "npm:^9"
-    "@types/pg": "npm:^8"
-    "@types/uuid": "npm:^9"
-    "@typescript-eslint/eslint-plugin": "npm:^7.9.0"
-    "@typescript-eslint/parser": "npm:^7.9.0"
-    "@vercel/blob": "npm:^0.23.2"
-    "@vercel/postgres": "npm:^0.8.0"
-    "@vueuse/core": "npm:^10.9.0"
-    "@vueuse/nuxt": "npm:^10.9.0"
-    bcrypt: "npm:^5.1.1"
-    dayjs: "npm:^1.11.11"
-    drizzle-kit: "npm:^0.21.1"
-    drizzle-orm: "npm:^0.30.10"
-    eslint: "npm:~8.56.0"
-    eslint-config-prettier: "npm:^9.1.0"
-    eslint-plugin-vue: "npm:^9.26.0"
-    joi: "npm:^17.13.1"
-    jsonwebtoken: "npm:^9.0.2"
-    libphonenumber-js: "npm:^1.11.1"
-    material-design-icons-iconfont: "npm:^6.7.0"
-    nuxt: "npm:^3.11.2"
-    nuxt-bugsnag: "npm:^7.3.0"
-    pg: "npm:^8.11.5"
-    prettier: "npm:^3.2.5"
-    sass: "npm:^1.77.1"
-    typescript: "npm:^5.4.5"
-    uuid: "npm:^9.0.1"
-    vite-plugin-vuetify: "npm:^2.0.3"
-    vue: "npm:^3.4.27"
-    vue-router: "npm:^4.3.2"
-    vuetify: "npm:^3.6.6"
-  languageName: unknown
-  linkType: soft
 
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3

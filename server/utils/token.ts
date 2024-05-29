@@ -9,8 +9,8 @@ export const signToken = (user: TokenUser, type: "access" | "refresh") => {
   return jwt.sign({ user }, process.env.JWT_KEY as string, {
     expiresIn: type === "access" ? "7m" : "7h",
     audience: ["qaweb", "qaapp"],
-    subject: "queroajudaraut",
-    issuer: "queroajudar",
+    subject: "adiuvareaut",
+    issuer: "adiuvare",
   });
 };
 
@@ -33,8 +33,8 @@ export const validateToken = (context: H3Event<EventHandlerRequest> | string) =>
   try {
     const verified = jwt.verify(token, process.env.JWT_KEY as string, {
       audience: ["qaweb", "qaapp"],
-      subject: "queroajudaraut",
-      issuer: "queroajudar",
+      subject: "adiuvareaut",
+      issuer: "adiuvare",
     }) as VerifiedToken;
 
     if (!verified) {
