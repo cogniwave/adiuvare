@@ -1,9 +1,7 @@
 import type { CookieRef } from "#app";
 import { useRouter, useRoute } from "vue-router";
 
-import type { LoginPayload, LoginResult, TokenUser } from "@/types/user";
-
-type SessionData = TokenUser;
+import type { Tokens, LoginPayload, LoginResult, TokenUser } from "@/types/user";
 
 type UseAuthStateReturn = {
   token: ComputedRef<string | null>;
@@ -11,13 +9,14 @@ type UseAuthStateReturn = {
   rawToken: CookieRef<string | null>;
   setToken: (newToken: string | null) => void;
   setRefreshToken: (newToken: string | null) => void;
-  setUser: (user: SessionData | null) => void;
+  setUser: (user: TokenUser | null) => void;
   rawRefreshToken: CookieRef<string | null>;
   refreshToken: ComputedRef<string | null>;
   loading: Ref<boolean>;
-  data: Ref<SessionData | null>;
+  data: Ref<TokenUser | null>;
   logout: typeof logout;
   login: typeof login;
+  updateUserAndTokens: (user: Partial<TokenUser>, tokens: Tokens) => void;
   refreshUser: () => void;
 };
 
@@ -55,6 +54,7 @@ const refresh = async () => {
     }
 
     setToken(result);
+
     if (!data.value) {
       refreshUser();
     }
@@ -63,6 +63,7 @@ const refresh = async () => {
 
     return true;
   } catch (err) {
+    console.log("error on refresh", err);
     logout();
     return false;
   } finally {
@@ -103,7 +104,6 @@ const logout = async () => {
 
   try {
     await $fetch("/api/v1/auth/logout", { method: "delete" });
-    loading.value = false;
 
     setToken(null);
     setRefreshToken(null);
@@ -116,6 +116,8 @@ const logout = async () => {
     if ($route.path !== "/") {
       $router.replace("/");
     }
+
+    loading.value = false;
   } catch (err) {
     console.warn("failed to refresh", err);
     window.location.reload();
@@ -123,7 +125,7 @@ const logout = async () => {
 };
 
 export const useAuth = (): UseAuthStateReturn => {
-  const data = useState<SessionData | null>("auth:data", () => null);
+  const data = useState<TokenUser | null>("auth:data", () => null);
   const storageUser = useLocalStorage<TokenUser>("qa:user", null, {
     writeDefaults: false,
     serializer: {
@@ -179,9 +181,16 @@ export const useAuth = (): UseAuthStateReturn => {
     return rawRefreshToken.value;
   });
 
-  const setUser = (user: SessionData | null) => {
+  const setUser = (user: TokenUser | null) => {
     data.value = user;
     storageUser.value = user;
+  };
+
+  const updateUserAndTokens = (user: Partial<TokenUser>, tokens: Tokens) => {
+    data.value = { ...data.value, ...(user as TokenUser) };
+    storageUser.value = { ...data.value, ...(user as TokenUser) };
+    setToken(tokens.accessToken);
+    setRefreshToken(tokens.refreshToken);
   };
 
   const refreshUser = () => {
@@ -213,5 +222,6 @@ export const useAuth = (): UseAuthStateReturn => {
     logout,
     refreshUser,
     login,
+    updateUserAndTokens,
   };
 };

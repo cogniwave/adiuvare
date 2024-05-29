@@ -135,33 +135,16 @@ useHead({ title: "Criar conta" });
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
+const { switchVisibility, password, password2, passwordFieldType, visibilityIcon } = usePassword();
 
 const email = ref<string>("");
 const email2 = ref<string>("");
-const password = ref<string>("");
-const password2 = ref<string>("");
 const name = ref<string>("");
 const type = ref<UserType>("org");
 const userCreated = ref<boolean>(false);
 
 const form = ref<VForm>();
-const passwordFieldType = ref<"text" | "password">("password");
-const visibility = ref<boolean>(false);
-const visibilityIcon = ref<"eye" | "eye-slash">("eye");
 const submitting = ref<boolean>(false);
-
-// form controls
-const switchVisibility = () => {
-  if (visibility.value) {
-    visibility.value = false;
-    passwordFieldType.value = "password";
-    visibilityIcon.value = "eye";
-  } else {
-    visibility.value = true;
-    passwordFieldType.value = "text";
-    visibilityIcon.value = "eye-slash";
-  }
-};
 
 const submit = async () => {
   clearErrors();

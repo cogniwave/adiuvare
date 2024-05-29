@@ -10,12 +10,22 @@
 
       <v-list>
         <v-list-item
+          :title="t('nav.account')"
+          append-icon="fa-solid fa-gear"
+          @click="$router.push('/account')"
+        />
+
+        <v-list-item
           :title="t('nav.profile')"
-          append-icon="person"
+          append-icon="fa-solid fa-user"
           @click="$router.push('/profile')"
         />
 
-        <v-list-item :title="t('nav.logout')" append-icon="logout" @click="logout" />
+        <v-list-item
+          :title="t('nav.logout')"
+          append-icon="fa-solid fa-arrow-right-from-bracket"
+          @click="logout"
+        />
       </v-list>
     </v-menu>
 

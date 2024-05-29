@@ -2,10 +2,14 @@ import Joi from "joi";
 
 import { updateUser } from "@/server/db/users";
 import { getSessionUser, getValidatedInput, sanitizeInput } from "@/server/utils/request";
-import type { UpdateUserPayload } from "@/types/user";
 
-export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<UpdateUserPayload>(event, {
+import type { UpdateProfilePayload, UpdateAccountPayload } from "@/types/user";
+import type { H3Event, EventHandlerRequest } from "h3";
+
+type UpdateAction = "account" | "profile";
+
+const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>) => {
+  const body = await getValidatedInput<UpdateProfilePayload>(event, {
     name: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
 
     slug: Joi.string().required().messages({ "strings.empty": "errors.empty" }),
@@ -28,6 +32,62 @@ export default defineEventHandler(async (event) => {
       }),
   });
 
+  const updatedUser = await updateUser(userId, [
+    { field: "name", value: sanitizeInput(body.name) },
+    { field: "slug", value: sanitizeInput(body.slug) },
+    { field: "bio", value: sanitizeInput(body.bio) },
+    {
+      field: "contacts",
+      value: body.contacts?.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
+    },
+  ]);
+
+  if (!updatedUser) {
+    sendError(event, createError({ statusCode: 500, statusMessage: "errors.unexpected" }));
+    return;
+  }
+
+  return updatedUser;
+};
+
+const updateAccount = async (userId: string, event: H3Event<EventHandlerRequest>) => {
+  const body = await getValidatedInput<UpdateAccountPayload>(event, {
+    email: Joi.string().email({}).messages({
+      "string.max": "errors.max_255",
+      "string.email": "errors.invalidEmail",
+    }),
+
+    password: Joi.string()
+      .pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/)
+      .messages({
+        "string.pattern.base": "errors.invalidPassword",
+      }),
+  });
+
+  const fields = [];
+
+  if (body.email) {
+    fields.push({ field: "email", value: sanitizeInput(body.email) });
+  }
+
+  if (body.password) {
+    fields.push({ field: "password", value: sanitizeInput(body.password) });
+  }
+
+  await updateUser(userId, fields);
+
+  return body.email;
+};
+
+export default defineEventHandler(async (event) => {
+  const action: UpdateAction | undefined = getQuery(event)?.action as UpdateAction;
+
+  if (!["account", "profile"].includes(action)) {
+    setResponseStatus(event, 500);
+    sendError(event, createError({ statusCode: 500, statusMessage: "errors.unexpected" }));
+    return;
+  }
+
   const id = sanitizeInput(getRouterParam(event, "id"));
   const user = getSessionUser(event);
 
@@ -38,24 +98,27 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const updatedUser = await updateUser(user.id, {
-      name: sanitizeInput(body.name),
-      slug: sanitizeInput(body.slug),
-      bio: sanitizeInput(body.bio),
-      contacts: body.contacts?.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
-    });
-
-    if (!updatedUser) {
-      sendError(event, createError({ statusCode: 500, statusMessage: "errors.unexpected" }));
-      return;
+    if (action === "profile") {
+      return await updateProfile(user.id, event);
     }
 
-    return updatedUser;
+    const email = await updateAccount(user.id, event);
+
+    if (email) {
+      return setupTokens(event, { ...user, email });
+    }
+
+    return { success: true };
   } catch (err: any) {
     if (err.statusCode === 401) {
       throw createError({ statusCode: 401, statusMessage: "errors.unexpected" });
     }
 
+    if (err.statusCode === 422) {
+      throw createError(err);
+    }
+
+    console.log(err);
     useBugsnag().notify({
       name: "[user] couldnt update user",
       message: JSON.stringify(err),

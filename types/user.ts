@@ -47,13 +47,16 @@ export interface UserContact {
   contact: string;
 }
 
-export interface LoginResult {
-  user: TokenUser;
+export interface Tokens {
   accessToken: string;
   refreshToken: string;
 }
 
-export interface UpdateUserPayload {
+export interface LoginResult extends Tokens {
+  user: TokenUser;
+}
+
+export interface UpdateProfilePayload {
   // id: string;
   name: string;
   slug: string;
@@ -61,9 +64,19 @@ export interface UpdateUserPayload {
   contacts?: UserContact[];
 }
 
+export interface UpdateAccountPayload {
+  email?: string;
+  password?: string;
+}
+
 export interface UpdatePhotoPayload {
   photo?: string;
   photoThumbnail?: string;
+}
+
+export interface UpdateUserPayload {
+  field: string;
+  value: string | UserContact[];
 }
 
 // type == org

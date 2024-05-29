@@ -16,11 +16,17 @@ export const isValidEmail = (t: TranslatorFunction) => (val: string) => {
   return emailPattern.test(val) || t("errors.invalidEmail");
 };
 
-export const isValidPassword = (t: TranslatorFunction) => (val: string) => {
-  const passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/;
+export const isValidPassword =
+  (t: TranslatorFunction, optional = false) =>
+  (val: string) => {
+    if (optional && !val) {
+      return true;
+    }
 
-  return passwordPattern.test(val) || t("errors.invalidPassword");
-};
+    const passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/;
+
+    return passwordPattern.test(val) || t("errors.invalidPassword");
+  };
 
 export const match = (t: TranslatorFunction, valToMatch: string, key: string) => (val: string) => {
   return valToMatch === val || t("errors.mismatchKeys").replace("{0}", key);

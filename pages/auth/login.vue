@@ -74,12 +74,8 @@ const { t } = useI18n();
 useHead({ title: t("pages.login") });
 
 const email = ref<string>("");
-const password = ref<string>("");
 
 const form = ref<VForm>();
-const passwordFieldType = ref<"text" | "password">("password");
-const visibility = ref<boolean>(false);
-const visibilityIcon = ref<"eye" | "eye-slash">("eye");
 const submitting = ref<boolean>(false);
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
@@ -87,6 +83,7 @@ const { notifyError, notifyInfo, notifyWarning } = useNotify();
 const $route = useRoute();
 const $router = useRouter();
 const { login } = useAuth();
+const { switchVisibility, password, passwordFieldType, visibilityIcon } = usePassword();
 
 onMounted(() => {
   if ($route.query?.requireAuth) {
@@ -105,19 +102,6 @@ onMounted(() => {
     });
   }
 });
-
-// form controls
-const switchVisibility = () => {
-  if (visibility.value) {
-    visibility.value = false;
-    passwordFieldType.value = "password";
-    visibilityIcon.value = "eye";
-  } else {
-    visibility.value = true;
-    passwordFieldType.value = "text";
-    visibilityIcon.value = "eye-slash";
-  }
-};
 
 const submit = async () => {
   // won't really happen, but keeps linter happy

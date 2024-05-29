@@ -122,17 +122,13 @@ useHead({ title: t("pages.updatePassword") });
 const $route = useRoute();
 const $router = useRouter();
 const { errors, handleErrors, clearErrors } = useFormErrors();
+const { switchVisibility, password, password2, passwordFieldType, visibilityIcon } = usePassword();
 
 const loading = ref(true);
 const invalidLink = ref(false);
 const expiredLink = ref(false);
-const password = ref<string>("");
-const password2 = ref<string>("");
 
 const form = ref<VForm>();
-const passwordFieldType = ref<"text" | "password">("password");
-const visibility = ref<boolean>(false);
-const visibilityIcon = ref<"eye" | "eye-slash">("eye");
 const submitting = ref<boolean>(false);
 
 onBeforeMount(() => {
@@ -156,19 +152,6 @@ onBeforeMount(() => {
 });
 
 onMounted(() => (loading.value = false));
-
-// form controls
-const switchVisibility = () => {
-  if (visibility.value) {
-    visibility.value = false;
-    passwordFieldType.value = "password";
-    visibilityIcon.value = "eye";
-  } else {
-    visibility.value = true;
-    passwordFieldType.value = "text";
-    visibilityIcon.value = "eye-slash";
-  }
-};
 
 const submit = async () => {
   clearErrors();

@@ -87,13 +87,6 @@
     </v-form>
 
     <div class="py-5 d-flex align-center justify-end">
-      <!-- todo: implement this functionality -->
-      <!-- <v-btn :disable="submitting" color="error" class="mr-2" @click="$router.go(-1)">
-        {{ t("form.user.delete") }}
-      </v-btn> -->
-
-      <v-spacer />
-
       <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
         {{ t("form.cancel") }}
       </v-btn>
@@ -147,6 +140,7 @@ onBeforeMount(() => userId.value && init());
 
 const _updateUser = async () => {
   return await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
+    query: { action: "profile" },
     body: {
       id: currUser.value.id,
       slug: currUser.value.slug,

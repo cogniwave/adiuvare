@@ -6,7 +6,7 @@ import { PgColumn } from "drizzle-orm/pg-core";
 import { db } from "./";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, User, UpdateUserPayload, UpdatePhotoPayload } from "@/types/user";
+import type { BaseUser, User, UpdateUserPayload, UserContact } from "@/types/user";
 import { genToken } from "@/server/utils";
 
 const SALT = 10;
@@ -61,24 +61,27 @@ export const verifyUser = async (token: string): Promise<boolean> => {
   return (result.rowCount || 0) > 0;
 };
 
-export const updateUser = async (
-  userId: string,
-  payload: UpdateUserPayload | UpdatePhotoPayload,
-) => {
+export const updateUser = async (userId: string, payload: UpdateUserPayload[]) => {
   const old = await db.select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
 
   if (!old?.length) {
     return null;
   }
 
-  return db.update(users).set(payload).where(eq(users.id, userId)).returning({
-    id: users.id,
-    slug: users.slug,
-    contacts: users.contacts,
-    name: users.name,
-    email: users.email,
-    type: users.type,
-  });
+  return db
+    .update(users)
+    .set(
+      payload.reduce<Record<string, string | UserContact[]>>((fields, { field, value }) => {
+        if (field === "password") {
+          fields.password = hashSync(value as string, SALT);
+        } else {
+          fields[field] = value;
+        }
+
+        return fields;
+      }, {}),
+    )
+    .where(eq(users.id, userId));
 };
 
 export const getUserById = async (id: string) => {

@@ -132,7 +132,9 @@
       "bioPlaceholder": "Um pequeno texto para os outros utilizadores / organizações conheçam um pouco mais sobre si",
       "bio": "Biografia",
       "editDetails": "Perfil",
-      "picAlt": "Foto de utilizador"
+      "picAlt": "Foto de utilizador",
+      "accountTitle": "Definições de conta",
+      "accountSubmit": "Atualizar"
     },
 
     "cancel": "Cancelar",
@@ -146,7 +148,8 @@
 
   "nav": {
     "profile": "Perfil",
-    "logout": "Sair"
+    "logout": "Sair",
+    "account": "Conta"
   },
 
   "errors": {
