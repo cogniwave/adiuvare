@@ -105,11 +105,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { User, UserType } from "@/types/user";
-import type { VForm } from "vuetify/lib/components/index.mjs";
-
+import AuthFormCard from "@/components/common/AuthFormCard.vue";
 import { required, isValidEmail, isValidPassword, match } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
+
+import type { User, UserType } from "@/types/user";
 
 definePageMeta({
   layout: "auth",
@@ -128,7 +128,7 @@ const name = ref<string>("");
 const type = ref<UserType>("org");
 const userCreated = ref<boolean>(false);
 
-const form = ref<VForm>();
+const form = ref<InstanceType<typeof AuthFormCard>>();
 const submitting = ref<boolean>(false);
 
 const submit = async () => {

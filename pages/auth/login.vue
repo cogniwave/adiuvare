@@ -1,5 +1,5 @@
 <template>
-  <auth-form-card :title="t('login.title')" @submit="submit">
+  <auth-form-card ref="form" :title="t('login.title')" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"
@@ -51,8 +51,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import type { VForm } from "vuetify/lib/components/index.mjs";
 
+import AuthFormCard from "@/components/common/AuthFormCard.vue";
 import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
 import { required, isValidEmail, isValidPassword } from "@/utils/validators";
@@ -74,7 +74,7 @@ const { login } = useAuth();
 const { switchVisibility, password, passwordFieldType, visibilityIcon } = usePassword();
 
 const email = ref<string>("");
-const form = ref<VForm>();
+const form = ref<InstanceType<typeof AuthFormCard>>();
 const submitting = ref<boolean>(false);
 
 onMounted(() => {
@@ -96,6 +96,7 @@ onMounted(() => {
 });
 
 const submit = async () => {
+  console.log("submirt", form.value);
   // won't really happen, but keeps linter happy
   if (!form.value) {
     return;

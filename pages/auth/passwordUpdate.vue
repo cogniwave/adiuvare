@@ -87,11 +87,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRoute, useRouter } from "#vue-router";
-import type { VForm } from "vuetify/lib/components/index.mjs";
 
 import dayjs from "@/services/dayjs.service";
 import { required, isValidPassword, match } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
+import AuthFormCard from "@/components/common/AuthFormCard.vue";
 
 import type { User } from "@/types/user";
 
@@ -115,7 +115,7 @@ const loading = ref(true);
 const invalidLink = ref(false);
 const expiredLink = ref(false);
 
-const form = ref<VForm>();
+const form = ref<InstanceType<typeof AuthFormCard>>();
 const submitting = ref<boolean>(false);
 
 onBeforeMount(() => {

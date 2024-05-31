@@ -43,5 +43,13 @@ const form = ref<VForm>();
 
 const submit = () => $emit("submit");
 
-defineExpose({ form });
+defineExpose({
+  validate: async () => {
+    if (!form.value) {
+      return { valid: false };
+    }
+
+    return form.value.validate();
+  },
+});
 </script>

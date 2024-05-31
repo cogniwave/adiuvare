@@ -36,10 +36,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { VForm } from "vuetify/lib/components/index.mjs";
-
 import { required, isValidEmail } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
+import AuthFormCard from "@/components/common/AuthFormCard.vue";
 
 definePageMeta({
   layout: "auth",
@@ -52,7 +51,7 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
 
 const email = ref<string>("");
-const form = ref<VForm>();
+const form = ref<InstanceType<typeof AuthFormCard>>();
 const submitting = ref<boolean>(false);
 const submitted = ref<boolean>(false);
 
