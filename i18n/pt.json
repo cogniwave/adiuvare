@@ -175,6 +175,7 @@
     "fetchPost": "Publicação não encontrada",
     "fetchOrg": "Organização não encontrada",
     "fetchUser": "Utilizador não encontrado",
+    "fetchFeed": "Ocurreu um erro a buscar as publicações",
     "unverifiedUser": "Utilizador não confirmado. Siga os passos do email enviado quando a conta foi criada",
     "contactExists": "Contacto já existe",
     "requiredField": "Campo obrigatório",

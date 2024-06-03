@@ -68,7 +68,7 @@ const { t } = useI18n();
 const page = ref(0);
 const reportDialogRendered = ref(false);
 
-const { data, pending, execute, refresh } = useFetch<{ posts: Post[]; total: number }>(
+const { data, pending, execute, refresh, error } = useFetch<{ posts: Post[]; total: number }>(
   "/api/v1/posts",
   { query: { page }, watch: [page], lazy: true, immediate: false },
 );
@@ -122,6 +122,14 @@ const onDelete = async (id: string) => {
 watch(
   () => data.value,
   (data) => (posts.value = data?.posts || []),
+);
+
+watch(
+  () => error.value,
+  () => {
+    data.value = { posts: [], total: 0 };
+    notifyError(t("errors.fetchFeed"));
+  },
 );
 </script>
 
