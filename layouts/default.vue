@@ -37,14 +37,15 @@ const { t } = useI18n();
 const $route = useRoute();
 
 const showUserPosts = computed(() => {
-  if (!["/", "/organizations"].includes($route.path)) {
-    if ($route.path === "/profile") {
-      return data.value?.type === "org";
-    }
-
-    return true;
+  // if no meta exists its because its error page
+  if (["/", "/organizations"].includes($route.path) || !Object.keys($route.meta).length) {
+    return false;
   }
 
-  return false;
+  if ($route.path === "/profile") {
+    return data.value?.type === "org";
+  }
+
+  return true;
 });
 </script>

@@ -310,6 +310,19 @@
     "postDetails": "Detalhes da publicação",
     "postEdit": "Editar publicação",
     "account": "Conta",
-    "userDetails": "Detalhes do utilizador"
+    "userDetails": "Detalhes do utilizador",
+    "error": "Algo correu mal"
+  },
+
+  "errorPage": {
+    "404": {
+      "title": "Página não encontrada",
+      "body": "A página que tentou aceder não existe. Verifice se o URL está correto e tente novamente, ou volte ao início"
+    },
+    "unexpected": {
+      "title": "Erro inesperado",
+      "body": "Ocorreu um erro inesperado a processo o seu pedido e viémos aqui ter. Volte ao início e tente novamente"
+    },
+    "backButton": "Voltar ao início"
   }
 }
