@@ -63,8 +63,8 @@
 import { ref } from "vue";
 
 import { usePosts } from "@/store/posts";
-import QaPostScheduleRecurringSelector from "./QaPostScheduleRecurringSelector.vue";
-import QaPostScheduleSpecificSelector from "./QaPostScheduleSpecificSelector.vue";
+import AdPostScheduleRecurringSelector from "./AdPostScheduleRecurringSelector.vue";
+import AdPostScheduleSpecificSelector from "./AdPostScheduleSpecificSelector.vue";
 import type { Post, ScheduleType } from "@/types/post";
 
 const { currPost } = usePosts<Post>();

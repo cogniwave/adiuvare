@@ -43,7 +43,7 @@
 <script lang="ts" setup>
 import { useRoute } from "vue-router";
 
-import QaContactsList from "@/components/contacts/QaContactsList.vue";
+import AdContactsList from "@/components/contacts/AdContactsList.vue";
 import { useUsers } from "@/store/users";
 import { useAuth } from "@/store/auth";
 

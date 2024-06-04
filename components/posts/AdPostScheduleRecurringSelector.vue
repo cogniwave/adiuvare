@@ -143,7 +143,7 @@ import type {
   RecurringScheduleTimeGroup,
 } from "@/types/post";
 import { usePosts } from "@/store/posts";
-import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
+import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 import { toHumanDay } from "@/utils/scheduling";
 

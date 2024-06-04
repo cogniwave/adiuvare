@@ -74,7 +74,7 @@ import { ref } from "vue";
 
 import type { ScheduleTime } from "@/types/post";
 
-import QaTimePicker from "./QaTimePicker.vue";
+import AdTimePicker from "./AdTimePicker.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 
 const props = defineProps({

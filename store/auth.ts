@@ -126,7 +126,7 @@ const logout = async () => {
 
 export const useAuth = (): UseAuthStateReturn => {
   const data = useState<TokenUser | null>("auth:data", () => null);
-  const storageUser = useLocalStorage<TokenUser>("qa:user", null, {
+  const storageUser = useLocalStorage<TokenUser>("Ad:user", null, {
     writeDefaults: false,
     serializer: {
       read: (val) => (val ? JSON.parse(val) : null),

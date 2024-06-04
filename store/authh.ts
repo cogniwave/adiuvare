@@ -9,7 +9,7 @@ let interval: NodeJS.Timeout | null = null;
 export const useAuth = () => {
   const $router = useRouter();
 
-  const storageUser = useLocalStorage<TokenUser>("qa:user", null, {
+  const storageUser = useLocalStorage<TokenUser>("Ad:user", null, {
     writeDefaults: false,
     serializer: {
       read: (val) => (val ? JSON.parse(val) : null),

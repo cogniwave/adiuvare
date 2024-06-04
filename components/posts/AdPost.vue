@@ -175,7 +175,7 @@
 
 <script setup lang="ts">
 import { usePosts } from "@/store/posts";
-import QaPostNeed from "@/components/posts/QaPostNeed.vue";
+import AdPostNeed from "@/components/posts/AdPostNeed.vue";
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 
 const MAX_DESC = 1300;

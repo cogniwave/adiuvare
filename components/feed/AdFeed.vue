@@ -55,7 +55,7 @@ import { usePosts } from "@/store/posts";
 import { useReport } from "@/store/report";
 
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
-import QaPost from "@/components/posts/QaPost.vue";
+import AdPost from "@/components/posts/AdPost.vue";
 
 const PER_PAGE = 30;
 

@@ -30,7 +30,7 @@ import { ref } from "vue";
 
 import dayjs from "@/services/dayjs.service";
 import { required, validDate, futureDate } from "@/utils/validators";
-import QaPostScheduleRecurringTime from "./QaPostScheduleRecurringTime.vue";
+import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
 import { getNewGroupTimes } from "@/utils/scheduling";
 import { usePosts } from "@/store/posts";
 import type { Post, ScheduleTime, SpecificSchedule } from "@/types/post";
