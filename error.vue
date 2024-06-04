@@ -35,7 +35,7 @@ const $router = useRouter();
 const home = () => clearError().then(() => $router.push("/"));
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .error-page {
   text-align: center;
 

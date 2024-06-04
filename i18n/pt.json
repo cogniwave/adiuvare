@@ -1,4 +1,9 @@
 {
+  "loading": "A carregar",
+  "copied": "Copiado",
+  "privacyPolicy": "Política de privacidade",
+  "eula": "Termos de utilização",
+
   "login": {
     "title": "Iniciar sessão",
     "actionRequiresAuth": "É necessário iniciar sessão para essa ação",
@@ -252,8 +257,6 @@
     "viewMore": "Ver mais"
   },
 
-  "loading": "A carregar",
-
   "feed": {
     "noPosts": "Não existem publicações, sê o {0}!",
     "noPostsButton": "primeiro"
@@ -274,8 +277,6 @@
     "bioPlaceholder": "Descreva a missão / objetivo da organização para melhor ajudar os voluntários à procura duma organização com a qual se identifiquem",
     "bio": "Missão / objetivo"
   },
-
-  "copied": "Copiado",
 
   "email": {
     "greetings": "Olá",
@@ -324,5 +325,14 @@
       "body": "Ocorreu um erro inesperado a processo o seu pedido e viémos aqui ter. Volte ao início e tente novamente"
     },
     "backButton": "Voltar ao início"
+  },
+
+  "footer": {
+    "newsletter": {
+      "text": "Subscreva à nossa newsletter e fique a par de todas as novidades à medida que elas vão acontecendo!",
+      "label": "Email",
+      "subscribe": "Subscrever",
+      "success": "Newsletter subscrita com sucesso"
+    }
   }
 }

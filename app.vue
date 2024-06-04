@@ -12,6 +12,8 @@
 
       <NuxtPage />
     </NuxtLayout>
+
+    <ad-footer />
   </v-app>
 </template>
 
