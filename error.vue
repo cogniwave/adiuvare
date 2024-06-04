@@ -12,6 +12,10 @@
         <template v-else>
           <h1>{{ $t("errorPage.unexpected.title") }}</h1>
           <p>{{ $t("errorPage.unexpected.body") }}</p>
+
+          <div v-if="isDev" class="mb-5">
+            {{ error }}
+          </div>
         </template>
       </div>
 
@@ -31,6 +35,8 @@ defineProps({
 });
 
 const $router = useRouter();
+
+const isDev = ref(import.meta.dev);
 
 const home = () => clearError().then(() => $router.push("/"));
 </script>
