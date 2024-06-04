@@ -84,6 +84,36 @@
           <v-radio :label="t('form.userType.volunteer')" value="volunteer" />
         </v-radio-group>
       </v-input>
+
+      <v-checkbox
+        v-model:model-value="privacyPolicy"
+        class="mt-10 mb-2"
+        hide-details="auto"
+        :rules="[required(t)]"
+      >
+        <template #label>
+          <i18n-t
+            scope="global"
+            keypath="form.privacyPolicy"
+            tag="span"
+            for="form.privacyPolicyLink"
+          >
+            <a href="/assets/privacypolicy.pdf" target="_blank">
+              {{ t("form.privacyPolicyLink") }}
+            </a>
+          </i18n-t>
+        </template>
+      </v-checkbox>
+
+      <v-checkbox v-model:model-value="eula" hide-details="auto" :rules="[required(t)]">
+        <template #label>
+          <i18n-t scope="global" keypath="form.eula" tag="span">
+            <a href="/assets/eula.pdf" target="_blank">
+              {{ t("form.eulaLink") }}
+            </a>
+          </i18n-t>
+        </template>
+      </v-checkbox>
     </template>
 
     <template #actions>
@@ -105,7 +135,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import AuthFormCard from "@/components/common/AuthFormCard.vue";
+import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
 import { required, isValidEmail, isValidPassword, match } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
 
@@ -125,10 +155,12 @@ const { switchVisibility, password, password2, passwordFieldType, visibilityIcon
 const email = ref<string>("");
 const email2 = ref<string>("");
 const name = ref<string>("");
+const privacyPolicy = ref<string>("");
+const eula = ref<string>("");
 const type = ref<UserType>("org");
 const userCreated = ref<boolean>(false);
 
-const form = ref<InstanceType<typeof AuthFormCard>>();
+const form = ref<InstanceType<typeof AdAuthFormCard>>();
 const submitting = ref<boolean>(false);
 
 const submit = async () => {
@@ -154,3 +186,15 @@ const submit = async () => {
     .finally(() => (submitting.value = false));
 };
 </script>
+
+<style scoped lang="scss">
+:deep(.v-checkbox) {
+  .v-selection-control {
+    min-height: 0 !important;
+  }
+
+  .v-selection-control__wrapper {
+    height: 0 !important;
+  }
+}
+</style>

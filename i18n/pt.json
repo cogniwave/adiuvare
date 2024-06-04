@@ -144,7 +144,12 @@
     },
 
     "cancel": "Cancelar",
-    "edit": "Editar"
+    "edit": "Editar",
+
+    "privacyPolicy": "Ao registar-me na Adiuvare concordo com a {0}",
+    "privacyPolicyLink": "política de privacidade",
+    "eula": "Ao registar-me na Adiuvare aceito os {0}",
+    "eulaLink": "termos de utilização"
   },
 
   "notFound": {
