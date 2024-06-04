@@ -51,11 +51,11 @@
   </v-input>
 
   <div v-if="scheduleType === 'recurring'" class="text-center">
-    <qa-post-schedule-recurring-selector />
+    <ad-post-schedule-recurring-selector />
   </div>
 
   <div v-else-if="scheduleType === 'specific'" class="text-center">
-    <qa-post-schedule-specific-selector />
+    <ad-post-schedule-specific-selector />
   </div>
 </template>
 

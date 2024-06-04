@@ -62,7 +62,7 @@
               <v-icon v-else size="x-small"> fa-solid fa-bell </v-icon>
             </v-btn> -->
 
-          <qa-profile-menu />
+          <ad-profile-menu />
         </v-col>
       </v-row>
     </template>

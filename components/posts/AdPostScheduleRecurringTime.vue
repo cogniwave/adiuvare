@@ -2,7 +2,7 @@
   <div class="w-100 item-group">
     <template v-for="(time, idx) in times" :key="time.id">
       <div class="picker-group mb-3">
-        <qa-time-picker
+        <ad-time-picker
           :model-value="time.start"
           :error="time.error"
           @update:model-value="onChange($event, 'start', time)"
@@ -10,7 +10,7 @@
 
         <span> - </span>
 
-        <qa-time-picker
+        <ad-time-picker
           :model-value="time.end"
           :error="time.error"
           @update:model-value="onChange($event, 'end', time)"

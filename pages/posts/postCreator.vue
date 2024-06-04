@@ -65,7 +65,7 @@
         @update:model-value="updatePost('needs', $event)"
       >
         <template v-slot:chip="{ item }">
-          <qa-post-dialog-need
+          <ad-post-dialog-need
             :key="item.value"
             :need="item.value"
             @click:remove="removeNeed(item.value)"
@@ -76,10 +76,10 @@
 
     <div class="bg-white rounded px-10 py-5">
       <!-- contacts -->
-      <qa-contacts v-if="user" :contacts="user.contacts" @update="updatePost('contacts', $event)" />
+      <ad-contacts v-if="user" :contacts="user.contacts" @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
-      <qa-post-schedule />
+      <ad-post-schedule />
     </div>
   </v-form>
 

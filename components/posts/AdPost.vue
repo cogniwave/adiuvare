@@ -31,7 +31,7 @@
           <h3 class="mb-0">{{ post.title }}</h3>
 
           <div style="line-height: 10px">
-            <qa-post-need v-for="need in post.needs" :key="need" :need="need" />
+            <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
           </div>
         </div>
       </v-card-title>
@@ -156,7 +156,7 @@
             </v-btn>
           </template>
 
-          <qa-contacts-list v-if="post.contacts?.length" :contacts="post.contacts" />
+          <ad-contacts-list v-if="post.contacts?.length" :contacts="post.contacts" />
         </v-menu>
 
         <v-btn

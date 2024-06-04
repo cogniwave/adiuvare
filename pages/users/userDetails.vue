@@ -35,7 +35,7 @@
     </div>
 
     <div v-if="currUser.contacts" class="bg-white rounded pa-5 mt-3">
-      <qa-contacts-list :contacts="currUser.contacts" />
+      <ad-contacts-list :contacts="currUser.contacts" />
     </div>
   </template>
 </template>

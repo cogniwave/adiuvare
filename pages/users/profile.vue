@@ -21,7 +21,7 @@
                 @change="onFileChange"
               />
 
-              <qa-img
+              <ad-img
                 height="128px"
                 width="128px"
                 :alt="t('form.user.picAlt')"
@@ -82,7 +82,7 @@
 
       <div class="bg-white rounded px-10 py-5">
         <!-- contacts -->
-        <qa-contacts :contacts="contacts" @update="updateUser('contacts', $event)" />
+        <ad-contacts :contacts="contacts" @update="updateUser('contacts', $event)" />
       </div>
     </v-form>
 

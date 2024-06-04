@@ -21,7 +21,7 @@
   </suspense>
 
   <div v-if="date" class="time-group mt-2">
-    <qa-post-schedule-recurring-time :model-value="times" @update:model-value="onTimesUpdate" />
+    <ad-post-schedule-recurring-time :model-value="times" @update:model-value="onTimesUpdate" />
   </div>
 </template>
 

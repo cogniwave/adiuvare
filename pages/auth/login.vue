@@ -1,5 +1,5 @@
 <template>
-  <auth-form-card ref="form" :title="t('login.title')" @submit="submit">
+  <ad-auth-form-card ref="form" :title="t('login.title')" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"
@@ -46,7 +46,7 @@
         {{ t("login.title") }}
       </v-btn>
     </template>
-  </auth-form-card>
+  </ad-auth-form-card>
 </template>
 
 <script setup lang="ts">

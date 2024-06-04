@@ -124,7 +124,7 @@
     <template v-slot:default="{ item }">
       <span>{{ toHumanDay(item.day) }}</span>
 
-      <qa-post-schedule-recurring-time
+      <ad-post-schedule-recurring-time
         :model-value="item.times"
         @update:model-value="onTimesUpdate(item.day, $event)"
       />

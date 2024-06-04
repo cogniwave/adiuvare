@@ -69,7 +69,7 @@
         </v-col>
 
         <v-col cols="6" align="end">
-          <qa-post-need
+          <ad-post-need
             v-for="need in currPost.needs"
             :key="need"
             :need="need"
@@ -86,7 +86,7 @@
       <!-- contacts -->
       {{ t("posts.contacts.detailsTitle") }}
 
-      <qa-contacts-list
+      <ad-contacts-list
         v-if="currPost.contacts?.length"
         :contacts="currPost.contacts"
         bg-color="transparent"

@@ -1,5 +1,5 @@
 <template>
-  <auth-form-card :title="t('register.title')" :show-form="!userCreated" @submit="submit">
+  <ad-auth-form-card :title="t('register.title')" :show-form="!userCreated" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="name"
@@ -99,7 +99,7 @@
     <template #content>
       <p class="mb-3">{{ t("register.successMessage") }}</p>
     </template>
-  </auth-form-card>
+  </ad-auth-form-card>
 </template>
 
 <script setup lang="ts">

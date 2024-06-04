@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <NuxtLayout>
-      <qa-navbar />
+      <ad-navbar />
 
       <div class="error-page">
         <template v-if="error.statusCode === 404">

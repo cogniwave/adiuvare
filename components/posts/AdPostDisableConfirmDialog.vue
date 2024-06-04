@@ -1,5 +1,5 @@
 <template>
-  <qa-confirm-dialog
+  <ad-confirm-dialog
     :model-value="disableDialogVisible"
     :title="t('posts.confirm.disableTitle')"
     :confirm-text="t('posts.confirm.disableConfirm')"
@@ -11,7 +11,7 @@
     <i18n-t scope="global" keypath="posts.confirm.disableDescription" tag="span">
       <b class="font-italic">{{ currPost.title }}</b>
     </i18n-t>
-  </qa-confirm-dialog>
+  </ad-confirm-dialog>
 </template>
 
 <script setup lang="ts">

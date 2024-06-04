@@ -14,7 +14,7 @@
 
     <v-virtual-scroll item-height="264" :items="data.posts">
       <template v-slot:default="{ item }">
-        <qa-post
+        <ad-post
           :post="item"
           :user="user?.slug || ''"
           :key="item.id"
@@ -39,11 +39,11 @@
     </i18n-t>
   </template>
 
-  <qa-post-report-dialog v-if="reportDialogRendered" />
+  <ad-post-report-dialog v-if="reportDialogRendered" />
 
-  <qa-post-disable-confirm-dialog v-if="disableDialogRendered" />
+  <ad-post-disable-confirm-dialog v-if="disableDialogRendered" />
 
-  <qa-post-delete-confirm-dialog v-if="deleteDialogRendered" @delete="onDelete" />
+  <ad-post-delete-confirm-dialog v-if="deleteDialogRendered" @delete="onDelete" />
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <qa-feed />
+  <ad-feed />
 </template>
 
 <script setup lang="ts">

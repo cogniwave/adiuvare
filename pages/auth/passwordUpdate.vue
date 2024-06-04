@@ -1,5 +1,5 @@
 <template>
-  <auth-form-card
+  <ad-auth-form-card
     :loading="loading"
     :title="t('reset.updateTitle')"
     :show-form="!invalidLink && !expiredLink"
@@ -81,7 +81,7 @@
         </nuxt-link>
       </i18n-t>
     </template>
-  </auth-form-card>
+  </ad-auth-form-card>
 </template>
 
 <script setup lang="ts">

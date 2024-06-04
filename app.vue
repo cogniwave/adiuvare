@@ -1,14 +1,14 @@
 <template>
   <v-app>
-    <qa-loading :loading="initLoading || isLoading" />
+    <ad-loading :loading="initLoading || isLoading" />
 
     <NuxtLayout>
-      <qa-navbar />
+      <ad-navbar />
 
       <!-- todo: add when there's messages and stuffs -->
-      <!-- <qa-notifications /> -->
+      <!-- <ad-notifications /> -->
 
-      <qa-snackbar />
+      <ad-snackbar />
 
       <NuxtPage />
     </NuxtLayout>

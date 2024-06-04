@@ -1,5 +1,5 @@
 <template>
-  <auth-form-card :title="t('register.confirmation.title')">
+  <ad-auth-form-card :title="t('register.confirmation.title')">
     <template #content>
       <template v-if="!loading">
         <p v-if="invalidLink">{{ t("register.confirmation.invalidLink") }}</p>
@@ -23,7 +23,7 @@
 
       <p v-else>{{ t("register.confirmation.loading") }}</p>
     </template>
-  </auth-form-card>
+  </ad-auth-form-card>
 </template>
 
 <script setup lang="ts">

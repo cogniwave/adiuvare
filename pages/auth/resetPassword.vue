@@ -1,5 +1,5 @@
 <template>
-  <auth-form-card :title="t('reset.title')" :show-form="!submitted" @submit="submit">
+  <ad-auth-form-card :title="t('reset.title')" :show-form="!submitted" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"
@@ -30,7 +30,7 @@
         {{ t("reset.submit") }}
       </v-btn>
     </template>
-  </auth-form-card>
+  </ad-auth-form-card>
 </template>
 
 <script setup lang="ts">
