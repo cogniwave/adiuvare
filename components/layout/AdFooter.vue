@@ -13,7 +13,7 @@
             @submit.prevent="submit"
           >
             <v-text-field
-              v-model-model-value="email"
+              v-model:model-value="email"
               type="text"
               class="w-100"
               placeholder="email@gmail.com"

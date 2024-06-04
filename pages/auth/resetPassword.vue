@@ -38,7 +38,7 @@ import { ref } from "vue";
 
 import { required, isValidEmail } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import AuthFormCard from "@/components/common/AuthFormCard.vue";
+import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
 
 definePageMeta({
   layout: "auth",
@@ -51,7 +51,7 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
 
 const email = ref<string>("");
-const form = ref<InstanceType<typeof AuthFormCard>>();
+const form = ref<InstanceType<typeof AdAuthFormCard>>();
 const submitting = ref<boolean>(false);
 const submitted = ref<boolean>(false);
 

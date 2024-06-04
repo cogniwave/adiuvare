@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import AuthFormCard from "@/components/common/AuthFormCard.vue";
+import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
 import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
 import { required, isValidEmail, isValidPassword } from "@/utils/validators";
@@ -74,7 +74,7 @@ const { login } = useAuth();
 const { switchVisibility, password, passwordFieldType, visibilityIcon } = usePassword();
 
 const email = ref<string>("");
-const form = ref<InstanceType<typeof AuthFormCard>>();
+const form = ref<InstanceType<typeof AdAuthFormCard>>();
 const submitting = ref<boolean>(false);
 
 onMounted(() => {

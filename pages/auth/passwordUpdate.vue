@@ -91,7 +91,7 @@ import { useRoute, useRouter } from "#vue-router";
 import dayjs from "@/services/dayjs.service";
 import { required, isValidPassword, match } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
-import AuthFormCard from "@/components/common/AuthFormCard.vue";
+import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
 
 import type { User } from "@/types/user";
 
@@ -115,7 +115,7 @@ const loading = ref(true);
 const invalidLink = ref(false);
 const expiredLink = ref(false);
 
-const form = ref<InstanceType<typeof AuthFormCard>>();
+const form = ref<InstanceType<typeof AdAuthFormCard>>();
 const submitting = ref<boolean>(false);
 
 onBeforeMount(() => {
