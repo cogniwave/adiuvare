@@ -5,6 +5,7 @@ export interface BaseUser {
   email: string;
   password: string;
   type: UserType;
+  newsletter?: boolean;
 }
 
 export interface User extends Omit<BaseUser, "password"> {

@@ -53,3 +53,21 @@ defineExpose({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+:deep(p) {
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+}
+
+a {
+  transition: 0.2s;
+  opacity: 0.8;
+
+  &:hover {
+    transition: 0.2s;
+    opacity: 1;
+  }
+}
+</style>

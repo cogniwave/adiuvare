@@ -2,7 +2,7 @@
   <v-footer color="white" class="pt-5 pb-2 flex-column">
     <div class="w-100">
       <v-row>
-        <v-col cols="4" offset="2">
+        <v-col md="4" offset-md="2" cols="12" offset="0">
           {{ $t("footer.newsletter.text") }}
 
           <v-form
@@ -20,10 +20,16 @@
               variant="outlined"
               :label="$t('footer.newsletter.label')"
               :error-messages="errors.email"
-              :rules="[isValidEmail($t)]"
             >
               <template #append-inner>
-                <v-btn type="submit" color="primary" :loading="submitting">
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  flat
+                  :rounded="false"
+                  :loading="submitting"
+                  @click="submit"
+                >
                   {{ $t("footer.newsletter.subscribe") }}
                 </v-btn>
               </template>
@@ -33,7 +39,7 @@
           <span v-else>{{ $t("footer.newsletter.success") }}</span>
         </v-col>
 
-        <v-col cols="4" offset="1">
+        <v-col md="4" offset-md="1" cols="12" offset="0">
           <a href="mailto:geral@adiuvare.pt">geral@adiuvare.pt</a>
           <br />
           <a href="/assets/privacypolicy.pdf" target="_blank">{{ $t("privacyPolicy") }}</a>
@@ -60,9 +66,11 @@ const form = ref<VForm>();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const submit = async () => {
+  console.log("submit");
   clearErrors();
 
   if (!(await form.value?.validate())?.valid) {
+    console.log("not valid");
     return;
   }
 
@@ -70,9 +78,7 @@ const submit = async () => {
 
   await $fetch("/api/v1/newsletter", {
     method: "post",
-    body: {
-      email: email.value,
-    },
+    body: { email: email.value },
   })
     .then(() => (subscribed.value = true))
     .catch(handleErrors)

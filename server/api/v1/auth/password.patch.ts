@@ -3,7 +3,7 @@ import Joi from "joi";
 import dayjs from "@/services/dayjs.service";
 import { updatePassword } from "@/server/db/users";
 import { getValidatedInput } from "@/server/utils/request";
-import { sendEmail } from "~/server/services/mail";
+import { sendEmail } from "~/server/services/brevo";
 
 // import type { PasswordUpdatePayload } from "@/types/user";
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
       .email({})
       .messages({
         "string.empty": t("errors.empty"),
-        "string.max": t("errors.max_255"),
+        "string.max": t("errors.max", 255),
         "string.email": t("errors.invalidEmail"),
       }),
 

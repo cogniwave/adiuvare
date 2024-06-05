@@ -5,12 +5,18 @@
   </template>
 
   <template v-else-if="currPost && Object.keys(currPost)">
-    <div class="d-flex justify-end mb-1">
+    <div class="d-flex mb-1">
+      <v-btn v-if="mdAndDown" variant="text" @click="$router.go(-1)">
+        <v-icon>fa-solid fa-chevron-left</v-icon>
+        {{ t("posts.back") }}
+      </v-btn>
+
       <v-btn
-        v-if="canEdit"
+        v-if="true || canEdit"
         variant="text"
         size="small"
         rounded="md"
+        class="ml-auto"
         :to="`/posts/${currPost.slug}/edit`"
       >
         <v-icon class="mr-1">fa-solid fa-pencil</v-icon>
@@ -54,7 +60,7 @@
       </div>
 
       <v-row no-gutters class="mb-5 mt-2">
-        <v-col cols="6">
+        <v-col cols="12" md="6" order="2">
           <v-chip
             v-for="location in currPost.locations"
             :key="location"
@@ -68,7 +74,13 @@
           </v-chip>
         </v-col>
 
-        <v-col cols="6" align="end">
+        <v-col
+          cols="12"
+          md="6"
+          order="1"
+          :align="mdAndDown ? 'start' : 'end'"
+          :class="{ 'mb-2': mdAndDown }"
+        >
           <ad-post-need
             v-for="need in currPost.needs"
             :key="need"
@@ -139,7 +151,7 @@
       </template>
     </div>
 
-    <div class="pt-3 d-flex align-center justify-end">
+    <div v-if="!mdAndDown" class="pt-3 d-flex align-center justify-end">
       <v-btn @click="$router.go(-1)">
         {{ t("posts.back") }}
       </v-btn>
@@ -149,6 +161,7 @@
 
 <script lang="ts" setup>
 import { useRoute, useRouter } from "vue-router";
+import { useDisplay } from "vuetify";
 
 import { useAuth } from "@/store/auth";
 import { usePosts } from "@/store/posts";
@@ -170,6 +183,7 @@ const $route = useRoute();
 const { data: user } = useAuth();
 const { notifyError } = useNotify();
 const { d, t } = useI18n();
+const { mdAndDown } = useDisplay();
 
 const WEEK_DAY_TO_HUMAN = [
   t("form.post.schedule.day.sunday"),

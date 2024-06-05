@@ -95,25 +95,34 @@
           <i18n-t
             scope="global"
             keypath="form.privacyPolicy"
-            tag="span"
+            tag="label"
             for="form.privacyPolicyLink"
           >
             <a href="/assets/privacypolicy.pdf" target="_blank">
-              {{ t("form.privacyPolicyLink") }}
+              {{ t("form.privacyPolicyLink") }}*
             </a>
           </i18n-t>
         </template>
       </v-checkbox>
 
-      <v-checkbox v-model:model-value="eula" hide-details="auto" :rules="[required(t)]">
+      <v-checkbox
+        v-model:model-value="eula"
+        class="mb-2"
+        hide-details="auto"
+        :rules="[required(t)]"
+      >
         <template #label>
-          <i18n-t scope="global" keypath="form.eula" tag="span">
-            <a href="/assets/eula.pdf" target="_blank">
-              {{ t("form.eulaLink") }}
-            </a>
+          <i18n-t scope="global" keypath="form.eula" tag="label">
+            <a href="/assets/eula.pdf" target="_blank"> {{ t("form.eulaLink") }}* </a>
           </i18n-t>
         </template>
       </v-checkbox>
+
+      <v-checkbox
+        v-model:model-value="newsletter"
+        hide-details="auto"
+        :label="t('form.subscribeNewsletter')"
+      />
     </template>
 
     <template #actions>
@@ -158,6 +167,7 @@ const name = ref<string>("");
 const privacyPolicy = ref<string>("");
 const eula = ref<string>("");
 const type = ref<UserType>("org");
+const newsletter = ref<boolean>(false);
 const userCreated = ref<boolean>(false);
 
 const form = ref<InstanceType<typeof AdAuthFormCard>>();
@@ -179,6 +189,7 @@ const submit = async () => {
       password: password.value,
       name: name.value,
       type: type.value,
+      newsletter: newsletter.value,
     },
   })
     .then(() => (userCreated.value = true))

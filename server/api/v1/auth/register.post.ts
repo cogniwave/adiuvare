@@ -1,9 +1,10 @@
 import Joi from "joi";
 
 import { addUser } from "@/server/db/users";
-import { sendEmail } from "@/server/services/mail";
+import { sendEmail } from "@/server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 import { notifyNewUser } from "@/server/services/slack";
+import { subscribeToNewsletter } from "@/server/services/brevo";
 
 import type { BaseUser, User } from "@/types/user";
 import type { DrizzleError } from "@/server/types/drizzle";
@@ -61,7 +62,7 @@ export default defineEventHandler(async (event) => {
       .max(255)
       .messages({
         "string.empty": t("errors.empty"),
-        "string.max": t("errors.max_255"),
+        "string.max": t("errors.max", 255),
       }),
 
     password: Joi.string()
@@ -77,7 +78,7 @@ export default defineEventHandler(async (event) => {
       .email({})
       .messages({
         "string.empty": t("errors.empty"),
-        "string.max": t("errors.max_255"),
+        "string.max": t("errors.max", 255),
         "string.email": t("errors.invalidEmail"),
       }),
 
@@ -88,17 +89,24 @@ export default defineEventHandler(async (event) => {
         "string.empty": t("errors.empty"),
         "any.only": t("errors.invalidUserType"),
       }),
+
+    newsletter: Joi.boolean().default(false),
   });
 
+  const email = sanitizeInput(body.email);
   const user = await register(
     {
       name: sanitizeInput(body.name),
       password: sanitizeInput(body.password),
       type: sanitizeInput(body.type),
-      email: sanitizeInput(body.email),
+      email,
     },
     t,
   );
+
+  if (body.newsletter) {
+    await subscribeToNewsletter(email);
+  }
 
   notifyNewUser(user);
 

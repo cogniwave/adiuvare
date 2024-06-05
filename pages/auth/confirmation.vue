@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card :title="t('register.confirmation.title')">
+  <ad-auth-form-card :show-form="false" :title="t('register.confirmation.title')">
     <template #content>
       <template v-if="!loading">
         <p v-if="invalidLink">{{ t("register.confirmation.invalidLink") }}</p>
@@ -33,6 +33,7 @@ definePageMeta({
   middleware: "unauthed",
   layout: "auth",
   title: "pages.accountConfirm",
+  path: "/confirmation",
 });
 
 const $route = useRoute();

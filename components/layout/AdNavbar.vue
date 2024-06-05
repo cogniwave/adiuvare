@@ -3,48 +3,49 @@
     <template v-slot:title>
       <v-row no-gutters>
         <v-col cols="1">
-          <v-img
-            src="/assets/logo.png"
-            aspect-ratio="1"
-            width="48px"
-            eager
-            @click="$router.push('/')"
-          />
+          <v-img src="/assets/logo.png" aspect-ratio="1" width="48px" @click="$router.push('/')" />
         </v-col>
 
-        <v-col cols="3" offset="2" align-self="center">
-          <form @keypress.enter.prevent="search" @submit.prevent="search">
-            <v-text-field
-              v-model:model-value="query"
-              variant="solo"
-              flat
-              clearable
-              append-inner-icon="fa-solid fa-magnifying-glass"
-              rounded="lx"
-              density="compact"
-              hide-details
-              :placeholder="t('filter.placeholder')"
-              @click:append-inner="search"
-            />
-          </form>
+        <v-col md="3" offset-md="1" offset-lg="2" cols="6" offset="2" align-self="center">
+          <div class="d-flex w-100 align-center">
+            <form class="w-100" @keypress.enter.prevent="search" @submit.prevent="search">
+              <v-text-field
+                v-model:model-value="query"
+                variant="solo"
+                flat
+                clearable
+                append-inner-icon="fa-solid fa-magnifying-glass"
+                rounded="lx"
+                density="compact"
+                hide-details
+                :placeholder="t('filter.placeholder')"
+                @click:append-inner="search"
+              />
+            </form>
+
+            <v-btn v-if="showCreateButton" size="small" icon class="ml-2" @click="toggleMenu">
+              <v-icon size="large">fa-solid fa-plus</v-icon>
+            </v-btn>
+          </div>
         </v-col>
 
-        <v-col cols="3" align-self="center" align="end">
-          <v-btn
-            v-if="loggedIn && isOrg"
-            size="small"
-            rounded="md"
-            variant="plain"
-            class="ml-auto btn-contact"
-            to="/posts/new"
-          >
-            {{ t("posts.submit") }}
-          </v-btn>
-        </v-col>
+        <template v-if="mdAndUp">
+          <v-col cols="3" align-self="center" align="end">
+            <v-btn
+              v-if="showCreateButton"
+              size="small"
+              rounded="md"
+              variant="plain"
+              class="ml-auto btn-contact"
+              to="/posts/new"
+            >
+              {{ t("posts.submit") }}
+            </v-btn>
+          </v-col>
 
-        <v-col cols="3" align-self="center" align="end">
-          <!-- todo: readd when we actually have notifications -->
-          <!-- <v-btn
+          <v-col cols="3" md="4" lg="3" align-self="center" align="end">
+            <!-- todo: readd when we actually have notifications -->
+            <!-- <v-btn
               v-if="authed"
               class="text-none"
               stacked
@@ -62,7 +63,14 @@
               <v-icon v-else size="x-small"> fa-solid fa-bell </v-icon>
             </v-btn> -->
 
-          <ad-profile-menu />
+            <ad-profile-menu />
+          </v-col>
+        </template>
+
+        <v-col v-else align="end" align-self="center">
+          <v-btn size="small" icon @click="toggleMenu">
+            <v-icon size="large">fa-solid fa-bars</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </template>
@@ -71,18 +79,23 @@
 
 <script lang="ts" setup>
 // import { useNotificationsStore } from "@/stores/notifications.store";
-import { useRouter } from "vue-router";
+import { useRouter } from "#imports";
+import { useDisplay } from "vuetify";
 
 import { useAuth } from "@/store/auth";
+import { useMenu } from "@/store/menu";
 
+const { menuOpen } = useMenu();
 const { loggedIn, data } = useAuth();
 const { t } = useI18n();
 const $router = useRouter();
+const { mdAndUp } = useDisplay();
 
 // const $notifStore = useNotificationsStore();
 const query = ref("");
-
-const isOrg = computed(() => data.value?.type === "org");
+const showCreateButton = computed(() => loggedIn && data.value?.type === "org");
 
 const search = () => console.log("searching");
+
+const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>

@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <v-row no-gutters class="py-10">
-      <v-col cols="2">
+      <v-col v-if="lgAndUp" cols="2">
         <v-list bg-color="transparent">
           <v-list-item :title="t('menu.home')" to="/" prepend-icon="fa-solid fa-house" />
 
@@ -20,7 +20,17 @@
         </v-list>
       </v-col>
 
-      <v-col offset="1" cols="6">
+      <v-col
+        offset-lg="1"
+        lg="6"
+        offset-md="2"
+        md="8"
+        offset-sm="1"
+        sm="10"
+        offset="0"
+        cols="12"
+        :class="{ 'px-2': xs }"
+      >
         <slot />
       </v-col>
     </v-row>
@@ -28,13 +38,15 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { useRoute } from "#imports";
+import { useDisplay } from "vuetify";
 
 import { useAuth } from "@/store/auth";
 
 const { data } = useAuth();
 const { t } = useI18n();
 const $route = useRoute();
+const { lgAndUp, xs } = useDisplay();
 
 const showUserPosts = computed(() => {
   // if no meta exists its because its error page

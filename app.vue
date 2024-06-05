@@ -2,26 +2,30 @@
   <v-app>
     <ad-loading :loading="initLoading || isLoading" />
 
+    <ad-navbar />
+
+    <ad-mobile-menu v-if="smAndDown" />
+
+    <!-- todo: add when there's messages and stuffs -->
+    <!-- <ad-notifications /> -->
+
+    <ad-snackbar />
+
     <NuxtLayout>
-      <ad-navbar />
-
-      <!-- todo: add when there's messages and stuffs -->
-      <!-- <ad-notifications /> -->
-
-      <ad-snackbar />
-
       <NuxtPage />
     </NuxtLayout>
 
-    <ad-footer />
+    <ad-footer v-if="$route.meta.middleware !== 'unauthed'" />
   </v-app>
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "#vue-router";
+import { useRoute } from "#imports";
+import { useDisplay } from "vuetify";
 
 const { t } = useI18n();
 const $route = useRoute();
+const { smAndDown } = useDisplay();
 
 useHead({
   titleTemplate: () => {

@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       .email()
       .messages({
         "string.empty": t("errors.empty"),
-        "string.max": t("errors.max_255"),
+        "string.max": t("errors.max", 255),
         "string.email": t("errors.invalidEmail"),
       }),
   });

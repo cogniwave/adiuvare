@@ -1,9 +1,17 @@
 <template>
   <v-main>
-    <v-row no-gutters class="py-10 mt-10">
-      <v-col offset="3" cols="6">
-        <slot />
-      </v-col>
-    </v-row>
+    <v-container>
+      <v-row no-gutters :class="lgAndUp ? 'mt-10 py-10' : 'py-5'">
+        <v-col md="10" offset-md="1" lg="6" offset-lg="3" offset="12" cols="0">
+          <slot />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-main>
 </template>
+
+<script lang="ts" setup>
+import { useDisplay } from "vuetify";
+
+const { lgAndUp } = useDisplay();
+</script>

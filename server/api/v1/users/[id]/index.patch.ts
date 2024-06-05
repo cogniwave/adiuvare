@@ -68,7 +68,7 @@ const updateAccount = async (
     email: Joi.string()
       .email({})
       .messages({
-        "string.max": t("errors.max_255"),
+        "string.max": t("errors.max", 255),
         "string.email": t("errors.invalidEmail"),
       }),
 

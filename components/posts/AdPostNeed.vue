@@ -6,7 +6,8 @@
         text-color="white"
         rounded="md"
         label
-        class="cursor-pointer pr-1 ml-2"
+        class="cursor-pointer pr-1"
+        :class="lgAndUp ? 'ml-2' : 'mr-2'"
         :variant="variant"
         :size="size"
         :prepend-icon="details.icon"
@@ -20,6 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 
 import type { PropType } from "vue";
 import type { PostCategory } from "@/types/post";
@@ -35,6 +37,7 @@ const props = defineProps({
 
 const { t } = useI18n();
 const { getNeedDetails } = useNeed();
+const { lgAndUp } = useDisplay();
 
 const details = ref(getNeedDetails(props.need));
 </script>

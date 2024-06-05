@@ -164,23 +164,3 @@ const submit = async () => {
     .finally(() => (submitting.value = false));
 };
 </script>
-
-<style lang="scss" scoped>
-p {
-  font-size: 18px;
-  line-height: 20px;
-  margin-top: 12px;
-  margin-bottom: 12px;
-  text-align: center;
-}
-
-a {
-  transition: 0.2s;
-  opacity: 0.8;
-
-  &:hover {
-    transition: 0.2s;
-    opacity: 1;
-  }
-}
-</style>

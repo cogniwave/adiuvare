@@ -2,38 +2,46 @@
   <!-- click event just to give it the nice ripple and hover effect xD -->
   <v-card flat variant="text" class="post mb-3" rounded="xl">
     <v-card-item>
-      <v-card-title class="d-flex align-start">
-        <v-avatar size="64">
-          <v-img
-            :alt="t('posts.logoAlt')"
-            src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
-            lazy-src="/assets/profile-placeholder.png"
-          >
-            <template v-slot:error>
-              {{ post.createdBy[0] }}
-            </template>
-          </v-img>
-        </v-avatar>
+      <v-card-title class="d-flex align-start" :class="{ 'flex-column': mdAndDown }">
+        <v-row no-gutters>
+          <v-col cols="3" lg="2" xl="1">
+            <v-avatar size="64">
+              <v-img
+                :alt="t('posts.logoAlt')"
+                src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
+                lazy-src="/assets/profile-placeholder.png"
+              >
+                <template v-slot:error>
+                  {{ post.createdBy[0] }}
+                </template>
+              </v-img>
+            </v-avatar>
+          </v-col>
 
-        <div class="text-subtitle ml-3">
-          <nuxt-link :to="`/organizations/${post.createdBy}`" @click.stop>
-            {{ post.createdBy }}
-          </nuxt-link>
+          <v-col cols="9" lg="4" xl="5">
+            <div class="text-subtitle">
+              <nuxt-link :to="`/organizations/${post.createdBy}`" @click.stop>
+                {{ post.createdBy }}
+              </nuxt-link>
 
-          <span class="text-subtitle-2 d-block">
-            <!-- otherwise vue will complain because $t only "accepts"
+              <span class="text-subtitle-2 d-block">
+                <!-- otherwise vue will complain because $t only "accepts"
              date and number but passing a string also works  -->
-            {{ d(post.createdAt as any) }}
-          </span>
-        </div>
+                {{ d(post.createdAt as any) }}
+              </span>
+            </div>
+          </v-col>
 
-        <div class="ml-auto d-flex align-end flex-column">
-          <h3 class="mb-0">{{ post.title }}</h3>
+          <v-col cols="12" lg="6">
+            <div class="d-flex flex-column" :class="lgAndUp ? 'ml-auto align-end' : 'mt-3'">
+              <h3 class="mb-0">{{ post.title }}</h3>
 
-          <div style="line-height: 10px">
-            <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
-          </div>
-        </div>
+              <div style="line-height: 10px">
+                <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
+              </div>
+            </div>
+          </v-col>
+        </v-row>
       </v-card-title>
 
       <v-card-text class="mt-5">
@@ -88,7 +96,7 @@
               v-bind="props"
               variant="plain"
               size="x-small"
-              class="mr-2"
+              class="ml-2"
               icon
               @click.stop.prevent
             >
@@ -142,14 +150,15 @@
           </v-list>
         </v-menu>
 
-        <v-menu :close-on-content-click="false">
+        <!-- contacts -->
+        <v-menu v-if="smAndUp" :close-on-content-click="false">
           <template v-slot:activator="{ props }">
             <v-btn
               v-bind="props"
               variant="outlined"
               size="small"
               rounded="md"
-              class="ml-auto btn-contact"
+              class="ml-auto ml-r btn-contact"
               @click.stop.prevent
             >
               {{ t("posts.contacts.contact") }}
@@ -163,7 +172,7 @@
           variant="outlined"
           size="small"
           rounded="md"
-          class="ml-3 btn-contact"
+          class="btn-contact"
           :to="`/posts/${post.slug}`"
         >
           {{ t("posts.viewMore") }}
@@ -174,12 +183,13 @@
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
+
 import { usePosts } from "@/store/posts";
 import AdPostNeed from "@/components/posts/AdPostNeed.vue";
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 
 const MAX_DESC = 1300;
-const NUM_VISIBLE_LOCATIONS = 3;
 
 const $emit = defineEmits<{
   (e: "click:state", payload: PostStateTogglePayload): void;
@@ -194,12 +204,16 @@ const props = defineProps({
 const $router = useRouter();
 const { t, d } = useI18n();
 const { setPost } = usePosts();
+const { smAndUp, mdAndUp, mdAndDown, lgAndUp } = useDisplay();
 
 const desc = ref(props.post.description);
 const descTooLong = ref(false);
 const descVisible = ref(false);
-const visibleLocations = ref<string[]>(props.post.locations.slice(0, NUM_VISIBLE_LOCATIONS));
-const leftoverLocations = ref<string[]>(props.post.locations.slice(NUM_VISIBLE_LOCATIONS));
+
+const numVisibleLocations = computed(() => (mdAndUp.value ? 3 : 1));
+
+const visibleLocations = ref<string[]>(props.post.locations.slice(0, numVisibleLocations.value));
+const leftoverLocations = ref<string[]>(props.post.locations.slice(numVisibleLocations.value));
 
 onBeforeMount(() => {
   if (props.post.description.length > MAX_DESC) {
@@ -207,12 +221,6 @@ onBeforeMount(() => {
 
     descTooLong.value = true;
   }
-
-  // visibleLocations.value = props.post.locations.slice(0, NUM_VISIBLE_LOCATIONS);
-
-  // if (props.post.locations.length > NUM_VISIBLE_LOCATIONS) {
-  //   leftoverLocations.value = props.post.locations.slice(NUM_VISIBLE_LOCATIONS);
-  // }
 });
 
 const viewAllDesc = () => {

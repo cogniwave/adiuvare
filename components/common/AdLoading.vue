@@ -16,7 +16,7 @@ defineProps({
   justify-content: center;
   align-items: center;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   width: 100vw;
   z-index: 99999999;
   background: #f7f7f7;
