@@ -8,21 +8,6 @@
 
         <v-col md="3" offset-md="1" offset-lg="2" cols="6" offset="2" align-self="center">
           <div class="d-flex w-100 align-center">
-            <form class="w-100" @keypress.enter.prevent="search" @submit.prevent="search">
-              <v-text-field
-                v-model:model-value="query"
-                variant="solo"
-                flat
-                clearable
-                append-inner-icon="fa-solid fa-magnifying-glass"
-                rounded="lx"
-                density="compact"
-                hide-details
-                :placeholder="t('filter.placeholder')"
-                @click:append-inner="search"
-              />
-            </form>
-
             <v-btn v-if="showCreateButton" size="small" icon class="ml-2" @click="toggleMenu">
               <v-icon size="large">fa-solid fa-plus</v-icon>
             </v-btn>
@@ -92,10 +77,7 @@ const $router = useRouter();
 const { mdAndUp } = useDisplay();
 
 // const $notifStore = useNotificationsStore();
-const query = ref("");
 const showCreateButton = computed(() => loggedIn && data.value?.type === "org");
-
-const search = () => console.log("searching");
 
 const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>

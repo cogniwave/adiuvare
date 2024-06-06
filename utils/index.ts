@@ -1,3 +1,5 @@
+export const FEED_PAGE_SIZE = 30;
+
 export const debounce = (func: (...args: any) => void, timeout = 300) => {
   let timer: NodeJS.Timeout | null = null;
 

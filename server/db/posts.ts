@@ -1,14 +1,39 @@
-import { and, count, desc, eq } from "drizzle-orm";
+import { SQL, and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
 
 import { db } from "./";
 import { posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
+import { FEED_PAGE_SIZE } from "@/utils";
 
 import type { InsertPost } from "./schemas/posts.schema";
 import type { UpdatePostPayload } from "@/types/post";
 
-export const getPosts = async () => {
+export const getPostsAndTotal = async (filter?: string) => {
+  let query: SQL | undefined = undefined;
+
+  if (filter) {
+    filter = filter.toLowerCase();
+    const fuzzy = `%${filter}%`;
+
+    query = or(
+      sql`unaccent(lower(${posts.description})) like unaccent(${fuzzy})`,
+      sql`unaccent(lower(${posts.title})) like unaccent(${fuzzy})`,
+      arrayOverlaps(posts.locations, [filter]),
+      arrayOverlaps(posts.needs, [filter]),
+      sql`unaccent(lower(${users.name})) like unaccent(${fuzzy})`,
+      sql`unaccent(lower(${users.bio})) like unaccent(${fuzzy})`,
+    ) as SQL;
+  }
+
+  const [result, total] = await Promise.all([getPosts(query), getTotalPosts(query)]);
+
+  return { posts: result, total };
+};
+
+export const getPosts = async (filter?: SQL) => {
+  const query = filter ? eq(posts.state, "active") : and(eq(posts.state, "active"), filter);
+
   const result = await db
     .select({
       id: posts.id,
@@ -24,18 +49,31 @@ export const getPosts = async () => {
       createdBySlug: users.slug,
     })
     .from(posts)
-    .where(eq(posts.state, "active"))
     .innerJoin(users, eq(posts.createdUserId, users.id))
+    .where(query)
     .orderBy(desc(posts.createdAt))
-    .limit(50);
+    .limit(FEED_PAGE_SIZE);
 
   return result || [];
 };
 
-export const getTotalPosts = async () => {
-  const result = await db.select({ total: count() }).from(posts);
-
+export const getTotalPosts = async (filter?: SQL) => {
   try {
+    let result;
+
+    // if filter exists we need to inner join with users because
+    // filter can be looking for user prop
+    if (filter) {
+      result = await db
+        .select({ total: count() })
+        .from(posts)
+        .innerJoin(users, eq(posts.createdUserId, users.id))
+        .where(and(eq(posts.state, "active"), filter));
+    } else {
+      // if filter doesn't exist, we can just query all posts
+      result = await db.select({ total: count() }).from(posts).where(eq(posts.state, "active"));
+    }
+
     return result[0].total ?? 0;
   } catch (_) {
     return 0;

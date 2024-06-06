@@ -99,6 +99,20 @@
       "when": 1715612016414,
       "tag": "0013_tricky_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1717611469824,
+      "tag": "0014_noisy_magneto",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "6",
+      "when": 1717614285514,
+      "tag": "0015_easy_skin",
+      "breakpoints": true
     }
   ]
 }

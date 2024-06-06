@@ -9,35 +9,69 @@
   </template>
 
   <!-- render posts -->
-  <template v-else-if="data.posts.length">
-    <p class="mb-5">Recent posts</p>
+  <template v-else-if="data.total || !!filter">
+    <v-row class="mb-2">
+      <v-col cols="5" align-self="end">
+        <p>Recent posts</p>
+      </v-col>
 
-    <v-virtual-scroll item-height="264" :items="data.posts">
-      <template v-slot:default="{ item }">
-        <ad-post
-          :post="item"
-          :user="user?.slug || ''"
-          :key="item.id"
-          class="mb-5"
-          @click:state="openDisableDialog"
-          @click:delete="openDeleteDialog"
-          @click:report="openReportDialog"
-        />
-      </template>
-    </v-virtual-scroll>
+      <v-col align-self="end">
+        <form class="pr-2 w-100" @keypress.enter.prevent="onSearch">
+          <v-text-field
+            v-model:model-value="search"
+            variant="solo"
+            flat
+            append-inner-icon="fa-solid fa-magnifying-glass"
+            rounded="lx"
+            density="compact"
+            hide-details
+            persistent-clear
+            :clearable="!!filter"
+            :placeholder="t('filter.placeholder')"
+            @click:clear="onSearch"
+            @click:append-inner="onSearch"
+          />
+        </form>
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters>
+      <v-col>
+        <v-virtual-scroll v-if="data.total" item-height="264" :items="data.posts">
+          <template v-slot:default="{ item }">
+            <ad-post
+              :post="item"
+              :user="user?.slug || ''"
+              :key="item.id"
+              class="mb-5"
+              @click:state="openDisableDialog"
+              @click:delete="openDeleteDialog"
+              @click:report="openReportDialog"
+            />
+          </template>
+        </v-virtual-scroll>
+
+        <span v-else>{{ t("feed.emptySearch") }}</span>
+      </v-col>
+    </v-row>
 
     <!-- there aren't enough posts to show pagination -->
-    <v-pagination v-if="data.total > PER_PAGE" v-model="page" length="5" />
+    <v-pagination
+      v-if="data.total > FEED_PAGE_SIZE"
+      v-model="page"
+      total-visible="5"
+      color="primary"
+      rounded
+      :length="data.total / FEED_PAGE_SIZE"
+    />
   </template>
 
   <!-- no posts exist -->
-  <template v-else>
-    <i18n-t scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton">
-      <nuxt-link to="/posts/new">
-        {{ t("feed.noPostsButton") }}
-      </nuxt-link>
-    </i18n-t>
-  </template>
+  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton">
+    <nuxt-link to="/posts/new">
+      {{ t("feed.noPostsButton") }}
+    </nuxt-link>
+  </i18n-t>
 
   <ad-post-report-dialog v-if="reportDialogRendered" />
 
@@ -53,11 +87,10 @@ import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
 import { usePosts } from "@/store/posts";
 import { useReport } from "@/store/report";
+import { FEED_PAGE_SIZE } from "@/utils";
 
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 import AdPost from "@/components/posts/AdPost.vue";
-
-const PER_PAGE = 30;
 
 const { notifyError } = useNotify();
 const { data: user } = useAuth();
@@ -65,12 +98,19 @@ const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts(
 const { openDialog: _openReportDialog } = useReport();
 const { t } = useI18n();
 
-const page = ref(0);
+const page = ref(1);
+const search = ref("");
+const filter = ref("");
 const reportDialogRendered = ref(false);
 
 const { data, pending, execute, refresh, error } = useFetch<{ posts: Post[]; total: number }>(
   "/api/v1/posts",
-  { query: { page }, watch: [page], lazy: true, immediate: false },
+  {
+    query: { page, filter },
+    watch: [page, filter],
+    lazy: true,
+    immediate: false,
+  },
 );
 
 const deleteDialogRendered = ref(false);
@@ -117,6 +157,12 @@ const onDelete = async (id: string) => {
   } finally {
     disableDialogVisible.value = false;
   }
+};
+
+const onSearch = () => {
+  console.log("onsearch");
+  page.value = 1;
+  filter.value = search.value;
 };
 
 watch(

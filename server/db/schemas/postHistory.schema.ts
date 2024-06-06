@@ -27,7 +27,7 @@ export const postHistory = pgTable(
       .references(() => users.id),
     updatedAt: timestamp("created_at").notNull(),
     title: varchar("title", { length: 264 }).notNull(),
-    description: text("descrition").notNull(),
+    description: text("description").notNull(),
     state: stateEnum("state").notNull().default("pending"),
     locations: text("locations").array().notNull(),
     schedule: json("schdule").notNull().$type<PostSchedule>(),

@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <v-container>
-      <v-row no-gutters :class="lgAndUp ? 'mt-10 py-10' : 'py-5'">
+      <v-row no-gutters :class="lgAndUp ? 'mt-10 py-5' : 'py-5'">
         <v-col md="10" offset-md="1" lg="6" offset-lg="3" offset="12" cols="0">
           <slot />
         </v-col>

@@ -265,7 +265,8 @@
 
   "feed": {
     "noPosts": "Não existem publicações, sê o {0}!",
-    "noPostsButton": "primeiro"
+    "noPostsButton": "primeiro",
+    "emptySearch": "Essa pesquisa não retornou resultados. Tente outra coisa"
   },
 
   "filter": {
