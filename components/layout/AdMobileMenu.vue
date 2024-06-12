@@ -3,6 +3,30 @@
     <v-list nav>
       <template v-if="loggedIn">
         <v-list-item
+          :title="t('menu.home')"
+          append-icon="fa-solid fa-house"
+          @click="$router.push('/')"
+        />
+
+        <v-list-item
+          :title="t('menu.orgs')"
+          append-icon="fa-solid fa-building-ngo"
+          @click="$router.push('/organizations')"
+        />
+
+        <v-divider />
+
+        <template v-if="showCreateButton">
+          <v-list-item
+            :title="t('posts.submit')"
+            append-icon="fa-solid fa-file-lines"
+            @click="$router.push('/posts/new')"
+          />
+
+          <v-divider />
+        </template>
+
+        <v-list-item
           :title="t('nav.account')"
           append-icon="fa-solid fa-gear"
           @click="$router.push('/account')"
@@ -42,7 +66,9 @@
 import { useMenu } from "@/store/menu";
 import { useAuth } from "@/store/auth";
 
-const { logout, loggedIn } = useAuth();
+const { logout, loggedIn, data } = useAuth();
 const { t } = useI18n();
 const { menuOpen } = useMenu();
+
+const showCreateButton = computed(() => loggedIn && data.value?.type === "org");
 </script>
