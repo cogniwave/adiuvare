@@ -28,7 +28,7 @@
             persistent-clear
             :clearable="!!filter"
             :placeholder="t('filter.placeholder')"
-            @click:clear="onSearch()"
+            @click:clear="resetSearch()"
             @click:append-inner="onSearch()"
           />
         </form>
@@ -223,6 +223,8 @@ const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts(
 const { openDialog: _openReportDialog } = useReport();
 const { t } = useI18n();
 const { filterLocations, filteringLocations, locations, noDataText } = useLocations();
+const $router = useRouter();
+const $route = useRoute();
 
 const page = ref(1);
 const search = ref<string | undefined>();
@@ -258,7 +260,53 @@ const disableDialogRendered = ref(false);
 // using fetch on immediate makes it so pending is always true
 // whenever the page loads, which results in a hydration mismatch
 // and ghost elements in the list
-onBeforeMount(execute);
+onBeforeMount(() => {
+  const query = $route.query;
+
+  if (query.page) {
+    const p = Number(query.page);
+
+    if (!isNaN(p) && p > 1) {
+      page.value = p;
+    }
+  }
+
+  const f: PostFilter = {};
+
+  if (!query.query) {
+    if (query.title) {
+      title.value = query.title as string;
+      f.title = title.value;
+    }
+
+    if (query.description) {
+      description.value = query.description as string;
+      f.description = description.value;
+    }
+
+    if (query.needs) {
+      need.value = query.needs as string[];
+      f.needs = need.value;
+    }
+
+    if (query.locations) {
+      location.value = query.locations as string[];
+      f.locations = location.value;
+    }
+  } else {
+    search.value = query.query as string;
+    f.query = search.value;
+  }
+
+  if (Object.keys(f).length) {
+    filter.value = f;
+  }
+
+  // avoid duplicate requests
+  if (!pending) {
+    execute();
+  }
+});
 
 const openDisableDialog = (post: PostStateTogglePayload) => {
   currPost.value = post;
@@ -306,8 +354,8 @@ const onSearch = (detailed = false) => {
     filter.value = {
       title: title.value,
       description: description.value,
-      locations: location.value,
-      needs: need.value,
+      locations: location.value?.length ? location.value : undefined,
+      needs: need.value?.length ? need.value : undefined,
     };
   } else {
     if (!search.value) {
@@ -318,6 +366,8 @@ const onSearch = (detailed = false) => {
   }
 
   page.value = 1;
+
+  $router.push({ path: "/", query: { page: 1, ...filter.value } });
 
   if (!pending) {
     execute();
@@ -334,6 +384,8 @@ const resetSearch = () => {
   description.value = undefined;
   location.value = undefined;
   need.value = undefined;
+
+  $router.push({ path: "/", query: {} });
 };
 
 watch(
@@ -348,6 +400,10 @@ watch(
     notifyError(t("errors.fetchFeed"));
   },
 );
+
+watch(page, (pg) => {
+  $router.push({ path: "/", query: { ...($router.currentRoute.value.query || {}), page: pg } });
+});
 </script>
 
 <style lang="scss">
