@@ -1,5 +1,6 @@
 import { getPostsAndTotal } from "@/server/db/posts";
 import type { TranslationFunction } from "@/types";
+import type { PostFilter } from "@/types/post";
 
 // because free search with i18n, we need some magics to
 // convert users input into the value thats saved in the db
@@ -16,6 +17,10 @@ const mapIfNeed = (filter: string, t: TranslationFunction) => {
     return "volunteers";
   }
 
+  if (t("posts.needs.other").toLowerCase().includes(filter)) {
+    return "other";
+  }
+
   return filter;
 };
 
@@ -23,10 +28,24 @@ export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   try {
-    let filter = ((getQuery(event)?.filter as string) || "").toLowerCase();
+    const qs = getQuery<{ filter: string } | undefined>(event);
 
-    if (filter) {
-      filter = mapIfNeed(filter, t);
+    let filter: PostFilter | undefined;
+
+    if (qs?.filter) {
+      try {
+        filter = JSON.parse(qs.filter);
+      } catch (_) {}
+
+      if (filter) {
+        if (filter.query) {
+          filter.query = mapIfNeed(filter.query, t);
+        }
+
+        if (filter.needs) {
+          filter.needs = filter.needs.map((n) => mapIfNeed(n, t));
+        }
+      }
     }
 
     return await getPostsAndTotal(filter);

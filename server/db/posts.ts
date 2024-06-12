@@ -1,29 +1,76 @@
-import { SQL, and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
+import { and, count, desc, eq, sql, or, arrayOverlaps, SQLWrapper, SQL } from "drizzle-orm";
 
 import { db } from "./";
-import { posts } from "./schemas/posts.schema";
+import { POST_NEEDS, posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
 import { FEED_PAGE_SIZE } from "@/utils";
 
 import type { InsertPost } from "./schemas/posts.schema";
-import type { UpdatePostPayload } from "@/types/post";
+import type { PostFilter, UpdatePostPayload } from "@/types/post";
 
-export const getPostsAndTotal = async (filter?: string) => {
-  let query: SQL | undefined = undefined;
+type Query = SQLWrapper[] | SQL<any>[] | undefined;
+
+const getFreeInputQuery = (query: string): Query => {
+  query = query.toLowerCase();
+  const fuzzy = `%${query}%`;
+
+  const conditions: Query = [
+    sql`unaccent(lower(${posts.description})) like unaccent(${fuzzy})`,
+    sql`unaccent(lower(${posts.title})) like unaccent(${fuzzy})`,
+    sql`unaccent(lower(${users.name})) like unaccent(${fuzzy})`,
+    sql`unaccent(lower(${users.bio})) like unaccent(${fuzzy})`,
+    arrayOverlaps(posts.locations, [query]),
+  ];
+
+  if (Object.values(POST_NEEDS).includes(query)) {
+    conditions.push(arrayOverlaps(posts.needs, [query]));
+  }
+
+  return [or(...conditions) as SQL<any>];
+};
+
+const getDetailedFilter = (filter: PostFilter): Query => {
+  const toFuzzy = (str: string) => `%${str}%`;
+
+  const conditions: SQLWrapper[] = [];
+
+  if (filter.title) {
+    conditions.push(sql`unaccent(lower(${posts.title})) like unaccent(${toFuzzy(filter.title)})`);
+  }
+
+  if (filter.description) {
+    conditions.push(
+      sql`unaccent(lower(${posts.description})) like unaccent(${toFuzzy(filter.description)})`,
+    );
+  }
+
+  if (filter.locations?.length) {
+    conditions.push(arrayOverlaps(posts.locations, filter.locations));
+  }
+
+  if (filter.needs?.length) {
+    conditions.push(arrayOverlaps(posts.needs, filter.needs));
+  }
+
+  // unexpected filtering
+  if (!conditions.length) {
+    useBugsnag().notify({
+      name: "[posts] unexpected filtering in get posts",
+      message: JSON.stringify(conditions),
+    });
+
+    return undefined;
+  }
+
+  return conditions;
+};
+
+export const getPostsAndTotal = async (filter?: PostFilter) => {
+  let query: Query = undefined;
 
   if (filter) {
-    filter = filter.toLowerCase();
-    const fuzzy = `%${filter}%`;
-
-    query = or(
-      sql`unaccent(lower(${posts.description})) like unaccent(${fuzzy})`,
-      sql`unaccent(lower(${posts.title})) like unaccent(${fuzzy})`,
-      arrayOverlaps(posts.locations, [filter]),
-      arrayOverlaps(posts.needs, [filter]),
-      sql`unaccent(lower(${users.name})) like unaccent(${fuzzy})`,
-      sql`unaccent(lower(${users.bio})) like unaccent(${fuzzy})`,
-    ) as SQL;
+    query = filter.query ? getFreeInputQuery(filter.query) : getDetailedFilter(filter);
   }
 
   const [result, total] = await Promise.all([getPosts(query), getTotalPosts(query)]);
@@ -31,8 +78,10 @@ export const getPostsAndTotal = async (filter?: string) => {
   return { posts: result, total };
 };
 
-export const getPosts = async (filter?: SQL) => {
-  const query = filter ? eq(posts.state, "active") : and(eq(posts.state, "active"), filter);
+export const getPosts = async (conditions?: Query) => {
+  const query = conditions
+    ? and(eq(posts.state, "active"), ...conditions)
+    : eq(posts.state, "active");
 
   const result = await db
     .select({
@@ -57,18 +106,18 @@ export const getPosts = async (filter?: SQL) => {
   return result || [];
 };
 
-export const getTotalPosts = async (filter?: SQL) => {
+export const getTotalPosts = async (conditions?: Query) => {
   try {
     let result;
 
     // if filter exists we need to inner join with users because
     // filter can be looking for user prop
-    if (filter) {
+    if (conditions) {
       result = await db
         .select({ total: count() })
         .from(posts)
         .innerJoin(users, eq(posts.createdUserId, users.id))
-        .where(and(eq(posts.state, "active"), filter));
+        .where(and(eq(posts.state, "active"), ...conditions));
     } else {
       // if filter doesn't exist, we can just query all posts
       result = await db.select({ total: count() }).from(posts).where(eq(posts.state, "active"));

@@ -19,3 +19,18 @@ export type ValidationRule =
   | PromiseLike<ValidationResult>
   | ((value: any) => ValidationResult)
   | ((value: any) => PromiseLike<ValidationResult>);
+
+// custom autocompelte filter typing
+// https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/composables/filter.ts#L19-L19
+type FilterMatch = boolean | number | [number, number] | [number, number][];
+
+interface InternalItem<T = any> {
+  value: any;
+  raw: T;
+}
+
+export type FilterFunction<T = any> = (
+  value: string,
+  query: string,
+  item?: InternalItem<T>,
+) => FilterMatch;

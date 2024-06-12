@@ -11,12 +11,12 @@
   <!-- render posts -->
   <template v-else-if="data.total || !!filter">
     <v-row class="mb-2">
-      <v-col cols="5" align-self="end">
+      <v-col cols="4" align-self="end">
         <p>Recent posts</p>
       </v-col>
 
-      <v-col align-self="end">
-        <form class="pr-2 w-100" @keypress.enter.prevent="onSearch">
+      <v-col align-self="end" class="d-flex">
+        <form class="pr-2 w-100" @keypress.enter.prevent="onSearch()">
           <v-text-field
             v-model:model-value="search"
             variant="solo"
@@ -28,12 +28,117 @@
             persistent-clear
             :clearable="!!filter"
             :placeholder="t('filter.placeholder')"
-            @click:clear="onSearch"
-            @click:append-inner="onSearch"
+            @click:clear="onSearch()"
+            @click:append-inner="onSearch()"
           />
         </form>
+
+        <v-btn icon size="small" flat variant="text" color="primary" @click="toggleExpandedFilter">
+          <v-icon size="x-small">fa-solid fa-filter</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
+
+    <v-expand-transition>
+      <div v-show="expandedFilterVisible" class="pa-2 rounded-lg mb-2">
+        <h4>Pesquisa detalhada</h4>
+
+        <form
+          class="mt-5 mb-3 w-100"
+          @keypress.enter.prevent="onSearch(true)"
+          @submit.prevent="onSearch(true)"
+        >
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model:model-value="title"
+                prepend-icon="fa-solid fa-heading"
+                rounded="lx"
+                density="compact"
+                flat
+                hide-details
+                persistent-clear
+                label="Pesquisar por titulo"
+              />
+            </v-col>
+
+            <v-col>
+              <v-textarea
+                v-model:model-value="description"
+                rows="1"
+                prepend-icon="fa-solid fa-quote-left"
+                rounded="lx"
+                density="compact"
+                flat
+                hide-details
+                persistent-clear
+                label="Pesquisar na descrição"
+              />
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <v-select
+                v-model:model-value="need"
+                hide-hint
+                multiple
+                prepend-icon="fa-solid fa-parachute-box"
+                :label="t('form.post.category')"
+                :items="needs"
+              />
+            </v-col>
+
+            <v-col>
+              <v-autocomplete
+                v-model:model-value="location"
+                rounded="lx"
+                density="compact"
+                prepend-icon="fa-solid fa-location-dot"
+                chips
+                class="detailed-filter"
+                hide-details
+                multiple
+                label="Pesquisar por localidade"
+                no-filter
+                closable-chips
+                :auto-select-first="false"
+                :no-data-text="noDataText"
+                :items="locations"
+                :loading="filteringLocations"
+                @update:search="filterLocations"
+              />
+            </v-col>
+          </v-row>
+
+          <div class="pt-5 d-flex align-center justify-end">
+            <v-btn
+              size="x-small"
+              type="submit"
+              variant="text"
+              flat
+              :loading="pending"
+              @click="resetSearch"
+            >
+              {{ t("feed.emptySearchReset") }}
+            </v-btn>
+
+            <v-btn
+              size="x-small"
+              type="submit"
+              color="primary"
+              variant="text"
+              flat
+              :loading="pending"
+            >
+              {{ t("feed.filter") }}
+            </v-btn>
+          </div>
+        </form>
+
+        <v-divider />
+      </div>
+    </v-expand-transition>
 
     <v-row no-gutters>
       <v-col>
@@ -51,7 +156,18 @@
           </template>
         </v-virtual-scroll>
 
-        <span v-else>{{ t("feed.emptySearch") }}</span>
+        <i18n-t
+          v-else
+          scope="global"
+          keypath="feed.emptySearch"
+          tag="span"
+          for="feed.emptySearchReset"
+          class="no-posts"
+        >
+          <v-btn variant="text" color="primary" size="x-small" @click="resetSearch">
+            {{ t("feed.emptySearchReset") }}
+          </v-btn>
+        </i18n-t>
       </v-col>
     </v-row>
 
@@ -67,7 +183,14 @@
   </template>
 
   <!-- no posts exist -->
-  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton">
+  <i18n-t
+    v-else
+    scope="global"
+    keypath="feed.noPosts"
+    tag="h3"
+    for="feed.noPostsButton"
+    class="no-posts"
+  >
     <nuxt-link to="/posts/new">
       {{ t("feed.noPostsButton") }}
     </nuxt-link>
@@ -91,23 +214,38 @@ import { FEED_PAGE_SIZE } from "@/utils";
 
 import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 import AdPost from "@/components/posts/AdPost.vue";
+import type { SelectOption } from "@/types/form";
+import type { PostFilter } from "@/types/post";
 
 const { notifyError } = useNotify();
 const { data: user } = useAuth();
 const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
 const { openDialog: _openReportDialog } = useReport();
 const { t } = useI18n();
+const { filterLocations, filteringLocations, locations, noDataText } = useLocations();
 
 const page = ref(1);
-const search = ref("");
-const filter = ref("");
+const search = ref<string | undefined>();
+const filter = ref<PostFilter | undefined>(undefined);
 const reportDialogRendered = ref(false);
+const expandedFilterVisible = ref(false);
+
+const title = ref<string | undefined>();
+const description = ref<string | undefined>();
+const location = ref<string[] | undefined>();
+const need = ref<string[] | undefined>();
+
+const needs = ref<SelectOption[]>([
+  { title: t("posts.needs.money"), value: "money" },
+  { title: t("posts.needs.volunteers"), value: "volunteers" },
+  { title: t("posts.needs.goods"), value: "goods" },
+  { title: t("posts.needs.other"), value: "other" },
+]);
 
 const { data, pending, execute, refresh, error } = useFetch<{ posts: Post[]; total: number }>(
   "/api/v1/posts",
   {
     query: { page, filter },
-    watch: [page, filter],
     lazy: true,
     immediate: false,
   },
@@ -159,10 +297,43 @@ const onDelete = async (id: string) => {
   }
 };
 
-const onSearch = () => {
-  console.log("onsearch");
+const onSearch = (detailed = false) => {
+  if (detailed) {
+    if (!title.value && !description.value && !location.value?.length && !need.value?.length) {
+      return;
+    }
+
+    filter.value = {
+      title: title.value,
+      description: description.value,
+      locations: location.value,
+      needs: need.value,
+    };
+  } else {
+    if (!search.value) {
+      return;
+    }
+
+    filter.value = { query: search.value };
+  }
+
   page.value = 1;
-  filter.value = search.value;
+
+  if (!pending) {
+    execute();
+  }
+};
+
+const toggleExpandedFilter = () => (expandedFilterVisible.value = !expandedFilterVisible.value);
+
+const resetSearch = () => {
+  page.value = 1;
+  filter.value = undefined;
+  search.value = undefined;
+  title.value = undefined;
+  description.value = undefined;
+  location.value = undefined;
+  need.value = undefined;
 };
 
 watch(
@@ -178,6 +349,16 @@ watch(
   },
 );
 </script>
+
+<style lang="scss">
+.v-autocomplete__content {
+  max-width: 200px !important;
+
+  .v-list-item-title {
+    white-space: initial !important;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 h3 {

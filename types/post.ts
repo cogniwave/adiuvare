@@ -102,3 +102,11 @@ export interface NotifyPost {
   createdBy: string;
   title: string;
 }
+
+export interface PostFilter {
+  query?: string;
+  title?: string;
+  description?: string;
+  locations?: string[];
+  needs?: string[];
+}
