@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     { path: "~/components/feed", pathPrefix: false },
     { path: "~/components/posts", pathPrefix: false },
     { path: "~/components/contacts", pathPrefix: false },
+    { path: "~/components/organizations", pathPrefix: false },
     "~/components",
   ],
 

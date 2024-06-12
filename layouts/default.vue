@@ -11,12 +11,12 @@
             prepend-icon="fa-solid fa-building-ngo"
           />
 
-          <v-list-item
+          <!-- <v-list-item
             v-if="showUserPosts"
             prepend-icon="fa-solid fa-file-lines"
             :title="t('menu.posts')"
             :to="{ path: '/', query: { createdBy: $route.params.slug } }"
-          />
+          /> -->
         </v-list>
       </v-col>
 
@@ -38,26 +38,28 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "#imports";
+// import { useRoute } from "#imports";
 import { useDisplay } from "vuetify";
 
-import { useAuth } from "@/store/auth";
+// import { useAuth } from "@/store/auth";
 
-const { data } = useAuth();
+// const { data } = useAuth();
+// const $route = useRoute();
 const { t } = useI18n();
-const $route = useRoute();
 const { lgAndUp, xs } = useDisplay();
 
-const showUserPosts = computed(() => {
-  // if no meta exists its because its error page
-  if (["/", "/organizations"].includes($route.path) || !Object.keys($route.meta).length) {
-    return false;
-  }
+// TODO: implement this at a later date
+// const showUserPosts = computed(() => {
+//   // todo: implement this at a later stage
+//   // if no meta exists its because its error page
+//   if (["/", "/organizations"].includes($route.path) || !Object.keys($route.meta).length) {
+//     return false;
+//   }
 
-  if ($route.path === "/profile") {
-    return data.value?.type === "org";
-  }
+//   if ($route.path === "/profile") {
+//     return data.value?.type === "org";
+//   }
 
-  return true;
-});
+//   return true;
+// });
 </script>

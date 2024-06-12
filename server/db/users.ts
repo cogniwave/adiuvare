@@ -109,6 +109,8 @@ export const getOrgs = async () => {
       name: users.name,
       slug: users.slug,
       email: users.email,
+      bio: users.bio,
+      photo: users.photo,
     })
     .from(users)
     .where(and(eq(users.type, "org"), eq(users.verified, true)))

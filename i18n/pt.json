@@ -284,7 +284,9 @@
   "org": {
     "learnMore": "Ver mais",
     "bioPlaceholder": "Descreva a missão / objetivo da organização para melhor ajudar os voluntários à procura duma organização com a qual se identifiquem",
-    "bio": "Missão / objetivo"
+    "bio": "Missão / objetivo",
+    "noBio": "Esta organização ainda não expecificou a sua missão",
+    "showAllBio": "Ver texto completo"
   },
 
   "email": {

@@ -11,45 +11,7 @@
   <template v-if="orgs.length">
     <v-row>
       <v-col v-for="org in orgs" :key="org.slug" cols="5">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-card class="mx-auto" variant="elevated" tile color="grey-lighten-4" v-bind="props">
-            <v-img
-              :aspect-ratio="16 / 9"
-              :src="org.photo || '-'"
-              cover
-              lazy-src="/assets/profile-placeholder.png"
-              referrerpolicy="same-origin"
-            >
-              <template v-slot:error>
-                <v-img src="/assets/profile-placeholder.png" cover referrerpolicy="same-origin" />
-              </template>
-
-              <v-expand-transition>
-                <div
-                  v-if="isHovering"
-                  class="transition-fast-in-fast-out v-card--reveal d-flex bg-primary align-end justify-center"
-                  style="height: 100%"
-                >
-                  <span v-if="org.bio"> {{ org.bio }}</span>
-
-                  <v-btn flat class="text-secondary mb-3" :to="`/organizations/${org.slug}`">
-                    {{ t("org.learnMore") }}
-                  </v-btn>
-                </div>
-              </v-expand-transition>
-            </v-img>
-
-            <v-card-text class="pt-2">
-              <h3 class="text-h4 font-weight-light text-primary">{{ org.name }}</h3>
-
-              <div v-if="org.bio" class="font-weight-light text-subtitle my-2">
-                <v-tooltip :text="org.bio">
-                  {{ shortenText(org.bio, 100) }}
-                </v-tooltip>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-hover>
+        <ad-org-list-item :org="org" />
       </v-col>
     </v-row>
   </template>
@@ -64,7 +26,6 @@ definePageMeta({ path: "/organizations", title: "pages.orgList" });
 
 const { orgs, setOrgs } = useOrganizations();
 const { notifyError } = useNotify();
-const { t } = useI18n();
 
 const { data, pending, error, execute } = useFetch<GetOrganizationsResult>(
   "/api/v1/organizations",
