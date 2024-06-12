@@ -95,4 +95,8 @@ const submit = async () => {
 a {
   color: rgba(var(--v-theme-primary));
 }
+
+.v-footer {
+  flex: initial;
+}
 </style>

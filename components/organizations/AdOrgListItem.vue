@@ -82,8 +82,8 @@ const showAllText = () => {
 
 <style lang="scss" scoped>
 .v-card--reveal {
-  max-height: 200px;
   height: 100%;
+  width: 100%;
   overflow: auto;
 
   &::-webkit-scrollbar {
