@@ -126,13 +126,25 @@
     </template>
 
     <template #actions>
-      <nuxt-link to="login" class="text-blue-grey mr-auto">
-        {{ t("login.title") }}
-      </nuxt-link>
+      <template v-if="!xs">
+        <nuxt-link to="login" class="text-blue-grey mr-auto">
+          {{ t("login.title") }}
+        </nuxt-link>
 
-      <v-btn type="submit" color="primary" :loading="submitting">
-        {{ t("register.register") }}
-      </v-btn>
+        <v-btn type="submit" color="primary" :loading="submitting">
+          {{ t("register.register") }}
+        </v-btn>
+      </template>
+
+      <div v-else class="d-flex flex-column align-center w-100">
+        <v-btn type="submit" color="primary" :loading="submitting">
+          {{ t("register.register") }}
+        </v-btn>
+
+        <nuxt-link to="login" class="text-blue-grey mt-4">
+          {{ t("login.title") }}
+        </nuxt-link>
+      </div>
     </template>
 
     <template #content>
@@ -143,6 +155,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 
 import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
 import { required, isValidEmail, isValidPassword, match } from "@/utils/validators";
@@ -160,6 +173,7 @@ definePageMeta({
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
 const { switchVisibility, password, password2, passwordFieldType, visibilityIcon } = usePassword();
+const { xs } = useDisplay();
 
 const email = ref<string>("");
 const email2 = ref<string>("");

@@ -32,24 +32,42 @@
     </template>
 
     <template #actions>
-      <nuxt-link to="register" class="text-blue-grey">
-        {{ t("register.link") }}
-      </nuxt-link>
+      <!-- desktop -->
+      <template v-if="mdAndUp">
+        <nuxt-link to="register" class="text-blue-grey">
+          {{ t("register.link") }}
+        </nuxt-link>
 
-      <span class="text-blue-grey mx-2">| </span>
+        <span class="text-blue-grey mx-2">| </span>
 
-      <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
-        {{ t("reset.link") }}
-      </nuxt-link>
+        <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
+          {{ t("reset.link") }}
+        </nuxt-link>
 
-      <v-btn type="submit" color="primary" :loading="submitting">
-        {{ t("login.title") }}
-      </v-btn>
+        <v-btn type="submit" color="primary" :loading="submitting">
+          {{ t("login.title") }}
+        </v-btn>
+      </template>
+
+      <div v-else class="d-flex flex-column align-center w-100">
+        <v-btn type="submit" color="primary" class="mb-5" :loading="submitting">
+          {{ t("login.title") }}
+        </v-btn>
+
+        <nuxt-link to="register" class="text-blue-grey mb-3">
+          {{ t("register.link") }}
+        </nuxt-link>
+
+        <nuxt-link to="reset-password" class="text-blue-grey">
+          {{ t("reset.link") }}
+        </nuxt-link>
+      </div>
     </template>
   </ad-auth-form-card>
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { ref } from "vue";
 
 import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
@@ -72,6 +90,7 @@ const $route = useRoute();
 const $router = useRouter();
 const { login } = useAuth();
 const { switchVisibility, password, passwordFieldType, visibilityIcon } = usePassword();
+const { mdAndUp } = useDisplay();
 
 const email = ref<string>("");
 const form = ref<InstanceType<typeof AdAuthFormCard>>();

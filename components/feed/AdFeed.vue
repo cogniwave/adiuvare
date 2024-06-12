@@ -11,7 +11,7 @@
   <!-- render posts -->
   <template v-else-if="data.total || !!filter">
     <v-row class="mb-2">
-      <v-col cols="4" align-self="end">
+      <v-col cols="12" sm="4" align-self="end">
         <p>Recent posts</p>
       </v-col>
 
@@ -49,7 +49,7 @@
           @submit.prevent="onSearch(true)"
         >
           <v-row>
-            <v-col>
+            <v-col cols="12" md="6">
               <v-text-field
                 v-model:model-value="title"
                 prepend-icon="fa-solid fa-heading"
@@ -62,7 +62,7 @@
               />
             </v-col>
 
-            <v-col>
+            <v-col cols="12" md="6">
               <v-textarea
                 v-model:model-value="description"
                 rows="1"
@@ -78,7 +78,7 @@
           </v-row>
 
           <v-row>
-            <v-col>
+            <v-col cols="12" md="6">
               <v-select
                 v-model:model-value="need"
                 hide-hint
@@ -89,7 +89,7 @@
               />
             </v-col>
 
-            <v-col>
+            <v-col cols="12" md="6">
               <v-autocomplete
                 v-model:model-value="location"
                 rounded="lx"

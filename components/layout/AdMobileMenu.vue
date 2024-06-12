@@ -1,21 +1,21 @@
 <template>
   <v-navigation-drawer v-model:model-value="menuOpen" temporary location="bottom">
     <v-list nav>
+      <v-list-item
+        :title="t('menu.home')"
+        append-icon="fa-solid fa-house"
+        @click="$router.push('/')"
+      />
+
+      <v-list-item
+        :title="t('menu.orgs')"
+        append-icon="fa-solid fa-building-ngo"
+        @click="$router.push('/organizations')"
+      />
+
+      <v-divider />
+
       <template v-if="loggedIn">
-        <v-list-item
-          :title="t('menu.home')"
-          append-icon="fa-solid fa-house"
-          @click="$router.push('/')"
-        />
-
-        <v-list-item
-          :title="t('menu.orgs')"
-          append-icon="fa-solid fa-building-ngo"
-          @click="$router.push('/organizations')"
-        />
-
-        <v-divider />
-
         <template v-if="showCreateButton">
           <v-list-item
             :title="t('posts.submit')"

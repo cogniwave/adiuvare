@@ -16,25 +16,42 @@
     </template>
 
     <template #actions>
-      <nuxt-link to="register" class="text-blue-grey">
-        {{ t("register.link") }}
-      </nuxt-link>
+      <template v-if="mdAndUp">
+        <nuxt-link to="register" class="text-blue-grey">
+          {{ t("register.link") }}
+        </nuxt-link>
 
-      <span class="text-blue-grey mx-2">|</span>
+        <span class="text-blue-grey mx-2">|</span>
 
-      <nuxt-link to="login" class="text-blue-grey mr-auto">
-        {{ t("login.title") }}
-      </nuxt-link>
+        <nuxt-link to="login" class="text-blue-grey mr-auto">
+          {{ t("login.title") }}
+        </nuxt-link>
 
-      <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-        {{ t("reset.submit") }}
-      </v-btn>
+        <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+          {{ t("reset.submit") }}
+        </v-btn>
+      </template>
+
+      <div v-else class="d-flex flex-column align-center w-100">
+        <v-btn type="submit" color="primary" class="mb-5" :loading="submitting" @click="submit">
+          {{ t("reset.submit") }}
+        </v-btn>
+
+        <nuxt-link to="register" class="text-blue-grey mb-3">
+          {{ t("register.link") }}
+        </nuxt-link>
+
+        <nuxt-link to="login" class="text-blue-grey">
+          {{ t("login.title") }}
+        </nuxt-link>
+      </div>
     </template>
   </ad-auth-form-card>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 
 import { required, isValidEmail } from "@/utils/validators";
 import { useFormErrors } from "@/composables/formErrors";
@@ -49,6 +66,7 @@ definePageMeta({
 
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
+const { mdAndUp } = useDisplay();
 
 const email = ref<string>("");
 const form = ref<InstanceType<typeof AdAuthFormCard>>();

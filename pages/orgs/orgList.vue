@@ -10,7 +10,7 @@
 
   <template v-else-if="orgs.length">
     <v-row>
-      <v-col v-for="org in orgs" :key="org.slug" cols="5">
+      <v-col v-for="org in orgs" :key="org.slug" md="6" lg="4" xl="3" cols="12">
         <ad-org-list-item :org="org" />
       </v-col>
     </v-row>
