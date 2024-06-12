@@ -8,7 +8,7 @@
     <v-skeleton-loader type="card" class="rounded-xl mt-5 mr-5" width="45%" />
   </div>
 
-  <template v-if="orgs.length">
+  <template v-else-if="orgs.length">
     <v-row>
       <v-col v-for="org in orgs" :key="org.slug" cols="5">
         <ad-org-list-item :org="org" />

@@ -5,12 +5,18 @@
   </template>
 
   <template v-if="currOrg && Object.keys(currOrg)">
-    <div class="d-flex justify-end mb-1">
+    <div class="d-flex mb-1">
+      <v-btn variant="text" size="small" @click="$router.go(-1)">
+        <v-icon>fa-solid fa-chevron-left</v-icon>
+        {{ t("posts.back") }}
+      </v-btn>
+
       <v-btn
         v-if="canEdit"
         variant="text"
         size="small"
         rounded="md"
+        class="ml-auto"
         :to="`/organiations/${currOrg.slug}/edit`"
       >
         <v-icon class="mr-1">fa-solid fa-pencil</v-icon>

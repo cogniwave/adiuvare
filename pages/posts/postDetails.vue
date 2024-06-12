@@ -6,13 +6,13 @@
 
   <template v-else-if="currPost && Object.keys(currPost)">
     <div class="d-flex mb-1">
-      <v-btn v-if="mdAndDown" variant="text" @click="$router.go(-1)">
+      <v-btn variant="text" @click="$router.go(-1)">
         <v-icon>fa-solid fa-chevron-left</v-icon>
         {{ t("posts.back") }}
       </v-btn>
 
       <v-btn
-        v-if="true || canEdit"
+        v-if="canEdit"
         variant="text"
         size="small"
         rounded="md"
@@ -149,12 +149,6 @@
           </v-col>
         </v-row>
       </template>
-    </div>
-
-    <div v-if="!mdAndDown" class="pt-3 d-flex align-center justify-end">
-      <v-btn @click="$router.go(-1)">
-        {{ t("posts.back") }}
-      </v-btn>
     </div>
   </template>
 </template>
