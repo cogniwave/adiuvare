@@ -98,7 +98,9 @@
             tag="label"
             for="form.privacyPolicyLink"
           >
-            <a href="/assets/pp.pdf" target="_blank"> {{ t("form.privacyPolicyLink") }}* </a>
+            <a :href="`/assets/${import.meta.env.PP_FILENAME}`" target="_blank">
+              {{ t("form.privacyPolicyLink") }}*
+            </a>
           </i18n-t>
         </template>
       </v-checkbox>
@@ -111,7 +113,9 @@
       >
         <template #label>
           <i18n-t scope="global" keypath="form.eula" tag="label">
-            <a href="/assets/eula.pdf" target="_blank"> {{ t("form.eulaLink") }}* </a>
+            <a :href="`/assets/${import.meta.env.EULA_FILENAME}`" target="_blank">
+              {{ t("form.eulaLink") }}*
+            </a>
           </i18n-t>
         </template>
       </v-checkbox>

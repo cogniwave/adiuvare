@@ -42,9 +42,13 @@
         <v-col md="4" offset-md="1" cols="12" offset="0">
           <a href="mailto:geral@adiuvare.pt">geral@adiuvare.pt</a>
           <br />
-          <a href="/assets/pp.pdf" target="_blank">{{ $t("privacyPolicy") }}</a>
+          <a :href="`/assets/${import.meta.env.PP_FILENAME}`" target="_blank">
+            {{ $t("privacyPolicy") }}
+          </a>
           <br />
-          <a href="/assets/eula.pdf" target="_blank">{{ $t("eula") }}</a>
+          <a :href="`/assets/${import.meta.env.EULA_FILENAME}`" target="_blank">
+            {{ $t("eula") }}
+          </a>
         </v-col>
       </v-row>
 
