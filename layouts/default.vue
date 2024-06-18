@@ -35,11 +35,14 @@
       </v-col>
     </v-row>
   </v-main>
+
+  <speed-insights />
 </template>
 
 <script setup lang="ts">
 // import { useRoute } from "#imports";
 import { useDisplay } from "vuetify";
+import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 
 // import { useAuth } from "@/store/auth";
 
