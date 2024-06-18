@@ -5,7 +5,7 @@
         :aspect-ratio="16 / 9"
         :src="org.photo || '-'"
         cover
-        lazy-src="/assets/profile-placeholder.png"
+        lazy-src="/assets/images/profile-placeholder.png"
         referrerpolicy="same-origin"
       >
         <template v-slot:error>

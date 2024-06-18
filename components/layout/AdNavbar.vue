@@ -3,7 +3,12 @@
     <template v-slot:title>
       <v-row no-gutters>
         <v-col cols="1">
-          <v-img src="/assets/logo.png" aspect-ratio="1" width="78px" @click="$router.push('/')" />
+          <v-img
+            src="/assets/images/logo.png"
+            aspect-ratio="1"
+            width="78px"
+            @click="$router.push('/')"
+          />
         </v-col>
 
         <v-col md="3" offset-md="1" offset-lg="2" cols="6" offset="2" align-self="center">

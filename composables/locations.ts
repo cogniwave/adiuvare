@@ -1,4 +1,4 @@
-import localidades from "@/public/localidades.json";
+import localidades from "@/public/assets/localidades.json";
 
 export const useLocations = () => {
   const { t } = useI18n();
