@@ -98,9 +98,7 @@
             tag="label"
             for="form.privacyPolicyLink"
           >
-            <a href="/assets/privacypolicy.pdf" target="_blank">
-              {{ t("form.privacyPolicyLink") }}*
-            </a>
+            <a href="/assets/pp.pdf" target="_blank"> {{ t("form.privacyPolicyLink") }}* </a>
           </i18n-t>
         </template>
       </v-checkbox>
