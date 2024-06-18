@@ -12,5 +12,4 @@ export default defineNuxtRouteMiddleware(() => {
     },
     { immediate: true },
   );
-  console.log(loggedIn.value, loading.value);
 });

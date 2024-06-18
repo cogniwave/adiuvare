@@ -63,7 +63,10 @@ const refresh = async () => {
 
     return true;
   } catch (err) {
-    console.log("error on refresh", err);
+    useBugsnag().notify({
+      name: "failed to refresh session",
+      message: JSON.stringify(err),
+    });
     logout();
     return false;
   } finally {

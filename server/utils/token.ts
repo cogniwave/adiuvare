@@ -19,12 +19,10 @@ export const validateToken = (context: H3Event<EventHandlerRequest> | string) =>
 
   if (typeof context !== "string") {
     const cookies = parseCookies(context);
-    console.log("coks", cookies);
     token = cookies["auth:token"] as string;
   } else {
     token = context;
   }
-  console.log(token);
 
   if (!token) {
     return null;

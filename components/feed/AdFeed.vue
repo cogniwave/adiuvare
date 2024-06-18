@@ -261,7 +261,6 @@ const disableDialogRendered = ref(false);
 // whenever the page loads, which results in a hydration mismatch
 // and ghost elements in the list
 onBeforeMount(() => {
-  console.log("on before mount");
   const query = $route.query;
 
   if (query.page) {

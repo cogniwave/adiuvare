@@ -115,7 +115,6 @@ onMounted(() => {
 });
 
 const submit = async () => {
-  console.log("submirt", form.value);
   // won't really happen, but keeps linter happy
   if (!form.value) {
     return;
@@ -133,7 +132,6 @@ const submit = async () => {
       navigateTo({ path: "/" });
     })
     .catch((errs) => {
-      console.log(errs);
       if (errs.statusCode === 401) {
         notifyError(t("errors.invalidCredentials"));
       } else if (errs.statusCode === 400) {
