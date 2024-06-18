@@ -1,75 +1,17 @@
-# Nuxt 3 Minimal Starter
+# Adiuvare
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Plataforma de agregação de organizações sem fins lucrativos e outros projetos sociais que funcionam com colaboração de voluntários ou quaisquer outros donativos.
 
-## Setup
+O objetivo é haver um sitio centralizado onde qualquer pessoa que queira ajudar quer seja como vonlutário, através de doações (monetárias, bens, etc) ou outra maneira qualquer possa facilmente encontrar todas as instituições em Portugal que cujas necessidades vão de encontro com o que a pessoa procura.
 
-Make sure to install the dependencies:
+A plataforma permite as organizações criarem publicações com o que precisam, horários, regiões e contactos através das quais as pessoas interessadas podem entrar em contacto
 
-```bash
-# npm
-npm install
+Permite também pesquisar organizações em geral para quem esteja interessado
 
-# pnpm
-pnpm install
+Sugestões e melhorias são sempre bem vindas
 
-# yarn
-yarn install
+Disponível em https://www.adiuvare.pt/
 
-# bun
-bun install
-```
+### Tecnicidades
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Está construído em [nuxt3](https://nuxt.com/) com [vuetify](https://vuetifyjs.com/en/), alojado em [vercel](https://vercel.com/) com postgres através de [drizzle](https://orm.drizzle.team/)
