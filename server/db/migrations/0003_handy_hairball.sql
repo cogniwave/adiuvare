@@ -1,2 +1,0 @@
-ALTER TABLE "posts" ALTER COLUMN "locations" SET DATA TYPE text[] USING (locations::text[]);--> statement-breakpoint
-ALTER TABLE "posts" ALTER COLUMN "needs" SET DATA TYPE needs[] USING (needs::text::needs[]);

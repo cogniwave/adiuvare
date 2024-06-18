@@ -14,7 +14,6 @@ import { relations } from "drizzle-orm";
 import { users } from "./users.schema";
 import type { PostSchedule } from "@/types/post";
 import type { UserContact } from "@/types/user";
-import { lower } from "./utils";
 
 export const POST_STATES: Readonly<[string, ...string[]]> = [
   "pending",
@@ -55,10 +54,10 @@ export const posts = pgTable(
   },
   (posts) => ({
     idIdx: uniqueIndex("post_id_idx").on(posts.id),
-    slugIdx: uniqueIndex("post_slug_idx").on(lower(posts.slug)),
-    titleIdx: index("post_title_idx").on(lower(posts.title)),
-    needsIdx: index("post_needs_idx").on(lower(posts.needs)),
-    locationsIdx: index("post_locations_idx").on(lower(posts.locations)),
+    slugIdx: uniqueIndex("post_slug_idx").on(posts.slug),
+    titleIdx: index("post_title_idx").on(posts.title),
+    needsIdx: index("post_needs_idx").on(posts.needs),
+    locationsIdx: index("post_locations_idx").on(posts.locations),
   }),
 );
 

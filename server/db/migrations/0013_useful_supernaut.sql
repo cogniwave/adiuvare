@@ -1,1 +1,0 @@
-ALTER TABLE "postHistory" ADD COLUMN "slug" text;

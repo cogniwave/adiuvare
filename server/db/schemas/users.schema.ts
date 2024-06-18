@@ -12,7 +12,6 @@ import {
 
 import { posts } from "./posts.schema";
 import type { UserContact, UserType } from "@/types/user";
-import { lower } from "./utils";
 
 export const USER_TYPES: Readonly<[UserType, ...UserType[]]> = ["org", "volunteer"];
 
@@ -35,8 +34,8 @@ export const users = pgTable(
   },
   (users) => ({
     idIdx: uniqueIndex("user_id_idx").on(users.id),
-    email: uniqueIndex("user_email_idx").on(lower(users.email)),
-    slug: uniqueIndex("user_slug_idx").on(lower(users.slug)),
+    email: uniqueIndex("user_email_idx").on(users.email),
+    slug: uniqueIndex("user_slug_idx").on(users.slug),
   }),
 );
 
