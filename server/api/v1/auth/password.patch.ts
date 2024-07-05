@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
     sanitizeInput(body.token),
   );
 
-  sendEmail(t("email.resetSuccess.subject"), { email: body.email }, "information", {
+  await sendEmail(t("email.resetSuccess.subject"), { email: body.email }, "information", {
     greetings: t("email.greetings"),
     body: t("email.resetSuccess.body"),
   });

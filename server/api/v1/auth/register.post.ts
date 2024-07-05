@@ -18,7 +18,7 @@ const register = async (payload: BaseUser, t: TranslationFunction): Promise<User
     throw Error("Something went wrong");
   }
 
-  sendEmail(
+  await sendEmail(
     t("email.accountConfirm.subject"),
     { email: payload.email, name: payload.name },
     "userActionRequired",
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
       await subscribeToNewsletter(email);
     }
 
-    notifyNewUser(user);
+    await notifyNewUser(user);
 
     return user;
   } catch (err: unknown) {

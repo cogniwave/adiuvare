@@ -2,10 +2,8 @@ import type { Report } from "@/types/report";
 import type { NotifyPost } from "@/types/post";
 import type { User } from "@/types/user";
 
-const sendToSlack = (message: string) => {
+const sendToSlack = async (message: string) => {
   const webhook = process.env.SLACK_WEBHOOK_URL;
-
-  console.log(webhook);
 
   if (!webhook) {
     if (process.env.NODE_ENV === "production") {
@@ -16,23 +14,25 @@ const sendToSlack = (message: string) => {
     return;
   }
 
-  fetch(webhook, {
-    headers: { "Content-type": "application/json" },
-    method: "POST",
-    body: JSON.stringify({ text: message }),
-  })
-    .then(() => console.log(`[slack]: ${message}`))
-    .catch((err) => {
-      console.log(`"[slack] failed to send message: ${err}`);
-      useBugsnag().notify({
-        name: "[slack] couldnt post to slack user",
-        message: JSON.stringify({ err, message }),
-      });
+  try {
+    await fetch(webhook, {
+      headers: { "Content-type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({ text: message }),
     });
+
+    console.log(`[slack]: ${message}`);
+  } catch (err) {
+    console.log(`"[slack] failed to send message: ${err}`);
+    useBugsnag().notify({
+      name: "[slack] couldnt post to slack user",
+      message: JSON.stringify({ err, message }),
+    });
+  }
 };
 
-export const notifyNewReport = (report: Report) => {
-  sendToSlack(
+export const notifyNewReport = async (report: Report) => {
+  return await sendToSlack(
     `:mega: New report created 
       user: ${report.user}
       reason: ${report.reason}
@@ -45,8 +45,8 @@ export const notifyNewReport = (report: Report) => {
   );
 };
 
-export const notifyNewUser = (user: User) => {
-  sendToSlack(
+export const notifyNewUser = async (user: User) => {
+  return await sendToSlack(
     `:standing_person: New user created 
       - id: ${user.id}
       - name: ${user.name}
@@ -56,8 +56,8 @@ export const notifyNewUser = (user: User) => {
   );
 };
 
-export const notifyNewPost = (post: NotifyPost) => {
-  sendToSlack(
+export const notifyNewPost = async (post: NotifyPost) => {
+  return await sendToSlack(
     `:scroll: New post created 
       - id: ${post.id}
       - created by: ${post.createdBy}

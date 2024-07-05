@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     const token = `${genToken(32)}-${Date.now()}`;
 
     if (await updateUserToken(user.id, token)) {
-      sendEmail(
+      await sendEmail(
         t("email.reset.subject"),
         { email: user.email, name: user.name },
         "userActionRequired",

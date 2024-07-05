@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
       slug: `${body.title.trim().slice(0, 20).replaceAll(" ", "_")}-${genToken(10)}`,
     });
 
-    notifyNewPost({ id: result.id, createdBy: user.id, title: user.id });
+    await notifyNewPost({ id: result.id, createdBy: user.id, title: user.id });
 
     return { ...result, createdBy: user.slug, logo: user.logo };
   } catch (err) {

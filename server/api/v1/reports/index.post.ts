@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
       reportBy: sanitizeInput(body.user),
     });
 
-    notifyNewReport(body);
+    await notifyNewReport(body);
 
     setResponseStatus(event, 201);
     return "ok";

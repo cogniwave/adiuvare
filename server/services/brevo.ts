@@ -20,7 +20,7 @@ const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
   information: 6,
 };
 
-export const sendEmail = (
+export const sendEmail = async (
   subject: string,
   to: Receiver,
   template: Template,
@@ -35,7 +35,7 @@ export const sendEmail = (
 
   const api = new TransactionalEmailsApi();
   api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
-  return api.sendTransacEmail(mailer);
+  return await api.sendTransacEmail(mailer);
 };
 
 export const subscribeToNewsletter = async (email: string) => {
