@@ -13,18 +13,19 @@ const sendToSlack = (message: string) => {
     return;
   }
 
-  console.log(`[slack]: ${message}`);
-
-  $fetch(webhook, {
+  fetch(webhook, {
     headers: { "Content-type": "application/json" },
     method: "POST",
-    body: { text: message },
-  }).catch((err) => {
-    useBugsnag().notify({
-      name: "[slack] couldnt post to slack user",
-      message: JSON.stringify({ err, message }),
+    body: JSON.stringify({ text: message }),
+  })
+    .then(() => console.log(`[slack]: ${message}`))
+    .catch((err) => {
+      console.log(`"[slack] failed to send message: ${err}`);
+      useBugsnag().notify({
+        name: "[slack] couldnt post to slack user",
+        message: JSON.stringify({ err, message }),
+      });
     });
-  });
 };
 
 export const notifyNewReport = (report: Report) => {

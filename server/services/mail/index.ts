@@ -20,7 +20,7 @@ const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
   information: 6,
 };
 
-export const sendEmail = (
+export const sendEmail = async (
   subject: string,
   to: Receiver,
   template: Template,
@@ -33,5 +33,15 @@ export const sendEmail = (
   mailer.templateId = TEMPLATE_NAME_TO_ID[template];
   mailer.params = data;
 
-  return brevo.sendTransacEmail(mailer);
+  try {
+    await brevo.sendTransacEmail(mailer);
+    console.log(`[email]: email sent for template ${template}`);
+    return;
+  } catch (err) {
+    console.log(`"[email] failed to send email: ${err}`);
+    useBugsnag().notify({
+      name: "[email] failed to send email couldnt post to slack user",
+      message: JSON.stringify({ err, to: to.email, data, subject }),
+    });
+  }
 };
