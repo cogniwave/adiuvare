@@ -146,11 +146,11 @@
     "cancel": "Cancelar",
     "edit": "Editar",
 
-    "privacyPolicy": "Ao registar-me na Adiuvare concordo com a {0}",
+    "privacyPolicy": "Li e aceito a {0}",
     "privacyPolicyLink": "política de privacidade",
-    "eula": "Ao registar-me na Adiuvare aceito os {0}",
+    "eula": "Li e aceito os {0}",
     "eulaLink": "termos de utilização",
-    "subscribeNewsletter": "Quero subscrever à newsletter e manter-me informado das novidades"
+    "subscribeNewsletter": "Quero subscrever à newsletter e receber novidades"
   },
 
   "notFound": {
