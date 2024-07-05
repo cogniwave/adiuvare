@@ -49,7 +49,7 @@ defineExpose({
       return { valid: false };
     }
 
-    return form.value.validate();
+    return await form.value.validate();
   },
 });
 </script>

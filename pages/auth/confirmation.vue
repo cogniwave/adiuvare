@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card :show-form="false" :title="t('register.confirmation.title')">
+  <ad-auth-form-card ref="form" :show-form="false" :title="t('register.confirmation.title')">
     <template #content>
       <template v-if="!loading">
         <p v-if="invalidLink">{{ t("register.confirmation.invalidLink") }}</p>

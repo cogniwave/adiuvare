@@ -1,5 +1,6 @@
 <template>
   <ad-auth-form-card
+    ref="form"
     :loading="loading"
     :title="t('reset.updateTitle')"
     :show-form="!invalidLink && !expiredLink"

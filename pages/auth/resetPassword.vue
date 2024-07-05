@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card :title="t('reset.title')" :show-form="!submitted" @submit="submit">
+  <ad-auth-form-card ref="form" :title="t('reset.title')" :show-form="!submitted" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"

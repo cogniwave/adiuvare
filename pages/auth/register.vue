@@ -1,5 +1,10 @@
 <template>
-  <ad-auth-form-card :title="t('register.title')" :show-form="!userCreated" @submit="submit">
+  <ad-auth-form-card
+    ref="form"
+    :title="t('register.title')"
+    :show-form="!userCreated"
+    @submit="submit"
+  >
     <template #form>
       <v-text-field
         v-model:model-value="name"
@@ -198,7 +203,11 @@ const submitting = ref<boolean>(false);
 const submit = async () => {
   clearErrors();
 
-  if (!(await form.value?.validate())?.valid) {
+  if (!form.value) {
+    return;
+  }
+
+  if (!(await form.value.validate())?.valid) {
     return;
   }
 
