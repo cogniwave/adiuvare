@@ -16,8 +16,8 @@ interface Receiver {
 }
 
 const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
-  userActionRequired: 1,
-  information: 6,
+  userActionRequired: Number(process.env.USER_ACTION_REQUIRED_TEMPLATE_ID),
+  information: Number(process.env.INFORMATION_TEMPLATE_ID),
 };
 
 export const sendEmail = async (
@@ -43,7 +43,7 @@ export const subscribeToNewsletter = async (email: string) => {
   const api = new ContactsApi();
 
   contact.email = email;
-  contact.listIds = [Number(process.env.NEWSLETTER_ID)];
+  contact.listIds = [Number(process.env.NEWSLETTER_TEMPLATE_ID)];
 
   api.setApiKey(ContactsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
 
