@@ -5,8 +5,11 @@ import type { User } from "@/types/user";
 const sendToSlack = (message: string) => {
   const webhook = process.env.SLACK_WEBHOOK_URL;
 
+  console.log(webhook);
+
   if (!webhook) {
     if (process.env.NODE_ENV === "production") {
+      console.error("SLACK_WEBOOK NOT DEFINED");
       useBugsnag().notify("SLACK_WEBOOK NOT DEFINED");
     }
 
