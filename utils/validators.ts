@@ -7,7 +7,7 @@ import { FILE_SIZE, ACCEPT_FILE_TYPES } from "@/server/utils";
 type TranslatorFunction = (k: string, named?: NamedValue, defaultMsg?: string) => string;
 
 export const required = (t: TranslatorFunction) => (val: string | boolean) => {
-  return typeof val === "string" ? val?.length > 0 : val || t("errors.requiredField");
+  return typeof val === "boolean" ? val : val?.length > 0 || t("errors.requiredField");
 };
 
 export const isValidEmail = (t: TranslatorFunction) => (val: string) => {
