@@ -1,10 +1,16 @@
 <template>
   <v-input prepend-icon="fa-solid fa-address-book">
     <v-label class="mr-2"> {{ t("form.contacts.title") }} </v-label>
+
+    <template #append>
+      <v-btn v-bind="props" variant="tonal" color="primary" density="compact" flat @click="onAdd">
+        {{ t("form.contacts.add") }}
+      </v-btn>
+    </template>
   </v-input>
 
   <div class="d-flex flex-column w-100 mb-10">
-    <div v-for="(c, idx) in proxyContacts" :key="c.contact" class="contact-group">
+    <div v-for="c in proxyContacts" :key="c.contact" class="contact-group">
       <v-select
         :model-value="c.type"
         :items="options"
@@ -39,7 +45,6 @@
         >
           <template v-slot:activator="{ props }">
             <v-btn
-              v-if="idx > 0"
               v-bind="props"
               rounded="xl"
               density="compact"
@@ -48,28 +53,6 @@
               icon="fa-solid fa-circle-minus"
               color="primary"
               @click="onRemove(c.id)"
-            />
-          </template>
-        </v-tooltip>
-
-        <v-tooltip
-          :text="t('form.contacts.add')"
-          location="bottom"
-          close-on-content-click
-          close-delay="0"
-        >
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-show="idx === proxyContacts.length - 1"
-              v-bind="props"
-              rounded="xl"
-              density="compact"
-              class="ml-1"
-              variant="tonal"
-              size="xs"
-              icon="fa-solid fa-circle-plus"
-              color="primary"
-              @click="onAdd"
             />
           </template>
         </v-tooltip>

@@ -3,6 +3,16 @@
     <v-row no-gutters class="py-10">
       <v-col v-if="lgAndUp" cols="2">
         <v-list bg-color="transparent">
+          <template v-if="showCreateButton">
+            <v-list-item
+              :title="t('posts.submit')"
+              to="/posts/new"
+              prepend-icon="fa-solid fa-house"
+            />
+
+            <v-divider class="my-3" />
+          </template>
+
           <v-list-item :title="t('menu.home')" to="/" prepend-icon="fa-solid fa-house" />
 
           <v-list-item
@@ -44,12 +54,15 @@
 import { useDisplay } from "vuetify";
 import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 
-// import { useAuth } from "@/store/auth";
+import { useAuth } from "@/store/auth";
 
 // const { data } = useAuth();
 // const $route = useRoute();
 const { t } = useI18n();
 const { lgAndUp, xs } = useDisplay();
+const { loggedIn, data } = useAuth();
+
+const showCreateButton = computed(() => loggedIn && data.value?.type === "org");
 
 // TODO: implement this at a later date
 // const showUserPosts = computed(() => {

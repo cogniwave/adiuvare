@@ -26,14 +26,13 @@ const updateProfile = async (
     bio: Joi.string().optional().allow(null),
 
     contacts: Joi.array()
+      .allow(null)
       .items(
         Joi.object().keys({
           type: Joi.string().valid("phone", "other", "email").required(),
           contact: Joi.string().min(5).max(264).required(),
         }),
       )
-      .required()
-      .min(1)
       .messages({
         "array.min": t("errors.empty"),
         "any.required": t("errors.invalidContact"),

@@ -1,5 +1,5 @@
 <template>
-  <template v-if="pending || !currUser || !Object.keys(currUser).length">
+  <template v-if="status === 'pending' || !currUser || !Object.keys(currUser).length">
     <v-skeleton-loader type="article@5" class="rounded-xl" />
   </template>
 
@@ -119,7 +119,7 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const userId = computed(() => auth.value?.id || "");
 
-const { data, error, pending, execute } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
+const { data, error, execute, status } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
   lazy: true,
   immediate: false,
 });
@@ -243,7 +243,7 @@ const init = () => {
 
   if (usr) {
     setUser(usr);
-    pending.value = false;
+    status.value = "pending";
   } else {
     execute().catch();
   }

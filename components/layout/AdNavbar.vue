@@ -11,29 +11,8 @@
           />
         </v-col>
 
-        <v-col md="3" offset-md="1" offset-lg="2" cols="6" offset="2" align-self="center">
-          <div class="d-flex w-100 align-center">
-            <v-btn v-if="showCreateButton" size="small" icon class="ml-2" @click="toggleMenu">
-              <v-icon size="large">fa-solid fa-plus</v-icon>
-            </v-btn>
-          </div>
-        </v-col>
-
         <template v-if="mdAndUp">
-          <v-col cols="3" align-self="center" align="end">
-            <v-btn
-              v-if="showCreateButton"
-              size="small"
-              rounded="md"
-              variant="plain"
-              class="ml-auto btn-contact"
-              to="/posts/new"
-            >
-              {{ t("posts.submit") }}
-            </v-btn>
-          </v-col>
-
-          <v-col cols="3" md="4" lg="3" align-self="center" align="end">
+          <v-col cols="5" offset="6" align-self="center" align="end">
             <!-- todo: readd when we actually have notifications -->
             <!-- <v-btn
               v-if="authed"
@@ -72,17 +51,13 @@
 import { useRouter } from "#imports";
 import { useDisplay } from "vuetify";
 
-import { useAuth } from "@/store/auth";
 import { useMenu } from "@/store/menu";
 
 const { menuOpen } = useMenu();
-const { loggedIn, data } = useAuth();
-const { t } = useI18n();
 const $router = useRouter();
 const { mdAndUp } = useDisplay();
 
 // const $notifStore = useNotificationsStore();
-const showCreateButton = computed(() => loggedIn && data.value?.type === "org");
 
 const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>

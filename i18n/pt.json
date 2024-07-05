@@ -121,7 +121,7 @@
       "other": "Outro",
       "type": "Tipo",
       "label": "Contacto",
-      "add": "Adicionar outro contacto",
+      "add": "Adicionar contacto",
       "remove": "Remover",
       "phoneHint": "Se não for um número português adicione também o indicativo"
     },
@@ -323,7 +323,8 @@
     "postEdit": "Editar publicação",
     "account": "Conta",
     "userDetails": "Detalhes do utilizador",
-    "error": "Algo correu mal"
+    "error": "Algo correu mal",
+    "profile": "Perfil"
   },
 
   "errorPage": {

@@ -27,7 +27,7 @@
     <div class="bg-white rounded pa-5">
       <div class="d-flex align-center">
         <v-avatar size="100">
-          <v-img :alt="t('posts.logoAlt')" :lazy-src="currOrg.photoThumbnail">
+          <v-img :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail">
             <template v-slot:error>
               <v-img :src="currOrg.photoThumbnail" cover referrerpolicy="same-origin" />
             </template>
@@ -39,7 +39,11 @@
     </div>
 
     <div v-if="currOrg.bio" class="bg-white rounded pa-5 mt-3">
-      <code v-html="currOrg.bio" />
+      <div v-html="currOrg.bio" class="bio" />
+    </div>
+
+    <div v-if="currOrg.contacts?.length" class="bg-white rounded pa-5 mt-3">
+      <ad-contacts-list :contacts="currOrg.contacts" bg-color="transparent" />
     </div>
   </template>
 </template>
@@ -114,5 +118,9 @@ span {
   font-weight: initial;
   font-size: initial;
   line-height: initial;
+}
+
+.bio {
+  white-space: pre-wrap;
 }
 </style>
