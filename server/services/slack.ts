@@ -10,13 +10,20 @@ const sendToSlack = (message: string) => {
       useBugsnag().notify("SLACK_WEBOOK NOT DEFINED");
     }
 
-    return console.log(`[slack]: ${message}`);
+    return;
   }
+
+  console.log(`[slack]: ${message}`);
 
   $fetch(webhook, {
     headers: { "Content-type": "application/json" },
     method: "POST",
     body: { text: message },
+  }).catch((err) => {
+    useBugsnag().notify({
+      name: "[slack] couldnt post to slack user",
+      message: JSON.stringify({ err, message }),
+    });
   });
 };
 

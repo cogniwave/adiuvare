@@ -11,46 +11,29 @@ import type { DrizzleError } from "@/server/types/drizzle";
 import type { TranslationFunction } from "@/types";
 
 const register = async (payload: BaseUser, t: TranslationFunction): Promise<User> => {
-  try {
-    const token = `${genToken(32)}${Date.now()}`;
-    const newUser = await addUser(payload, token);
+  const token = `${genToken(32)}${Date.now()}`;
+  const newUser = await addUser(payload, token);
 
-    if (!newUser) {
-      throw Error("Something went wrong");
-    }
-
-    sendEmail(
-      t("email.accountConfirm.subject"),
-      { email: payload.email, name: payload.name },
-      "userActionRequired",
-      {
-        greetings: t("email.greetings"),
-        name: payload.name,
-        body: t("email.accountConfirm.body"),
-        body2: t("email.accountConfirm.body2"),
-        buttonText: t("email.accountConfirm.buttonText"),
-        alternativeLinkText: t("email.alternativeLinkText"),
-        link: `${process.env.APP_BASE_URL}/confirmation?token=${token}&email=${payload.email}`,
-      },
-    );
-
-    return newUser;
-  } catch (err: unknown) {
-    if ((err as DrizzleError).constraint === "users_email_unique") {
-      throw createError({
-        data: {
-          email: t("errors.emailExists"),
-        },
-        statusCode: 422,
-        statusMessage: t("errors.validationError"),
-      });
-    }
-
-    throw createError({
-      statusCode: 500,
-      statusMessage: t("errors.unexpected"),
-    });
+  if (!newUser) {
+    throw Error("Something went wrong");
   }
+
+  sendEmail(
+    t("email.accountConfirm.subject"),
+    { email: payload.email, name: payload.name },
+    "userActionRequired",
+    {
+      greetings: t("email.greetings"),
+      name: payload.name,
+      body: t("email.accountConfirm.body"),
+      body2: t("email.accountConfirm.body2"),
+      buttonText: t("email.accountConfirm.buttonText"),
+      alternativeLinkText: t("email.alternativeLinkText"),
+      link: `${process.env.APP_BASE_URL}/confirmation?token=${token}&email=${payload.email}`,
+    },
+  );
+
+  return newUser;
 };
 
 export default defineEventHandler(async (event) => {
@@ -94,21 +77,45 @@ export default defineEventHandler(async (event) => {
   });
 
   const email = sanitizeInput(body.email);
-  const user = await register(
-    {
-      name: sanitizeInput(body.name),
-      password: sanitizeInput(body.password),
-      type: sanitizeInput(body.type),
-      email,
-    },
-    t,
-  );
 
-  if (body.newsletter) {
-    await subscribeToNewsletter(email);
+  try {
+    const user = await register(
+      {
+        name: sanitizeInput(body.name),
+        password: sanitizeInput(body.password),
+        type: sanitizeInput(body.type),
+        email,
+      },
+      t,
+    );
+
+    if (body.newsletter) {
+      await subscribeToNewsletter(email);
+    }
+
+    notifyNewUser(user);
+
+    return user;
+  } catch (err: unknown) {
+    if ((err as DrizzleError).constraint === "users_email_unique") {
+      throw createError({
+        data: {
+          email: t("errors.emailExists"),
+        },
+        statusCode: 422,
+        statusMessage: t("errors.validationError"),
+      });
+    }
+
+    console.log(err);
+    useBugsnag().notify({
+      name: "[user] couldnt create user",
+      message: JSON.stringify(err),
+    });
+
+    throw createError({
+      statusCode: 500,
+      statusMessage: t("errors.unexpected"),
+    });
   }
-
-  notifyNewUser(user);
-
-  return user;
 });
