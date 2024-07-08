@@ -45,7 +45,7 @@ export const sendEmail = async (
   try {
     return await api.sendTransacEmail(mailer);
   } catch (error) {
-    console.log((error as HttpError).response);
+    console.log((error as HttpError).body);
     throw error;
   }
 };
