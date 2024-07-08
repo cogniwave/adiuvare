@@ -26,6 +26,9 @@ export const sendEmail = async (
   template: Template,
   data?: Record<string, string>,
 ) => {
+  // return;
+  console.log(to, template, data);
+
   const mailer = new SendSmtpEmail();
 
   mailer.subject = subject;
