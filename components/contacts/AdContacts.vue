@@ -15,7 +15,7 @@
         :model-value="c.type"
         :items="options"
         :label="t('form.contacts.type')"
-        @update:model-value="onUpdate($event, c.contact, c.id)"
+        @update:model-value="onUpdateType($event, c.contact, c.id)"
         @blur="persistUpdate"
       />
 
@@ -32,7 +32,7 @@
           ...(c.type === 'email' ? [isValidEmail(t)] : []),
           ...(c.type === 'phone' ? [isValidPhone(t)] : []),
         ]"
-        @update:model-value="onUpdate(c.type, $event, c.id)"
+        @update:model-value="onUpdateValue(c.type, $event, c.id)"
         @blur="persistUpdate"
       />
 
@@ -95,7 +95,15 @@ const options = ref([
 
 const contactEdits = ref<Record<number, Contact>>({});
 
-const onUpdate = (type: ContactType, contact: string, id: number) => {
+const onUpdateType = (type: ContactType, contact: string, id: number) => {
+  contactEdits.value[id] = { id, type, contact };
+
+  proxyContacts.value = proxyContacts.value.map((c) => {
+    return c.id === id ? { type, contact, id } : c;
+  });
+};
+
+const onUpdateValue = (type: ContactType, contact: string, id: number) => {
   contactEdits.value[id] = { id, type, contact };
 };
 
