@@ -140,7 +140,8 @@
       "editDetails": "Perfil",
       "picAlt": "Foto de utilizador",
       "accountTitle": "Definições de conta",
-      "accountSubmit": "Atualizar"
+      "accountSubmit": "Atualizar",
+      "createdSuccesffuly": "Conta criada com sucesso"
     },
 
     "cancel": "Cancelar",

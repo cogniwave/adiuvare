@@ -172,6 +172,7 @@ import { useDisplay } from "vuetify";
 
 import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
 import { required, isValidEmail, isValidPassword, match } from "@/utils/validators";
+import { useNotify } from "@/store/notify";
 import { useFormErrors } from "@/composables/formErrors";
 
 import type { User, UserType } from "@/types/user";
@@ -187,6 +188,7 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 const { t } = useI18n();
 const { switchVisibility, password, password2, passwordFieldType, visibilityIcon } = usePassword();
 const { xs } = useDisplay();
+const { notifySuccess } = useNotify();
 
 const email = ref<string>("");
 const email2 = ref<string>("");
@@ -223,7 +225,10 @@ const submit = async () => {
       newsletter: newsletter.value,
     },
   })
-    .then(() => (userCreated.value = true))
+    .then(() => {
+      notifySuccess(t("form.user.createdSuccesffuly"));
+      userCreated.value = true;
+    })
     .catch(handleErrors)
     .finally(() => (submitting.value = false));
 };
