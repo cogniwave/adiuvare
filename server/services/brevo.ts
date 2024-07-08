@@ -26,9 +26,6 @@ export const sendEmail = async (
   template: Template,
   data?: Record<string, string>,
 ) => {
-  // return;
-  console.log(to, TEMPLATE_NAME_TO_ID[template], data);
-
   const mailer = new SendSmtpEmail();
 
   mailer.subject = subject;
@@ -42,6 +39,7 @@ export const sendEmail = async (
 
   const api = new TransactionalEmailsApi();
   api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
+
   try {
     return await api.sendTransacEmail(mailer);
   } catch (error) {
