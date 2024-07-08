@@ -23,7 +23,7 @@ const updateProfile = async (
       .required()
       .messages({ "strings.empty": t("errors.empty") }),
 
-    bio: Joi.string().optional().allow(null),
+    bio: Joi.string().optional().allow(null, ""),
 
     contacts: Joi.array()
       .allow(null)

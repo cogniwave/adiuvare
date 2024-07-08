@@ -185,7 +185,7 @@ const submit = async () => {
   try {
     const requests: any[] = [_updateUser()];
 
-    if (pic.value !== currUser.value.photo) {
+    if (pic.value && pic.value !== currUser.value.photo) {
       requests.push(_uploadFile());
     }
 
@@ -218,7 +218,7 @@ const onFileChange = (e: Event) => {
   const files = (e.target as HTMLInputElement).files;
 
   if (!files?.length) {
-    return t("errors.required");
+    return;
   }
 
   const f = files[0];
