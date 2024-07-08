@@ -38,7 +38,12 @@ export const sendEmail = async (
 
   const api = new TransactionalEmailsApi();
   api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
-  return await api.sendTransacEmail(mailer);
+  try {
+    return await api.sendTransacEmail(mailer);
+  } catch (error) {
+    console.log((error as HttpError).message);
+    throw error;
+  }
 };
 
 export const subscribeToNewsletter = async (email: string) => {

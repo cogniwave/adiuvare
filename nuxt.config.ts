@@ -85,7 +85,7 @@ export default defineNuxtConfig({
 
   bugsnag: {
     publishRelease: true,
-    disableLog: true,
+    disableLog: false,
     baseUrl: process.env.APP_BASE_URL,
 
     config: {
