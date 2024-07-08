@@ -27,7 +27,7 @@ export const sendEmail = async (
   data?: Record<string, string>,
 ) => {
   // return;
-  console.log(to, template, data);
+  console.log(to, TEMPLATE_NAME_TO_ID[template], data);
 
   const mailer = new SendSmtpEmail();
 
@@ -35,13 +35,17 @@ export const sendEmail = async (
   mailer.to = [to];
   mailer.templateId = TEMPLATE_NAME_TO_ID[template];
   mailer.params = data;
+  mailer.sender = {
+    name: "Adiuvare",
+    email: "noreply@adiuvare.pt",
+  };
 
   const api = new TransactionalEmailsApi();
   api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
   try {
     return await api.sendTransacEmail(mailer);
   } catch (error) {
-    console.log((error as HttpError).message);
+    console.log((error as HttpError).response);
     throw error;
   }
 };
