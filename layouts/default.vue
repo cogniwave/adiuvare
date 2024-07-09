@@ -3,7 +3,7 @@
     <v-row no-gutters class="py-10">
       <v-col v-if="lgAndUp" cols="2">
         <v-list bg-color="transparent">
-          <template v-if="showCreateButton">
+          <template v-if="loggedIn">
             <v-list-item
               :title="t('posts.submit')"
               to="/posts/new"
@@ -60,9 +60,7 @@ import { useAuth } from "@/store/auth";
 // const $route = useRoute();
 const { t } = useI18n();
 const { lgAndUp, xs } = useDisplay();
-const { loggedIn, data } = useAuth();
-
-const showCreateButton = computed(() => loggedIn && data.value?.type === "org");
+const { loggedIn } = useAuth();
 
 // TODO: implement this at a later date
 // const showUserPosts = computed(() => {
