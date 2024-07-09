@@ -41,7 +41,7 @@ export const futureDate = (t: TranslatorFunction) => (val: string) => {
 };
 
 export const maxLength = (t: TranslatorFunction, max: number) => (val: string) => {
-  return val.length < max || t("errors.max").replace("{max}", String(max));
+  return val.length <= max || t("errors.max", { max: String(max) });
 };
 
 export const isValidPhone = (t: TranslatorFunction) => (val: string) => {

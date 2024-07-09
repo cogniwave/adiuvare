@@ -12,6 +12,11 @@ export interface User extends Omit<BaseUser, "password"> {
   id: string;
   slug: string;
   bio?: string;
+  website?: string;
+  address?: string;
+  postalCode?: string;
+  city?: string;
+  district?: string;
   photo?: string;
   photoThumbnail?: string;
   contacts?: UserContact[];
@@ -58,10 +63,15 @@ export interface LoginResult extends Tokens {
 }
 
 export interface UpdateProfilePayload {
-  // id: string;
   name: string;
   slug: string;
   bio?: string;
+  website?: string;
+  address?: string;
+  postalCode?: string;
+  city?: string;
+  district?: string;
+
   contacts?: UserContact[];
 }
 

@@ -3478,6 +3478,7 @@ __metadata:
     joi: "npm:^17.13.3"
     jsonwebtoken: "npm:^9.0.2"
     libphonenumber-js: "npm:^1.11.4"
+    maska: "npm:^3.0.0-beta5"
     material-design-icons-iconfont: "npm:^6.7.0"
     nuxt: "npm:^3.12.3"
     nuxt-bugsnag: "npm:^7.3.0"
@@ -7590,6 +7591,13 @@ __metadata:
     promise-retry: "npm:^2.0.1"
     ssri: "npm:^10.0.0"
   checksum: df5f4dbb6d98153b751bccf4dc4cc500de85a96a9331db9805596c46aa9f99d9555983954e6c1266d9f981ae37a9e4647f42b9a4bb5466f867f4012e582c9e7e
+  languageName: node
+  linkType: hard
+
+"maska@npm:^3.0.0-beta5":
+  version: 3.0.0-beta5
+  resolution: "maska@npm:3.0.0-beta5"
+  checksum: 6898e77822e6cfa6361cf2b24588f28a98b35df89defcdf2b6844177ca59aa1636a2135000623a065d71d1ab4ec0d22d278dc9697e6bb439461d2eaddd5c6c42
   languageName: node
   linkType: hard
 

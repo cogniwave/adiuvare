@@ -141,7 +141,17 @@
       "picAlt": "Foto de utilizador",
       "accountTitle": "Definições de conta",
       "accountSubmit": "Atualizar",
-      "createdSuccesffuly": "Conta criada com sucesso"
+      "createdSuccesffuly": "Conta criada com sucesso",
+      "websitePlaceholder": "Link do seu website",
+      "website": "Website",
+      "addressPlaceholder": "Nome da rua, número de porta, andar, lote, etc",
+      "address": "Morada",
+      "postalCodePlaceholder": "1234-123",
+      "postalCode": "Código postal",
+      "cityPlaceholder": "Almada",
+      "city": "Localidade",
+      "districtPlaceholder": "Setúbal",
+      "district": "Distrito"
     },
 
     "cancel": "Cancelar",

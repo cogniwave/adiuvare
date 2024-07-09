@@ -58,3 +58,25 @@ export const sanitizeInput = (input: any) => {
 
   return input.replace(/[&<>"'/]/gi, (match: string) => map[match]);
 };
+
+export const desanitizeInput = (input: any) => {
+  if (!input) {
+    return "";
+  }
+
+  input = input.toString().trim();
+
+  const map: Record<string, string> = {
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#x27;": "'",
+    "&#x2F;": "/",
+  };
+
+  return input.replace(
+    /(&amp;)|(&lt;)|(&gt;)|(&quot)|(&#x27;)|(&#x2F;)/gi,
+    (match: string) => map[match],
+  );
+};

@@ -59,10 +59,11 @@
           class="mb-8"
           persistent-counter
           counter="264"
+          required
           :hint="t('form.user.slugHint')"
           :placeholder="t('form.user.slugPlaceholder')"
           :label="t('form.user.slug')"
-          :rules="[required(t)]"
+          :rules="[required(t), maxLength($t, 264)]"
           :error-messages="errors.slug"
           @blur="onSlugBlur"
         />
@@ -70,13 +71,84 @@
         <!-- bio -->
         <v-textarea
           v-model:model-value="bio"
-          class="mt-10"
+          class="my-10"
           prepend-icon="fa-solid fa-quote-left"
           :placeholder="
             t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')
           "
           :label="t(currUser.type === 'org' ? 'form.org.bio' : 'form.user.bio')"
           @update:model-value="(value) => updateUser('bio', value)"
+        />
+
+        <!-- website -->
+        <v-text-field
+          v-model:model-value="website"
+          prepend-icon="fa-solid fa-globe"
+          class="mb-8"
+          persistent-counter
+          counter="256"
+          :placeholder="t('form.user.websitePlaceholder')"
+          :label="t('form.user.website')"
+          :rules="[maxLength($t, 256)]"
+          :error-messages="errors.website"
+          @update:model-value="(value) => updateUser('website', value)"
+        />
+
+        <!-- morada -->
+        <v-text-field
+          v-model:model-value="address"
+          prepend-icon="fa-solid fa-map"
+          class="mb-8"
+          persistent-counter
+          counter="256"
+          :placeholder="t('form.user.addressPlaceholder')"
+          :label="t('form.user.address')"
+          :rules="[maxLength($t, 256)]"
+          :error-messages="errors.address"
+          @update:model-value="(value) => updateUser('address', value)"
+        />
+
+        <!-- código postal -->
+        <v-text-field
+          v-model:model-value="postalCode"
+          v-maska="'####-###'"
+          prepend-icon="fa-solid fa-address-book"
+          class="mb-8"
+          persistent-counter
+          counter="8"
+          :placeholder="t('form.user.postalCodePlaceholder')"
+          :label="t('form.user.postalCode')"
+          :rules="[maxLength($t, 8)]"
+          :error-messages="errors.postalCode"
+          @update:model-value="(value) => updateUser('postalCode', value)"
+        />
+
+        <!-- city -->
+        <v-text-field
+          v-model:model-value="city"
+          prepend-icon="fa-solid fa-map-location"
+          class="mb-8"
+          persistent-counter
+          counter="256"
+          :placeholder="t('form.user.cityPlaceholder')"
+          :label="t('form.user.city')"
+          :rules="[maxLength($t, 256)]"
+          :error-messages="errors.city"
+          @update:model-value="(value) => updateUser('city', value)"
+        />
+
+        <!-- district -->
+        <v-text-field
+          v-model:model-value="district"
+          prepend-icon="fa-solid fa-location-dot"
+          class="mb-8"
+          persistent-counter
+          counter="128"
+          :placeholder="t('form.user.districtPlaceholder')"
+          :label="t('form.user.district')"
+          :rules="[maxLength($t, 126)]"
+          :error-messages="errors.district"
+          @update:model-value="(value) => updateUser('district', value)"
         />
       </div>
 
@@ -101,6 +173,7 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
 import type { VForm } from "vuetify/components";
+import { vMaska } from "maska/vue";
 
 import { fileSize, fileType } from "@/utils/validators";
 import { useUsers } from "@/store/users";
@@ -129,6 +202,11 @@ const bio = ref<string>("");
 const slug = ref<string>("");
 const pic = ref<string>("");
 const contacts = ref<UserContact[]>([]);
+const website = ref<string>("");
+const address = ref<string>("");
+const postalCode = ref<string>("");
+const city = ref<string>("");
+const district = ref<string>("");
 
 const fileInput = ref<InstanceType<typeof HTMLInputElement> | null>(null);
 
@@ -147,6 +225,11 @@ const _updateUser = async () => {
       bio: currUser.value.bio,
       name: currUser.value.name,
       contacts: currUser.value.contacts,
+      website: currUser.value.website,
+      address: currUser.value.address,
+      postalCode: currUser.value.postalCode,
+      city: currUser.value.city,
+      district: currUser.value.district,
     },
     method: "patch",
   });
@@ -257,9 +340,13 @@ watch(
     }
 
     name.value = usr.name;
-    bio.value = usr.bio || "";
     slug.value = usr.slug;
-    pic.value = usr.photo || "";
+    bio.value = usr.bio || "";
+    website.value = usr.website || "";
+    address.value = usr.address || "";
+    postalCode.value = usr.postalCode || "";
+    city.value = usr.city || "";
+    district.value = usr.district || "";
     contacts.value = usr.contacts || [];
 
     users.value.push(usr);

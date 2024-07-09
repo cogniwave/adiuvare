@@ -102,4 +102,6 @@ export default defineNuxtConfig({
       localeDetector: "./i18n/localeDetector.ts",
     },
   },
+
+  compatibilityDate: "2024-07-08",
 });

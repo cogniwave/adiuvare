@@ -25,6 +25,48 @@ const updateProfile = async (
 
     bio: Joi.string().optional().allow(null, ""),
 
+    website: Joi.string()
+      .optional()
+      .max(256)
+      .allow(null, "")
+      .messages({
+        "string.max": t("errors.max", 256),
+      }),
+
+    address: Joi.string()
+      .optional()
+      .max(256)
+      .allow(null, "")
+      .messages({
+        "string.max": t("errors.max", 256),
+      }),
+
+    postalcode: Joi.string()
+      .optional()
+      .max(8)
+      .allow(null, "")
+      .messages({
+        "string.max": t("errors.max", 8),
+      }),
+
+    city: Joi.string()
+      .optional()
+      .max(256)
+      .allow(null, "")
+      .messages({
+        "string.max": t("errors.max", 256),
+      }),
+
+    district: Joi.string()
+      .optional()
+      .max(128)
+      .allow(null, "")
+      .messages({
+        "string.max": t("errors.max", 128),
+      }),
+
+    postalCode: Joi.string().optional().allow(null, ""),
+
     contacts: Joi.array()
       .allow(null)
       .items(
@@ -40,15 +82,43 @@ const updateProfile = async (
       }),
   });
 
-  const updatedUser = await updateUser(userId, [
+  const payload = [
     { field: "name", value: sanitizeInput(body.name) },
     { field: "slug", value: sanitizeInput(body.slug) },
-    { field: "bio", value: sanitizeInput(body.bio) },
-    {
+  ];
+
+  if (body.bio) {
+    payload.push({ field: "bio", value: sanitizeInput(body.bio) });
+  }
+
+  if (body.website) {
+    payload.push({ field: "website", value: sanitizeInput(body.website) });
+  }
+
+  if (body.address) {
+    payload.push({ field: "address", value: sanitizeInput(body.address) });
+  }
+
+  if (body.postalCode) {
+    payload.push({ field: "postalCode", value: sanitizeInput(body.postalCode) });
+  }
+
+  if (body.city) {
+    payload.push({ field: "city", value: sanitizeInput(body.city) });
+  }
+
+  if (body.district) {
+    payload.push({ field: "district", value: sanitizeInput(body.district) });
+  }
+
+  if (body.contacts) {
+    payload.push({
       field: "contacts",
       value: body.contacts?.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
-    },
-  ]);
+    });
+  }
+
+  const updatedUser = await updateUser(userId, payload);
 
   if (!updatedUser) {
     sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));

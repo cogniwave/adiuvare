@@ -93,6 +93,11 @@ export const getUserById = async (id: string) => {
       photo: users.photo,
       photoThumbnail: users.photoThumbnail,
       contacts: users.contacts,
+      website: users.website,
+      address: users.address,
+      postalCode: users.postalCode,
+      city: users.city,
+      district: users.district,
     })
     .from(users)
     .where(and(eq(users.id, id), eq(users.verified, true)))
