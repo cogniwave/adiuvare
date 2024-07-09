@@ -179,7 +179,14 @@ export default defineEventHandler(async (event) => {
 
   if (!user || user.id !== id) {
     setResponseStatus(event, 401);
-    sendError(event, createError({ statusCode: 401, statusMessage: t("errors.unexpected") }));
+    sendError(
+      event,
+      createError({
+        statusCode: 401,
+        statusMessage: "unauthorized",
+        message: t("errors.unauthenticated"),
+      }),
+    );
     return;
   }
 
@@ -197,7 +204,11 @@ export default defineEventHandler(async (event) => {
     return { success: true };
   } catch (err: any) {
     if (err.statusCode === 401) {
-      throw createError({ statusCode: 401, statusMessage: t("errors.unexpected") });
+      throw createError({
+        statusCode: 401,
+        statusMessage: "unauthorized",
+        message: t("errors.unauthenticated"),
+      });
     }
 
     if (err.statusCode === 422) {

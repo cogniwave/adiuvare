@@ -23,7 +23,8 @@ export default eventHandler(async (event) => {
 
     throw createError({
       statusCode: 401,
-      statusMessage: t("errors.invalidRefreshToken"),
+      message: t("errors.invalidRefreshToken"),
+      statusMessage: "unauthorized",
     });
   }
 

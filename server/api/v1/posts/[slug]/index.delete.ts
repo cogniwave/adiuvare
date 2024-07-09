@@ -12,7 +12,14 @@ export default defineEventHandler(async (event) => {
 
     if (!user) {
       setResponseStatus(event, 401);
-      sendError(event, createError({ statusCode: 401, statusMessage: t("errors.unexpected") }));
+      sendError(
+        event,
+        createError({
+          statusCode: 401,
+          statusMessage: "unauthorized",
+          message: t("errors.unauthenticated"),
+        }),
+      );
       return;
     }
 

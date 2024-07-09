@@ -26,6 +26,7 @@ const login = async (
   if (!user || !compareSync(password, user.password as string)) {
     throw createError({
       statusCode: 401,
+      statusMessage: "unauthorized",
       message: t("errors.invalidCredentials"),
     });
   }
