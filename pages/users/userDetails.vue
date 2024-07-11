@@ -41,11 +41,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import AdContactsList from "@/components/contacts/AdContactsList.vue";
 import { useUsers } from "@/store/users";
 import { useAuth } from "@/store/auth";
+import { useNotify } from "@/store/notify";
 
 import type { User } from "@/types/user";
 
@@ -57,11 +58,13 @@ definePageMeta({
 const { data: auth } = useAuth();
 const { t } = useI18n();
 const $route = useRoute();
+const $router = useRouter();
 const { users, currUser, setUser } = useUsers();
+const { notifyError } = useNotify();
 
 const _slug = $route.params.slug as string;
 
-const { data, pending, execute } = useFetch<User>(`/api/v1/users/${_slug}`, {
+const { data, pending, error } = await useFetch<User>(`/api/v1/users/${_slug}`, {
   lazy: true,
   immediate: false,
 });
@@ -73,13 +76,21 @@ onBeforeMount(() => {
 
   if (usr) {
     setUser(usr);
-  } else {
-    execute();
   }
 });
 
 watch(
   () => data.value,
   (usr) => setUser(usr),
+);
+
+watch(
+  () => error.value,
+  (err) => {
+    if (err) {
+      $router.push("/not-found");
+      notifyError(t("errors.fetchUser"));
+    }
+  },
 );
 </script>

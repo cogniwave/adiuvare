@@ -1,6 +1,6 @@
 <template>
   <!-- show loading -->
-  <template v-if="pending || !data">
+  <template v-if="pending">
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
@@ -9,7 +9,7 @@
   </template>
 
   <!-- render posts -->
-  <template v-else-if="data.total || !!filter">
+  <template v-else-if="data && (data.total || !!filter)">
     <v-row class="mb-2">
       <v-col cols="12" sm="4" align-self="end">
         <p>Recent posts</p>
@@ -217,6 +217,8 @@ import AdPost from "@/components/posts/AdPost.vue";
 import type { SelectOption } from "@/types/form";
 import type { PostFilter } from "@/types/post";
 
+const $route = useRoute();
+
 const { notifyError } = useNotify();
 const { data: user } = useAuth();
 const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
@@ -224,11 +226,8 @@ const { openDialog: _openReportDialog } = useReport();
 const { t } = useI18n();
 const { filterLocations, filteringLocations, locations, noDataText } = useLocations();
 const $router = useRouter();
-const $route = useRoute();
 
-const page = ref(1);
 const search = ref<string | undefined>();
-const filter = ref<PostFilter | undefined>(undefined);
 const reportDialogRendered = ref(false);
 const expandedFilterVisible = ref(false);
 
@@ -244,67 +243,19 @@ const needs = ref<SelectOption[]>([
   { title: t("posts.needs.other"), value: "other" },
 ]);
 
-const { data, pending, execute, refresh, error } = useFetch<{ posts: Post[]; total: number }>(
+const deleteDialogRendered = ref(false);
+const disableDialogRendered = ref(false);
+
+const page = ref(setupPage());
+const filter = ref<PostFilter | undefined>(setupQuery());
+
+const { data, pending, error, refresh } = await useFetch<{ posts: Post[]; total: number }>(
   "/api/v1/posts",
   {
     query: { page, filter },
     lazy: true,
-    immediate: false,
   },
 );
-
-const deleteDialogRendered = ref(false);
-const disableDialogRendered = ref(false);
-
-// todo: figure out a way to use pending without this...
-// using fetch on immediate makes it so pending is always true
-// whenever the page loads, which results in a hydration mismatch
-// and ghost elements in the list
-onBeforeMount(() => {
-  const query = $route.query;
-
-  if (query.page) {
-    const p = Number(query.page);
-
-    if (!isNaN(p) && p > 1) {
-      page.value = p;
-    }
-  }
-
-  const f: PostFilter = {};
-
-  if (!query.query) {
-    if (query.title) {
-      title.value = query.title as string;
-      f.title = title.value;
-    }
-
-    if (query.description) {
-      description.value = query.description as string;
-      f.description = description.value;
-    }
-
-    if (query.needs) {
-      need.value = query.needs as string[];
-      f.needs = need.value;
-    }
-
-    if (query.locations) {
-      location.value = query.locations as string[];
-      f.locations = location.value;
-    }
-  } else {
-    search.value = query.query as string;
-    f.query = search.value;
-  }
-
-  if (Object.keys(f).length) {
-    filter.value = f;
-  } else {
-    // avoid duplicate requests
-    execute();
-  }
-});
 
 const openDisableDialog = (post: PostStateTogglePayload) => {
   currPost.value = post;
@@ -368,7 +319,7 @@ const onSearch = (detailed = false) => {
   $router.push({ path: "/", query: { page: 1, ...filter.value } });
 
   if (!pending) {
-    execute();
+    // execute();
   }
 };
 
@@ -385,6 +336,57 @@ const resetSearch = () => {
 
   $router.push({ path: "/", query: {} });
 };
+
+function setupPage() {
+  const page = $route.query?.page;
+
+  if (!page) {
+    return 1;
+  }
+
+  const p = Number(page);
+
+  return !isNaN(p) && p > 1 ? p : 1;
+}
+
+function setupQuery() {
+  const query = $route.query;
+
+  if (!query) {
+    return undefined;
+  }
+
+  const f: PostFilter = {};
+
+  if (!query.query) {
+    if (query.title) {
+      title.value = query.title as string;
+      f.title = title.value;
+    }
+
+    if (query.description) {
+      description.value = query.description as string;
+      f.description = description.value;
+    }
+
+    if (query.needs) {
+      need.value = query.needs as string[];
+      f.needs = need.value;
+    }
+
+    if (query.locations) {
+      location.value = query.locations as string[];
+      f.locations = location.value;
+    }
+  } else {
+    search.value = query.query as string;
+    f.query = search.value;
+  }
+
+  if (Object.keys(f).length) {
+    filter.value = f;
+  }
+}
 
 watch(
   () => data.value,

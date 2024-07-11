@@ -222,20 +222,12 @@ const DAY_TO_I18N: Record<string, { day: string; order: number }> = {
 
 const slug = $route.params.slug as string;
 
+setPost(null);
 const {
   data: post,
   pending,
   error,
-  execute,
-} = useFetch<Post>(`/api/v1/posts/${slug}`, { lazy: true, immediate: false });
-
-onBeforeMount(() => {
-  if (slug !== currPost.value.slug) {
-    setPost(null);
-  }
-
-  execute();
-});
+} = await useFetch<Post>(`/api/v1/posts/${slug}`, { lazy: true });
 
 const recurringTimes = computed<MappedRecurringTimes[]>(() => {
   if (currPost.value.schedule.type !== "recurring") {

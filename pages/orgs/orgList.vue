@@ -26,13 +26,11 @@ definePageMeta({ path: "/organizations", title: "pages.orgList" });
 
 const { orgs, setOrgs } = useOrganizations();
 const { notifyError } = useNotify();
+const { t } = useI18n();
 
-const { data, pending, error, execute } = useFetch<GetOrganizationsResult>(
-  "/api/v1/organizations",
-  { lazy: true, immediate: false },
-);
-
-onBeforeMount(execute);
+const { data, pending, error } = await useFetch<GetOrganizationsResult>("/api/v1/organizations", {
+  lazy: true,
+});
 
 watch(
   () => data.value,
@@ -44,7 +42,7 @@ watch(
   () => error.value,
   (err) => {
     if (err) {
-      notifyError("Could not fetch organizations");
+      notifyError(t("errors.fetchOrgs"));
     }
   },
   { immediate: true },

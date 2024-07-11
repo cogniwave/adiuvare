@@ -68,20 +68,13 @@ const slug = $route.params.slug as string;
 
 definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails" });
 
+setOrg(null);
+
 const {
   data: org,
   pending,
   error,
-  execute,
-} = useFetch<User>(`/api/v1/organizations/${slug}`, { lazy: true, immediate: false });
-
-onBeforeMount(() => {
-  if (slug !== currOrg.value?.slug) {
-    setOrg(null);
-  }
-
-  execute();
-});
+} = await useFetch<User>(`/api/v1/organizations/${slug}`, { lazy: true });
 
 const canEdit = computed(() => org.value?.slug === user.value?.slug);
 
@@ -101,9 +94,10 @@ watch(
     if (err.statusCode === 404) {
       $router.push("/not-found");
     } else {
-      notifyError(t("errors.fetchOrg"));
       $router.push("/");
     }
+
+    notifyError(t("errors.fetchOrg"));
   },
   { immediate: true },
 );

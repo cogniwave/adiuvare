@@ -187,7 +187,7 @@ import type { UserContact } from "~/types/user";
 
 definePageMeta({ path: "/posts/:slug/edit", middleware: "protected", title: "pages.postEdit" });
 
-const { notifySuccess } = useNotify();
+const { notifySuccess, notifyError } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { currPost, posts, setPost } = usePosts<Post>();
@@ -196,13 +196,13 @@ const $router = useRouter();
 
 const _slug = $route.params.slug as string;
 
+setPost(null);
+
 const {
   data: post,
   pending,
-  execute,
-} = useFetch<Post>(`/api/v1/posts/${_slug}`, { lazy: true, immediate: false });
-
-onBeforeMount(execute);
+  error,
+} = await useFetch<Post>(`/api/v1/posts/${_slug}`, { lazy: true });
 
 const title = ref<string>("");
 const description = ref<string>("");
@@ -319,6 +319,19 @@ watch(
       needs.value = post.needs;
       setPost({ ...post });
     }
+  },
+  { immediate: true },
+);
+
+watch(
+  () => error.value,
+  (err) => {
+    if (!err) {
+      return;
+    }
+
+    $router.push("/not-found");
+    notifyError(t("errors.fetchPost"));
   },
   { immediate: true },
 );
