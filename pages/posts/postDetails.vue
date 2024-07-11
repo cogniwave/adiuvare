@@ -159,7 +159,6 @@ import { useDisplay } from "vuetify";
 
 import { useAuth } from "@/store/auth";
 import { usePosts } from "@/store/posts";
-import { useNotify } from "@/store/notify";
 import dayjs from "@/services/dayjs.service";
 import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "@/types/post";
 
@@ -175,7 +174,6 @@ const { currPost, setPost } = usePosts<Post>();
 const $router = useRouter();
 const $route = useRoute();
 const { data: user } = useAuth();
-const { notifyError } = useNotify();
 const { d, t } = useI18n();
 const { mdAndDown } = useDisplay();
 
@@ -227,7 +225,12 @@ const {
   data: post,
   pending,
   error,
-} = await useFetch<Post>(`/api/v1/posts/${slug}`, { lazy: true });
+} = await useFetch<Post>(`/api/v1/posts/${slug}`, {
+  lazy: true,
+  onResponse({ response }) {
+    setPost(response._data);
+  },
+});
 
 const recurringTimes = computed<MappedRecurringTimes[]>(() => {
   if (currPost.value.schedule.type !== "recurring") {
@@ -255,24 +258,13 @@ const formatSpecificDay = () => {
 };
 
 watch(
-  () => post.value,
-  (post) => post && (currPost.value = post),
-  { immediate: true },
-);
-
-watch(
   () => error.value,
   (err) => {
     if (!err) {
       return;
     }
 
-    if (err.statusCode === 404) {
-      $router.push("/not-found");
-    } else {
-      notifyError(t("errors.fetchPost"));
-      $router.push("/");
-    }
+    throw createError(err);
   },
   { immediate: true },
 );

@@ -52,7 +52,6 @@
 import { useRoute, useRouter } from "vue-router";
 
 import { useAuth } from "@/store/auth";
-import { useNotify } from "@/store/notify";
 import { useOrganizations } from "@/store/organizations";
 
 import type { User } from "@/types/user";
@@ -61,7 +60,6 @@ const { currOrg, setOrg } = useOrganizations();
 const $router = useRouter();
 const $route = useRoute();
 const { data: user } = useAuth();
-const { notifyError } = useNotify();
 const { t } = useI18n();
 
 const slug = $route.params.slug as string;
@@ -74,15 +72,14 @@ const {
   data: org,
   pending,
   error,
-} = await useFetch<User>(`/api/v1/organizations/${slug}`, { lazy: true });
+} = await useFetch<User>(`/api/v1/organizations/${slug}`, {
+  lazy: true,
+  onResponse({ response }) {
+    setOrg(response._data);
+  },
+});
 
 const canEdit = computed(() => org.value?.slug === user.value?.slug);
-
-watch(
-  () => org.value,
-  (org) => org && setOrg(org),
-  { immediate: true },
-);
 
 watch(
   () => error.value,
@@ -91,13 +88,7 @@ watch(
       return;
     }
 
-    if (err.statusCode === 404) {
-      $router.push("/not-found");
-    } else {
-      $router.push("/");
-    }
-
-    notifyError(t("errors.fetchOrg"));
+    throw createError(err);
   },
   { immediate: true },
 );

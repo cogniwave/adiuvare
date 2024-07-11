@@ -192,9 +192,29 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const userId = computed(() => auth.value?.id || "");
 
-const { data, error, execute, status } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
+const { error, execute, status } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
   lazy: true,
   immediate: false,
+  onResponse({ response }) {
+    const usr = response._data;
+
+    if (!usr) {
+      return;
+    }
+
+    name.value = usr.name;
+    slug.value = usr.slug;
+    bio.value = usr.bio || "";
+    website.value = usr.website || "";
+    address.value = usr.address || "";
+    postalCode.value = usr.postalCode || "";
+    city.value = usr.city || "";
+    district.value = usr.district || "";
+    contacts.value = usr.contacts || [];
+
+    users.value.push(usr);
+    setUser(usr);
+  },
 });
 
 const name = ref<string>("");
@@ -331,28 +351,6 @@ const init = () => {
     execute().catch();
   }
 };
-
-watch(
-  () => data.value,
-  (usr) => {
-    if (!usr) {
-      return;
-    }
-
-    name.value = usr.name;
-    slug.value = usr.slug;
-    bio.value = usr.bio || "";
-    website.value = usr.website || "";
-    address.value = usr.address || "";
-    postalCode.value = usr.postalCode || "";
-    city.value = usr.city || "";
-    district.value = usr.district || "";
-    contacts.value = usr.contacts || [];
-
-    users.value.push(usr);
-    setUser(usr);
-  },
-);
 
 watch(
   () => error.value,

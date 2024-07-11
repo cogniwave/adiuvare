@@ -64,9 +64,12 @@ const { notifyError } = useNotify();
 
 const _slug = $route.params.slug as string;
 
-const { data, pending, error } = await useFetch<User>(`/api/v1/users/${_slug}`, {
+const { pending, error } = await useFetch<User>(`/api/v1/users/${_slug}`, {
   lazy: true,
   immediate: false,
+  onResponse({ response }) {
+    setUser(response._data);
+  },
 });
 
 const canEdit = computed(() => currUser.value?.slug === auth.value?.slug);
@@ -78,11 +81,6 @@ onBeforeMount(() => {
     setUser(usr);
   }
 });
-
-watch(
-  () => data.value,
-  (usr) => setUser(usr),
-);
 
 watch(
   () => error.value,

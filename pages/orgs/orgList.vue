@@ -28,15 +28,12 @@ const { orgs, setOrgs } = useOrganizations();
 const { notifyError } = useNotify();
 const { t } = useI18n();
 
-const { data, pending, error } = await useFetch<GetOrganizationsResult>("/api/v1/organizations", {
+const { pending, error } = await useFetch<GetOrganizationsResult>("/api/v1/organizations", {
   lazy: true,
+  onResponse({ response }) {
+    setOrgs(response._data || []);
+  },
 });
-
-watch(
-  () => data.value,
-  (data) => data && setOrgs(data),
-  { immediate: true },
-);
 
 watch(
   () => error.value,

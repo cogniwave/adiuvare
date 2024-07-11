@@ -187,7 +187,7 @@ import type { UserContact } from "~/types/user";
 
 definePageMeta({ path: "/posts/:slug/edit", middleware: "protected", title: "pages.postEdit" });
 
-const { notifySuccess, notifyError } = useNotify();
+const { notifySuccess } = useNotify();
 const { t } = useI18n();
 const { errors, handleErrors, clearErrors } = useFormErrors();
 const { currPost, posts, setPost } = usePosts<Post>();
@@ -202,7 +202,20 @@ const {
   data: post,
   pending,
   error,
-} = await useFetch<Post>(`/api/v1/posts/${_slug}`, { lazy: true });
+} = await useFetch<Post>(`/api/v1/posts/${_slug}`, {
+  lazy: true,
+  onResponse({ response }) {
+    const p = response._data;
+    title.value = p.title;
+    description.value = p.description;
+    slug.value = p.slug;
+    state.value = p.state;
+    locationInput.value = p.locations;
+    locations.value = p.locations;
+    needs.value = p.needs;
+    setPost({ ...p });
+  },
+});
 
 const title = ref<string>("");
 const description = ref<string>("");
@@ -307,31 +320,13 @@ const onSlugBlur = () => {
 const goBack = () => $router.push(`/posts/${_slug}/`);
 
 watch(
-  () => post.value,
-  (post) => {
-    if (post) {
-      title.value = post.title;
-      description.value = post.description;
-      slug.value = post.slug;
-      state.value = post.state;
-      locationInput.value = post.locations;
-      locations.value = post.locations;
-      needs.value = post.needs;
-      setPost({ ...post });
-    }
-  },
-  { immediate: true },
-);
-
-watch(
   () => error.value,
   (err) => {
     if (!err) {
       return;
     }
 
-    $router.push("/not-found");
-    notifyError(t("errors.fetchPost"));
+    throw createError(err);
   },
   { immediate: true },
 );

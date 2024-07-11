@@ -19,7 +19,7 @@
         </template>
       </div>
 
-      <v-btn color="primary" flat class="d-flex mx-auto" @click="home">
+      <v-btn color="primary" flat class="d-flex mx-auto" @click="$router.push('/')">
         {{ $t("errorPage.backButton") }}
       </v-btn>
     </NuxtLayout>
@@ -37,8 +37,6 @@ defineProps({
 const $router = useRouter();
 
 const isDev = ref(import.meta.dev);
-
-const home = () => clearError().then(() => $router.push("/"));
 </script>
 
 <style scoped lang="scss">

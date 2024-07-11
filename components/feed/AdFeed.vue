@@ -29,7 +29,7 @@
             :clearable="!!filter"
             :placeholder="t('filter.placeholder')"
             @click:clear="resetSearch()"
-            @click:append-inner="onSearch()"
+            @click:append-inner.stop.prevent="onSearch()"
           />
         </form>
 
@@ -249,13 +249,19 @@ const disableDialogRendered = ref(false);
 const page = ref(setupPage());
 const filter = ref<PostFilter | undefined>(setupQuery());
 
-const { data, pending, error, refresh } = await useFetch<{ posts: Post[]; total: number }>(
-  "/api/v1/posts",
-  {
-    query: { page, filter },
-    lazy: true,
+const { data, pending, refresh } = useFetch<{ posts: Post[]; total: number }>("/api/v1/posts", {
+  query: { filter: filter.value, page: page.value },
+  lazy: true,
+  onResponse({ response }) {
+    posts.value = response._data?.posts || [];
   },
-);
+  onResponseError() {
+    data.value = { posts: [], total: 0 };
+    posts.value = [];
+
+    notifyError(t("errors.fetchFeed"));
+  },
+});
 
 const openDisableDialog = (post: PostStateTogglePayload) => {
   currPost.value = post;
@@ -311,16 +317,17 @@ const onSearch = (detailed = false) => {
       return;
     }
 
+    if (search.value === filter.value) {
+      return;
+    }
+
     filter.value = { query: search.value };
   }
 
   page.value = 1;
 
   $router.push({ path: "/", query: { page: 1, ...filter.value } });
-
-  if (!pending) {
-    // execute();
-  }
+  refresh();
 };
 
 const toggleExpandedFilter = () => (expandedFilterVisible.value = !expandedFilterVisible.value);
@@ -387,19 +394,6 @@ function setupQuery() {
     filter.value = f;
   }
 }
-
-watch(
-  () => data.value,
-  (data) => (posts.value = data?.posts || []),
-);
-
-watch(
-  () => error.value,
-  () => {
-    data.value = { posts: [], total: 0 };
-    notifyError(t("errors.fetchFeed"));
-  },
-);
 
 watch(page, (pg) => {
   $router.push({ path: "/", query: { ...($router.currentRoute.value.query || {}), page: pg } });
