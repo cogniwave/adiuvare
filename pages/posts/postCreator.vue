@@ -126,7 +126,7 @@ const description = ref<string>("");
 const locationInput = ref<string[]>([]);
 const locations = ref<string[]>([]);
 const fetchingLocations = ref(false);
-const noDataText = ref(t("form.post.locationNoFilter"));
+const noDataText = ref(t("form.post.locationNoData"));
 
 const form = ref<VForm>();
 const categoryInput = ref<string[]>([]);
@@ -153,7 +153,7 @@ const fetchLocations = (text: string) => {
     if (text?.length <= 2) {
       locations.value = [];
       fetchingLocations.value = false;
-      noDataText.value = t("form.post.locationNoFilter");
+      noDataText.value = t("form.post.locationNoData");
       return;
     }
 
@@ -163,7 +163,7 @@ const fetchLocations = (text: string) => {
       .then((cities) => {
         if (!cities?.length) {
           locations.value = [];
-          noDataText.value = t("form.post.locationNoFilter");
+          noDataText.value = t("form.post.locationNoData");
         } else {
           locations.value = cities as string[];
         }

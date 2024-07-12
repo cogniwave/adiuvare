@@ -62,7 +62,7 @@
       "descriptionPlaceholder": "E.g.: Precisa-se voluntário para ajudar com a distribuição de comida às sextas à noite",
       "location": "Área(s) de atuação",
       "locationPlaceholder": "E.g.: Barreiro; Bombarral; Lisboa",
-      "locationNoFilter": "Escreva para procurar uma localidade",
+      "locationNoData": "Escreva para procurar uma localidade",
       "locationSearching": "Procurando...",
       "locationNoResults": "Sem resultados",
       "category": "Que ajuda precisa",
