@@ -7,7 +7,12 @@
   <template v-else>
     <h2 class="text-h5 mb-5">{{ t("form.user.editDetails") }}</h2>
 
-    <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
+    <v-form
+      ref="form"
+      validate-on="submit lazy"
+      @keypress.enter.prevent="submit"
+      @submit.prevent="submit"
+    >
       <div class="bg-white rounded px-10 py-5">
         <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
           <v-hover v-slot="{ isHovering, props }">
