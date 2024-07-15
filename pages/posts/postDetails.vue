@@ -220,7 +220,6 @@ const DAY_TO_I18N: Record<string, { day: string; order: number }> = {
 
 const slug = $route.params.slug as string;
 
-setPost(null);
 const {
   data: post,
   pending,

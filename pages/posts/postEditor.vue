@@ -196,8 +196,6 @@ const $router = useRouter();
 
 const _slug = $route.params.slug as string;
 
-setPost(null);
-
 const {
   data: post,
   pending,

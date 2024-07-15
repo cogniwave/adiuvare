@@ -66,8 +66,6 @@ const slug = $route.params.slug as string;
 
 definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails" });
 
-setOrg(null);
-
 const {
   data: org,
   pending,
