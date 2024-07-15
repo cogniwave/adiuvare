@@ -48,12 +48,19 @@ export const sendEmail = async (
   }
 };
 
-export const subscribeToNewsletter = async (email: string) => {
+export type NewsletterType = "newsletter" | "orgNewsletter";
+
+const NEWSLETTER_TO_ID: Record<NewsletterType, number> = {
+  newsletter: Number(process.env.NEWSLETTER_ID),
+  orgNewsletter: Number(process.env.ORG_NEWSLETTER_ID),
+};
+
+export const subscribeToNewsletter = async (email: string, lists: NewsletterType[]) => {
   const contact = new CreateContact();
   const api = new ContactsApi();
 
   contact.email = email;
-  contact.listIds = [Number(process.env.NEWSLETTER_TEMPLATE_ID)];
+  contact.listIds = lists.map((l) => NEWSLETTER_TO_ID[l]);
 
   api.setApiKey(ContactsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
 

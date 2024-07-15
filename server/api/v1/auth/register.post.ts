@@ -4,7 +4,7 @@ import { addUser } from "@/server/db/users";
 import { sendEmail } from "@/server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 import { notifyNewUser } from "@/server/services/slack";
-import { subscribeToNewsletter } from "@/server/services/brevo";
+import { subscribeToNewsletter, type NewsletterType } from "@/server/services/brevo";
 
 import type { BaseUser, User } from "@/types/user";
 import type { DrizzleError } from "@/server/types/drizzle";
@@ -90,7 +90,13 @@ export default defineEventHandler(async (event) => {
     );
 
     if (body.newsletter) {
-      await subscribeToNewsletter(email);
+      const newsletters: NewsletterType[] = ["newsletter"];
+
+      if (body.type === "org") {
+        newsletters.push("orgNewsletter");
+      }
+
+      await subscribeToNewsletter(email, newsletters);
     }
 
     await notifyNewUser(user);
