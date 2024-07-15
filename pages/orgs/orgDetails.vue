@@ -34,7 +34,24 @@
           </v-img>
         </v-avatar>
 
-        <h1 class="ml-5">{{ currOrg.name }}</h1>
+        <div class="ml-5">
+          <h1>{{ currOrg.name }}</h1>
+
+          <v-list-item
+            v-if="currOrg.address || currOrg.postalCode || currOrg.city || currOrg.district"
+            density="compact"
+            class="px-0"
+            :title="currOrg.address"
+            :subtitle="`${currOrg.postalCode} ${currOrg.city} ${currOrg.district}`.trim()"
+          />
+
+          <v-list-item
+            v-if="currOrg.website"
+            density="compact"
+            class="px-0"
+            :title="currOrg.website"
+          />
+        </div>
       </div>
     </div>
 

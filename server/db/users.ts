@@ -116,6 +116,13 @@ export const getOrgs = async () => {
       email: users.email,
       bio: users.bio,
       photo: users.photo,
+      photoThumbnail: users.photoThumbnail,
+      contacts: users.contacts,
+      website: users.website,
+      address: users.address,
+      postalCode: users.postalCode,
+      city: users.city,
+      district: users.district,
     })
     .from(users)
     .where(and(eq(users.type, "org"), eq(users.verified, true)))
@@ -135,7 +142,7 @@ export const getTotalOrgs = async () => {
   }
 };
 
-export const getUserBySlug = async (slug: string) => {
+export const getOrgBySlug = async (slug: string) => {
   const result = await db
     .select({
       id: users.id,
@@ -145,6 +152,11 @@ export const getUserBySlug = async (slug: string) => {
       photo: users.photo,
       photoThumbnail: users.photoThumbnail,
       contacts: users.contacts,
+      website: users.website,
+      address: users.address,
+      postalCode: users.postalCode,
+      city: users.city,
+      district: users.district,
     })
     .from(users)
     .where(and(eq(users.slug, slug), eq(users.verified, true)))
