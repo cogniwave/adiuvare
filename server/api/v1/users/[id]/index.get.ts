@@ -28,8 +28,8 @@ export default defineEventHandler(async (event) => {
     if (user) {
       return {
         id: user.id,
-        photo: desanitizeInput(user.photo),
-        photoThumbnail: desanitizeInput(user.photoThumbnail),
+        photo: user.photo,
+        photoThumbnail: user.photoThumbnail,
         name: desanitizeInput(user.name),
         slug: desanitizeInput(user.slug),
         bio: desanitizeInput(user.bio),
