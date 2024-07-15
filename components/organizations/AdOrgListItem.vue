@@ -26,7 +26,7 @@
                   <small
                     v-if="org.bio && org.bio.length > 180 && !showFullText"
                     class="inline"
-                    @click="showAllText"
+                    @click.stop.prevent="showAllText"
                   >
                     {{ $t("org.showAllBio") }}
                   </small>
@@ -106,6 +106,13 @@ const showAllText = () => {
 
   small {
     cursor: pointer;
+    transition: 0.2s;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.8;
+      transition: 0.2s;
+    }
   }
 }
 
