@@ -22,7 +22,7 @@ import { useNotify } from "@/store/notify";
 import { useOrganizations } from "@/store/organizations";
 import type { GetOrganizationsResult } from "@/types/user";
 
-definePageMeta({ path: "/organizations", title: "pages.orgList" });
+definePageMeta({ path: "/organizations", title: "pages.orgList", layout: "listing" });
 
 const { orgs, setOrgs } = useOrganizations();
 const { notifyError } = useNotify();

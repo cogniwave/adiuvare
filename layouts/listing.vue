@@ -7,9 +7,9 @@
 
       <v-col
         offset-lg="1"
-        lg="6"
-        offset-md="2"
-        md="8"
+        lg="8"
+        offset-md="1"
+        md="10"
         offset-sm="1"
         sm="10"
         offset="0"
@@ -28,6 +28,8 @@
 // import { useRoute } from "#imports";
 import { useDisplay } from "vuetify";
 import { SpeedInsights } from "@vercel/speed-insights/nuxt";
+
+import AdMenu from "@/components/layout/AdMenu.vue";
 
 // const { data } = useAuth();
 // const $route = useRoute();
