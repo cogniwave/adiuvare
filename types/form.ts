@@ -22,9 +22,9 @@ export type ValidationRule =
 
 // custom autocompelte filter typing
 // https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/composables/filter.ts#L19-L19
-type FilterMatch = boolean | number | [number, number] | [number, number][];
+export type FilterMatch = boolean | number | [number, number] | [number, number][];
 
-interface InternalItem<T = any> {
+export interface InternalItem<T = any> {
   value: any;
   raw: T;
 }

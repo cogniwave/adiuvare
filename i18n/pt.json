@@ -212,7 +212,8 @@
     "invalidFileType": "Ficheiro inválido. Tem que ser JPG, JPEG, ou PNG",
     "validationError": "Erro a validar dados",
     "mismatchKeys": "{0} não coincidem",
-    "expiredResetLink": "Link expirado"
+    "expiredResetLink": "Link expirado",
+    "invalidUrl": "Não é um link válido"
   },
 
   "posts": {

@@ -1,3 +1,4 @@
+import { normalize } from "@/utils";
 import localidades from "@/public/assets/localidades.json";
 
 export const useLocations = () => {
@@ -6,13 +7,6 @@ export const useLocations = () => {
   const filteringLocations = ref(false);
   const locations = ref<string[]>([]);
   const noDataText = ref(t("form.post.locationNoFilter"));
-
-  const normalize = (str: string) => {
-    return str
-      .normalize("NFD")
-      .replace(/\p{Diacritic}/gu, "")
-      .toLowerCase();
-  };
 
   let query = "";
 

@@ -28,6 +28,19 @@ export const isValidPassword = (t: TranslatorFunction, optional = false) => {
   };
 };
 
+export const isValidUrl = (t: TranslatorFunction) => (val: string) => {
+  if (!val) {
+    return true;
+  }
+
+  try {
+    new URL(val);
+    return true;
+  } catch (err) {
+    return t("errors.invalidUrl");
+  }
+};
+
 export const match = (t: TranslatorFunction, valToMatch: string, key: string) => (val: string) => {
   return valToMatch === val || t("errors.mismatchKeys").replace("{0}", key);
 };

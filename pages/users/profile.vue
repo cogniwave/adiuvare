@@ -89,7 +89,7 @@
           counter="256"
           :placeholder="t('form.user.websitePlaceholder')"
           :label="t('form.user.website')"
-          :rules="[maxLength($t, 256)]"
+          :rules="[maxLength($t, 256), isValidUrl($t)]"
           :error-messages="errors.website"
           @update:model-value="(value) => updateUser('website', value)"
         />
@@ -124,30 +124,30 @@
         />
 
         <!-- city -->
-        <v-text-field
+        <v-autocomplete
           v-model:model-value="city"
           prepend-icon="fa-solid fa-map-location"
-          class="mb-8"
-          persistent-counter
-          counter="256"
+          class="mb-10"
+          :items="localidades"
           :placeholder="t('form.user.cityPlaceholder')"
           :label="t('form.user.city')"
-          :rules="[maxLength($t, 256)]"
           :error-messages="errors.city"
+          :no-data-text="t('form.post.locationNoResults')"
+          :custom-filter="filterAutocomplete"
           @update:model-value="(value) => updateUser('city', value)"
         />
 
         <!-- district -->
-        <v-text-field
+        <v-autocomplete
           v-model:model-value="district"
           prepend-icon="fa-solid fa-location-dot"
           class="mb-8"
-          persistent-counter
-          counter="128"
+          :items="distritos"
           :placeholder="t('form.user.districtPlaceholder')"
           :label="t('form.user.district')"
-          :rules="[maxLength($t, 126)]"
+          :no-data-text="t('form.post.locationNoResults')"
           :error-messages="errors.district"
+          :custom-filter="filterAutocomplete"
           @update:model-value="(value) => updateUser('district', value)"
         />
       </div>
@@ -175,11 +175,16 @@ import { useRouter } from "vue-router";
 import type { VForm } from "vuetify/components";
 import { vMaska } from "maska/vue";
 
+import distritos from "@/public/assets/distritos.json";
+import localidades from "@/public/assets/localidades.json";
+
 import { fileSize, fileType } from "@/utils/validators";
 import { useUsers } from "@/store/users";
 import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
+import { normalize } from "@/utils";
 import type { User, UserContact } from "@/types/user";
+import type { FilterMatch } from "@/types/form";
 
 definePageMeta({ path: "/profile", middleware: "protected", title: "pages.profile" });
 
@@ -192,28 +197,20 @@ const { errors, handleErrors, clearErrors } = useFormErrors();
 
 const userId = computed(() => auth.value?.id || "");
 
+// TODO: figure out why 2 requests are going off on page load
+// when loading directly profile
 const { error, execute, status } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
   lazy: true,
   immediate: false,
   onResponse({ response }) {
-    const usr = response._data;
+    const usr: User | null = response._data;
 
     if (!usr) {
       return;
     }
 
-    name.value = usr.name;
-    slug.value = usr.slug;
-    bio.value = usr.bio || "";
-    website.value = usr.website || "";
-    address.value = usr.address || "";
-    postalCode.value = usr.postalCode || "";
-    city.value = usr.city || "";
-    district.value = usr.district || "";
-    contacts.value = usr.contacts || [];
-
+    initUser(usr);
     users.value.push(usr);
-    setUser(usr);
   },
 });
 
@@ -225,8 +222,8 @@ const contacts = ref<UserContact[]>([]);
 const website = ref<string>("");
 const address = ref<string>("");
 const postalCode = ref<string>("");
-const city = ref<string>("");
-const district = ref<string>("");
+const city = ref<string>();
+const district = ref<string>();
 
 const fileInput = ref<InstanceType<typeof HTMLInputElement> | null>(null);
 
@@ -234,7 +231,7 @@ const form = ref<VForm>();
 
 const submitting = ref<boolean>(false);
 
-onBeforeMount(() => userId.value && init());
+onBeforeMount(() => userId.value && status.value !== "pending" && init());
 
 const _updateUser = async () => {
   return await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
@@ -345,11 +342,30 @@ const init = () => {
   const usr = (users.value || []).find(({ id }) => id === userId.value);
 
   if (usr) {
-    setUser(usr);
-    status.value = "pending";
+    initUser(usr);
+    status.value = "success";
   } else {
     execute().catch();
   }
+};
+
+const initUser = (user: User) => {
+  name.value = user.name;
+  slug.value = user.slug;
+  bio.value = user.bio || "";
+  website.value = user.website || "";
+  address.value = user.address || "";
+  postalCode.value = user.postalCode || "";
+  city.value = user.city || undefined;
+  district.value = user.district || undefined;
+  contacts.value = user.contacts || [];
+  pic.value = user.photo || "";
+
+  setUser(user);
+};
+
+const filterAutocomplete = (value: string, query: string): FilterMatch => {
+  return normalize(value).includes(normalize(query));
 };
 
 watch(
