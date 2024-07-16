@@ -44,7 +44,7 @@ onMounted(() => {
   initLoading.value = false;
   finish();
 
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "production") {
     // no use in trying to add stuff to doc if doc does not exist
     if (!document.head) {
       return;
