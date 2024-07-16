@@ -43,5 +43,26 @@ onBeforeMount(() => start());
 onMounted(() => {
   initLoading.value = false;
   finish();
+
+  if (process.env.NODE_ENV !== "production") {
+    // no use in trying to add stuff to doc if doc does not exist
+    if (!document.head) {
+      return;
+    }
+
+    window.BrevoConversationsID = process.env.BREVO_CONVO_ID;
+
+    window.BrevoConversations =
+      window.BrevoConversations ||
+      function () {
+        (window.BrevoConversations.q = window.BrevoConversations.q || []).push(arguments);
+      };
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://conversations-widget.brevo.com/brevo-conversations.js";
+
+    document.head.appendChild(script);
+  }
 });
 </script>
