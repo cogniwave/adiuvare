@@ -26,6 +26,7 @@ import { useDisplay } from "vuetify";
 const { t } = useI18n();
 const $route = useRoute();
 const { smAndDown } = useDisplay();
+const config = useRuntimeConfig();
 
 useHead({
   titleTemplate: () => {
@@ -44,13 +45,13 @@ onMounted(() => {
   initLoading.value = false;
   finish();
 
-  if (process.env.NODE_ENV === "production") {
+  if (!import.meta.dev) {
     // no use in trying to add stuff to doc if doc does not exist
     if (!document.head) {
       return;
     }
 
-    window.BrevoConversationsID = process.env.BREVO_CONVO_ID;
+    window.BrevoConversationsID = config.public.brevoConversationId;
 
     window.BrevoConversations =
       window.BrevoConversations ||

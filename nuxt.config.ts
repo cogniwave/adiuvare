@@ -38,6 +38,12 @@ export default defineNuxtConfig({
     },
   },
 
+  runtimeConfig: {
+    public: {
+      brevoConversationId: import.meta.env.BREVO_CONVO_ID,
+    },
+  },
+
   ssr: true,
 
   build: {
@@ -86,11 +92,11 @@ export default defineNuxtConfig({
   bugsnag: {
     publishRelease: true,
     disableLog: false,
-    baseUrl: process.env.APP_BASE_URL,
+    baseUrl: import.meta.env.APP_BASE_URL,
 
     config: {
-      releaseStage: process.env.NODE_ENV,
-      apiKey: process.env.BUGSNAG_KEY,
+      releaseStage: import.meta.env.NODE_ENV,
+      apiKey: import.meta.env.BUGSNAG_KEY,
       enabledReleaseStages: ["staging", "production"],
       appVersion: version,
     },
