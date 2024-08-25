@@ -66,8 +66,6 @@ export const subscribeToNewsletter = async (email: string, lists: NewsletterType
 
   try {
     await api.createContact(contact);
-
-    return;
   } catch (error) {
     if ((error as HttpError).body.code === "duplicate_parameter") {
       return;
