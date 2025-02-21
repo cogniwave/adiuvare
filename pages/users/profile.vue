@@ -1,25 +1,22 @@
 <template>
-  <template v-if="status === 'pending' || !currUser || !Object.keys(currUser).length">
-    <v-skeleton-loader type="article@5" class="rounded-xl" />
-  </template>
+  <v-skeleton-loader
+    v-if="status === 'pending' || !currUser || !Object.keys(currUser).length"
+    type="article@5"
+    class="rounded-xl"
+  />
 
   <!-- render users -->
   <template v-else>
     <h2 class="text-h5 mb-5">{{ t("form.user.editDetails") }}</h2>
 
-    <v-form
-      ref="form"
-      validate-on="submit lazy"
-      @keypress.enter.prevent="submit"
-      @submit.prevent="submit"
-    >
+    <v-form ref="form" validate-on="submit lazy" @keypress.enter.prevent="submit" @submit.prevent="submit">
       <div class="bg-white rounded px-10 py-5">
         <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
           <v-hover v-slot="{ isHovering, props }">
             <div v-bind="props" class="pic-wrapper" @click="fileInput?.click()">
               <input
-                ref="fileInput"
                 id="avatar"
+                ref="fileInput"
                 type="file"
                 accept="image/png, image/jpeg"
                 class="d-none"
@@ -78,9 +75,7 @@
           v-model:model-value="bio"
           class="my-10"
           prepend-icon="fa-solid fa-quote-left"
-          :placeholder="
-            t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')
-          "
+          :placeholder="t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')"
           :label="t(currUser.type === 'org' ? 'form.org.bio' : 'form.user.bio')"
           @update:model-value="(value) => updateUser('bio', value)"
         />
@@ -176,247 +171,248 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from "vue-router";
-import type { VForm } from "vuetify/components";
-import { vMaska } from "maska/vue";
+  import { useRouter } from "vue-router";
+  import type { VForm } from "vuetify/components";
+  import { vMaska } from "maska/vue";
 
-import distritos from "@/public/assets/distritos.json";
-import localidades from "@/public/assets/localidades.json";
+  import distritos from "@/public/assets/distritos.json";
+  import localidades from "@/public/assets/localidades.json";
 
-import { fileSize, fileType } from "@/utils/validators";
-import { useUsers } from "@/store/users";
-import { useAuth } from "@/store/auth";
-import { useNotify } from "@/store/notify";
-import { normalize } from "@/utils";
-import type { User, UserContact } from "@/types/user";
-import type { FilterMatch } from "@/types/form";
+  import { fileSize, fileType } from "@/utils/validators";
+  import { useUsers } from "@/store/users";
+  import { useAuth } from "@/store/auth";
+  import { useNotify } from "@/store/notify";
+  import { normalize } from "@/utils";
+  import type { User, UserContact } from "@/types/user";
+  import type { FilterMatch } from "@/types/form";
 
-definePageMeta({ path: "/profile", middleware: "protected", title: "pages.profile" });
+  definePageMeta({ path: "/profile", middleware: "protected", title: "pages.profile" });
 
-const { data: auth, logout } = useAuth();
-const { t } = useI18n();
-const $router = useRouter();
-const { users, currUser, setUser } = useUsers();
-const { notifyError, notifySuccess } = useNotify();
-const { errors, handleErrors, clearErrors } = useFormErrors();
+  const { data: auth, logout } = useAuth();
+  const { t } = useI18n();
+  const $router = useRouter();
+  const { users, currUser, setUser } = useUsers();
+  const { notifyError, notifySuccess } = useNotify();
+  const { errors, handleErrors, clearErrors } = useFormErrors();
 
-const userId = computed(() => auth.value?.id || "");
+  const userId = computed(() => auth.value?.id || "");
 
-// TODO: figure out why 2 requests are going off on page load
-// when loading directly profile
-const { error, execute, status } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
-  lazy: true,
-  immediate: false,
-  onResponse({ response }) {
-    const usr: User | null = response._data;
+  // TODO: figure out why 2 requests are going off on page load
+  // when loading directly profile
+  const { error, execute, status } = useFetch<User>(() => `/api/v1/users/${userId.value}`, {
+    lazy: true,
+    immediate: false,
+    onResponse({ response }) {
+      const usr: User | null = response._data;
 
-    if (!usr) {
-      return;
-    }
+      if (!usr) {
+        return;
+      }
 
-    initUser(usr);
-    users.value.push(usr);
-  },
-});
-
-const name = ref<string>("");
-const bio = ref<string>("");
-const slug = ref<string>("");
-const pic = ref<string>("");
-const contacts = ref<UserContact[]>([]);
-const website = ref<string>("");
-const address = ref<string>("");
-const postalCode = ref<string>("");
-const city = ref<string>();
-const district = ref<string>();
-
-const fileInput = ref<InstanceType<typeof HTMLInputElement> | null>(null);
-
-const form = ref<VForm>();
-
-const submitting = ref<boolean>(false);
-
-onBeforeMount(() => userId.value && status.value !== "pending" && init());
-
-const _updateUser = async () => {
-  return await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
-    query: { action: "profile" },
-    body: {
-      id: currUser.value.id,
-      slug: currUser.value.slug,
-      bio: currUser.value.bio,
-      name: currUser.value.name,
-      contacts: currUser.value.contacts,
-      website: currUser.value.website,
-      address: currUser.value.address,
-      postalCode: currUser.value.postalCode,
-      city: currUser.value.city,
-      district: currUser.value.district,
+      initUser(usr);
+      users.value.push(usr);
     },
-    method: "patch",
   });
-};
 
-const _uploadFile = async () => {
-  const formData = new FormData();
+  const name = ref<string>("");
+  const bio = ref<string>("");
+  const slug = ref<string>("");
+  const pic = ref<string>("");
+  const contacts = ref<UserContact[]>([]);
+  const website = ref<string>("");
+  const address = ref<string>("");
+  const postalCode = ref<string>("");
+  const city = ref<string>();
+  const district = ref<string>();
 
-  if (!fileInput.value) {
-    return;
-  }
+  const fileInput = ref<InstanceType<typeof HTMLInputElement> | null>(null);
 
-  // @ts-expect-error TS will complain that files is not the correct type
-  formData.append("file", fileInput.value.files?.[0]);
+  const form = ref<VForm>();
 
-  return await $fetch<User>(`/api/v1/users/${currUser.value.id}/photo`, {
-    body: formData,
-    method: "post",
-  });
-};
+  const submitting = ref<boolean>(false);
 
-const submit = async () => {
-  // won't really happen, but keeps linter happy
-  if (!form.value) {
-    return;
-  }
+  onBeforeMount(() => userId.value && status.value !== "pending" && init());
 
-  const result = await form.value.validate();
-  if (!result.valid || !!errors.value.file) {
-    return;
-  }
+  const _updateUser = async () => {
+    return await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
+      query: { action: "profile" },
+      body: {
+        id: currUser.value.id,
+        slug: currUser.value.slug,
+        bio: currUser.value.bio,
+        name: currUser.value.name,
+        contacts: currUser.value.contacts,
+        website: currUser.value.website,
+        address: currUser.value.address,
+        postalCode: currUser.value.postalCode,
+        city: currUser.value.city,
+        district: currUser.value.district,
+      },
+      method: "patch",
+    });
+  };
 
-  clearErrors();
-  submitting.value = true;
+  const _uploadFile = async () => {
+    const formData = new FormData();
 
-  try {
-    const requests: any[] = [_updateUser()];
-
-    if (pic.value && pic.value !== currUser.value.photo) {
-      requests.push(_uploadFile());
-    }
-
-    const [user, urls] = await Promise.all(requests);
-
-    if (user) {
-      users.value = users.value.map((p) => {
-        return p.id === currUser.value.id ? { ...currUser.value, ...urls } : p;
-      });
-    }
-
-    notifySuccess(t("form.user.updated"));
-  } catch (errs: any) {
-    handleErrors(errs);
-  } finally {
-    submitting.value = false;
-  }
-};
-
-const updateUser = (prop: string, val: string | UserContact[]) => {
-  currUser.value = { ...currUser.value, [prop]: val };
-};
-
-const onSlugBlur = () => {
-  slug.value = slug.value.replaceAll(/[^A-Za-z0-9]/g, "-");
-  updateUser("slug", slug.value);
-};
-
-const onFileChange = (e: Event) => {
-  const files = (e.target as HTMLInputElement).files;
-
-  if (!files?.length) {
-    return;
-  }
-
-  const f = files[0];
-  const typeResult = fileType(t)(f);
-  if (typeof typeResult === "boolean") {
-    const sizeResult = fileSize(t)(f);
-
-    if (typeof sizeResult === "boolean") {
-      clearErrors();
-
-      pic.value = URL.createObjectURL(f);
-    } else {
-      errors.value.file = sizeResult;
-    }
-  } else {
-    errors.value.file = typeResult;
-  }
-};
-
-const init = () => {
-  const usr = (users.value || []).find(({ id }) => id === userId.value);
-
-  if (usr) {
-    initUser(usr);
-    status.value = "success";
-  } else {
-    execute().catch();
-  }
-};
-
-const initUser = (user: User) => {
-  name.value = user.name;
-  slug.value = user.slug;
-  bio.value = user.bio || "";
-  website.value = user.website || "";
-  address.value = user.address || "";
-  postalCode.value = user.postalCode || "";
-  city.value = user.city || undefined;
-  district.value = user.district || undefined;
-  contacts.value = user.contacts || [];
-  pic.value = user.photo || "";
-
-  setUser(user);
-};
-
-const filterAutocomplete = (value: string, query: string): FilterMatch => {
-  return normalize(value).includes(normalize(query));
-};
-
-watch(
-  () => error.value,
-  (err) => {
-    if (!err) {
+    if (!fileInput.value) {
       return;
     }
 
-    if (err.statusCode === 404) {
-      $router.push("/not-found");
-    } else if (err.statusCode === 401) {
-      logout().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
-    } else {
-      notifyError(t("errors.fetchUser"));
-      $router.push("/");
-    }
-  },
-  { immediate: true },
-);
+    // @ts-expect-error TS will complain that files is not the correct type
+    formData.append("file", fileInput.value.files?.[0]);
 
-watch(() => userId.value, init);
+    return await $fetch<User>(`/api/v1/users/${currUser.value.id}/photo`, {
+      body: formData,
+      method: "post",
+    });
+  };
+
+  const submit = async () => {
+    // won't really happen, but keeps linter happy
+    if (!form.value) {
+      return;
+    }
+
+    const result = await form.value.validate();
+    if (!result.valid || !!errors.value.file) {
+      return;
+    }
+
+    clearErrors();
+    submitting.value = true;
+
+    try {
+      const requests: Array<ReturnType<typeof _updateUser | typeof _uploadFile>> = [_updateUser()];
+
+      if (pic.value && pic.value !== currUser.value.photo) {
+        requests.push(_uploadFile());
+      }
+
+      const [user, urls] = await Promise.all(requests);
+
+      if (user) {
+        users.value = users.value.map((p) => {
+          return p.id === currUser.value.id ? { ...currUser.value, ...urls } : p;
+        });
+      }
+
+      notifySuccess(t("form.user.updated"));
+    } catch (errs: unknown) {
+      handleErrors(errs);
+    } finally {
+      submitting.value = false;
+    }
+  };
+
+  const updateUser = (prop: string, val: string | UserContact[]) => {
+    currUser.value = { ...currUser.value, [prop]: val };
+  };
+
+  const onSlugBlur = () => {
+    slug.value = slug.value.replaceAll(/[^A-Za-z0-9]/g, "-");
+    updateUser("slug", slug.value);
+  };
+
+  const onFileChange = (e: Event) => {
+    const files = (e.target as HTMLInputElement).files;
+
+    if (!files?.length) {
+      return;
+    }
+
+    const f = files[0];
+
+    const typeResult = fileType(t)(f!);
+    if (typeof typeResult === "boolean") {
+      const sizeResult = fileSize(t)(f!);
+
+      if (typeof sizeResult === "boolean") {
+        clearErrors();
+
+        pic.value = URL.createObjectURL(f!);
+      } else {
+        errors.value.file = sizeResult;
+      }
+    } else {
+      errors.value.file = typeResult;
+    }
+  };
+
+  const init = () => {
+    const usr = (users.value || []).find(({ id }) => id === userId.value);
+
+    if (usr) {
+      initUser(usr);
+      status.value = "success";
+    } else {
+      execute().catch();
+    }
+  };
+
+  const initUser = (user: User) => {
+    name.value = user.name;
+    slug.value = user.slug;
+    bio.value = user.bio || "";
+    website.value = user.website || "";
+    address.value = user.address || "";
+    postalCode.value = user.postalCode || "";
+    city.value = user.city || undefined;
+    district.value = user.district || undefined;
+    contacts.value = user.contacts || [];
+    pic.value = user.photo || "";
+
+    setUser(user);
+  };
+
+  const filterAutocomplete = (value: string, query: string): FilterMatch => {
+    return normalize(value).includes(normalize(query));
+  };
+
+  watch(
+    () => error.value,
+    (err) => {
+      if (!err) {
+        return;
+      }
+
+      if (err.statusCode === 404) {
+        $router.push("/not-found");
+      } else if (err.statusCode === 401) {
+        logout().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
+      } else {
+        notifyError(t("errors.fetchUser"));
+        $router.push("/");
+      }
+    },
+    { immediate: true },
+  );
+
+  watch(() => userId.value, init);
 </script>
 
 <style scoped lang="scss">
-.pic-wrapper {
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 8px;
-  border-radius: 100px;
-  width: 128px;
-  display: block;
-  margin: auto;
-
-  .camera-wrapper {
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.3);
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .pic-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+    border-radius: 100px;
+    width: 128px;
+    display: block;
     margin: auto;
+
+    .camera-wrapper {
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.3);
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+    }
   }
-}
 </style>

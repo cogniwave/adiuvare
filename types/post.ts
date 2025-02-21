@@ -38,13 +38,13 @@ export interface PostSchedule {
   payload?: RecurringSchedule | SpecificSchedule;
 }
 
-export type PostCategory = "volunteers" | "money" | "goods" | "other";
+export type Need = string | "volunteers" | "money" | "goods" | "other";
 
 export interface EmptyPost {
   schedule: PostSchedule;
   description: string;
   title: string;
-  needs: PostCategory[];
+  needs: Need[];
   contacts: UserContact[];
   locations: string[];
 }
@@ -65,7 +65,7 @@ export interface CreatePostPayload {
   description: string;
   locations: string[];
   schedule: PostSchedule;
-  needs: PostCategory[];
+  needs: Need[];
   title: string;
   contacts: UserContact[];
 }
@@ -93,7 +93,7 @@ export interface PostHistory {
   description: string;
   locations: string[];
   schedule: PostSchedule;
-  needs: PostCategory[];
+  needs: Need[];
   title: string;
 }
 

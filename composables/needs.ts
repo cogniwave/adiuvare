@@ -1,4 +1,4 @@
-import type { PostCategory } from "@/types/post";
+import type { Need } from "@/types/post";
 
 interface ConfigItem {
   icon: string;
@@ -7,12 +7,10 @@ interface ConfigItem {
   description: string;
 }
 
-interface Config {
-  [key: string]: ConfigItem;
-}
+type Config = Record<Need, ConfigItem>;
 
 export const useNeed = () => {
-  const getNeedDetails = (need: PostCategory) => {
+  const getNeedDetails = (need: Need): ConfigItem => {
     const NEED_MAPPING: Config = {
       money: {
         icon: "fa-solid fa-coins",
@@ -40,7 +38,7 @@ export const useNeed = () => {
       },
     };
 
-    return NEED_MAPPING[need];
+    return NEED_MAPPING[need]!;
   };
 
   return { getNeedDetails };

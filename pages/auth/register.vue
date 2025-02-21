@@ -47,7 +47,7 @@
         :type="passwordFieldType"
         :rules="[required(t), isValidPassword(t)]"
       >
-        <template v-slot:append-inner>
+        <template #append-inner>
           <v-icon class="cursor-pointer" @click="switchVisibility">
             fa-solid fa-{{ visibilityIcon }}
           </v-icon>
@@ -70,7 +70,7 @@
           match(t, password, t('form.passwordDuplicateKey')),
         ]"
       >
-        <template v-slot:append-inner>
+        <template #append-inner>
           <v-icon class="cursor-pointer" @click="switchVisibility">
             fa-solid fa-{{ visibilityIcon }}
           </v-icon>

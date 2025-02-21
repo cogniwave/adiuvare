@@ -28,7 +28,7 @@
       <div class="d-flex align-center">
         <v-avatar size="100">
           <v-img :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail">
-            <template v-slot:error>
+            <template #error>
               <v-img :src="currOrg.photoThumbnail" cover referrerpolicy="same-origin" />
             </template>
           </v-img>
@@ -45,18 +45,13 @@
             :subtitle="`${currOrg.postalCode} ${currOrg.city} ${currOrg.district}`.trim()"
           />
 
-          <v-list-item
-            v-if="currOrg.website"
-            density="compact"
-            class="px-0"
-            :title="currOrg.website"
-          />
+          <v-list-item v-if="currOrg.website" density="compact" class="px-0" :title="currOrg.website" />
         </div>
       </div>
     </div>
 
     <div v-if="currOrg.bio" class="bg-white rounded pa-5 mt-3">
-      <div v-html="currOrg.bio" class="bio" />
+      <div class="bio">{{ currOrg.bio }}</div>
     </div>
 
     <div v-if="currOrg.contacts?.length" class="bg-white rounded pa-5 mt-3">
@@ -66,61 +61,61 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute, useRouter } from "vue-router";
+  import { useRoute, useRouter } from "vue-router";
 
-import { useAuth } from "@/store/auth";
-import { useOrganizations } from "@/store/organizations";
+  import { useAuth } from "@/store/auth";
+  import { useOrganizations } from "@/store/organizations";
 
-import type { User } from "@/types/user";
+  import type { User } from "@/types/user";
 
-const { currOrg, setOrg } = useOrganizations();
-const $router = useRouter();
-const $route = useRoute();
-const { data: user } = useAuth();
-const { t } = useI18n();
+  const { currOrg, setOrg } = useOrganizations();
+  const $router = useRouter();
+  const $route = useRoute();
+  const { data: user } = useAuth();
+  const { t } = useI18n();
 
-const slug = $route.params.slug as string;
+  const slug = $route.params.slug as string;
 
-definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails" });
+  definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails" });
 
-const {
-  data: org,
-  pending,
-  error,
-} = await useFetch<User>(`/api/v1/organizations/${slug}`, {
-  lazy: true,
-  onResponse({ response }) {
-    setOrg(response._data);
-  },
-});
+  const {
+    data: org,
+    pending,
+    error,
+  } = await useFetch<User>(`/api/v1/organizations/${slug}`, {
+    lazy: true,
+    onResponse({ response }) {
+      setOrg(response._data);
+    },
+  });
 
-const canEdit = computed(() => org.value?.slug === user.value?.slug);
+  const canEdit = computed(() => org.value?.slug === user.value?.slug);
 
-watch(
-  () => error.value,
-  (err) => {
-    if (!err) {
-      return;
-    }
+  watch(
+    () => error.value,
+    (err) => {
+      if (!err) {
+        return;
+      }
 
-    throw createError(err);
-  },
-  { immediate: true },
-);
+      throw createError(err);
+    },
+    { immediate: true },
+  );
 </script>
 
 <style lang="scss" scoped>
-a {
-  color: initial;
-}
+  a {
+    color: initial;
+  }
 
-span {
-  font-weight: initial;
-  font-size: initial;
-  line-height: initial;
-}
+  span {
+    font-weight: initial;
+    font-size: initial;
+    line-height: initial;
+  }
 
-.bio {
-  white-space: pre-wrap;
-}
+  .bio {
+    white-space: pre-wrap;
+  }
 </style>

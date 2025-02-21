@@ -6,13 +6,13 @@ export default defineI18nConfig(() => ({
 
   strategy: "no_prefix",
 
-  fallbackLocale: "pt",
-  locale: "pt",
-  defaultLocale: "pt",
+  fallbackLocale: "pt-PT",
+  locale: "pt-PT",
+  defaultLocale: "pt-PT",
 
   defaultDirection: "ltr",
 
-  messages: { en, pt },
+  messages: { "en-GB": en, "pt-PT": pt },
 
   legacy: false,
   lazy: true,
@@ -24,9 +24,113 @@ export default defineI18nConfig(() => ({
   },
 
   locales: [
-    { code: "pt", iso: "pt-PT", file: "pt.json" },
-    { code: "en", iso: "en-GB", file: "en.json" },
+    { code: "pt-PT", iso: "pt-PT", file: "pt.json" },
+    { code: "en-GB", iso: "en-GB", file: "en.json" },
   ],
 
-  langDir: "i18n",
+  langDir: "./app/i18n",
+
+  datetimeFormats: {
+    "pt-PT": {
+      short: {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      },
+      long: {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        weekday: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZoneName: "short",
+      },
+    },
+    "en-GB": {
+      short: {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+      },
+      long: {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        weekday: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZoneName: "short",
+      },
+    },
+    "en-US": {
+      short: {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      },
+      long: {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        weekday: "long",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        timeZoneName: "short",
+      },
+    },
+  },
+  numberFormats: {
+    "pt-PT": {
+      currency: {
+        style: "currency",
+        currency: "EUR",
+      },
+      decimal: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+      percent: {
+        style: "percent",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    },
+    "en-GB": {
+      currency: {
+        style: "currency",
+        currency: "GBP",
+      },
+      decimal: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+      percent: {
+        style: "percent",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    },
+    "en-US": {
+      currency: {
+        style: "currency",
+        currency: "USD",
+      },
+      decimal: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+      percent: {
+        style: "percent",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    },
+  },
 }));

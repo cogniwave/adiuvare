@@ -1,5 +1,5 @@
 import Joi from "joi";
-import type { H3Event, EventHandlerRequest } from "h3";
+import type { H3Event, EventHandlerRequest, H3Error } from "h3";
 
 // make this a separate function to call on functions where we need to get current logged user
 // this could be a middleware but we wouldn't use it in every request so it'd be wasted time
@@ -13,15 +13,12 @@ export const getSessionUser = (event: H3Event<EventHandlerRequest>) => {
   return user;
 };
 
-export const getValidatedInput = async <T>(
-  event: H3Event<EventHandlerRequest>,
-  schema: Joi.PartialSchemaMap,
-) => {
+export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: Joi.PartialSchemaMap) => {
   let body;
   try {
     body = await readBody(event);
-  } catch (error) {
-    throw createError(error as any);
+  } catch (error: unknown) {
+    throw createError(error as H3Error);
   }
 
   const { value, error } = Joi.object<T>(schema).validate(body, {
@@ -40,9 +37,9 @@ export const getValidatedInput = async <T>(
   return value;
 };
 
-export const sanitizeInput = (input: any) => {
+export const sanitizeInput = <R = string>(input?: string | null): R => {
   if (!input) {
-    return "";
+    return "" as R;
   }
 
   input = input.toString().trim();
@@ -56,10 +53,10 @@ export const sanitizeInput = (input: any) => {
     "/": "&#x2F;",
   };
 
-  return input.replace(/[&<>"'/]/gi, (match: string) => map[match]);
+  return input.replace(/[&<>"'/]/gi, (match: string) => map[match]!) as R;
 };
 
-export const desanitizeInput = (input: any) => {
+export const desanitizeInput = (input?: string | null) => {
   if (!input) {
     return "";
   }
@@ -75,8 +72,5 @@ export const desanitizeInput = (input: any) => {
     "&#x2F;": "/",
   };
 
-  return input.replace(
-    /(&amp;)|(&lt;)|(&gt;)|(&quot)|(&#x27;)|(&#x2F;)/gi,
-    (match: string) => map[match],
-  );
+  return input.replace(/(&amp;)|(&lt;)|(&gt;)|(&quot)|(&#x27;)|(&#x2F;)/gi, (match: string) => map[match]!);
 };

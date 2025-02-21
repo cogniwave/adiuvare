@@ -4,16 +4,13 @@ import { updateUser } from "@/server/db/users";
 import { getSessionUser, getValidatedInput, sanitizeInput } from "@/server/utils/request";
 
 import type { H3Event, EventHandlerRequest } from "h3";
-import type { UpdateProfilePayload, UpdateAccountPayload } from "@/types/user";
+import type { UpdateProfilePayload, UpdateAccountPayload, UpdateUserPayload } from "@/types/user";
 import type { TranslationFunction } from "@/types";
+import { isH3Error } from "~/types/guards";
 
 type UpdateAction = "account" | "profile";
 
-const updateProfile = async (
-  userId: string,
-  event: H3Event<EventHandlerRequest>,
-  t: TranslationFunction,
-) => {
+const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>, t: TranslationFunction) => {
   const body = await getValidatedInput<UpdateProfilePayload>(event, {
     name: Joi.string()
       .required()
@@ -82,7 +79,7 @@ const updateProfile = async (
       }),
   });
 
-  const payload = [
+  const payload: UpdateUserPayload[] = [
     { field: "name", value: sanitizeInput(body.name) },
     { field: "slug", value: sanitizeInput(body.slug) },
   ];
@@ -114,7 +111,7 @@ const updateProfile = async (
   if (body.contacts) {
     payload.push({
       field: "contacts",
-      value: body.contacts?.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
+      value: body.contacts.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
     });
   }
 
@@ -128,11 +125,7 @@ const updateProfile = async (
   return updatedUser;
 };
 
-const updateAccount = async (
-  userId: string,
-  event: H3Event<EventHandlerRequest>,
-  t: TranslationFunction,
-) => {
+const updateAccount = async (userId: string, event: H3Event<EventHandlerRequest>, t: TranslationFunction) => {
   const body = await getValidatedInput<UpdateAccountPayload>(event, {
     email: Joi.string()
       .email({})
@@ -148,7 +141,7 @@ const updateAccount = async (
       }),
   });
 
-  const fields = [];
+  const fields: UpdateUserPayload[] = [];
 
   if (body.email) {
     fields.push({ field: "email", value: sanitizeInput(body.email) });
@@ -174,7 +167,7 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  const id = sanitizeInput(getRouterParam(event, "id"));
+  const id = sanitizeInput(getRouterParam(event, "id") || "");
   const user = getSessionUser(event);
 
   if (!user || user.id !== id) {
@@ -202,30 +195,32 @@ export default defineEventHandler(async (event) => {
     }
 
     return { success: true };
-  } catch (err: any) {
-    if (err.statusCode === 401) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: "unauthorized",
-        message: t("errors.unauthenticated"),
-      });
-    }
+  } catch (err: unknown) {
+    if (isH3Error(err)) {
+      if (err.statusCode === 401) {
+        throw createError({
+          statusCode: 401,
+          statusMessage: "unauthorized",
+          message: t("errors.unauthenticated"),
+        });
+      }
 
-    if (err.statusCode === 422) {
-      throw createError(err);
-    }
+      if (err.statusCode === 422) {
+        throw createError(err);
+      }
 
-    if (err.message.startsWith("duplicate key")) {
-      throw createError({
-        statusCode: 422,
-        statusMessage: t("errors.validationError"),
-        data: { email: t("errors.emailExists") },
-      });
+      if (err.message.startsWith("duplicate key")) {
+        throw createError({
+          statusCode: 422,
+          statusMessage: t("errors.validationError"),
+          data: { email: t("errors.emailExists") },
+        });
+      }
     }
 
     console.log(err);
     useBugsnag().notify({
-      name: "[user] couldnt update user",
+      name: "[user] couldn't update user",
       message: JSON.stringify(err),
     });
 

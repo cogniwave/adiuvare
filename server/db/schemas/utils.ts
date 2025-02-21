@@ -1,5 +1,4 @@
 import { sql } from "drizzle-orm";
-import { AnyPgColumn } from "drizzle-orm/pg-core";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 
-// todo: properly type the retrn of this
-export const lower = (email: AnyPgColumn): any => sql`(lower(${email}))`;
+export const lower = (email: AnySQLiteColumn): ReturnType<typeof sql> => sql`(lower(${email}))`;

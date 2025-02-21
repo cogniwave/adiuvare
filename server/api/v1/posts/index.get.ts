@@ -35,7 +35,9 @@ export default defineEventHandler(async (event) => {
     if (qs?.filter) {
       try {
         filter = JSON.parse(qs.filter);
-      } catch (_) {}
+      } catch (_) {
+        //
+      }
 
       if (filter) {
         if (filter.query) {

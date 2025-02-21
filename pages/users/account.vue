@@ -30,10 +30,8 @@
           :type="passwordFieldType"
           :rules="[isValidPassword(t, true)]"
         >
-          <template v-slot:append-inner>
-            <v-icon class="cursor-pointer" @click="switchVisibility">
-              fa-solid fa-{{ visibilityIcon }}
-            </v-icon>
+          <template #append-inner>
+            <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
           </template>
         </v-text-field>
 
@@ -49,10 +47,8 @@
           :type="passwordFieldType"
           :rules="[isValidPassword(t, true), match(t, password, t('form.passwordDuplicateKey'))]"
         >
-          <template v-slot:append-inner>
-            <v-icon class="cursor-pointer" @click="switchVisibility">
-              fa-solid fa-{{ visibilityIcon }}
-            </v-icon>
+          <template #append-inner>
+            <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
           </template>
         </v-text-field>
       </div>
@@ -78,107 +74,104 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from "vue-router";
-import type { VForm } from "vuetify/components";
+  import { useRouter } from "vue-router";
+  import type { VForm } from "vuetify/components";
 
-import { useUsers } from "@/store/users";
-import { useAuth } from "@/store/auth";
-import { useNotify } from "@/store/notify";
-import type { TokenUser, Tokens } from "@/types/user";
+  import { useUsers } from "@/store/users";
+  import { useAuth } from "@/store/auth";
+  import { useNotify } from "@/store/notify";
+  import type { TokenUser, Tokens } from "@/types/user";
 
-definePageMeta({ path: "/account", middleware: "protected", title: "pages.account" });
+  definePageMeta({ path: "/account", middleware: "protected", title: "pages.account" });
 
-const { data: auth, updateUserAndTokens } = useAuth();
-const { t } = useI18n();
-const $router = useRouter();
-const { users } = useUsers();
-const { notifySuccess } = useNotify();
-const { errors, handleErrors, clearErrors } = useFormErrors();
-const { switchVisibility, password, password2, passwordFieldType, visibilityIcon } = usePassword();
+  const { data: auth, updateUserAndTokens } = useAuth();
+  const { t } = useI18n();
+  const $router = useRouter();
+  const { users } = useUsers();
+  const { notifySuccess } = useNotify();
+  const { errors, handleErrors, clearErrors } = useFormErrors();
+  const { switchVisibility, password, password2, passwordFieldType, visibilityIcon } = usePassword();
 
-const loading = ref(true);
-const email = ref<string>("");
-const form = ref<VForm>();
-const submitting = ref<boolean>(false);
+  const loading = ref(true);
+  const email = ref<string>("");
+  const form = ref<VForm>();
+  const submitting = ref<boolean>(false);
 
-onMounted(() => (loading.value = false));
+  onMounted(() => (loading.value = false));
 
-const submit = async () => {
-  // won't really happen, but keeps linter happy
-  if (!form.value) {
-    return;
-  }
+  const submit = async () => {
+    // won't really happen, but keeps linter happy
+    if (!form.value) {
+      return;
+    }
 
-  const result = await form.value.validate();
-  if (!result.valid || !!errors.value.file) {
-    return;
-  }
+    const result = await form.value.validate();
+    if (!result.valid || !!errors.value.file) {
+      return;
+    }
 
-  clearErrors();
-  submitting.value = true;
+    clearErrors();
+    submitting.value = true;
 
-  // nothing was changed, do nothing
-  const emailChanged = email.value !== (auth.value as TokenUser).email;
-  if (!emailChanged && !password.value) {
-    notifySuccess(t("form.user.updated"));
-    submitting.value = false;
-    return;
-  }
+    // nothing was changed, do nothing
+    const emailChanged = email.value !== (auth.value as TokenUser).email;
+    if (!emailChanged && !password.value) {
+      notifySuccess(t("form.user.updated"));
+      submitting.value = false;
+      return;
+    }
 
-  try {
-    const result = await $fetch<Tokens | { success: boolean }>(
-      `/api/v1/users/${(auth.value as TokenUser).id}`,
-      {
+    try {
+      const result = await $fetch<Tokens | { success: boolean }>(`/api/v1/users/${(auth.value as TokenUser).id}`, {
         query: { action: "account" },
         body: {
           ...(emailChanged && { email: email.value }),
           ...(password.value && { password: password.value }),
         },
         method: "patch",
-      },
-    );
-
-    if (emailChanged) {
-      users.value = users.value.map((u) => {
-        return u.email === (auth.value as TokenUser).email ? { ...u, email: email.value } : u;
       });
 
-      updateUserAndTokens({ email: email.value }, result as Tokens);
+      if (emailChanged) {
+        users.value = users.value.map((u) => {
+          return u.email === (auth.value as TokenUser).email ? { ...u, email: email.value } : u;
+        });
+
+        updateUserAndTokens({ email: email.value }, result as Tokens);
+      }
+
+      notifySuccess(t("form.user.updated"));
+    } catch (errs: unknown) {
+      handleErrors(errs);
+    } finally {
+      submitting.value = false;
     }
+  };
 
-    notifySuccess(t("form.user.updated"));
-  } catch (errs: any) {
-    handleErrors(errs);
-  } finally {
-    submitting.value = false;
-  }
-};
-
-watch(auth, (auth) => auth && (email.value = auth.email), { immediate: true });
+  watch(auth, (auth) => auth && (email.value = auth.email), { immediate: true });
 </script>
 
 <style scoped lang="scss">
-.pic-wrapper {
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 8px;
-  border-radius: 100px;
-  width: 128px;
-  display: block;
-  margin: auto;
-
-  .camera-wrapper {
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.3);
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .pic-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+    border-radius: 100px;
+    width: 128px;
+    display: block;
     margin: auto;
+
+    .camera-wrapper {
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.3);
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+    }
   }
-}
 </style>

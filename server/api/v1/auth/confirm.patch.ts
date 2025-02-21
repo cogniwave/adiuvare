@@ -1,4 +1,5 @@
 import Joi from "joi";
+import type { H3Error } from "h3";
 
 import { verifyUser } from "@/server/db/users";
 import { getValidatedInput, sanitizeInput } from "@/server/utils/request";
@@ -33,7 +34,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: await verifyUser(sanitizeInput(body.token), sanitizeInput(body.email)),
     };
-  } catch (error: any) {
-    throw createError(error);
+  } catch (error: unknown) {
+    throw createError(error as H3Error);
   }
 });

@@ -1,4 +1,70 @@
 {
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+
+  "notebook.defaultFormatter": "esbenp.prettier-vscode",
+
+  "prettier.bracketSameLine": false,
+  "prettier.printWidth": 120,
+  "prettier.vueIndentScriptAndStyle": true,
+
+  "vue.inlayHints.missingProps": true,
+  "vue.inlayHints.optionsWrapper": true,
+  "vue.inlayHints.inlineHandlerLeading": true,
+  "vue.inlayHints.destructuredProps": true,
+  "vue.inlayHints.vBindShorthand": true,
+  "vue.autoInsert.dotValue": true,
+  "vue.updateImportsOnFileMove.enabled": true,
+  "vue.format.style.initialIndent": true,
+  "vue.format.script.initialIndent": true,
+  "vue.format.wrapAttributes": "aligned-multiple",
+  "vue.server.hybridMode": true,
+
+  "js/ts.implicitProjectConfig.strictFunctionTypes": false,
+
+  "javascript.preferences.quoteStyle": "double",
+  "javascript.format.semicolons": "insert",
+
+  "typescript.format.semicolons": "insert",
+  "typescript.preferences.quoteStyle": "double",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": false
+
+  "html.format.indentHandlebars": true,
+  "html.format.indentInnerHtml": true,
+  "html.format.wrapAttributes": "aligned-multiple",
+
+  "yaml.format.printWidth": 120,
+
+  "eslint.useFlatConfig": true,
+
+  "cSpell.autoFormatConfigFile": true,
+  "cSpell.words": [
+    "Adiuvare",
+    "adsense",
+    "Brevo",
+    "desanitize",
+    "feira",
+    "fontawesome",
+    "getbrevo",
+    "intlify",
+    "maska",
+    "nuxthub",
+    "nuxtjs",
+    "paralleldrive",
+    "postalcode",
+    "Quarta",
+    "Quinta",
+    "Sábado",
+    "Segunda",
+    "Sexta",
+    "Terça",
+    "unaccent",
+    "unlighthouse",
+    "unplugin",
+    "vuetify",
+    "vueuse"
+  ]
 }

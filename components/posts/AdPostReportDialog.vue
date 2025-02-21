@@ -1,17 +1,12 @@
 <template>
-  <v-dialog
-    :model-value="dialogVisible"
-    width="65vw"
-    persistent
-    @update:model-value="dialogVisible = false"
-  >
+  <v-dialog :model-value="dialogVisible" width="65vw" persistent @update:model-value="dialogVisible = false">
     <v-card>
       <v-card-title class="bg-primary">
         {{ t("posts.report.title") }}
       </v-card-title>
 
       <v-card-text>
-        <p v-html="t('posts.report.description')" />
+        <p>{{ t("posts.report.description") }}</p>
 
         <v-form ref="form" class="px-4 pt-4" validate-on="input lazy" @submit.prevent="submit">
           <!-- email -->
@@ -55,76 +50,76 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import type { VForm } from "vuetify/lib/components/index.mjs";
+  import { ref, watch } from "vue";
+  import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import { useAuth } from "@/store/auth";
-import { useReport } from "@/store/report";
-import { useNotify } from "@/store/notify";
+  import { useAuth } from "@/store/auth";
+  import { useReport } from "@/store/report";
+  import { useNotify } from "@/store/notify";
 
-import { required } from "@/utils/validators";
-import { useFormErrors } from "@/composables/formErrors";
+  import { required } from "@/utils/validators";
+  import { useFormErrors } from "@/composables/formErrors";
 
-const { errors, handleErrors, clearErrors } = useFormErrors();
-const { data, loggedIn } = useAuth();
-const { t } = useI18n();
-const { dialogVisible, post } = useReport();
-const { notifySuccess } = useNotify();
+  const { errors, handleErrors, clearErrors } = useFormErrors();
+  const { data, loggedIn } = useAuth();
+  const { t } = useI18n();
+  const { dialogVisible, post } = useReport();
+  const { notifySuccess } = useNotify();
 
-const reason = ref("");
-const email = ref(data.value?.email || "");
+  const reason = ref("");
+  const email = ref(data.value?.email || "");
 
-const submitting = ref(false);
-const form = ref<VForm>();
+  const submitting = ref(false);
+  const form = ref<VForm>();
 
-watch(
-  () => dialogVisible.value,
-  (val) => {
-    if (!val) {
+  watch(
+    () => dialogVisible.value,
+    (val) => {
+      if (!val) {
+        return;
+      }
+
+      clearErrors();
+
+      reason.value = "";
+      email.value = data.value?.email || "";
+    },
+  );
+
+  const submit = async () => {
+    // won't really happen, but keeps linter happy
+    if (!form.value) {
+      return;
+    }
+
+    if (!(await form.value.validate())?.valid) {
       return;
     }
 
     clearErrors();
+    submitting.value = true;
 
-    reason.value = "";
-    email.value = data.value?.email || "";
-  },
-);
-
-const submit = async () => {
-  // won't really happen, but keeps linter happy
-  if (!form.value) {
-    return;
-  }
-
-  if (!(await form.value.validate())?.valid) {
-    return;
-  }
-
-  clearErrors();
-  submitting.value = true;
-
-  $fetch("/api/v1/reports", {
-    method: "post",
-    body: { post: post.value, user: email.value, reason: reason.value },
-  })
-    .then(() => {
-      notifySuccess(t("posts.report.success"));
-      dialogVisible.value = false;
+    $fetch("/api/v1/reports", {
+      method: "post",
+      body: { post: post.value, user: email.value, reason: reason.value },
     })
-    .catch(handleErrors)
-    .finally(() => (submitting.value = false));
-};
+      .then(() => {
+        notifySuccess(t("posts.report.success"));
+        dialogVisible.value = false;
+      })
+      .catch(handleErrors)
+      .finally(() => (submitting.value = false));
+  };
 </script>
 
 <style scoped lang="scss">
-:deep(.v-card) {
-  background-color: rgba(var(--v-theme-surface));
+  :deep(.v-card) {
+    background-color: rgba(var(--v-theme-surface));
 
-  p {
-    letter-spacing: 1px;
-    line-height: 20px;
-    text-align: center;
+    p {
+      letter-spacing: 1px;
+      line-height: 20px;
+      text-align: center;
+    }
   }
-}
 </style>

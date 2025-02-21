@@ -10,7 +10,7 @@
           lazy-src="/assets/images/profile-placeholder.png"
           referrerpolicy="same-origin"
         >
-          <template v-slot:error>
+          <template #error>
             <v-icon size="100px">fa-solid fa-shop-slash</v-icon>
           </template>
 
@@ -49,84 +49,84 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from "vue";
-import { shortenText } from "#imports";
+  import type { PropType } from "vue";
+  import { shortenText } from "#imports";
 
-import type { User } from "@/types/user";
+  import type { User } from "@/types/user";
 
-const props = defineProps({
-  org: { type: Object as PropType<User>, required: true },
-});
+  const $props = defineProps({
+    org: { type: Object as PropType<User>, required: true },
+  });
 
-const { t } = useI18n();
+  const { t } = useI18n();
 
-const visibleText = ref("");
-const showFullText = ref(false);
+  const visibleText = ref("");
+  const showFullText = ref(false);
 
-onBeforeMount(() => {
-  if (props.org.bio) {
-    visibleText.value = shortenText(props.org.bio, 180);
-  } else {
-    visibleText.value = t("org.noBio");
-  }
-});
+  onBeforeMount(() => {
+    if ($props.org.bio) {
+      visibleText.value = shortenText($props.org.bio, 180);
+    } else {
+      visibleText.value = t("org.noBio");
+    }
+  });
 
-const showAllText = () => {
-  visibleText.value = props.org.bio as string;
-  showFullText.value = true;
-};
+  const showAllText = () => {
+    visibleText.value = $props.org.bio as string;
+    showFullText.value = true;
+  };
 </script>
 
 <style lang="scss" scoped>
-.v-card--reveal {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
+  .v-card--reveal {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
 
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    background: rgba(var(--v-theme-background));
-  }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(var(--v-theme-background));
+    }
 
-  > div {
-    min-height: 100%;
-  }
+    > div {
+      min-height: 100%;
+    }
 
-  span {
-    font-size: 16px;
-    line-height: 22px;
-  }
+    span {
+      font-size: 16px;
+      line-height: 22px;
+    }
 
-  small {
-    cursor: pointer;
-    transition: 0.2s;
-    opacity: 1;
-
-    &:hover {
-      opacity: 0.8;
+    small {
+      cursor: pointer;
       transition: 0.2s;
+      opacity: 1;
+
+      &:hover {
+        opacity: 0.8;
+        transition: 0.2s;
+      }
     }
   }
-}
 
-:deep(.v-img__error) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  :deep(.v-img__error) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  i {
-    opacity: 0.2;
+    i {
+      opacity: 0.2;
+    }
   }
-}
 
-.text-subtitle {
-  color: #000;
-}
+  .text-subtitle {
+    color: #000;
+  }
 </style>

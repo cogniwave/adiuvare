@@ -1,6 +1,6 @@
 <template>
   <v-app-bar color="white" density="compact" elevation="0">
-    <template v-slot:title>
+    <template #title>
       <v-row no-gutters>
         <v-col cols="1">
           <v-img

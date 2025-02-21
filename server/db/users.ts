@@ -1,8 +1,8 @@
 import { hashSync } from "bcrypt";
 import { and, asc, count, eq } from "drizzle-orm";
-import { PgColumn } from "drizzle-orm/pg-core";
+import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
-import { db } from "./";
+import { useDrizzle } from "./";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, User, UpdateUserPayload, UserContact } from "@/types/user";
@@ -12,10 +12,10 @@ const SALT = 10;
 
 export const getUser = async <T = SelectUser>(
   email: string,
-  filter: Array<Array<string | any>> = [],
-  fields: Record<string, PgColumn> = {},
+  filter: Array<Array<SQLiteColumn | string | number | boolean>> = [],
+  fields: Record<string, SQLiteColumn> = {},
 ): Promise<T | undefined> => {
-  const result = await db
+  const result = await useDrizzle()
     .select({
       email: users.email,
       type: users.type,
@@ -23,14 +23,14 @@ export const getUser = async <T = SelectUser>(
       ...fields,
     })
     .from(users)
-    .where(and(eq(users.email, email), ...filter.map(([key, value]) => eq(key, value))))
+    .where(and(eq(users.email, email), ...filter.map(([key, value]) => eq(key as SQLiteColumn, value))))
     .limit(1);
 
   return result.length ? (result[0] as T) : undefined;
 };
 
 export const addUser = async (payload: BaseUser, token: string): Promise<User | null> => {
-  const result = await db
+  const result = await useDrizzle()
     .insert(users)
     .values({
       email: payload.email,
@@ -52,7 +52,7 @@ export const addUser = async (payload: BaseUser, token: string): Promise<User | 
 };
 
 export const verifyUser = async (token: string, email: string): Promise<boolean> => {
-  const result = await db
+  const result = await useDrizzle()
     .update(users)
     .set({ verified: true, token: null })
     .where(and(eq(users.token, token), eq(users.email, email)));
@@ -61,13 +61,13 @@ export const verifyUser = async (token: string, email: string): Promise<boolean>
 };
 
 export const updateUser = async (userId: string, payload: UpdateUserPayload[]) => {
-  const old = await db.select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
+  const old = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
 
   if (!old?.length) {
     return null;
   }
 
-  return db
+  return await useDrizzle()
     .update(users)
     .set(
       payload.reduce<Record<string, string | UserContact[]>>((fields, { field, value }) => {
@@ -84,7 +84,7 @@ export const updateUser = async (userId: string, payload: UpdateUserPayload[]) =
 };
 
 export const getUserById = async (id: string) => {
-  const result = await db
+  const result = await useDrizzle()
     .select({
       id: users.id,
       name: users.name,
@@ -106,9 +106,29 @@ export const getUserById = async (id: string) => {
   return result.length === 1 ? result[0] : null;
 };
 
+export const updateUserToken = async (userId: string, token: string) => {
+  const user = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
+
+  if (!user?.length) {
+    return false;
+  }
+
+  await useDrizzle().update(users).set({ token }).where(eq(users.id, userId));
+
+  return true;
+};
+
+export const updatePassword = async (email: string, password: string, token: string) => {
+  return await useDrizzle()
+    .update(users)
+    .set({ password: hashSync(password as string, SALT), token: null })
+    .where(and(eq(users.email, email), eq(users.token, token)));
+};
+
+// **********
 // org specific stuffs
 export const getOrgs = async () => {
-  const result = await db
+  const result = await useDrizzle()
     .select({
       id: users.id,
       name: users.name,
@@ -133,17 +153,17 @@ export const getOrgs = async () => {
 };
 
 export const getTotalOrgs = async () => {
-  const result = await db.select({ total: count() }).from(users).where(eq(users.type, "org"));
+  const result = await useDrizzle().select({ total: count() }).from(users).where(eq(users.type, "org"));
 
   try {
-    return result[0].total ?? 0;
+    return result[0]!.total ?? 0;
   } catch (_) {
     return 0;
   }
 };
 
 export const getOrgBySlug = async (slug: string) => {
-  const result = await db
+  const result = await useDrizzle()
     .select({
       id: users.id,
       name: users.name,
@@ -163,23 +183,4 @@ export const getOrgBySlug = async (slug: string) => {
     .limit(1);
 
   return result.length === 1 ? result[0] : null;
-};
-
-export const updateUserToken = async (userId: string, token: string) => {
-  const user = await db.select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
-
-  if (!user?.length) {
-    return false;
-  }
-
-  await db.update(users).set({ token }).where(eq(users.id, userId));
-
-  return true;
-};
-
-export const updatePassword = async (email: string, password: string, token: string) => {
-  return db
-    .update(users)
-    .set({ password: hashSync(password as string, SALT), token: null })
-    .where(and(eq(users.email, email), eq(users.token, token)));
 };

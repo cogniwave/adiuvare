@@ -8,7 +8,7 @@
       </v-card-title>
 
       <v-card-text class="py-5">
-        <slot></slot>
+        <slot/>
       </v-card-text>
 
       <v-divider />

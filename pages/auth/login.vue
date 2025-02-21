@@ -23,7 +23,7 @@
         :rules="[required(t), isValidPassword(t)]"
         :error-messages="errors.password"
       >
-        <template v-slot:append-inner>
+        <template #append-inner>
           <v-icon class="cursor-pointer" @click="switchVisibility">
             fa-solid fa-{{ visibilityIcon }}
           </v-icon>

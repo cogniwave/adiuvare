@@ -3,7 +3,6 @@ import { useRouter } from "vue-router";
 
 import { useAuth } from "@/store/auth";
 import { useNotify } from "@/store/notify";
-import type { NuxtError } from "@/exceptions";
 
 export function useFormErrors() {
   const { t } = useI18n();
@@ -14,7 +13,13 @@ export function useFormErrors() {
   const errors = ref<Record<string, string>>({});
   const hasErrors = ref(false);
 
-  const handleErrors = (err: NuxtError) => {
+  const handleErrors = (err: unknown) => {
+    if (!isNuxtError<Record<string, string>>(err)) {
+      hasErrors.value = false;
+      notifyError("errors.unexpected");
+      return;
+    }
+
     if (err.statusCode === 401) {
       logout().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
       return;
@@ -22,7 +27,7 @@ export function useFormErrors() {
 
     if (err.statusCode === 422) {
       // show form errors
-      for (const [field, error] of Object.entries(err.data.data || {})) {
+      for (const [field, error] of Object.entries(err.data?.data || {})) {
         errors.value[field] = error;
       }
 
@@ -31,7 +36,7 @@ export function useFormErrors() {
     }
 
     hasErrors.value = false;
-    notifyError(t(err.data?.statusMessage || "errors.unexpected"));
+    notifyError(t(err.statusMessage || "errors.unexpected"));
   };
 
   const clearErrors = () => {

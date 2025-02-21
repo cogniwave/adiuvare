@@ -4,9 +4,9 @@
       <v-list-item v-if="c.type === 'email'" prepend-icon="fa-solid fa-envelope">
         <a :href="`mailto:${c.contact}`">{{ c.contact }}</a>
 
-        <template v-slot:append>
+        <template #append>
           <v-tooltip :text="t('posts.contacts.copyTooltip')">
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
@@ -24,9 +24,9 @@
       <v-list-item v-else-if="c.type === 'phone'" prepend-icon="fa-solid fa-phone">
         <a :href="`tel:${c.contact}`">{{ c.contact }}</a>
 
-        <template v-slot:append>
+        <template #append>
           <v-tooltip :text="t('posts.contacts.copyTooltip')">
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
@@ -42,9 +42,9 @@
       </v-list-item>
 
       <v-list-item v-else prepend-icon="fa-solid fa-file-signature" :title="c.contact">
-        <template v-slot:append>
+        <template #append>
           <v-tooltip :text="t('posts.contacts.copyTooltip')">
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"

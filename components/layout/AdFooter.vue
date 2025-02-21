@@ -41,14 +41,14 @@
 
         <v-col md="4" offset-md="1" cols="12" offset="0">
           <a href="mailto:geral@adiuvare.pt">geral@adiuvare.pt</a>
-          <br />
+          <br >
           <a
             href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/pp-UDhf9fo8lpJMQUwNJeGnKkCpRyPGOe.pdf"
             target="_blank"
           >
             {{ $t("privacyPolicy") }}
           </a>
-          <br />
+          <br >
           <a
             href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/eula-0aoyOz5t1i4QBJVcoh2BtkjWI7j73r.pdf"
             target="_blank"

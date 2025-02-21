@@ -11,7 +11,7 @@
                 src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
                 lazy-src="/assets/images/profile-placeholder.png"
               >
-                <template v-slot:error>
+                <template #error>
                   {{ post.createdBy[0] }}
                 </template>
               </v-img>
@@ -72,7 +72,7 @@
         </v-chip>
 
         <v-menu v-if="leftoverLocations.length" open-on-hover>
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <span v-bind="props">
               <v-chip label size="small"> +{{ leftoverLocations.length }} </v-chip>
             </span>
@@ -91,15 +91,8 @@
 
         <!-- post options -->
         <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              variant="plain"
-              size="x-small"
-              class="ml-2"
-              icon
-              @click.stop.prevent
-            >
+          <template #activator="{ props }">
+            <v-btn v-bind="props" variant="plain" size="x-small" class="ml-2" icon @click.stop.prevent>
               <v-icon size="x-small">fa-solid fa-ellipsis-vertical</v-icon>
             </v-btn>
           </template>
@@ -152,7 +145,7 @@
 
         <!-- contacts -->
         <v-menu v-if="smAndUp" :close-on-content-click="false">
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-btn
               v-bind="props"
               variant="outlined"
@@ -168,13 +161,7 @@
           <ad-contacts-list v-if="post.contacts?.length" :contacts="post.contacts" />
         </v-menu>
 
-        <v-btn
-          variant="outlined"
-          size="small"
-          rounded="md"
-          class="btn-contact"
-          :to="`/posts/${post.slug}`"
-        >
+        <v-btn variant="outlined" size="small" rounded="md" class="btn-contact" :to="`/posts/${post.slug}`">
           {{ t("posts.viewMore") }}
         </v-btn>
       </v-card-actions>
@@ -183,116 +170,116 @@
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from "vuetify";
+  import { useDisplay } from "vuetify";
 
-import { usePosts } from "@/store/posts";
-import AdPostNeed from "@/components/posts/AdPostNeed.vue";
-import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
+  import { usePosts } from "@/store/posts";
+  import AdPostNeed from "@/components/posts/AdPostNeed.vue";
+  import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
 
-const MAX_DESC = 1300;
+  const MAX_DESC = 1300;
 
-const $emit = defineEmits<{
-  (e: "click:state", payload: PostStateTogglePayload): void;
-  (e: "click:delete" | "click:report", payload: PostDeletePayload): void;
-}>();
+  const $emit = defineEmits<{
+    (e: "click:state", payload: PostStateTogglePayload): void;
+    (e: "click:delete" | "click:report", payload: PostDeletePayload): void;
+  }>();
 
-const props = defineProps({
-  post: { type: Object as PropType<Post>, required: true },
-  user: { type: String, required: true },
-});
+  const $props = defineProps({
+    post: { type: Object as PropType<Post>, required: true },
+    user: { type: String, required: true },
+  });
 
-const $router = useRouter();
-const { t, d } = useI18n();
-const { setPost } = usePosts();
-const { smAndUp, mdAndUp, mdAndDown, lgAndUp } = useDisplay();
+  const $router = useRouter();
+  const { t, d } = useI18n();
+  const { setPost } = usePosts();
+  const { smAndUp, mdAndUp, mdAndDown, lgAndUp } = useDisplay();
 
-const desc = ref(props.post.description);
-const descTooLong = ref(false);
-const descVisible = ref(false);
+  const desc = ref($props.post.description);
+  const descTooLong = ref(false);
+  const descVisible = ref(false);
 
-const numVisibleLocations = computed(() => (mdAndUp.value ? 3 : 1));
+  const numVisibleLocations = computed(() => (mdAndUp.value ? 3 : 1));
 
-const visibleLocations = ref<string[]>(props.post.locations.slice(0, numVisibleLocations.value));
-const leftoverLocations = ref<string[]>(props.post.locations.slice(numVisibleLocations.value));
+  const visibleLocations = ref<string[]>($props.post.locations.slice(0, numVisibleLocations.value));
+  const leftoverLocations = ref<string[]>($props.post.locations.slice(numVisibleLocations.value));
 
-onBeforeMount(() => {
-  if (props.post.description.length > MAX_DESC) {
-    desc.value = shortenText(props.post.description, MAX_DESC);
+  onBeforeMount(() => {
+    if ($props.post.description.length > MAX_DESC) {
+      desc.value = shortenText($props.post.description, MAX_DESC);
 
-    descTooLong.value = true;
-  }
-});
+      descTooLong.value = true;
+    }
+  });
 
-const viewAllDesc = () => {
-  desc.value = props.post.description;
-  descVisible.value = true;
-};
+  const viewAllDesc = () => {
+    desc.value = $props.post.description;
+    descVisible.value = true;
+  };
 
-const onLocationClick = () => {};
+  const onLocationClick = () => {};
 
-const onReport = () => $emit("click:report", props.post);
+  const onReport = () => $emit("click:report", $props.post);
 
-const openPost = () => {
-  setPost(props.post);
-  $router.push(`posts/${props.post.slug}/edit`);
-};
+  const openPost = () => {
+    setPost($props.post);
+    $router.push(`posts/${$props.post.slug}/edit`);
+  };
 </script>
 
 <style scoped lang="scss">
-.post {
-  background-color: rgb(var(--v-theme-surface));
+  .post {
+    background-color: rgb(var(--v-theme-surface));
 
-  :deep(.v-img__error) {
-    color: rgb(var(--v-theme-primary));
-    background-color: rgb(var(--v-theme-background));
-    font-size: 2rem;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .v-card-title {
-    a {
-      text-decoration: none;
-      color: rgb(var(--v-theme-accent));
-    }
-  }
-
-  .v-card-item {
-    color: rgb(var(--v-theme-accent));
-
-    h3 {
-      font-weight: normal;
+    :deep(.v-img__error) {
+      color: rgb(var(--v-theme-primary));
+      background-color: rgb(var(--v-theme-background));
+      font-size: 2rem;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .v-card-actions {
-      .btn-contact {
-        color: rgb(var(--v-theme-primary));
-        background-color: rgb(var(--v-theme-background));
+    .v-card-title {
+      a {
+        text-decoration: none;
+        color: rgb(var(--v-theme-accent));
       }
     }
-  }
 
-  .expand-desc {
-    cursor: pointer;
-    color: rgb(var(--v-theme-primary));
-    font-weight: bold;
-  }
+    .v-card-item {
+      color: rgb(var(--v-theme-accent));
 
-  .text-subtitle {
-    a {
+      h3 {
+        font-weight: normal;
+        text-transform: uppercase;
+      }
+
+      .v-card-actions {
+        .btn-contact {
+          color: rgb(var(--v-theme-primary));
+          background-color: rgb(var(--v-theme-background));
+        }
+      }
+    }
+
+    .expand-desc {
+      cursor: pointer;
       color: rgb(var(--v-theme-primary));
       font-weight: bold;
-      opacity: 1;
-      transition: 100ms;
+    }
 
-      &:hover {
-        opacity: 0.7;
+    .text-subtitle {
+      a {
+        color: rgb(var(--v-theme-primary));
+        font-weight: bold;
+        opacity: 1;
         transition: 100ms;
+
+        &:hover {
+          opacity: 0.7;
+          transition: 100ms;
+        }
       }
     }
   }
-}
 </style>

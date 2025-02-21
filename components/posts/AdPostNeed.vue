@@ -1,6 +1,6 @@
 <template>
   <v-tooltip :text="t(details.description)">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-chip
         v-bind="props"
         text-color="white"
@@ -20,24 +20,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useDisplay } from "vuetify";
+  import { ref } from "vue";
+  import { useDisplay } from "vuetify";
 
-import type { PropType } from "vue";
-import type { PostCategory } from "@/types/post";
+  import type { PropType } from "vue";
+  import type { Need } from "@/types/post";
 
-const props = defineProps({
-  need: { type: String as PropType<PostCategory>, required: true },
-  size: { type: String, default: "x-small" },
-  variant: {
-    type: String as PropType<"text" | "flat" | "elevated" | "tonal" | "outlined" | "plain">,
-    default: "text",
-  },
-});
+  const $props = defineProps({
+    need: { type: String as PropType<Need>, required: true },
+    size: { type: String, default: "x-small" },
+    variant: {
+      type: String as PropType<"text" | "flat" | "elevated" | "tonal" | "outlined" | "plain">,
+      default: "text",
+    },
+  });
 
-const { t } = useI18n();
-const { getNeedDetails } = useNeed();
-const { lgAndUp } = useDisplay();
+  const { t } = useI18n();
+  const { getNeedDetails } = useNeed();
+  const { lgAndUp } = useDisplay();
 
-const details = ref(getNeedDetails(props.need));
+  const details = ref(getNeedDetails($props.need));
 </script>

@@ -63,20 +63,15 @@
             class="ml-auto"
           >
             <v-tooltip :text="t('form.post.state.activeTooltip')">
-              <template v-slot:activator="{ props }">
-                <v-btn
-                  v-bind="props"
-                  size="x-small"
-                  value="active"
-                  @update:model-value="updatePost('state', 'active')"
-                >
+              <template #activator="{ props }">
+                <v-btn v-bind="props" size="x-small" value="active" @update:model-value="updatePost('state', 'active')">
                   {{ t("form.post.state.active") }}
                 </v-btn>
               </template>
             </v-tooltip>
 
             <v-tooltip :text="t('form.post.state.inactiveTooltip')">
-              <template v-slot:activator="{ props }">
+              <template #activator="{ props }">
                 <v-btn
                   v-bind="props"
                   size="x-small"
@@ -91,12 +86,10 @@
 
           <template v-else>
             <v-tooltip :text="t(`form.post.state.${post.state}Tooltip`)">
-              <template v-slot:activator="{ props }">
+              <template #activator="{ props }">
                 {{ t(`form.post.state.${post.state}`) }}
 
-                <v-icon v-bind="props" color="primary" class="ml-1">
-                  fa-solid fa-circle-question
-                </v-icon>
+                <v-icon v-bind="props" color="primary" class="ml-1"> fa-solid fa-circle-question </v-icon>
               </template>
             </v-tooltip>
           </template>
@@ -138,12 +131,8 @@
           :items="needOptions"
           @update:model-value="updatePost('needs', $event)"
         >
-          <template v-slot:chip="{ item }">
-            <ad-post-dialog-need
-              :key="item.value"
-              :need="item.value"
-              @click:remove="removeNeed(item.value)"
-            />
+          <template #chip="{ item }">
+            <ad-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
           </template>
         </v-select>
       </div>
@@ -170,168 +159,168 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import type { VForm } from "vuetify/lib/components/index.mjs";
+  import { ref } from "vue";
+  import type { VForm } from "vuetify/lib/components/index.mjs";
 
-import { required, maxLength } from "@/utils/validators";
-import { useFormErrors } from "@/composables/formErrors";
-import { debounce } from "@/utils";
-import { getCities } from "@/services/geoapify.service";
-import AdPostDialogNeed from "@/components/posts/AdPostDialogNeed.vue";
-import AdPostSchedule from "@/components/posts/AdPostSchedule.vue";
-import { useNotify } from "@/store/notify";
-import { usePosts } from "@/store/posts";
-import type { Post, PostSchedule, PostState } from "@/types/post";
-import type { SelectOption } from "@/types/form";
-import type { UserContact } from "~/types/user";
+  import { required, maxLength } from "@/utils/validators";
+  import { useFormErrors } from "@/composables/formErrors";
+  import { debounce } from "@/utils";
+  import { getCities } from "@/services/geoapify.service";
+  import AdPostDialogNeed from "@/components/posts/AdPostDialogNeed.vue";
+  import AdPostSchedule from "@/components/posts/AdPostSchedule.vue";
+  import { useNotify } from "@/store/notify";
+  import { usePosts } from "@/store/posts";
+  import type { Post, PostSchedule, PostState } from "@/types/post";
+  import type { SelectOption } from "@/types/form";
+  import type { UserContact } from "~/types/user";
 
-definePageMeta({ path: "/posts/:slug/edit", middleware: "protected", title: "pages.postEdit" });
+  definePageMeta({ path: "/posts/:slug/edit", middleware: "protected", title: "pages.postEdit" });
 
-const { notifySuccess } = useNotify();
-const { t } = useI18n();
-const { errors, handleErrors, clearErrors } = useFormErrors();
-const { currPost, posts, setPost } = usePosts<Post>();
-const $route = useRoute();
-const $router = useRouter();
+  const { notifySuccess } = useNotify();
+  const { t } = useI18n();
+  const { errors, handleErrors, clearErrors } = useFormErrors();
+  const { currPost, posts, setPost } = usePosts<Post>();
+  const $route = useRoute();
+  const $router = useRouter();
 
-const _slug = $route.params.slug as string;
+  const _slug = $route.params.slug as string;
 
-const {
-  data: post,
-  pending,
-  error,
-} = await useFetch<Post>(`/api/v1/posts/${_slug}`, {
-  lazy: true,
-  onResponse({ response }) {
-    const p = response._data;
-    title.value = p.title;
-    description.value = p.description;
-    slug.value = p.slug;
-    state.value = p.state;
-    locationInput.value = p.locations;
-    locations.value = p.locations;
-    needs.value = p.needs;
-    setPost({ ...p });
-  },
-});
-
-const title = ref<string>("");
-const description = ref<string>("");
-const locationInput = ref<string[]>([]);
-const locations = ref<string[]>([]);
-const fetchingLocations = ref(false);
-const noDataText = ref(t("form.post.locationNoData"));
-const form = ref<VForm>();
-const slug = ref<string>(_slug);
-const state = ref<PostState>("pending");
-const needs = ref<string[]>([]);
-const needOptions = ref<SelectOption[]>([
-  { title: t("posts.needs.money"), value: "money" },
-  { title: t("posts.needs.volunteers"), value: "volunteers" },
-  { title: t("posts.needs.goods"), value: "goods" },
-  { title: t("posts.needs.other"), value: "other" },
-]);
-
-const submitting = ref<boolean>(false);
-
-const fetchLocations = (text: string) => {
-  debounce(() => {
-    if (fetchingLocations.value) {
-      noDataText.value = t("form.post.locationSearching");
-      return;
-    }
-
-    if (text?.length <= 2) {
-      locations.value = [];
-      fetchingLocations.value = false;
-      noDataText.value = t("form.post.locationNoData");
-      return;
-    }
-
-    fetchingLocations.value = true;
-    noDataText.value = t("form.post.locationSearching");
-    getCities(text)
-      .then((cities) => {
-        if (!cities?.length) {
-          locations.value = [];
-          noDataText.value = t("form.post.locationNoData");
-        } else {
-          locations.value = cities as string[];
-        }
-      })
-      .finally(() => (fetchingLocations.value = false));
+  const {
+    data: post,
+    pending,
+    error,
+  } = await useFetch<Post>(`/api/v1/posts/${_slug}`, {
+    lazy: true,
+    onResponse({ response }) {
+      const p = response._data;
+      title.value = p.title;
+      description.value = p.description;
+      slug.value = p.slug;
+      state.value = p.state;
+      locationInput.value = p.locations;
+      locations.value = p.locations;
+      needs.value = p.needs;
+      setPost({ ...p });
+    },
   });
-};
 
-const onRemoveLocation = (location: string) => {
-  locationInput.value = locationInput.value.filter((l) => l !== location);
-  updatePost("location", locationInput.value);
-};
+  const title = ref<string>("");
+  const description = ref<string>("");
+  const locationInput = ref<string[]>([]);
+  const locations = ref<string[]>([]);
+  const fetchingLocations = ref(false);
+  const noDataText = ref(t("form.post.locationNoData"));
+  const form = ref<VForm>();
+  const slug = ref<string>(_slug);
+  const state = ref<PostState>("pending");
+  const needs = ref<string[]>([]);
+  const needOptions = ref<SelectOption[]>([
+    { title: t("posts.needs.money"), value: "money" },
+    { title: t("posts.needs.volunteers"), value: "volunteers" },
+    { title: t("posts.needs.goods"), value: "goods" },
+    { title: t("posts.needs.other"), value: "other" },
+  ]);
 
-const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
-  currPost.value = { ...currPost.value, [prop]: val };
-};
+  const submitting = ref<boolean>(false);
 
-const removeNeed = (category: string) => {
-  needs.value = needs.value.filter((c) => category !== c);
-  updatePost("needs", needs.value);
-};
+  const fetchLocations = (text: string) => {
+    debounce(() => {
+      if (fetchingLocations.value) {
+        noDataText.value = t("form.post.locationSearching");
+        return;
+      }
 
-const submit = async () => {
-  // won't really happen, but keeps linter happy
-  if (!form.value) {
-    return;
-  }
+      if (text?.length <= 2) {
+        locations.value = [];
+        fetchingLocations.value = false;
+        noDataText.value = t("form.post.locationNoData");
+        return;
+      }
 
-  const result = await form.value.validate();
-  if (!result.valid) {
-    return;
-  }
-
-  clearErrors();
-  submitting.value = true;
-
-  try {
-    const post = await $fetch<Post>(`/api/v1/posts/${_slug}`, {
-      body: currPost.value,
-      method: "patch",
+      fetchingLocations.value = true;
+      noDataText.value = t("form.post.locationSearching");
+      getCities(text)
+        .then((cities) => {
+          if (!cities?.length) {
+            locations.value = [];
+            noDataText.value = t("form.post.locationNoData");
+          } else {
+            locations.value = cities as string[];
+          }
+        })
+        .finally(() => (fetchingLocations.value = false));
     });
+  };
 
-    if (post) {
-      posts.value = posts.value.map((p) => (p.id === currPost.value.id ? currPost.value : p));
-    }
+  const onRemoveLocation = (location: string) => {
+    locationInput.value = locationInput.value.filter((l) => l !== location);
+    updatePost("location", locationInput.value);
+  };
 
-    $router.push(`/posts/${_slug}`);
-    notifySuccess(t("posts.updated"));
-  } catch (errs: any) {
-    handleErrors(errs);
-  } finally {
-    submitting.value = false;
-  }
-};
+  const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
+    currPost.value = { ...currPost.value, [prop]: val };
+  };
 
-const onSlugBlur = () => {
-  slug.value = slug.value.replaceAll(/[^A-Za-z0-9]/g, "-");
-  updatePost("slug", slug.value);
-};
+  const removeNeed = (category: string) => {
+    needs.value = needs.value.filter((c) => category !== c);
+    updatePost("needs", needs.value);
+  };
 
-const goBack = () => $router.push(`/posts/${_slug}/`);
-
-watch(
-  () => error.value,
-  (err) => {
-    if (!err) {
+  const submit = async () => {
+    // won't really happen, but keeps linter happy
+    if (!form.value) {
       return;
     }
 
-    throw createError(err);
-  },
-  { immediate: true },
-);
+    const result = await form.value.validate();
+    if (!result.valid) {
+      return;
+    }
+
+    clearErrors();
+    submitting.value = true;
+
+    try {
+      const post = await $fetch<Post>(`/api/v1/posts/${_slug}`, {
+        body: currPost.value,
+        method: "patch",
+      });
+
+      if (post) {
+        posts.value = posts.value.map((p) => (p.id === currPost.value.id ? currPost.value : p));
+      }
+
+      $router.push(`/posts/${_slug}`);
+      notifySuccess(t("posts.updated"));
+    } catch (errs: unknown) {
+      handleErrors(errs);
+    } finally {
+      submitting.value = false;
+    }
+  };
+
+  const onSlugBlur = () => {
+    slug.value = slug.value.replaceAll(/[^A-Za-z0-9]/g, "-");
+    updatePost("slug", slug.value);
+  };
+
+  const goBack = () => $router.push(`/posts/${_slug}/`);
+
+  watch(
+    () => error.value,
+    (err) => {
+      if (!err) {
+        return;
+      }
+
+      throw createError(err);
+    },
+    { immediate: true },
+  );
 </script>
 
 <style scoped lang="scss">
-:deep(.v-card) {
-  background-color: rgba(var(--v-theme-surface));
-}
+  :deep(.v-card) {
+    background-color: rgba(var(--v-theme-surface));
+  }
 </style>

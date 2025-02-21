@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer v-if="loggedIn" v-model:model-value="visible" temporary location="right">
-    <template v-slot:prepend>
+    <template #prepend>
       <v-list-item
         v-if="notifications === null"
         title="Something went wrong trying to fetch notifications"

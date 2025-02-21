@@ -1,13 +1,12 @@
 import Joi from "joi";
 
-import { getSessionUser, sanitizeInput } from "@/server/utils/request";
+import { getSessionUser, sanitizeInput, getValidatedInput } from "@/server/utils/request";
 import { POST_NEEDS } from "@/server/db/schemas/posts.schema";
 import { createPost } from "@/server/db/posts";
-import { getValidatedInput } from "@/server/utils/request";
 import { genToken } from "@/server/utils";
 import { notifyNewPost } from "@/server/services/slack";
 
-import type { CreatePostPayload } from "@/types/post";
+import type { CreatePostPayload, ScheduleType } from "@/types/post";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
@@ -71,7 +70,7 @@ export default defineEventHandler(async (event) => {
       return;
     }
 
-    const scheduleType = sanitizeInput(body.schedule.type);
+    const scheduleType: ScheduleType = sanitizeInput(body.schedule.type);
 
     const result = await createPost({
       title: sanitizeInput(body.title),
@@ -93,7 +92,7 @@ export default defineEventHandler(async (event) => {
   } catch (err) {
     console.log(err);
     useBugsnag().notify({
-      name: "couldnt create post",
+      name: "couldn't create post",
       message: JSON.stringify(err),
     });
 

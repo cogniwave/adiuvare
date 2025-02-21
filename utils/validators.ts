@@ -2,7 +2,7 @@ import { isPossiblePhoneNumber, isValidPhoneNumber } from "libphonenumber-js";
 import type { NamedValue } from "@intlify/core-base";
 
 import dayjs from "@/services/dayjs.service";
-import { FILE_SIZE, ACCEPT_FILE_TYPES } from "@/server/utils";
+import { MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "@/server/services/fileUpload";
 
 type TranslatorFunction = (k: string, named?: NamedValue, defaultMsg?: string) => string;
 
@@ -36,7 +36,7 @@ export const isValidUrl = (t: TranslatorFunction) => (val: string) => {
   try {
     new URL(val);
     return true;
-  } catch (err) {
+  } catch (_) {
     return t("errors.invalidUrl");
   }
 };
@@ -58,9 +58,7 @@ export const maxLength = (t: TranslatorFunction, max: number) => (val: string) =
 };
 
 export const isValidPhone = (t: TranslatorFunction) => (val: string) => {
-  return (
-    (isPossiblePhoneNumber(val, "PT") && isValidPhoneNumber(val, "PT")) || t("errors.invalidPhone")
-  );
+  return (isPossiblePhoneNumber(val, "PT") && isValidPhoneNumber(val, "PT")) || t("errors.invalidPhone");
 };
 
 export const fileType = (t: TranslatorFunction) => (val: File) => {
@@ -68,5 +66,5 @@ export const fileType = (t: TranslatorFunction) => (val: File) => {
 };
 
 export const fileSize = (t: TranslatorFunction) => (val: File) => {
-  return !val || val.size < FILE_SIZE || t("errors.fileLarge");
+  return !val || val.size < MAX_FILE_SIZE || t("errors.fileLarge");
 };

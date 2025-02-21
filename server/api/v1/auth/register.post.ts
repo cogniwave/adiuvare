@@ -6,8 +6,8 @@ import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 import { notifyNewUser } from "@/server/services/slack";
 import { subscribeToNewsletter, type NewsletterType } from "@/server/services/brevo";
 
-import type { BaseUser, User } from "@/types/user";
-import type { DrizzleError } from "@/server/types/drizzle";
+import { isDrizzleError } from "~/types/guards";
+import type { BaseUser, User, UserType } from "@/types/user";
 import type { TranslationFunction } from "@/types";
 
 const register = async (payload: BaseUser, t: TranslationFunction): Promise<User> => {
@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
       {
         name: sanitizeInput(body.name),
         password: sanitizeInput(body.password),
-        type: sanitizeInput(body.type),
+        type: sanitizeInput<UserType>(body.type),
         email,
       },
       t,
@@ -103,7 +103,8 @@ export default defineEventHandler(async (event) => {
 
     return user;
   } catch (err: unknown) {
-    if ((err as DrizzleError).constraint === "users_email_unique") {
+    // todo: validate this is still correct
+    if (isDrizzleError(err) && err.message === "users_email_unique") {
       throw createError({
         data: {
           email: t("errors.emailExists"),
@@ -115,7 +116,7 @@ export default defineEventHandler(async (event) => {
 
     console.log(err);
     useBugsnag().notify({
-      name: "[user] couldnt create user",
+      name: "[user] couldn't create user",
       message: JSON.stringify(err),
     });
 

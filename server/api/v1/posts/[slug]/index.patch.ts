@@ -3,7 +3,8 @@ import Joi from "joi";
 import { POST_NEEDS, POST_STATES } from "@/server/db/schemas/posts.schema";
 import { updatePost } from "@/server/db/posts";
 import { getSessionUser, getValidatedInput, sanitizeInput } from "@/server/utils/request";
-import type { UpdatePostPayload } from "@/types/post";
+import type { ScheduleType, UpdatePostPayload } from "@/types/post";
+import { isH3Error } from "~/types/guards";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
@@ -58,7 +59,7 @@ export default defineEventHandler(async (event) => {
       }),
   });
 
-  const slug = sanitizeInput(getRouterParam(event, "slug"));
+  const slug = sanitizeInput(getRouterParam(event, "slug") || "");
   const user = getSessionUser(event);
 
   if (!user) {
@@ -75,7 +76,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const scheduleType = sanitizeInput(body.schedule.type);
+    const scheduleType = sanitizeInput<ScheduleType>(body.schedule.type);
 
     const result = await updatePost(
       slug,
@@ -99,8 +100,8 @@ export default defineEventHandler(async (event) => {
     }
 
     sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));
-  } catch (err: any) {
-    if (err.statusCode === 401) {
+  } catch (err: unknown) {
+    if (isH3Error(err) && err.statusCode === 401) {
       throw createError({
         statusCode: 401,
         statusMessage: "unauthorized",
@@ -109,7 +110,7 @@ export default defineEventHandler(async (event) => {
     }
 
     useBugsnag().notify({
-      name: "[post] couldnt delete post",
+      name: "[post] couldn't delete post",
       message: JSON.stringify(err),
     });
 

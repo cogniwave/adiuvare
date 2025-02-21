@@ -1,6 +1,7 @@
-import { and, count, desc, eq, sql, or, arrayOverlaps, SQLWrapper, SQL } from "drizzle-orm";
+import type { SQLWrapper, SQL } from "drizzle-orm";
+import { and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
 
-import { db } from "./";
+import { useDrizzle } from "./";
 import { POST_NEEDS, posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
@@ -9,7 +10,7 @@ import { FEED_PAGE_SIZE } from "@/utils";
 import type { InsertPost } from "./schemas/posts.schema";
 import type { PostFilter, UpdatePostPayload } from "@/types/post";
 
-type Query = SQLWrapper[] | SQL<any>[] | undefined;
+type Query = SQLWrapper[] | SQL<unknown>[] | undefined;
 
 const getFreeInputQuery = (query: string): Query => {
   query = query.toLowerCase();
@@ -27,7 +28,7 @@ const getFreeInputQuery = (query: string): Query => {
     conditions.push(arrayOverlaps(posts.needs, [query]));
   }
 
-  return [or(...conditions) as SQL<any>];
+  return [or(...conditions) as SQL<unknown>];
 };
 
 const getDetailedFilter = (filter: PostFilter): Query => {
@@ -40,9 +41,7 @@ const getDetailedFilter = (filter: PostFilter): Query => {
   }
 
   if (filter.description) {
-    conditions.push(
-      sql`unaccent(lower(${posts.description})) like unaccent(${toFuzzy(filter.description)})`,
-    );
+    conditions.push(sql`unaccent(lower(${posts.description})) like unaccent(${toFuzzy(filter.description)})`);
   }
 
   if (filter.locations?.length) {
@@ -79,11 +78,9 @@ export const getPostsAndTotal = async (filter?: PostFilter) => {
 };
 
 export const getPosts = async (conditions?: Query) => {
-  const query = conditions
-    ? and(eq(posts.state, "active"), ...conditions)
-    : eq(posts.state, "active");
+  const query = conditions ? and(eq(posts.state, "active"), ...conditions) : eq(posts.state, "active");
 
-  const result = await db
+  const result = await useDrizzle()
     .select({
       id: posts.id,
       title: posts.title,
@@ -113,24 +110,24 @@ export const getTotalPosts = async (conditions?: Query) => {
     // if filter exists we need to inner join with users because
     // filter can be looking for user prop
     if (conditions) {
-      result = await db
+      result = await useDrizzle()
         .select({ total: count() })
         .from(posts)
         .innerJoin(users, eq(posts.createdUserId, users.id))
         .where(and(eq(posts.state, "active"), ...conditions));
     } else {
       // if filter doesn't exist, we can just query all posts
-      result = await db.select({ total: count() }).from(posts).where(eq(posts.state, "active"));
+      result = await useDrizzle().select({ total: count() }).from(posts).where(eq(posts.state, "active"));
     }
 
-    return result[0].total ?? 0;
+    return result[0]!.total ?? 0;
   } catch (_) {
     return 0;
   }
 };
 
 export const createPost = async (payload: InsertPost) => {
-  const result = await db.insert(posts).values(payload).returning({
+  const result = await useDrizzle().insert(posts).values(payload).returning({
     id: posts.id,
     title: posts.title,
     state: posts.state,
@@ -144,7 +141,7 @@ export const createPost = async (payload: InsertPost) => {
     updatedAt: posts.updatedAt,
   });
 
-  return result[0];
+  return result[0]!;
 };
 
 export const updatePost = async (slug: string, payload: UpdatePostPayload, userId: string) => {
@@ -158,12 +155,12 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
     return { ...old, updated: old };
   }
 
-  await db.transaction(async (tx) => {
+  await useDrizzle().transaction(async (tx) => {
     // update post
     try {
       await tx
         .update(posts)
-        .set({ ...payload, updatedBy: userId, updatedAt: new Date() })
+        .set({ ...payload, updatedBy: userId })
         .where(eq(posts.slug, slug));
 
       // add entry to history
@@ -180,7 +177,7 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
         slug: old.slug,
         contacts: old.contacts,
       });
-    } catch (err) {
+    } catch (_) {
       tx.rollback();
     }
   });
@@ -189,17 +186,17 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
 };
 
 export const deletePost = async (id: string) => {
-  return await db.delete(posts).where(eq(posts.id, id));
+  return await useDrizzle().delete(posts).where(eq(posts.id, id));
 };
 
 export const getPost = async (postId: string) => {
-  const result = await db.select().from(posts).where(eq(posts.id, postId)).limit(1);
+  const result = await useDrizzle().select().from(posts).where(eq(posts.id, postId)).limit(1);
 
   return result.length === 1 ? result[0] : null;
 };
 
 export const getPostByOwner = async (postId: string, userId: string) => {
-  const result = await db
+  const result = await useDrizzle()
     .select({ createdBy: users.name })
     .from(posts)
     .where(and(eq(posts.id, postId), eq(posts.createdUserId, userId)))
@@ -209,7 +206,7 @@ export const getPostByOwner = async (postId: string, userId: string) => {
 };
 
 export const getPostBySlug = async (slug: string, getId = false) => {
-  const result = await db
+  const result = await useDrizzle()
     .select({
       id: posts.id,
       title: posts.title,

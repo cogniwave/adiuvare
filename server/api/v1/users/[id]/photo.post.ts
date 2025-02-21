@@ -1,10 +1,13 @@
-import { put } from "@vercel/blob";
-
 import { updateUser } from "@/server/db/users";
 import { getSessionUser, sanitizeInput } from "@/server/utils/request";
-import { ACCEPT_FILE_TYPES, FILE_SIZE, genToken } from "@/server/utils";
-
-const getExtension = (mime: string) => mime.split("image/");
+import { isNuxtError } from "nuxt/app";
+import {
+  uploadFile,
+  FileSizeError,
+  FileTypeError,
+  MAX_FILE_SIZE,
+  ACCEPT_FILE_TYPES,
+} from "~/server/services/fileUpload";
 
 export default defineEventHandler(async (event) => {
   const formData = await readFormData(event);
@@ -14,7 +17,7 @@ export default defineEventHandler(async (event) => {
     return {};
   }
 
-  const id = sanitizeInput(getRouterParam(event, "id"));
+  const id = sanitizeInput(getRouterParam(event, "id") || "");
   const user = getSessionUser(event);
 
   const t = await useTranslation(event);
@@ -34,7 +37,7 @@ export default defineEventHandler(async (event) => {
 
   const file = formData.get("file") as File;
 
-  if (file.size > FILE_SIZE) {
+  if (file.size > MAX_FILE_SIZE) {
     throw createError({
       statusCode: 422,
       data: { file: t("errors.fileTooBig") },
@@ -50,15 +53,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // TODO: add picture thumbimification
   // TODO: delete previous picture if it exists
 
   try {
-    const path = await put(
-      `${genToken(4)}-${Date.now()}.${getExtension(file.type)}?${genToken(4)}`,
-      file,
-      { access: "public" },
-    );
+    const path = await uploadFile(file);
 
     await updateUser(user.id, [
       { field: "photo", value: path.url },
@@ -66,8 +64,24 @@ export default defineEventHandler(async (event) => {
     ]);
 
     return { photo: path.url, photoThumbnail: path.url };
-  } catch (err: any) {
-    if (err.statusCode === 401) {
+  } catch (err: unknown) {
+    if (err instanceof FileSizeError) {
+      createError({
+        statusCode: 422,
+        data: { file: t("errors.fileTooBig") },
+        statusMessage: t("errors.validationError"),
+      });
+    }
+
+    if (err instanceof FileTypeError) {
+      throw createError({
+        statusCode: 422,
+        data: { file: t("errors.invalidFileType") },
+        statusMessage: t("errors.validationError"),
+      });
+    }
+
+    if (isNuxtError(err) && err.statusCode === 401) {
       throw createError({
         statusCode: 401,
         statusMessage: "unauthorized",
@@ -76,7 +90,7 @@ export default defineEventHandler(async (event) => {
     }
 
     useBugsnag().notify({
-      name: "[user] couldnt upload photo",
+      name: "[user] couldn't upload photo",
       message: JSON.stringify(err),
     });
 

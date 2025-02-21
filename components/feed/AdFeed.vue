@@ -43,11 +43,7 @@
       <div v-show="expandedFilterVisible" class="pa-2 rounded-lg mb-2">
         <h4>Pesquisa detalhada</h4>
 
-        <form
-          class="mt-5 mb-3 w-100"
-          @keypress.enter.prevent="onSearch(true)"
-          @submit.prevent="onSearch(true)"
-        >
+        <form class="mt-5 mb-3 w-100" @keypress.enter.prevent="onSearch(true)" @submit.prevent="onSearch(true)">
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
@@ -112,25 +108,11 @@
           </v-row>
 
           <div class="pt-5 d-flex align-center justify-end">
-            <v-btn
-              size="x-small"
-              type="submit"
-              variant="text"
-              flat
-              :loading="pending"
-              @click="resetSearch"
-            >
+            <v-btn size="x-small" type="submit" variant="text" flat :loading="pending" @click="resetSearch">
               {{ t("feed.emptySearchReset") }}
             </v-btn>
 
-            <v-btn
-              size="x-small"
-              type="submit"
-              color="primary"
-              variant="text"
-              flat
-              :loading="pending"
-            >
+            <v-btn size="x-small" type="submit" color="primary" variant="text" flat :loading="pending">
               {{ t("feed.filter") }}
             </v-btn>
           </div>
@@ -143,11 +125,11 @@
     <v-row no-gutters>
       <v-col>
         <v-virtual-scroll v-if="data.total" item-height="264" :items="data.posts">
-          <template v-slot:default="{ item }">
+          <template #default="{ item }">
             <ad-post
+              :key="item.id"
               :post="item"
               :user="user?.slug || ''"
-              :key="item.id"
               class="mb-5"
               @click:state="openDisableDialog"
               @click:delete="openDeleteDialog"
@@ -183,14 +165,7 @@
   </template>
 
   <!-- no posts exist -->
-  <i18n-t
-    v-else
-    scope="global"
-    keypath="feed.noPosts"
-    tag="h3"
-    for="feed.noPostsButton"
-    class="no-posts"
-  >
+  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton" class="no-posts">
     <nuxt-link to="/posts/new">
       {{ t("feed.noPostsButton") }}
     </nuxt-link>
@@ -204,227 +179,226 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+  import { ref } from "vue";
 
-import { useAuth } from "@/store/auth";
-import { useNotify } from "@/store/notify";
-import { usePosts } from "@/store/posts";
-import { useReport } from "@/store/report";
-import { FEED_PAGE_SIZE } from "@/utils";
+  import { useAuth } from "@/store/auth";
+  import { useNotify } from "@/store/notify";
+  import { usePosts } from "@/store/posts";
+  import { useReport } from "@/store/report";
+  import { FEED_PAGE_SIZE } from "@/utils";
 
-import type { Post, PostDeletePayload, PostStateTogglePayload } from "@/types/post";
-import AdPost from "@/components/posts/AdPost.vue";
-import type { SelectOption } from "@/types/form";
-import type { PostFilter } from "@/types/post";
+  import type { Post, PostDeletePayload, PostStateTogglePayload, PostFilter } from "@/types/post";
+  import AdPost from "@/components/posts/AdPost.vue";
+  import type { SelectOption } from "@/types/form";
 
-const $route = useRoute();
+  const $route = useRoute();
 
-const { notifyError } = useNotify();
-const { data: user } = useAuth();
-const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
-const { openDialog: _openReportDialog } = useReport();
-const { t } = useI18n();
-const { filterLocations, filteringLocations, locations, noDataText } = useLocations();
-const $router = useRouter();
+  const { notifyError } = useNotify();
+  const { data: user } = useAuth();
+  const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
+  const { openDialog: _openReportDialog } = useReport();
+  const { t } = useI18n();
+  const { filterLocations, filteringLocations, locations, noDataText } = useLocations();
+  const $router = useRouter();
 
-const search = ref<string | undefined>();
-const reportDialogRendered = ref(false);
-const expandedFilterVisible = ref(false);
+  const search = ref<string | undefined>();
+  const reportDialogRendered = ref(false);
+  const expandedFilterVisible = ref(false);
 
-const title = ref<string | undefined>();
-const description = ref<string | undefined>();
-const location = ref<string[] | undefined>();
-const need = ref<string[] | undefined>();
+  const title = ref<string | undefined>();
+  const description = ref<string | undefined>();
+  const location = ref<string[] | undefined>();
+  const need = ref<string[] | undefined>();
 
-const needs = ref<SelectOption[]>([
-  { title: t("posts.needs.money"), value: "money" },
-  { title: t("posts.needs.volunteers"), value: "volunteers" },
-  { title: t("posts.needs.goods"), value: "goods" },
-  { title: t("posts.needs.other"), value: "other" },
-]);
+  const needs = ref<SelectOption[]>([
+    { title: t("posts.needs.money"), value: "money" },
+    { title: t("posts.needs.volunteers"), value: "volunteers" },
+    { title: t("posts.needs.goods"), value: "goods" },
+    { title: t("posts.needs.other"), value: "other" },
+  ]);
 
-const deleteDialogRendered = ref(false);
-const disableDialogRendered = ref(false);
+  const deleteDialogRendered = ref(false);
+  const disableDialogRendered = ref(false);
 
-const page = ref(setupPage());
-const filter = ref<PostFilter | undefined>(setupQuery());
+  const page = ref(setupPage());
+  const filter = ref<PostFilter | undefined>(setupQuery());
 
-const { data, pending, refresh } = useFetch<{ posts: Post[]; total: number }>("/api/v1/posts", {
-  query: { filter: filter.value, page: page.value },
-  lazy: true,
-  onResponse({ response }) {
-    posts.value = response._data?.posts || [];
-  },
-  onResponseError() {
-    data.value = { posts: [], total: 0 };
-    posts.value = [];
+  const { data, pending, refresh } = useFetch<{ posts: Post[]; total: number }>("/api/v1/posts", {
+    query: { filter: filter.value, page: page.value },
+    lazy: true,
+    onResponse({ response }) {
+      posts.value = response._data?.posts || [];
+    },
+    onResponseError() {
+      data.value = { posts: [], total: 0 };
+      posts.value = [];
 
-    notifyError(t("errors.fetchFeed"));
-  },
-});
+      notifyError(t("errors.fetchFeed"));
+    },
+  });
 
-const openDisableDialog = (post: PostStateTogglePayload) => {
-  currPost.value = post;
-  if (!disableDialogRendered.value) {
-    disableDialogRendered.value = true;
-  } else {
-    disableDialogVisible.value = true;
-  }
-};
+  const openDisableDialog = (post: PostStateTogglePayload) => {
+    currPost.value = post;
+    if (!disableDialogRendered.value) {
+      disableDialogRendered.value = true;
+    } else {
+      disableDialogVisible.value = true;
+    }
+  };
 
-const openDeleteDialog = (post: PostDeletePayload) => {
-  currPost.value = post;
-  if (!deleteDialogRendered.value) {
-    deleteDialogRendered.value = true;
-  } else {
-    deleteDialogVisible.value = true;
-  }
-};
+  const openDeleteDialog = (post: PostDeletePayload) => {
+    currPost.value = post;
+    if (!deleteDialogRendered.value) {
+      deleteDialogRendered.value = true;
+    } else {
+      deleteDialogVisible.value = true;
+    }
+  };
 
-const openReportDialog = (post: PostDeletePayload) => {
-  if (!reportDialogRendered.value) {
-    reportDialogRendered.value = true;
-  }
+  const openReportDialog = (post: PostDeletePayload) => {
+    if (!reportDialogRendered.value) {
+      reportDialogRendered.value = true;
+    }
 
-  _openReportDialog(post);
-};
+    _openReportDialog(post);
+  };
 
-const onDelete = async (id: string) => {
-  try {
-    await $fetch<Post>(`/api/v1/posts/${id}`, { method: "delete" });
+  const onDelete = async (id: string) => {
+    try {
+      await $fetch<Post>(`/api/v1/posts/${id}`, { method: "delete" });
+      refresh();
+    } catch (err: unknown) {
+      notifyError(err as string);
+    } finally {
+      disableDialogVisible.value = false;
+    }
+  };
+
+  const onSearch = (detailed = false) => {
+    if (detailed) {
+      if (!title.value && !description.value && !location.value?.length && !need.value?.length) {
+        return;
+      }
+
+      filter.value = {
+        title: title.value,
+        description: description.value,
+        locations: location.value?.length ? location.value : undefined,
+        needs: need.value?.length ? need.value : undefined,
+      };
+    } else {
+      if (!search.value) {
+        return;
+      }
+
+      if (search.value === filter.value) {
+        return;
+      }
+
+      filter.value = { query: search.value };
+    }
+
+    page.value = 1;
+
+    $router.push({ path: "/", query: { page: 1, ...filter.value } });
     refresh();
-  } catch (err: any) {
-    notifyError(err);
-  } finally {
-    disableDialogVisible.value = false;
-  }
-};
+  };
 
-const onSearch = (detailed = false) => {
-  if (detailed) {
-    if (!title.value && !description.value && !location.value?.length && !need.value?.length) {
-      return;
+  const toggleExpandedFilter = () => (expandedFilterVisible.value = !expandedFilterVisible.value);
+
+  const resetSearch = () => {
+    page.value = 1;
+    filter.value = undefined;
+    search.value = undefined;
+    title.value = undefined;
+    description.value = undefined;
+    location.value = undefined;
+    need.value = undefined;
+
+    $router.push({ path: "/", query: {} });
+  };
+
+  function setupPage() {
+    const page = $route.query?.page;
+
+    if (!page) {
+      return 1;
     }
 
-    filter.value = {
-      title: title.value,
-      description: description.value,
-      locations: location.value?.length ? location.value : undefined,
-      needs: need.value?.length ? need.value : undefined,
-    };
-  } else {
-    if (!search.value) {
-      return;
-    }
+    const p = Number(page);
 
-    if (search.value === filter.value) {
-      return;
-    }
-
-    filter.value = { query: search.value };
+    return !isNaN(p) && p > 1 ? p : 1;
   }
 
-  page.value = 1;
+  function setupQuery() {
+    const query = $route.query;
 
-  $router.push({ path: "/", query: { page: 1, ...filter.value } });
-  refresh();
-};
-
-const toggleExpandedFilter = () => (expandedFilterVisible.value = !expandedFilterVisible.value);
-
-const resetSearch = () => {
-  page.value = 1;
-  filter.value = undefined;
-  search.value = undefined;
-  title.value = undefined;
-  description.value = undefined;
-  location.value = undefined;
-  need.value = undefined;
-
-  $router.push({ path: "/", query: {} });
-};
-
-function setupPage() {
-  const page = $route.query?.page;
-
-  if (!page) {
-    return 1;
-  }
-
-  const p = Number(page);
-
-  return !isNaN(p) && p > 1 ? p : 1;
-}
-
-function setupQuery() {
-  const query = $route.query;
-
-  if (!query) {
-    return undefined;
-  }
-
-  const f: PostFilter = {};
-
-  if (!query.query) {
-    if (query.title) {
-      title.value = query.title as string;
-      f.title = title.value;
+    if (!query) {
+      return undefined;
     }
 
-    if (query.description) {
-      description.value = query.description as string;
-      f.description = description.value;
+    const f: PostFilter = {};
+
+    if (!query.query) {
+      if (query.title) {
+        title.value = query.title as string;
+        f.title = title.value;
+      }
+
+      if (query.description) {
+        description.value = query.description as string;
+        f.description = description.value;
+      }
+
+      if (query.needs) {
+        need.value = query.needs as string[];
+        f.needs = need.value;
+      }
+
+      if (query.locations) {
+        location.value = query.locations as string[];
+        f.locations = location.value;
+      }
+    } else {
+      search.value = query.query as string;
+      f.query = search.value;
     }
 
-    if (query.needs) {
-      need.value = query.needs as string[];
-      f.needs = need.value;
+    if (Object.keys(f).length) {
+      filter.value = f;
     }
-
-    if (query.locations) {
-      location.value = query.locations as string[];
-      f.locations = location.value;
-    }
-  } else {
-    search.value = query.query as string;
-    f.query = search.value;
   }
 
-  if (Object.keys(f).length) {
-    filter.value = f;
-  }
-}
-
-watch(page, (pg) => {
-  $router.push({ path: "/", query: { ...($router.currentRoute.value.query || {}), page: pg } });
-});
+  watch(page, (pg) => {
+    $router.push({ path: "/", query: { ...($router.currentRoute.value.query || {}), page: pg } });
+  });
 </script>
 
 <style lang="scss">
-.v-autocomplete__content {
-  max-width: 200px !important;
+  .v-autocomplete__content {
+    max-width: 200px !important;
 
-  .v-list-item-title {
-    white-space: initial !important;
+    .v-list-item-title {
+      white-space: initial !important;
+    }
   }
-}
 </style>
 
 <style lang="scss" scoped>
-h3 {
-  text-align: center;
-  font-weight: normal;
+  h3 {
+    text-align: center;
+    font-weight: normal;
 
-  span {
-    font-size: inherit;
-    color: rgba(var(--v-theme-primary));
-    transition: 0.2s;
-    cursor: pointer;
-
-    &:hover {
+    span {
+      font-size: inherit;
+      color: rgba(var(--v-theme-primary));
       transition: 0.2s;
-      opacity: 0.6;
+      cursor: pointer;
+
+      &:hover {
+        transition: 0.2s;
+        opacity: 0.6;
+      }
     }
   }
-}
 </style>

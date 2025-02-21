@@ -12,17 +12,17 @@
         validate-on="submit lazy"
         @submit.prevent="submit"
       >
-        <slot name="form"></slot>
+        <slot name="form"/>
 
         <v-divider class="mt-4" />
 
         <v-card-actions class="px-5 d-flex align-center justify-end">
-          <slot name="actions"></slot>
+          <slot name="actions"/>
         </v-card-actions>
       </v-form>
 
       <div v-else class="py-5">
-        <slot name="content"></slot>
+        <slot name="content"/>
       </div>
     </v-card-item>
   </v-card>

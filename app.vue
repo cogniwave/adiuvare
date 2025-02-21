@@ -20,50 +20,54 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "#imports";
-import { useDisplay } from "vuetify";
+  import { useRoute } from "#imports";
+  import { useDisplay } from "vuetify";
 
-const { t } = useI18n();
-const $route = useRoute();
-const { smAndDown } = useDisplay();
-const config = useRuntimeConfig();
+  const { t } = useI18n();
+  const $route = useRoute();
+  const { smAndDown } = useDisplay();
+  const config = useRuntimeConfig();
 
-useHead({
-  titleTemplate: () => {
-    return $route.meta.title ? `Adiuvare - ${t($route.meta.title as string)}` : "Adiuvare";
-  },
-});
+  useHead({
+    titleTemplate: () => {
+      return $route.meta.title ? `Adiuvare - ${t($route.meta.title as string)}` : "Adiuvare";
+    },
+  });
 
-const { isLoading, start, finish } = useLoadingIndicator();
+  const { isLoading, start, finish } = useLoadingIndicator();
 
-// show the loading screen on first render as loadingIndicator doesnt seem to be doing its job
-const initLoading = ref(true);
+  // show the loading screen on first render as loadingIndicator doesnt seem to be doing its job
+  const initLoading = ref(true);
 
-onBeforeMount(() => start());
+  onBeforeMount(() => start());
 
-onMounted(() => {
-  initLoading.value = false;
-  finish();
+  onMounted(() => {
+    initLoading.value = false;
+    finish();
 
-  if (!import.meta.dev) {
-    // no use in trying to add stuff to doc if doc does not exist
-    if (!document.head) {
-      return;
-    }
+    if (!import.meta.dev) {
+      // no use in trying to add stuff to doc if doc does not exist
+      if (!document.head) {
+        return;
+      }
 
-    window.BrevoConversationsID = config.public.brevoConversationId;
-
-    window.BrevoConversations =
-      window.BrevoConversations ||
-      function () {
-        (window.BrevoConversations.q = window.BrevoConversations.q || []).push(arguments);
+      window.BrevoConversationsSetup = {
+        deferredLoading: true,
       };
 
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = "https://conversations-widget.brevo.com/brevo-conversations.js";
+      window.BrevoConversationsID = config.public.brevoConversationId;
 
-    document.head.appendChild(script);
-  }
-});
+      window.BrevoConversations =
+        window.BrevoConversations ||
+        function (...args: unknown[]) {
+          (window.BrevoConversations.q = window.BrevoConversations.q || []).push(args);
+        };
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://conversations-widget.brevo.com/brevo-conversations.js";
+
+      document.head.appendChild(script);
+    }
+  });
 </script>

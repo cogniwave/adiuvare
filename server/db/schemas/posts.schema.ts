@@ -1,64 +1,44 @@
-import {
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-  index,
-  varchar,
-  uuid,
-  json,
-  uniqueIndex,
-} from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
+import { createId } from "@paralleldrive/cuid2";
 
 import { users } from "./users.schema";
-import type { PostSchedule } from "@/types/post";
+import type { Need, PostState, PostSchedule } from "@/types/post";
 import type { UserContact } from "@/types/user";
 
-export const POST_STATES: Readonly<[string, ...string[]]> = [
-  "pending",
-  "active",
-  "inactive",
-  "rejected",
-];
+export const POST_STATES: Readonly<[PostState, ...PostState[]]> = ["pending", "active", "inactive", "rejected"];
 
-export const POST_NEEDS: Readonly<[string, ...string[]]> = [
-  "money",
-  "volunteers",
-  "goods",
-  "other",
-];
+export const POST_NEEDS: Need[] = ["money", "volunteers", "goods", "other"];
 
-export const needsEnum = pgEnum("needs", POST_NEEDS);
-
-export const stateEnum = pgEnum("state", POST_STATES);
-
-export const posts = pgTable(
+export const posts = sqliteTable(
   "posts",
   {
-    id: uuid("id").primaryKey().unique().notNull().defaultRandom(),
-    title: varchar("title", { length: 264 }).notNull(),
+    id: text("id").primaryKey().unique().notNull().$defaultFn(createId),
+    title: text("title", { length: 264 }).notNull(),
     description: text("description").notNull(),
-    locations: text("locations").array().notNull(),
-    schedule: json("schdule").notNull().$type<PostSchedule>(),
-    state: stateEnum("state").notNull().default("pending"),
-    needs: needsEnum("needs").array().notNull(),
-    createdUserId: uuid("created_user_id")
+    locations: text("locations", { mode: "json" }).notNull().$type<string[]>(),
+    schedule: text("schedule", { mode: "json" }).notNull().$type<PostSchedule>(),
+    state: text("state", { enum: POST_STATES }).notNull().default("pending").$type<PostState>(),
+    needs: text("needs", { mode: "json" }).notNull().$type<Need[]>(),
+    createdUserId: text("created_user_id")
       .notNull()
       .references(() => users.id),
     slug: text("slug"),
-    contacts: json("contacts").notNull().$type<UserContact[]>(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedBy: uuid("updated_by").references(() => users.id),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    contacts: text("contacts", { mode: "json" }).notNull().$type<UserContact[]>(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(new Date()),
+    updatedBy: text("updated_by").references(() => users.id),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(new Date())
+      .$onUpdateFn(() => new Date()),
   },
-  (posts) => ({
-    idIdx: uniqueIndex("post_id_idx").on(posts.id),
-    slugIdx: uniqueIndex("post_slug_idx").on(posts.slug),
-    titleIdx: index("post_title_idx").on(posts.title),
-    needsIdx: index("post_needs_idx").on(posts.needs),
-    locationsIdx: index("post_locations_idx").on(posts.locations),
-  }),
+  (posts) => [
+    uniqueIndex("post_id_idx").on(posts.id),
+    uniqueIndex("post_slug_idx").on(posts.slug),
+    index("post_title_idx").on(posts.title),
+    index("post_needs_idx").on(posts.needs),
+    index("post_locations_idx").on(posts.locations),
+  ],
 );
 
 export const postsRelations = relations(posts, ({ one }) => ({

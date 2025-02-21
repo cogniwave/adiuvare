@@ -23,7 +23,7 @@
             close-on-content-click
             close-delay="0"
           >
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-btn
                 v-if="idx > 0"
                 v-bind="props"
@@ -45,7 +45,7 @@
             close-on-content-click
             close-delay="0"
           >
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-btn
                 v-show="idx === times.length - 1"
                 v-bind="props"
@@ -70,93 +70,93 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+  import { ref } from "vue";
 
-import type { ScheduleTime } from "@/types/post";
+  import type { ScheduleTime } from "@/types/post";
 
-import AdTimePicker from "./AdTimePicker.vue";
-import { getNewGroupTimes } from "@/utils/scheduling";
+  import AdTimePicker from "./AdTimePicker.vue";
+  import { getNewGroupTimes } from "@/utils/scheduling";
 
-const props = defineProps({
-  modelValue: { type: Array<ScheduleTime>, required: true },
-});
+  const $props = defineProps({
+    modelValue: { type: Array<ScheduleTime>, required: true },
+  });
 
-const $emit = defineEmits<{
-  (e: "update:model-value", payload: ScheduleTime[]): void;
-}>();
+  const $emit = defineEmits<{
+    (e: "update:model-value", payload: ScheduleTime[]): void;
+  }>();
 
-const { t } = useI18n();
+  const { t } = useI18n();
 
-const times = ref<ScheduleTime[]>(props.modelValue);
+  const times = ref<ScheduleTime[]>($props.modelValue);
 
-watch(
-  () => props.modelValue,
-  (t) => (times.value = t),
-);
+  watch(
+    () => $props.modelValue,
+    (t) => (times.value = t),
+  );
 
-const onAdd = () => {
-  times.value = [...times.value, getNewGroupTimes()];
+  const onAdd = () => {
+    times.value = [...times.value, getNewGroupTimes()];
 
-  $emit("update:model-value", times.value);
-};
-
-const onRemove = (id: string) => {
-  times.value = times.value.filter((t) => t.id !== id);
-  $emit("update:model-value", times.value);
-};
-
-const onChange = (val: string, field: "start" | "end", item: ScheduleTime) => {
-  const validateTime = ([hour1, minute1]: number[], [hour2, minute2]: number[]) => {
-    return hour1 > hour2 || (hour1 === hour2 && minute1 >= minute2);
+    $emit("update:model-value", times.value);
   };
 
-  const newTime = val.split(":").map((v) => Number(v));
-
-  if (field === "start") {
-    // check if start time is lower than end time
-    const currTime = item.end.split(":").map((v) => Number(v));
-
-    item.error = validateTime(newTime, currTime);
-    item.start = val;
-  } else {
-    // check if end time is higher than start time
-    const currTime = item.start.split(":").map((v) => Number(v));
-
-    item.error = validateTime(currTime, newTime);
-    item.end = val;
-  }
-
-  times.value = times.value.map((t) => (t.id === item.id ? item : t));
-
-  if (!item.error) {
+  const onRemove = (id: string) => {
+    times.value = times.value.filter((t) => t.id !== id);
     $emit("update:model-value", times.value);
-  }
-};
+  };
+
+  const onChange = (val: string, field: "start" | "end", item: ScheduleTime) => {
+    const validateTime = ([hour1, minute1]: number[], [hour2, minute2]: number[]) => {
+      return hour1! > hour2! || (hour1 === hour2 && minute1! >= minute2!);
+    };
+
+    const newTime = val.split(":").map((v) => Number(v));
+
+    if (field === "start") {
+      // check if start time is lower than end time
+      const currTime = item.end.split(":").map((v) => Number(v));
+
+      item.error = validateTime(newTime, currTime);
+      item.start = val;
+    } else {
+      // check if end time is higher than start time
+      const currTime = item.start.split(":").map((v) => Number(v));
+
+      item.error = validateTime(currTime, newTime);
+      item.end = val;
+    }
+
+    times.value = times.value.map((t) => (t.id === item.id ? item : t));
+
+    if (!item.error) {
+      $emit("update:model-value", times.value);
+    }
+  };
 </script>
 
 <style lang="scss" scoped>
-.item-group {
-  .picker-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .item-group {
+    .picker-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-    span {
-      display: inline-block;
-      width: 15%;
-    }
+      span {
+        display: inline-block;
+        width: 15%;
+      }
 
-    &:first-child {
+      &:first-child {
+        .button-group {
+          padding-left: 18px;
+        }
+      }
+
       .button-group {
-        padding-left: 18px;
+        width: 60px;
+        justify-content: flex-start;
+        display: flex;
       }
     }
-
-    .button-group {
-      width: 60px;
-      justify-content: flex-start;
-      display: flex;
-    }
   }
-}
 </style>

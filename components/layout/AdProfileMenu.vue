@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading">
     <v-menu v-if="loggedIn">
-      <template v-slot:activator="{ props }">
+      <template #activator="{ props }">
         <span v-bind="props" class="cursor-pointer ml-5">
           {{ data?.name }}
           <v-icon class="ml-2 mb-1">fa-solid fa-chevron-down</v-icon>

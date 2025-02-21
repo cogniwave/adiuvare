@@ -1,7 +1,6 @@
 import Joi from "joi";
 
-import { sanitizeInput } from "@/server/utils/request";
-import { getValidatedInput } from "@/server/utils/request";
+import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
 import { subscribeToNewsletter } from "@/server/services/brevo";
 
 import type { NewsletterSubscribePayload } from "@/types/newsletter";
@@ -22,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
   // validate and add token to event
   try {
-    await subscribeToNewsletter(sanitizeInput(body.email));
+    await subscribeToNewsletter(sanitizeInput(body.email), ["newsletter"]);
 
     return { success: true };
   } catch (err) {

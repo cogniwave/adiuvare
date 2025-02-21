@@ -1,17 +1,20 @@
-import { pgTable, uuid, text, timestamp, index, json } from "drizzle-orm/pg-core";
+import { createId } from "@paralleldrive/cuid2";
+import { sqliteTable, text, index, integer } from "drizzle-orm/sqlite-core";
 
-export const reports = pgTable(
+import type { Post } from "~/types/post";
+
+export const reports = sqliteTable(
   "reports",
   {
-    id: uuid("id").primaryKey().unique().notNull().defaultRandom(),
+    id: text("id").primaryKey().unique().notNull().$defaultFn(createId),
     reason: text("reason").notNull(),
     reportBy: text("reportedBy").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    post: json("post").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    post: text("post", { mode: "json" }).notNull().$type<Post>(),
   },
-  (reports) => ({
-    idIdx: index("report_id_idx").on(reports.id),
-  }),
+  (reports) => [index("report_id_idx").on(reports.id)],
 );
 
 export type InsertReport = typeof reports.$inferInsert;

@@ -18,14 +18,14 @@
 import { ref } from "vue";
 
 import type { PropType } from "vue";
-import type { PostCategory } from "@/types/post";
+import type { Need } from "@/types/post";
 
 const props = defineProps({
-  need: { type: String as PropType<PostCategory>, required: true },
+  need: { type: String as PropType<Need>, required: true },
 });
 
 const emit = defineEmits<{
-  (e: "click" | "click:remove", payload: PostCategory): void;
+  (e: "click" | "click:remove", payload: Need): void;
 }>();
 
 const { getNeedDetails } = useNeed();

@@ -11,7 +11,3 @@ Permite também pesquisar organizações em geral para quem esteja interessado
 Sugestões e melhorias são sempre bem vindas
 
 Disponível em https://www.adiuvare.pt/
-
-### Tecnicidades
-
-Está construído em [nuxt3](https://nuxt.com/) com [vuetify](https://vuetifyjs.com/en/), alojado em [vercel](https://vercel.com/) com postgres através de [drizzle](https://orm.drizzle.team/)

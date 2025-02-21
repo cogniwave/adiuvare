@@ -28,7 +28,7 @@
       <div class="d-flex">
         <v-avatar size="64">
           <v-img :alt="t('posts.logoAlt')" lazy-src="/assets/images/profile-placeholder.png">
-            <template v-slot:error>
+            <template #error>
               {{ currPost.createdBy }}
             </template>
           </v-img>
@@ -49,7 +49,7 @@
               close-delay="0"
               :text="`${t('posts.lastUpdatedAt')} ${d(currPost.updatedAt as any)}`"
             >
-              <template v-slot:activator="{ props }">
+              <template #activator="{ props }">
                 <small v-bind="props">¬ {{ d(currPost.createdAt as any) }}</small>
               </template>
             </v-tooltip>
@@ -74,35 +74,19 @@
           </v-chip>
         </v-col>
 
-        <v-col
-          cols="12"
-          md="6"
-          order="1"
-          :align="mdAndDown ? 'start' : 'end'"
-          :class="{ 'mb-2': mdAndDown }"
-        >
-          <ad-post-need
-            v-for="need in currPost.needs"
-            :key="need"
-            :need="need"
-            size="small"
-            variant="flat"
-          />
+        <v-col cols="12" md="6" order="1" :align="mdAndDown ? 'start' : 'end'" :class="{ 'mb-2': mdAndDown }">
+          <ad-post-need v-for="need in currPost.needs" :key="need" :need="need" size="small" variant="flat" />
         </v-col>
       </v-row>
 
-      <code v-html="currPost.description" />
+      <code>{{ currPost.description }}</code>
     </div>
 
     <div v-if="currPost.schedule" class="bg-white rounded px-10 py-5 mt-5">
       <!-- contacts -->
       {{ t("posts.contacts.detailsTitle") }}
 
-      <ad-contacts-list
-        v-if="currPost.contacts?.length"
-        :contacts="currPost.contacts"
-        bg-color="transparent"
-      />
+      <ad-contacts-list v-if="currPost.contacts?.length" :contacts="currPost.contacts" bg-color="transparent" />
 
       <!-- anytime time -->
       <div class="my-3">
@@ -122,11 +106,7 @@
         </v-col>
 
         <v-col align="center" cols="6">
-          <span
-            v-for="time in (currPost.schedule.payload as SpecificSchedule).times"
-            :key="time.id"
-            class="d-block"
-          >
+          <span v-for="time in (currPost.schedule.payload as SpecificSchedule).times" :key="time.id" class="d-block">
             {{ t("posts.schedule.from") }}
             {{ time.start }}
             {{ t("posts.schedule.to") }}
@@ -145,7 +125,7 @@
 
         <v-row>
           <v-col v-for="time in recurringTimes" :key="time.day" align="center">
-            <p v-for="t in time.times" :key="t.id" class="mb-2">{{ t.start }} - {{ t.end }}</p>
+            <p v-for="tim in time.times" :key="tim.id" class="mb-2">{{ tim.start }} - {{ tim.end }}</p>
           </v-col>
         </v-row>
       </template>
@@ -154,129 +134,129 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute, useRouter } from "vue-router";
-import { useDisplay } from "vuetify";
+  import { useRoute, useRouter } from "vue-router";
+  import { useDisplay } from "vuetify";
 
-import { useAuth } from "@/store/auth";
-import { usePosts } from "@/store/posts";
-import dayjs from "@/services/dayjs.service";
-import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "@/types/post";
+  import { useAuth } from "@/store/auth";
+  import { usePosts } from "@/store/posts";
+  import dayjs from "@/services/dayjs.service";
+  import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "@/types/post";
 
-definePageMeta({ path: "/posts/:slug", title: "pages.postDetails" });
+  definePageMeta({ path: "/posts/:slug", title: "pages.postDetails" });
 
-interface MappedRecurringTimes {
-  times: ScheduleTime[];
-  order: number;
-  day: string;
-}
-
-const { currPost, setPost } = usePosts<Post>();
-const $router = useRouter();
-const $route = useRoute();
-const { data: user } = useAuth();
-const { d, t } = useI18n();
-const { mdAndDown } = useDisplay();
-
-const WEEK_DAY_TO_HUMAN = [
-  t("form.post.schedule.day.sunday"),
-  t("form.post.schedule.day.monday"),
-  t("form.post.schedule.day.tuesday"),
-  t("form.post.schedule.day.wednesday"),
-  t("form.post.schedule.day.thursday"),
-  t("form.post.schedule.day.friday"),
-  t("form.post.schedule.day.saturday"),
-];
-
-const DAY_TO_I18N: Record<string, { day: string; order: number }> = {
-  monday: {
-    day: t("form.post.schedule.day.sunday"),
-    order: 0,
-  },
-  tuesday: {
-    day: t("form.post.schedule.day.monday"),
-    order: 1,
-  },
-  wednesday: {
-    day: t("form.post.schedule.day.tuesday"),
-    order: 2,
-  },
-  thursday: {
-    day: t("form.post.schedule.day.wednesday"),
-    order: 3,
-  },
-  friday: {
-    day: t("form.post.schedule.day.thursday"),
-    order: 4,
-  },
-  saturday: {
-    day: t("form.post.schedule.day.friday"),
-    order: 5,
-  },
-  sunday: {
-    day: t("form.post.schedule.day.saturday"),
-    order: 6,
-  },
-};
-
-const slug = $route.params.slug as string;
-
-const {
-  data: post,
-  pending,
-  error,
-} = await useFetch<Post>(`/api/v1/posts/${slug}`, {
-  lazy: true,
-  onResponse({ response }) {
-    setPost(response._data);
-  },
-});
-
-const recurringTimes = computed<MappedRecurringTimes[]>(() => {
-  if (currPost.value.schedule.type !== "recurring") {
-    return [];
+  interface MappedRecurringTimes {
+    times: ScheduleTime[];
+    order: number;
+    day: string;
   }
 
-  return Object.entries(currPost.value.schedule.payload as RecurringSchedule)
-    .reduce<MappedRecurringTimes[]>((result, [day, times]) => {
-      result.push({
-        ...DAY_TO_I18N[day],
-        times: (times as ScheduleTime[]).toSorted((a, b) => a.start.localeCompare(b.start)),
-      });
+  const { currPost, setPost } = usePosts<Post>();
+  const $router = useRouter();
+  const $route = useRoute();
+  const { data: user } = useAuth();
+  const { d, t } = useI18n();
+  const { mdAndDown } = useDisplay();
 
-      return result;
-    }, [])
-    .toSorted((a, b) => b.order - a.order);
-});
+  const WEEK_DAY_TO_HUMAN = [
+    t("form.post.schedule.day.sunday"),
+    t("form.post.schedule.day.monday"),
+    t("form.post.schedule.day.tuesday"),
+    t("form.post.schedule.day.wednesday"),
+    t("form.post.schedule.day.thursday"),
+    t("form.post.schedule.day.friday"),
+    t("form.post.schedule.day.saturday"),
+  ];
 
-const canEdit = computed(() => post.value?.createdBy === user.value?.slug);
+  const DAY_TO_I18N: Record<string, { day: string; order: number }> = {
+    monday: {
+      day: t("form.post.schedule.day.sunday"),
+      order: 0,
+    },
+    tuesday: {
+      day: t("form.post.schedule.day.monday"),
+      order: 1,
+    },
+    wednesday: {
+      day: t("form.post.schedule.day.tuesday"),
+      order: 2,
+    },
+    thursday: {
+      day: t("form.post.schedule.day.wednesday"),
+      order: 3,
+    },
+    friday: {
+      day: t("form.post.schedule.day.thursday"),
+      order: 4,
+    },
+    saturday: {
+      day: t("form.post.schedule.day.friday"),
+      order: 5,
+    },
+    sunday: {
+      day: t("form.post.schedule.day.saturday"),
+      order: 6,
+    },
+  };
 
-const formatSpecificDay = () => {
-  const day = (currPost.value.schedule.payload as SpecificSchedule).day;
+  const slug = $route.params.slug as string;
 
-  return `${WEEK_DAY_TO_HUMAN[dayjs(day).day()]} - ${d(day)}`;
-};
+  const {
+    data: post,
+    pending,
+    error,
+  } = await useFetch<Post>(`/api/v1/posts/${slug}`, {
+    lazy: true,
+    onResponse({ response }) {
+      setPost(response._data);
+    },
+  });
 
-watch(
-  () => error.value,
-  (err) => {
-    if (!err) {
-      return;
+  const recurringTimes = computed<MappedRecurringTimes[]>(() => {
+    if (currPost.value.schedule.type !== "recurring") {
+      return [];
     }
 
-    throw createError(err);
-  },
-  { immediate: true },
-);
+    return Object.entries(currPost.value.schedule.payload as RecurringSchedule)
+      .reduce<MappedRecurringTimes[]>((result, [day, times]) => {
+        result.push({
+          ...DAY_TO_I18N[day]!,
+          times: times!.toSorted((a, b) => a.start.localeCompare(b.start)),
+        });
+
+        return result;
+      }, [])
+      .toSorted((a, b) => b.order - a.order);
+  });
+
+  const canEdit = computed(() => post.value?.createdBy === user.value?.slug);
+
+  const formatSpecificDay = () => {
+    const day = (currPost.value.schedule.payload as SpecificSchedule).day;
+
+    return `${WEEK_DAY_TO_HUMAN[dayjs(day).day()]} - ${d(day)}`;
+  };
+
+  watch(
+    () => error.value,
+    (err) => {
+      if (!err) {
+        return;
+      }
+
+      throw createError(err);
+    },
+    { immediate: true },
+  );
 </script>
 
 <style lang="scss" scoped>
-a {
-  color: initial;
-}
+  a {
+    color: initial;
+  }
 
-span {
-  font-weight: initial;
-  font-size: initial;
-  line-height: initial;
-}
+  span {
+    font-weight: initial;
+    font-size: initial;
+    line-height: initial;
+  }
 </style>

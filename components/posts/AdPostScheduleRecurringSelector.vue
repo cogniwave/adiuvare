@@ -1,6 +1,6 @@
 <template>
   <v-tooltip :text="t('form.post.schedule.day.monday')">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         :variant="selected['monday'] ? 'flat' : 'outlined'"
@@ -16,7 +16,7 @@
   </v-tooltip>
 
   <v-tooltip :text="t('form.post.schedule.day.tuesday')">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         :variant="selected['tuesday'] ? 'flat' : 'outlined'"
@@ -33,7 +33,7 @@
   </v-tooltip>
 
   <v-tooltip :text="t('form.post.schedule.day.wednesday')">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         :variant="selected['wednesday'] ? 'flat' : 'outlined'"
@@ -50,7 +50,7 @@
   </v-tooltip>
 
   <v-tooltip :text="t('form.post.schedule.day.thursday')">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         :variant="selected['thursday'] ? 'flat' : 'outlined'"
@@ -67,7 +67,7 @@
   </v-tooltip>
 
   <v-tooltip :text="t('form.post.schedule.day.friday')">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         :variant="selected['friday'] ? 'flat' : 'outlined'"
@@ -84,7 +84,7 @@
   </v-tooltip>
 
   <v-tooltip :text="t('form.post.schedule.day.saturday')">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         :variant="selected['saturday'] ? 'flat' : 'outlined'"
@@ -101,7 +101,7 @@
   </v-tooltip>
 
   <v-tooltip :text="t('form.post.schedule.day.sunday')">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         :variant="selected['sunday'] ? 'flat' : 'outlined'"
@@ -121,7 +121,7 @@
   <br />
 
   <v-virtual-scroll :items="timeGroups" class="time-group" item-height="264">
-    <template v-slot:default="{ item }">
+    <template #default="{ item }">
       <span>{{ toHumanDay(item.day) }}</span>
 
       <ad-post-schedule-recurring-time
@@ -133,105 +133,98 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
-import type { PropType } from "vue";
+  import { onBeforeMount, ref, type PropType } from "vue";
 
-import type {
-  Day,
-  RecurringSchedule,
-  ScheduleTime,
-  RecurringScheduleTimeGroup,
-} from "@/types/post";
-import { usePosts } from "@/store/posts";
-import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
-import { getNewGroupTimes } from "@/utils/scheduling";
-import { toHumanDay } from "@/utils/scheduling";
+  import type { Day, RecurringSchedule, ScheduleTime, RecurringScheduleTimeGroup } from "@/types/post";
+  import { usePosts } from "@/store/posts";
+  import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
+  import { getNewGroupTimes, toHumanDay } from "@/utils/scheduling";
 
-// setup
+  // setup
 
-const props = defineProps({
-  modelValue: {
-    type: Object as PropType<RecurringSchedule>,
-    default: () => ({
-      monday: [getNewGroupTimes()],
-      tuesday: null,
-      wednesday: null,
-      thursday: null,
-      friday: null,
-      saturday: null,
-      sunday: null,
-    }),
-  },
-});
+  const $props = defineProps({
+    modelValue: {
+      type: Object as PropType<RecurringSchedule>,
+      default: () => ({
+        monday: [getNewGroupTimes()],
+        tuesday: null,
+        wednesday: null,
+        thursday: null,
+        friday: null,
+        saturday: null,
+        sunday: null,
+      }),
+    },
+  });
 
-const { currPost } = usePosts();
-const { t } = useI18n();
+  const { currPost } = usePosts();
+  const { t } = useI18n();
 
-// data
-const selected = ref<RecurringSchedule>(props.modelValue);
+  // data
+  const selected = ref<RecurringSchedule>($props.modelValue);
 
-const timeGroups = ref<RecurringScheduleTimeGroup[]>();
+  const timeGroups = ref<RecurringScheduleTimeGroup[]>();
 
-// hooks
-onBeforeMount(() => setupTimeGroups(selected.value));
+  // hooks
+  onBeforeMount(() => setupTimeGroups(selected.value));
 
-// methods
+  // methods
 
-const toggleDay = (day: Day) => {
-  const updated = { ...selected.value };
+  const toggleDay = (day: Day) => {
+    const updated = { ...selected.value };
 
-  if (!selected.value[day]) {
-    updated[day] = [getNewGroupTimes()];
-  } else {
-    updated[day] = null;
-  }
-
-  setupTimeGroups(updated);
-
-  selected.value = updated;
-
-  onUpdate(updated);
-};
-
-const onTimesUpdate = (day: Day, newTimes: ScheduleTime[]) => {
-  selected.value[day] = newTimes;
-  onUpdate(selected.value);
-};
-
-const setupTimeGroups = (updated: RecurringSchedule) => {
-  timeGroups.value = Object.entries(updated).reduce((result, [key, times]) => {
-    if (times) {
-      result.push({ day: key as Day, times });
+    if (!selected.value[day]) {
+      updated[day] = [getNewGroupTimes()];
+    } else {
+      updated[day] = null;
     }
 
-    return result;
-  }, [] as RecurringScheduleTimeGroup[]);
-};
+    setupTimeGroups(updated);
 
-const onUpdate = (payload: RecurringSchedule) => {
-  currPost.value = {
-    ...currPost.value,
-    schedule: {
-      type: "recurring",
-      payload: Object.fromEntries(
-        Object.entries(payload).filter(([_, value]) => value !== null),
-      ) as RecurringSchedule,
-    },
+    selected.value = updated;
+
+    onUpdate(updated);
   };
-};
+
+  const onTimesUpdate = (day: Day, newTimes: ScheduleTime[]) => {
+    selected.value[day] = newTimes;
+    onUpdate(selected.value);
+  };
+
+  const setupTimeGroups = (updated: RecurringSchedule) => {
+    timeGroups.value = Object.entries(updated).reduce((result, [key, times]) => {
+      if (times) {
+        result.push({ day: key as Day, times });
+      }
+
+      return result;
+    }, [] as RecurringScheduleTimeGroup[]);
+  };
+
+  const onUpdate = (payload: RecurringSchedule) => {
+    currPost.value = {
+      ...currPost.value,
+      schedule: {
+        type: "recurring",
+        payload: Object.fromEntries(
+          Object.entries(payload).filter(([_, value]) => value !== null),
+        ) as RecurringSchedule,
+      },
+    };
+  };
 </script>
 
 <style lang="scss" scoped>
-.time-group {
-  width: 90%;
-  display: block;
-  margin: auto;
+  .time-group {
+    width: 90%;
+    display: block;
+    margin: auto;
 
-  span {
-    width: 150px;
-    display: inline-block;
-    text-align: left;
-    margin-top: 10px;
+    span {
+      width: 150px;
+      display: inline-block;
+      text-align: left;
+      margin-top: 10px;
+    }
   }
-}
 </style>

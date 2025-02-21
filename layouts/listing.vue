@@ -27,7 +27,6 @@
 <script setup lang="ts">
 // import { useRoute } from "#imports";
 import { useDisplay } from "vuetify";
-import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 
 import AdMenu from "@/components/layout/AdMenu.vue";
 

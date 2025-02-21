@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   // validate and add token to event
   try {
     await createReport({
-      post: sanitizeInput(body.post),
+      post: body.post,
       reason: sanitizeInput(body.reason),
       reportBy: sanitizeInput(body.user),
     });

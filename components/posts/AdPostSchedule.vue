@@ -10,7 +10,7 @@
       class="ml-auto"
     >
       <v-tooltip :text="t('form.post.schedule.anytime')">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             v-bind="props"
             size="x-small"
@@ -23,7 +23,7 @@
       </v-tooltip>
 
       <v-tooltip :text="t('form.post.schedule.specific')">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             v-bind="props"
             size="x-small"
@@ -36,7 +36,7 @@
       </v-tooltip>
 
       <v-tooltip :text="t('form.post.schedule.recurring')">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             v-bind="props"
             size="x-small"
