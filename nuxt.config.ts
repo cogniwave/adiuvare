@@ -57,7 +57,7 @@ export default defineNuxtConfig({
   },
 
   build: {
-    transpile: ["vuetify", "jsonwebtoken", "vue-i18n"],
+    transpile: ["vuetify", "vue-i18n"],
   },
 
   css: [

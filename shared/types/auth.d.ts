@@ -1,14 +1,14 @@
+import type { TokenUser } from "./user";
+import type { Dayjs } from "../services/dayjs.service";
+
 interface SessionUser {
   email: string;
 }
 
 declare module "#auth-utils" {
-  interface User {
-    email: string;
-  }
-
   interface UserSession {
-    email: string;
+    user: TokenUser;
+    loggedInAt: Dayjs;
   }
 
   interface SecureSessionData {

@@ -1,16 +1,25 @@
 import Joi from "joi";
 import { compareSync } from "bcrypt";
-import type { H3Error } from "h3";
 
+import dayjs from "~~/shared/services/dayjs.service";
 import { getUser } from "~~/server/db/users";
-import { sanitizeInput, getValidatedInput } from "~~/server/utils/request";
+import { getValidatedInput, defineWrappedResponseHandler } from "~~/server/utils/request";
 import { users } from "~~/server/db/schemas/users.schema";
-import { setupTokens } from "~~/server/utils/token";
 
 import type { LoginPayload, TokenUser } from "~~/shared/types/user";
-import type { TranslationFunction } from "~~/shared/types";
 
-const login = async (email: string, password: string, t: TranslationFunction): Promise<TokenUser> => {
+export default defineWrappedResponseHandler(async (event) => {
+  const t = await useTranslation(event);
+
+  const { email, password } = await getValidatedInput<LoginPayload>(event, {
+    email: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
+    password: Joi.string()
+      .required()
+      .messages({ "strings.empty": t("errors.empty") }),
+  });
+
   const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
     password: users.password,
     slug: users.slug,
@@ -35,29 +44,9 @@ const login = async (email: string, password: string, t: TranslationFunction): P
     });
   }
 
-  delete user.password;
   delete user.verified;
+  delete user.password;
+  await setUserSession(event, { user, loggedInAt: dayjs() });
+  setResponseStatus(event, 201);
   return user;
-};
-
-export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
-
-  const body = await getValidatedInput<LoginPayload>(event, {
-    email: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-    password: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-  });
-
-  try {
-    const user = await login(sanitizeInput(body.email), sanitizeInput(body.password), t);
-
-    return { user, ...setupTokens(event, user) };
-  } catch (err: unknown) {
-    console.log(err);
-    throw createError(err as H3Error);
-  }
 });
