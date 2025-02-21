@@ -1,5 +1,5 @@
 // @ts-check
-import withNuxt from "./.nuxt/eslint.config.mjs";
+import withNuxt from ".nuxt/eslint.config.mjs";
 
 import globals from "globals";
 import vueParser from "vue-eslint-parser";

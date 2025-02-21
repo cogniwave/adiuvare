@@ -1,8 +1,8 @@
 import Joi from "joi";
 import type { H3Error } from "h3";
 
-import { verifyUser } from "@/server/db/users";
-import { getValidatedInput, sanitizeInput } from "@/server/utils/request";
+import { verifyUser } from "~~/server/db/users";
+import { getValidatedInput, sanitizeInput } from "~~/server/utils/request";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);

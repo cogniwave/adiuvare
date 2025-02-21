@@ -1,5 +1,5 @@
-import { updateUser } from "@/server/db/users";
-import { getSessionUser, sanitizeInput } from "@/server/utils/request";
+import { updateUser } from "~~/server/db/users";
+import { getSessionUser, sanitizeInput } from "~~/server/utils/request";
 import { isNuxtError } from "nuxt/app";
 import {
   uploadFile,
@@ -7,7 +7,7 @@ import {
   FileTypeError,
   MAX_FILE_SIZE,
   ACCEPT_FILE_TYPES,
-} from "~/server/services/fileUpload";
+} from "~~/server/services/fileUpload";
 
 export default defineEventHandler(async (event) => {
   const formData = await readFormData(event);

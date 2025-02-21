@@ -1,6 +1,6 @@
-import type { Report } from "@/types/report";
-import type { NotifyPost } from "@/types/post";
-import type { User } from "@/types/user";
+import type { Report } from "~~/shared/types/report";
+import type { NotifyPost } from "~~/shared/types/post";
+import type { User } from "~~/shared/types/user";
 
 const sendToSlack = async (message: string) => {
   const webhook = process.env.SLACK_WEBHOOK_URL;

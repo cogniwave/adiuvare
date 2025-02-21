@@ -1,10 +1,13 @@
-import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-
+import { defineNuxtConfig } from "nuxt/config";
 import { version } from "./package.json";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: import.meta.env.NODE_ENV === "development" },
+  compatibilityDate: "2025-02-21",
+
+  future: { compatibilityVersion: 4 },
+
+  devtools: { enabled: process.env.NODE_ENV === "development" },
 
   app: {
     head: {
@@ -40,51 +43,41 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      brevoConversationId: import.meta.env.BREVO_CONVO_ID,
+      brevoConversationId: process.env.BREVO_CONVO_ID,
+      baseUrl: process.env.BASE_URL || "http://localhost:3000",
     },
   },
 
   ssr: true,
 
-  build: {
-    transpile: ["vuetify", "jsonwebtoken"],
+  nitro: {
+    experimental: {
+      openAPI: true,
+    },
   },
 
-  components: [
-    { path: "~/components/layout", pathPrefix: false },
-    { path: "~/components/common", pathPrefix: false },
-    { path: "~/components/feed", pathPrefix: false },
-    { path: "~/components/posts", pathPrefix: false },
-    { path: "~/components/contacts", pathPrefix: false },
-    { path: "~/components/organizations", pathPrefix: false },
-    "~/components",
-  ],
+  build: {
+    transpile: ["vuetify", "jsonwebtoken", "vue-i18n"],
+  },
 
   css: [
     "~/scss/styles.scss", // you should add main.scss somewhere in your app
   ],
 
   modules: [
-    "@nuxtjs/robots",
-    "@nuxtjs/eslint-module",
-    "nuxt-bugsnag",
     "@nuxtjs/i18n",
+    "@nuxt/image",
+    "nuxt-auth-utils",
+    "vuetify-nuxt-module",
+    "@nuxthub/core",
     "@vueuse/nuxt",
-    (_, nuxt) => {
-      nuxt.hooks.hook("vite:extendConfig", (config) => {
-        config.plugins?.push(vuetify({ autoImport: true }));
-      });
-    },
+    "nuxt-bugsnag",
   ],
 
-  eslint: {
-    lintOnStart: false,
-  },
-
   vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
+    css: {
+      preprocessorOptions: {
+        sass: { api: "modern-compiler" },
       },
     },
   },
@@ -92,22 +85,49 @@ export default defineNuxtConfig({
   bugsnag: {
     publishRelease: true,
     disableLog: false,
-    baseUrl: import.meta.env.APP_BASE_URL,
+    baseUrl: process.env.APP_BASE_URL,
 
     config: {
-      releaseStage: import.meta.env.NODE_ENV,
-      apiKey: import.meta.env.BUGSNAG_KEY,
+      releaseStage: process.env.NODE_ENV,
+      apiKey: process.env.BUGSNAG_KEY!,
       enabledReleaseStages: ["staging", "production"],
       appVersion: version,
     },
   },
 
   i18n: {
-    vueI18n: "./i18n/i18n.config.ts", // if you are using custom path, default
+    restructureDir: "./app/i18n",
+    vueI18n: "./i18n.config.ts",
+
     experimental: {
-      localeDetector: "./i18n/localeDetector.ts",
+      localeDetector: "./localeDetector.ts",
     },
   },
 
-  compatibilityDate: "2024-07-08",
+  vuetify: {
+    moduleOptions: {
+      // styles: { configFile: '/settings.scss' }
+    },
+    vuetifyOptions: {
+      theme: {
+        defaultTheme: "dark",
+      },
+      date: {
+        adapter: "dayjs",
+        // locale: { en: enGB, pt },
+      },
+      defaults: {
+        VTextField: {
+          density: "comfortable",
+          flat: true,
+        },
+        VForm: {
+          "validate-on": "input lazy",
+        },
+        VBtn: {
+          flat: true,
+        },
+      },
+    },
+  },
 });

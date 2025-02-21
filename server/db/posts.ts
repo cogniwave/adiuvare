@@ -1,14 +1,14 @@
 import type { SQLWrapper, SQL } from "drizzle-orm";
 import { and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
 
-import { useDrizzle } from "./";
+import { useDrizzle } from "../db";
 import { POST_NEEDS, posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
 import { FEED_PAGE_SIZE } from "@/utils";
 
 import type { InsertPost } from "./schemas/posts.schema";
-import type { PostFilter, UpdatePostPayload } from "@/types/post";
+import type { PostFilter, UpdatePostPayload } from "~~/shared/types/post";
 
 type Query = SQLWrapper[] | SQL<unknown>[] | undefined;
 

@@ -1,8 +1,8 @@
 import Joi from "joi";
 import { createError, eventHandler } from "h3";
 
-import { signToken, validateToken } from "@/server/utils/token";
-import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
+import { signToken, validateToken } from "~~/server/utils/token";
+import { sanitizeInput, getValidatedInput } from "~~/server/utils/request";
 
 export default eventHandler(async (event) => {
   const t = await useTranslation(event);

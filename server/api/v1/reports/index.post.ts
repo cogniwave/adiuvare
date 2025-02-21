@@ -1,9 +1,9 @@
 import Joi from "joi";
 
-import type { Report } from "@/types/report";
-import { createReport } from "@/server/db/reports";
-import { notifyNewReport } from "@/server/services/slack";
-import { getValidatedInput, sanitizeInput } from "@/server/utils/request";
+import type { Report } from "~~/shared/types/report";
+import { createReport } from "~~/server/db/reports";
+import { notifyNewReport } from "~~/server/services/slack";
+import { getValidatedInput, sanitizeInput } from "~~/server/utils/request";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);

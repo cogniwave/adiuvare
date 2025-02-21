@@ -1,9 +1,9 @@
 import Joi from "joi";
 
-import dayjs from "@/services/dayjs.service";
-import { updatePassword } from "@/server/db/users";
-import { getValidatedInput } from "@/server/utils/request";
-import { sendEmail } from "~/server/services/brevo";
+import dayjs from "~~/shared/services/dayjs.service";
+import { updatePassword } from "~~/server/db/users";
+import { getValidatedInput } from "~~/server/utils/request";
+import { sendEmail } from "~~/server/services/brevo";
 
 // import type { PasswordUpdatePayload } from "@/types/user";
 
@@ -49,11 +49,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  await updatePassword(
-    sanitizeInput(body.email),
-    sanitizeInput(body.password),
-    sanitizeInput(body.token),
-  );
+  await updatePassword(sanitizeInput(body.email), sanitizeInput(body.password), sanitizeInput(body.token));
 
   await sendEmail(t("email.resetSuccess.subject"), { email: body.email }, "information", {
     greetings: t("email.greetings"),

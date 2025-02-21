@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import type { H3Event, EventHandlerRequest } from "h3";
-import type { TokenUser } from "@/types/user";
+import type { TokenUser } from "~~/shared/types/user";
 
 type VerifiedToken = (jwt.JwtPayload & { user: TokenUser }) | null;
 

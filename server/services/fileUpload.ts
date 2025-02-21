@@ -1,4 +1,4 @@
-import { genToken } from "@/server/utils";
+import { genToken } from "~~/server/utils";
 
 export const MAX_FILE_SIZE = 4000000;
 

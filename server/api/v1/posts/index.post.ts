@@ -1,12 +1,12 @@
 import Joi from "joi";
 
-import { getSessionUser, sanitizeInput, getValidatedInput } from "@/server/utils/request";
-import { POST_NEEDS } from "@/server/db/schemas/posts.schema";
-import { createPost } from "@/server/db/posts";
-import { genToken } from "@/server/utils";
-import { notifyNewPost } from "@/server/services/slack";
+import { getSessionUser, sanitizeInput, getValidatedInput } from "~~/server/utils/request";
+import { POST_NEEDS } from "~~/server/db/schemas/posts.schema";
+import { createPost } from "~~/server/db/posts";
+import { genToken } from "~~/server/utils";
+import { notifyNewPost } from "~~/server/services/slack";
 
-import type { CreatePostPayload, ScheduleType } from "@/types/post";
+import type { CreatePostPayload, ScheduleType } from "~~/shared/types/post";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);

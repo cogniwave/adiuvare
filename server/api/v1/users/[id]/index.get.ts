@@ -1,5 +1,5 @@
-import { getUserById } from "@/server/db/users";
-import { sanitizeInput, desanitizeInput } from "@/server/utils/request";
+import { getUserById } from "~~/server/db/users";
+import { sanitizeInput, desanitizeInput } from "~~/server/utils/request";
 
 export default defineEventHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists

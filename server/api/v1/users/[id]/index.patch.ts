@@ -1,12 +1,12 @@
 import Joi from "joi";
 
-import { updateUser } from "@/server/db/users";
-import { getSessionUser, getValidatedInput, sanitizeInput } from "@/server/utils/request";
+import { updateUser } from "~~/server/db/users";
+import { getSessionUser, getValidatedInput, sanitizeInput } from "~~/server/utils/request";
 
 import type { H3Event, EventHandlerRequest } from "h3";
-import type { UpdateProfilePayload, UpdateAccountPayload, UpdateUserPayload } from "@/types/user";
-import type { TranslationFunction } from "@/types";
-import { isH3Error } from "~/types/guards";
+import type { UpdateProfilePayload, UpdateAccountPayload, UpdateUserPayload } from "~~/shared/types/user";
+import type { TranslationFunction } from "~~/shared/types";
+import { isH3Error } from "~~/shared/types/guards";
 
 type UpdateAction = "account" | "profile";
 

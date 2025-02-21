@@ -2,13 +2,13 @@ import Joi from "joi";
 import { compareSync } from "bcrypt";
 import type { H3Error } from "h3";
 
-import { getUser } from "@/server/db/users";
-import { sanitizeInput, getValidatedInput } from "@/server/utils/request";
-import { users } from "@/server/db/schemas/users.schema";
-import { setupTokens } from "@/server/utils/token";
+import { getUser } from "~~/server/db/users";
+import { sanitizeInput, getValidatedInput } from "~~/server/utils/request";
+import { users } from "~~/server/db/schemas/users.schema";
+import { setupTokens } from "~~/server/utils/token";
 
-import type { LoginPayload, TokenUser } from "@/types/user";
-import type { TranslationFunction } from "@/types";
+import type { LoginPayload, TokenUser } from "~~/shared/types/user";
+import type { TranslationFunction } from "~~/shared/types";
 
 const login = async (email: string, password: string, t: TranslationFunction): Promise<TokenUser> => {
   const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
