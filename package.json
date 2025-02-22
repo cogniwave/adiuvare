@@ -9,9 +9,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "db:ui": "yarn drizzle-kit studio --verbose",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "yarn db:generate && drizzle-kit migrate"
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@date-io/dayjs": "^3.2.0",

@@ -1,1 +1,0 @@
-ALTER TABLE "users" RENAME COLUMN "postalCode" TO "postal_code";

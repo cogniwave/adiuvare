@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 
 Move vercel to nuxthub/cloudflare
 
-
 ## v1.0.0 (2024-07-01)
 
 Initial release

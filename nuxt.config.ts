@@ -63,9 +63,7 @@ export default defineNuxtConfig({
   ssr: true,
 
   nitro: {
-    experimental: {
-      openAPI: true,
-    },
+    experimental: { openAPI: true },
   },
 
   build: {
