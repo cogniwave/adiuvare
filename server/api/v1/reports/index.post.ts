@@ -1,4 +1,4 @@
-import Joi from "joi";
+import { RequiredObject, RequiredString } from "shared/joi/validators";
 
 import type { Report } from "shared/types/report";
 import { createReport } from "server/db/reports";
@@ -9,15 +9,9 @@ export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   const body = await getValidatedInput<Report>(event, {
-    post: Joi.object()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-    reason: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-    user: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
+    post: RequiredObject,
+    reason: RequiredString,
+    user: RequiredString,
   });
 
   // validate and add token to event

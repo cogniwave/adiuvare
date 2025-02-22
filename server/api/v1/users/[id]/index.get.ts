@@ -1,26 +1,10 @@
 import { getUserById } from "server/db/users";
 import { sanitizeInput, desanitizeInput } from "server/utils/request";
 
-export default defineEventHandler(async (event) => {
+export default defineProtectedRouteHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
   const id = sanitizeInput(getRouterParam(event, "id"));
-
-  const user = getSessionUser(event);
-
   const t = await useTranslation(event);
-
-  if (!user) {
-    setResponseStatus(event, 401);
-    sendError(
-      event,
-      createError({
-        statusCode: 401,
-        statusMessage: "unauthorized",
-        message: t("errors.unauthenticated"),
-      }),
-    );
-    return;
-  }
 
   try {
     const user = await getUserById(id);
@@ -48,7 +32,7 @@ export default defineEventHandler(async (event) => {
   } catch (err) {
     console.log(err);
     useBugsnag().notify({
-      name: "[user] couldnt get user",
+      name: "[user] couldn't get user",
       message: JSON.stringify(err),
     });
 

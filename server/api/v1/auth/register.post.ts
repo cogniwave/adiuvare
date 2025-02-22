@@ -1,11 +1,10 @@
-import Joi from "joi";
-
 import { addUser } from "server/db/users";
 import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
 
+import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/joi/validators";
 import { isDrizzleError } from "shared/types/guards";
 import type { BaseUser, User, UserType } from "shared/types/user";
 import type { TranslationFunction } from "shared/types";
@@ -40,39 +39,10 @@ export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   const body = await getValidatedInput<BaseUser>(event, {
-    name: Joi.string()
-      .required()
-      .max(255)
-      .messages({
-        "string.empty": t("errors.empty"),
-        "string.max": t("errors.max", 255),
-      }),
-
-    password: Joi.string()
-      .required()
-      .pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/)
-      .messages({
-        "string.empty": t("errors.empty"),
-        "string.pattern.base": t("errors.invalidPassword"),
-      }),
-
-    email: Joi.string()
-      .required()
-      .email({})
-      .messages({
-        "string.empty": t("errors.empty"),
-        "string.max": t("errors.max", 255),
-        "string.email": t("errors.invalidEmail"),
-      }),
-
-    type: Joi.string()
-      .required()
-      .valid("org", "volunteer")
-      .messages({
-        "string.empty": t("errors.empty"),
-        "any.only": t("errors.invalidUserType"),
-      }),
-
+    name: RequiredString.max(255),
+    password: RequiredPassword,
+    email: RequiredEmail,
+    type: RequiredString.valid("org", "volunteer"),
     newsletter: Joi.boolean().default(false),
   });
 

@@ -1,79 +1,31 @@
-import Joi from "joi";
+import Joi, {
+  RequiredNeeds,
+  RequiredArray,
+  RequiredContacts,
+  RequiredObject,
+  RequiredString,
+} from "shared/joi/validators";
 
-import { POST_NEEDS, POST_STATES } from "server/db/schemas/posts.schema";
+import { POST_STATES } from "server/db/schemas/posts.schema";
 import { updatePost } from "server/db/posts";
-import { getSessionUser, getValidatedInput, sanitizeInput } from "server/utils/request";
+import { getValidatedInput, sanitizeInput } from "server/utils/request";
 import type { ScheduleType, UpdatePostPayload } from "shared/types/post";
 import { isH3Error } from "shared/types/guards";
 
-export default defineEventHandler(async (event) => {
+export default defineProtectedRouteHandler(async (event) => {
   const t = await useTranslation(event);
 
   const body = await getValidatedInput<UpdatePostPayload>(event, {
-    title: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-
-    state: Joi.string()
-      .required()
-      .valid(...POST_STATES)
-      .messages({
-        "strings.empty": t("errors.empty"),
-        "strings.valid": t("errors.invalidField"),
-      }),
-
-    description: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-
-    needs: Joi.array()
-      .items(Joi.string().valid(...POST_NEEDS))
-      .required()
-      .messages({
-        "strings.empty": t("errors.empty"),
-        "strings.valid": t("errors.invalidField"),
-      }),
-
-    locations: Joi.array()
-      .items(Joi.string())
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-
-    schedule: Joi.object()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-
-    contacts: Joi.array()
-      .items(
-        Joi.object().keys({
-          type: Joi.string().valid("phone", "other", "email").required(),
-          contact: Joi.string().min(5).max(264).required(),
-        }),
-      )
-      .required()
-      .min(1)
-      .messages({
-        "array.min": t("errors.empty"),
-        "any.required": t("errors.invalidContact"),
-        "any.only": t("errors.invalidContactType"),
-      }),
+    title: RequiredString,
+    state: RequiredString.valid(...POST_STATES),
+    description: RequiredString,
+    needs: RequiredNeeds,
+    locations: RequiredArray.items(Joi.string()),
+    schedule: RequiredObject,
+    contacts: RequiredContacts,
   });
 
   const slug = sanitizeInput(getRouterParam(event, "slug") || "");
-  const user = getSessionUser(event);
-
-  if (!user) {
-    setResponseStatus(event, 401);
-    sendError(
-      event,
-      createError({
-        statusCode: 401,
-        statusMessage: "unauthorized",
-        message: t("errors.unauthenticated"),
-      }),
-    );
-    return;
-  }
 
   try {
     const scheduleType = sanitizeInput<ScheduleType>(body.schedule.type);
@@ -90,9 +42,9 @@ export default defineEventHandler(async (event) => {
           type: scheduleType,
           ...(scheduleType !== "anytime" && { payload: body.schedule.payload }),
         },
-        contacts: body.contacts.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
+        contacts: body.contacts,
       },
-      user.id,
+      event.context.user.id,
     );
 
     if (result) {

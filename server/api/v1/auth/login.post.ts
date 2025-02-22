@@ -1,5 +1,4 @@
-import Joi from "joi";
-import { compareSync } from "bcrypt";
+import { RequiredString } from "shared/joi/validators";
 
 import dayjs from "shared/services/dayjs.service";
 import { getUser } from "server/db/users";
@@ -12,12 +11,8 @@ export default defineWrappedResponseHandler(async (event) => {
   const t = await useTranslation(event);
 
   const { email, password } = await getValidatedInput<LoginPayload>(event, {
-    email: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-    password: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
+    email: RequiredString,
+    password: RequiredString,
   });
 
   const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
@@ -29,7 +24,7 @@ export default defineWrappedResponseHandler(async (event) => {
     verified: users.verified,
   });
 
-  if (!user || !compareSync(password, user.password as string)) {
+  if (!user || !(await verifyPassword(password, user.password!))) {
     throw createError({
       statusCode: 401,
       statusMessage: "unauthorized",

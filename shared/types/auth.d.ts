@@ -2,7 +2,10 @@ import type { TokenUser } from "./user";
 import type { Dayjs } from "../services/dayjs.service";
 
 interface SessionUser {
+  id: string;
   email: string;
+  slug: string;
+  logo: string;
 }
 
 declare module "#auth-utils" {

@@ -1,9 +1,9 @@
 import { updateUser } from "server/db/users";
-import { getSessionUser, sanitizeInput } from "server/utils/request";
-import { isNuxtError } from "nuxt/app";
+import { sanitizeInput } from "server/utils/request";
+
 import { uploadFile, FileSizeError, FileTypeError, MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "shared/services/fileUpload";
 
-export default defineEventHandler(async (event) => {
+export default defineProtectedRouteHandler(async (event) => {
   const formData = await readFormData(event);
 
   if (!formData) {
@@ -12,11 +12,9 @@ export default defineEventHandler(async (event) => {
   }
 
   const id = sanitizeInput(getRouterParam(event, "id") || "");
-  const user = getSessionUser(event);
-
   const t = await useTranslation(event);
 
-  if (!user || user.id !== id) {
+  if (event.context.user.id !== id) {
     setResponseStatus(event, 401);
     sendError(
       event,
@@ -52,7 +50,7 @@ export default defineEventHandler(async (event) => {
   try {
     const path = await uploadFile(file);
 
-    await updateUser(user.id, [
+    await updateUser(event.context.user.id, [
       { field: "photo", value: path.url },
       { field: "photoThumbnail", value: path.url },
     ]);

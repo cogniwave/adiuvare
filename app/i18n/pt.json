@@ -176,6 +176,14 @@
   },
 
   "errors": {
+    "joi": {
+      "required": "{#label} é obrigatório",
+      "only": "{#label} tem que ser um de {#valids}",
+      "max": "{#label} não pode ter mais que {#limit} caracteres",
+      "invalidEmail": "Email inválido",
+      "invalidPassword": "{#label} tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número"
+    },
+
     "unexpected": "Erro inesperado",
     "unauthenticated": "É necessário iniciar sessão para esta ação",
     "post": {
@@ -183,14 +191,11 @@
       "empty": "Não pode ser vazio"
     },
     "invalidCredentials": "Email ou palavra-passe errados",
-    "empty": "Não pode ser vazio",
     "invalidConfirmToken": "Token invalido",
     "emptyRefreshToken": "No refresh token",
     "noRefreshToken": "Unauthorized, no refreshToken in payload",
     "invalidRefreshToken": "Unauthorized, refreshToken can`t be verified",
-    "max": "Não pode ter mais que {max} caracteres",
     "invalidUserType": "Tem que ser \"org\" ou \"voluntário\"",
-    "invalidPassword": "Tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
     "emailExists": "Já existe uma conta com este email",
     "invalidEmail": "Email inválido",
     "invalidField": "Invalid field",

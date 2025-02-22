@@ -1,75 +1,32 @@
-import Joi from "joi";
+import Joi, {
+  RequiredArray,
+  RequiredContacts,
+  RequiredNeeds,
+  RequiredObject,
+  RequiredString,
+} from "shared/joi/validators";
 
-import { getSessionUser, sanitizeInput, getValidatedInput } from "server/utils/request";
-import { POST_NEEDS } from "server/db/schemas/posts.schema";
+import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { createPost } from "server/db/posts";
 import { genToken } from "server/utils";
 import { notifyNewPost } from "server/services/slack";
 
 import type { CreatePostPayload, ScheduleType } from "shared/types/post";
 
-export default defineEventHandler(async (event) => {
+export default defineProtectedRouteHandler(async (event) => {
   const t = await useTranslation(event);
 
   const body = await getValidatedInput<CreatePostPayload>(event, {
-    title: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-
-    description: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-
-    needs: Joi.array()
-      .items(Joi.string().valid(...POST_NEEDS))
-      .required()
-      .messages({
-        "strings.empty": t("errors.empty"),
-        "strings.valid": t("errors.invalidField"),
-      }),
-
-    locations: Joi.array()
-      .items(Joi.string())
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-
-    schedule: Joi.object()
-      .required()
-      .messages({ "any.required": t("errors.requiredField"), "strings.empty": t("errors.empty") }),
-
-    contacts: Joi.array()
-      .items(
-        Joi.object().keys({
-          type: Joi.string().valid("phone", "other", "email").required(),
-          contact: Joi.string().min(5).max(264).required(),
-        }),
-      )
-      .required()
-      .min(1)
-      .messages({
-        "array.min": t("errors.empty"),
-        "any.required": t("errors.requiredField"),
-        "any.only": t("errors.invalidContactType"),
-      }),
+    title: RequiredString,
+    description: RequiredString,
+    needs: RequiredNeeds,
+    locations: RequiredArray.items(Joi.string()),
+    schedule: RequiredObject,
+    contacts: RequiredContacts,
   });
 
   // validate and add token to event
   try {
-    const user = getSessionUser(event);
-
-    if (!user) {
-      setResponseStatus(event, 401);
-      sendError(
-        event,
-        createError({
-          statusCode: 401,
-          statusMessage: "unauthorized",
-          message: t("errors.unexpected"),
-        }),
-      );
-      return;
-    }
-
     const scheduleType: ScheduleType = sanitizeInput(body.schedule.type);
 
     const result = await createPost({
@@ -81,14 +38,14 @@ export default defineEventHandler(async (event) => {
         type: scheduleType,
         ...(scheduleType !== "anytime" && { payload: body.schedule.payload }),
       },
-      contacts: body.contacts.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) })),
-      createdUserId: user.id,
+      contacts: body.contacts,
+      createdUserId: event.context.user.id,
       slug: `${body.title.trim().slice(0, 20).replaceAll(" ", "_")}-${genToken(10)}`,
     });
 
-    await notifyNewPost({ id: result.id, createdBy: user.id, title: user.id });
+    await notifyNewPost({ id: result.id, createdBy: event.context.user.id, title: event.context.user.id });
 
-    return { ...result, createdBy: user.slug, logo: user.logo };
+    return { ...result, createdBy: event.context.user.slug, logo: event.context.user.logo };
   } catch (err) {
     console.log(err);
     useBugsnag().notify({

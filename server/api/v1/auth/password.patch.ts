@@ -1,11 +1,9 @@
-import Joi from "joi";
-
-import dayjs from "shared/services/dayjs.service";
 import { updatePassword } from "server/db/users";
 import { getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 
-// import type { PasswordUpdatePayload } from "app/types/user";
+import { RequiredEmail, RequiredPassword, RequiredString } from "shared/joi/validators";
+import dayjs from "shared/services/dayjs.service";
 
 interface PasswordUpdatePayload {
   email: string;
@@ -17,26 +15,9 @@ export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   const body = await getValidatedInput<PasswordUpdatePayload>(event, {
-    password: Joi.string()
-      .required()
-      .pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/)
-      .messages({
-        "string.empty": t("errors.empty"),
-        "string.pattern.base": t("errors.invalidPassword"),
-      }),
-
-    email: Joi.string()
-      .required()
-      .email({})
-      .messages({
-        "string.empty": t("errors.empty"),
-        "string.max": t("errors.max", 255),
-        "string.email": t("errors.invalidEmail"),
-      }),
-
-    token: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
+    password: RequiredPassword,
+    email: RequiredEmail,
+    token: RequiredString.messages({ "strings.empty": t("errors.empty") }),
   });
 
   if (dayjs(body.token.split("-")[1]).isAfter(dayjs().add(12, "hours"))) {

@@ -1,3 +1,8 @@
+export enum UserTypeEnum {
+  ORGANIZATION = "org",
+  VOLUNTEER = "volunteer",
+}
+
 export type UserType = "org" | "volunteer";
 
 export interface BaseUser {
@@ -71,7 +76,6 @@ export interface UpdateProfilePayload {
   postalCode?: string;
   city?: string;
   district?: string;
-
   contacts?: UserContact[];
 }
 

@@ -1,30 +1,15 @@
 import { deletePost, getPostByOwner } from "server/db/posts";
-import { sanitizeInput, getSessionUser } from "server/utils/request";
+import { sanitizeInput } from "server/utils/request";
 
-export default defineEventHandler(async (event) => {
+export default defineProtectedRouteHandler(async (event) => {
   const postId = sanitizeInput(getRouterParam(event, "id"));
 
   const t = await useTranslation(event);
 
   // delete post
   try {
-    const user = getSessionUser(event);
-
-    if (!user) {
-      setResponseStatus(event, 401);
-      sendError(
-        event,
-        createError({
-          statusCode: 401,
-          statusMessage: "unauthorized",
-          message: t("errors.unauthenticated"),
-        }),
-      );
-      return;
-    }
-
     // make sure post exists and belongs to logged in user
-    const post = await getPostByOwner(postId, user.id);
+    const post = await getPostByOwner(postId, event.context.user.id);
 
     // couldn't find post, just return success
     if (!post) {
@@ -36,7 +21,7 @@ export default defineEventHandler(async (event) => {
   } catch (err) {
     console.log(err);
     useBugsnag().notify({
-      name: "[post] couldnt delete post",
+      name: "[post] couldn't delete post",
       message: JSON.stringify(err),
     });
 

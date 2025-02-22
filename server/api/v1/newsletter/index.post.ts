@@ -1,23 +1,13 @@
-import Joi from "joi";
-
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { subscribeToNewsletter } from "server/services/brevo";
 
+import { RequiredEmail } from "shared/joi/validators";
 import type { NewsletterSubscribePayload } from "shared/types/newsletter";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
-  const body = await getValidatedInput<NewsletterSubscribePayload>(event, {
-    email: Joi.string()
-      .required()
-      .email({})
-      .messages({
-        "string.empty": t("errors.empty"),
-        "string.max": t("errors.max", 255),
-        "string.email": t("errors.invalidEmail"),
-      }),
-  });
+  const body = await getValidatedInput<NewsletterSubscribePayload>(event, { email: RequiredEmail });
 
   // validate and add token to event
   try {
@@ -27,7 +17,7 @@ export default defineEventHandler(async (event) => {
   } catch (err) {
     console.log(err);
     useBugsnag().notify({
-      name: "couldnt subscribe to newsletter",
+      name: "couldn't subscribe to newsletter",
       message: JSON.stringify(err),
     });
 

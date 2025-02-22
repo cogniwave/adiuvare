@@ -32,8 +32,8 @@ export default defineNuxtConfig({
         { name: "theme-color", content: "#ECEFF1" },
       ],
       link: [
-        { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v5.0.13/css/brand.css" },
-        { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v5.0.13/css/solid.css" },
+        { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v6.7.2/css/brand.css" },
+        { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v6.7.2/css/solid.css" },
         { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/favicon/apple-touch-icon.png" },
         {
           rel: "icon",

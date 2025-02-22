@@ -2,18 +2,6 @@ import Joi from "joi";
 import { H3Error, type EventHandler, type EventHandlerRequest, type H3Event } from "h3";
 import { ValidationError } from "shared/exceptions";
 
-// make this a separate function to call on functions where we need to get current logged user
-// this could be a middleware but we wouldn't use it in every request so it'd be wasted time
-export const getSessionUser = (event: H3Event<EventHandlerRequest>) => {
-  const user = validateToken(event);
-
-  if (!user) {
-    return null;
-  }
-
-  return user;
-};
-
 export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: Joi.PartialSchemaMap) => {
   let body;
   try {
@@ -25,6 +13,7 @@ export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, 
   const { value, error } = Joi.object<T>(schema).validate(body, {
     abortEarly: false,
     stripUnknown: true,
+    externals: true,
   });
 
   if (error) {

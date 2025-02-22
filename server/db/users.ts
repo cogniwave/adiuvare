@@ -1,11 +1,10 @@
-import { hashSync } from "bcrypt";
 import { and, asc, count, eq } from "drizzle-orm";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
 import { useDrizzle } from "../db";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, User, UpdateUserPayload, UserContact } from "shared/types/user";
+import type { BaseUser, UpdateProfilePayload, User, UserContact } from "shared/types/user";
 import { genToken } from "server/utils";
 
 const SALT = 10;
@@ -34,7 +33,7 @@ export const addUser = async (payload: BaseUser, token: string): Promise<User | 
     .insert(users)
     .values({
       email: payload.email,
-      password: hashSync(payload.password as string, SALT),
+      password: await hashPassword(payload.password),
       name: payload.name,
       type: payload.type,
       slug: `${payload.email.split("@")[0]}-${genToken()}`,
@@ -60,27 +59,14 @@ export const verifyUser = async (token: string, email: string): Promise<boolean>
   return (result.rowCount || 0) > 0;
 };
 
-export const updateUser = async (userId: string, payload: UpdateUserPayload[]) => {
+export const updateUser = async (userId: string, payload: UpdateProfilePayload | UpdateAccountPayload) => {
   const old = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
 
   if (!old?.length) {
     return null;
   }
 
-  return await useDrizzle()
-    .update(users)
-    .set(
-      payload.reduce<Record<string, string | UserContact[]>>((fields, { field, value }) => {
-        if (field === "password") {
-          fields.password = hashSync(value as string, SALT);
-        } else {
-          fields[field] = value;
-        }
-
-        return fields;
-      }, {}),
-    )
-    .where(eq(users.id, userId));
+  return await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
 };
 
 export const getUserById = async (id: string) => {
@@ -121,7 +107,7 @@ export const updateUserToken = async (userId: string, token: string) => {
 export const updatePassword = async (email: string, password: string, token: string) => {
   return await useDrizzle()
     .update(users)
-    .set({ password: hashSync(password as string, SALT), token: null })
+    .set({ password: await hashPassword(password), token: null })
     .where(and(eq(users.email, email), eq(users.token, token)));
 };
 

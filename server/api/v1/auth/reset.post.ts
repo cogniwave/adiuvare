@@ -1,10 +1,9 @@
-import Joi from "joi";
-
 import { getUser, updateUserToken } from "server/db/users";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 import { users } from "server/db/schemas/users.schema";
 
+import { RequiredEmail } from "shared/joi/validators";
 import type { LoginPayload } from "shared/types/user";
 
 interface User {
@@ -15,13 +14,7 @@ interface User {
 }
 
 export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
-
-  const body = await getValidatedInput<LoginPayload>(event, {
-    email: Joi.string()
-      .required()
-      .messages({ "strings.empty": t("errors.empty") }),
-  });
+  const body = await getValidatedInput<LoginPayload>(event, { email: RequiredEmail });
 
   const user = await getUser<User>(sanitizeInput(body.email), [], { id: users.id });
 

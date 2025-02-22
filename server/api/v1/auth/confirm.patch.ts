@@ -1,16 +1,15 @@
-import Joi from "joi";
 import type { H3Error } from "h3";
 
 import { verifyUser } from "server/db/users";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
 
+import { RequiredEmail, RequiredString } from "shared/joi/validators";
+
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   const body = await getValidatedInput<{ email: string; token: string }>(event, {
-    token: Joi.string()
-      .required()
-      .min(32)
+    token: RequiredString.min(32)
       .max(50)
       .messages({
         "string.empty": t("errors.invalidConfirmToken"),
@@ -18,14 +17,7 @@ export default defineEventHandler(async (event) => {
         "string.min": t("errors.invalidConfirmToken"),
       }),
 
-    email: Joi.string()
-      .required()
-      .email()
-      .messages({
-        "string.empty": t("errors.empty"),
-        "string.max": t("errors.max", 255),
-        "string.email": t("errors.invalidEmail"),
-      }),
+    email: RequiredEmail,
   });
 
   // todo: add validation for link expiration
