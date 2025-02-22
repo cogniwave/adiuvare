@@ -6,7 +6,7 @@ export const useLocations = () => {
 
   const filteringLocations = ref(false);
   const locations = ref<string[]>([]);
-  const noDataText = ref(t("form.post.locationNoFilter"));
+  const noDataText = ref(t("form.post.locationNoData"));
 
   let query = "";
 
@@ -21,7 +21,7 @@ export const useLocations = () => {
 
     if (query?.length <= 2) {
       filteringLocations.value = false;
-      noDataText.value = t("form.post.locationNoFilter");
+      noDataText.value = t("form.post.locationNoData");
       return;
     }
 

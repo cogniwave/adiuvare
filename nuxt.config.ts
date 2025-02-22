@@ -72,13 +72,21 @@ export default defineNuxtConfig({
     transpile: ["vuetify", "vue-i18n"],
   },
 
+  components: [
+    { path: "~/components/layout", pathPrefix: false },
+    { path: "~/components/common", pathPrefix: false },
+    { path: "~/components/feed", pathPrefix: false },
+    { path: "~/components/posts", pathPrefix: false },
+    { path: "~/components/contacts", pathPrefix: false },
+    { path: "~/components/organizations", pathPrefix: false },
+    "~/components",
+  ],
+
   css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
 
   modules: ["@nuxtjs/i18n", "@nuxt/image", "nuxt-auth-utils", "vuetify-nuxt-module", "@nuxthub/core", "nuxt-bugsnag"],
 
-  features: {
-    inlineStyles: false,
-  },
+  features: { inlineStyles: false },
 
   vite: {
     resolve: { alias },
@@ -195,5 +203,11 @@ export default defineNuxtConfig({
         sets: "fa",
       },
     },
+  },
+
+  hub: {
+    analytics: true,
+    blob: true,
+    database: true,
   },
 });
