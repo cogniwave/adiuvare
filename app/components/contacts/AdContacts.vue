@@ -57,8 +57,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { ContactType, UserContact } from "~~/shared/types/user";
-  import type { PropType } from "vue";
+  import type { ContactType, UserContact } from "shared/types/user";
 
   interface Contact extends UserContact {
     id: number;

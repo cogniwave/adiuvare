@@ -1,12 +1,12 @@
 import Joi from "joi";
 import { compareSync } from "bcrypt";
 
-import dayjs from "~~/shared/services/dayjs.service";
-import { getUser } from "~~/server/db/users";
-import { getValidatedInput, defineWrappedResponseHandler } from "~~/server/utils/request";
-import { users } from "~~/server/db/schemas/users.schema";
+import dayjs from "shared/services/dayjs.service";
+import { getUser } from "server/db/users";
+import { getValidatedInput, defineWrappedResponseHandler } from "server/utils/request";
+import { users } from "server/db/schemas/users.schema";
 
-import type { LoginPayload, TokenUser } from "~~/shared/types/user";
+import type { LoginPayload, TokenUser } from "shared/types/user";
 
 export default defineWrappedResponseHandler(async (event) => {
   const t = await useTranslation(event);

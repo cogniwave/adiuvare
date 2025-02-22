@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import AdFeed from "@/components/feed/AdFeed.vue";
+  import AdFeed from "app/components/feed/AdFeed.vue";
 
-definePageMeta({ path: "/" });
+  definePageMeta({ path: "/" });
 </script>

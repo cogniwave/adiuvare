@@ -39,12 +39,10 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from "vue";
-
-  import { usePosts } from "@/store/posts";
+  import { usePosts } from "app/store/posts";
   import AdPostScheduleRecurringSelector from "./AdPostScheduleRecurringSelector.vue";
   import AdPostScheduleSpecificSelector from "./AdPostScheduleSpecificSelector.vue";
-  import type { Post, ScheduleType } from "~~/shared/types/post";
+  import type { Post, ScheduleType } from "shared/types/post";
 
   const { currPost } = usePosts<Post>();
   const { t } = useI18n();

@@ -20,11 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from "vue";
-  import { useDisplay } from "vuetify";
-
-  import type { PropType } from "vue";
-  import type { Need } from "~~/shared/types/post";
+  import type { Need } from "shared/types/post";
 
   const $props = defineProps({
     need: { type: String as PropType<Need>, required: true },

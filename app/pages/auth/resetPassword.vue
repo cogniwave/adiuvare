@@ -50,48 +50,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useDisplay } from "vuetify";
+  import { required, isValidEmail } from "app/utils/validators";
+  import { useFormErrors } from "app/composables/formErrors";
+  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
 
-import { required, isValidEmail } from "@/utils/validators";
-import { useFormErrors } from "@/composables/formErrors";
-import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
+  definePageMeta({
+    layout: "auth",
+    middleware: "unauthed",
+    title: "pages.resetPassword",
+    path: "/reset-password",
+  });
 
-definePageMeta({
-  layout: "auth",
-  middleware: "unauthed",
-  title: "pages.resetPassword",
-  path: "/reset-password",
-});
+  const { errors, handleErrors, clearErrors } = useFormErrors();
+  const { t } = useI18n();
+  const { mdAndUp } = useDisplay();
 
-const { errors, handleErrors, clearErrors } = useFormErrors();
-const { t } = useI18n();
-const { mdAndUp } = useDisplay();
+  const email = ref<string>("");
+  const form = ref<InstanceType<typeof AdAuthFormCard>>();
+  const submitting = ref<boolean>(false);
+  const submitted = ref<boolean>(false);
 
-const email = ref<string>("");
-const form = ref<InstanceType<typeof AdAuthFormCard>>();
-const submitting = ref<boolean>(false);
-const submitted = ref<boolean>(false);
+  const submit = async () => {
+    // won't really happen, but keeps linter happy
+    if (!form.value) {
+      return;
+    }
 
-const submit = async () => {
-  // won't really happen, but keeps linter happy
-  if (!form.value) {
-    return;
-  }
+    if (!(await form.value.validate()).valid) {
+      return;
+    }
 
-  if (!(await form.value.validate()).valid) {
-    return;
-  }
+    clearErrors();
+    submitting.value = true;
 
-  clearErrors();
-  submitting.value = true;
-
-  $fetch("/api/v1/auth/reset", {
-    method: "post",
-    body: { email: email.value },
-  })
-    .then(() => (submitted.value = true))
-    .catch(handleErrors)
-    .finally(() => (submitting.value = false));
-};
+    $fetch("/api/v1/auth/reset", {
+      method: "post",
+      body: { email: email.value },
+    })
+      .then(() => (submitted.value = true))
+      .catch(handleErrors)
+      .finally(() => (submitting.value = false));
+  };
 </script>

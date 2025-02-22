@@ -1,7 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { sqliteTable, text, index, integer } from "drizzle-orm/sqlite-core";
 
-import type { Post } from "~~/shared/types/post";
+import type { Post } from "shared/types/post";
 
 export const reports = sqliteTable(
   "reports",

@@ -74,17 +74,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRouter } from "vue-router";
-  import type { VForm } from "vuetify/components";
+  import type { VForm } from "vuetify/lib/components/index.mjs";
 
-  import { useUsers } from "@/store/users";
-  import { useAuth } from "@/store/auth";
-  import { useNotify } from "@/store/notify";
-  import type { TokenUser, Tokens } from "~~/shared/types/user";
+  import { useUsers } from "app/store/users";
+  import { useNotify } from "app/store/notify";
+  import type { TokenUser, Tokens } from "shared/types/user";
 
   definePageMeta({ path: "/account", middleware: "protected", title: "pages.account" });
 
-  const { data: auth, updateUserAndTokens } = useAuth();
+  const { user } = useUserSession();
   const { t } = useI18n();
   const $router = useRouter();
   const { users } = useUsers();
@@ -114,7 +112,7 @@
     submitting.value = true;
 
     // nothing was changed, do nothing
-    const emailChanged = email.value !== (auth.value as TokenUser).email;
+    const emailChanged = email.value !== (user.value as TokenUser).email;
     if (!emailChanged && !password.value) {
       notifySuccess(t("form.user.updated"));
       submitting.value = false;
@@ -122,7 +120,7 @@
     }
 
     try {
-      const result = await $fetch<Tokens | { success: boolean }>(`/api/v1/users/${(auth.value as TokenUser).id}`, {
+      const result = await $fetch<Tokens | { success: boolean }>(`/api/v1/users/${(user.value as TokenUser).id}`, {
         query: { action: "account" },
         body: {
           ...(emailChanged && { email: email.value }),
@@ -133,10 +131,8 @@
 
       if (emailChanged) {
         users.value = users.value.map((u) => {
-          return u.email === (auth.value as TokenUser).email ? { ...u, email: email.value } : u;
+          return u.email === (user.value as TokenUser).email ? { ...u, email: email.value } : u;
         });
-
-        updateUserAndTokens({ email: email.value }, result as Tokens);
       }
 
       notifySuccess(t("form.user.updated"));
@@ -147,7 +143,7 @@
     }
   };
 
-  watch(auth, (auth) => auth && (email.value = auth.email), { immediate: true });
+  watch(user, (user) => user && (email.value = user.email), { immediate: true });
 </script>
 
 <style scoped lang="scss">

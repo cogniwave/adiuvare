@@ -1,11 +1,11 @@
 import Joi from "joi";
 
-import { getUser, updateUserToken } from "~~/server/db/users";
-import { sanitizeInput, getValidatedInput } from "~~/server/utils/request";
-import { sendEmail } from "~~/server/services/brevo";
-import { users } from "~~/server/db/schemas/users.schema";
+import { getUser, updateUserToken } from "server/db/users";
+import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { sendEmail } from "server/services/brevo";
+import { users } from "server/db/schemas/users.schema";
 
-import type { LoginPayload } from "~~/shared/types/user";
+import type { LoginPayload } from "shared/types/user";
 
 interface User {
   email: string;

@@ -27,35 +27,34 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from "vue";
-import { type NuxtError, useRouter } from "#app";
+  import type { NuxtError } from "shared/exceptions";
 
-defineProps({
-  error: { type: Object as PropType<NuxtError>, required: true },
-});
+  defineProps({
+    error: { type: Object as PropType<NuxtError>, required: true },
+  });
 
-const $router = useRouter();
+  const $router = useRouter();
 
-const isDev = ref(import.meta.dev);
+  const isDev = ref(import.meta.dev);
 </script>
 
 <style scoped lang="scss">
-.error-page {
-  text-align: center;
+  .error-page {
+    text-align: center;
 
-  * {
-    color: rgba(var(--v-theme-primary));
-  }
+    * {
+      color: rgba(var(--v-theme-primary));
+    }
 
-  h1 {
-    margin-bottom: 10%;
-    font-weight: 3rem;
-  }
+    h1 {
+      margin-bottom: 10%;
+      font-weight: 3rem;
+    }
 
-  p {
-    font-size: 1.5rem;
-    line-height: 2rem;
-    margin-bottom: 10%;
+    p {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      margin-bottom: 10%;
+    }
   }
-}
 </style>

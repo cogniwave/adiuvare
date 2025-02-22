@@ -1,4 +1,4 @@
-import type { Need } from "~~/shared/types/post";
+import type { Need } from "shared/types/post";
 
 interface ConfigItem {
   icon: string;

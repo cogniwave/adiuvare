@@ -1,14 +1,14 @@
 import Joi from "joi";
 
-import { addUser } from "~~/server/db/users";
-import { sendEmail } from "~~/server/services/brevo";
-import { sanitizeInput, getValidatedInput } from "~~/server/utils/request";
-import { notifyNewUser } from "~~/server/services/slack";
-import { subscribeToNewsletter, type NewsletterType } from "~~/server/services/brevo";
+import { addUser } from "server/db/users";
+import { sendEmail } from "server/services/brevo";
+import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { notifyNewUser } from "server/services/slack";
+import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
 
-import { isDrizzleError } from "~~/shared/types/guards";
-import type { BaseUser, User, UserType } from "~~/shared/types/user";
-import type { TranslationFunction } from "~~/shared/types";
+import { isDrizzleError } from "shared/types/guards";
+import type { BaseUser, User, UserType } from "shared/types/user";
+import type { TranslationFunction } from "shared/types";
 
 const register = async (payload: BaseUser, t: TranslationFunction): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;

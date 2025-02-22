@@ -1,20 +1,18 @@
-import { useAuth } from "~/store/auth";
-
 export default defineNuxtRouteMiddleware((to) => {
-  const { data, loading } = useAuth();
+  const { user, ready } = useUserSession();
 
   watch(
-    () => loading.value,
-    (loading) => {
-      if (loading) {
+    () => ready.value,
+    (ready) => {
+      if (!ready) {
         return;
       }
 
-      if (!data.value) {
+      if (!user.value) {
         return navigateTo("/login");
       }
 
-      if (data.value.slug !== to.params.slug) {
+      if (user.value.slug !== to.params.slug) {
         return navigateTo("/");
       }
     },

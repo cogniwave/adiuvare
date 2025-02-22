@@ -5,8 +5,8 @@ import { createId } from "@paralleldrive/cuid2";
 import { users } from "./users.schema";
 import type { POST_NEEDS } from "./posts.schema";
 import { posts, POST_STATES } from "./posts.schema";
-import type { PostSchedule } from "~~/shared/types/post";
-import type { UserContact } from "~~/shared/types/user";
+import type { PostSchedule } from "shared/types/post";
+import type { UserContact } from "shared/types/user";
 
 export const postHistory = sqliteTable(
   "postHistory",

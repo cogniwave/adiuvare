@@ -1,8 +1,8 @@
 import { isPossiblePhoneNumber, isValidPhoneNumber } from "libphonenumber-js";
 import type { NamedValue } from "@intlify/core-base";
 
-import dayjs from "~~/shared/services/dayjs.service";
-import { MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "~~/server/services/fileUpload";
+import dayjs from "shared/services/dayjs.service";
+import { MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "shared/services/fileUpload";
 
 type TranslatorFunction = (k: string, named?: NamedValue, defaultMsg?: string) => string;
 

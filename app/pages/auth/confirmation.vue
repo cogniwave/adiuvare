@@ -27,47 +27,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+  definePageMeta({
+    middleware: "unauthed",
+    layout: "auth",
+    title: "pages.accountConfirm",
+    path: "/confirmation",
+  });
 
-definePageMeta({
-  middleware: "unauthed",
-  layout: "auth",
-  title: "pages.accountConfirm",
-  path: "/confirmation",
-});
+  const $route = useRoute();
+  const { t } = useI18n();
 
-const $route = useRoute();
-const { t } = useI18n();
+  const loading = ref<boolean>(true);
+  const success = ref(true);
+  const invalidLink = ref(false);
+  const expiredLink = ref(false);
 
-const loading = ref<boolean>(true);
-const success = ref(true);
-const invalidLink = ref(false);
-const expiredLink = ref(false);
+  onBeforeMount(() => {
+    const { token, email } = $route.query;
 
-onBeforeMount(() => {
-  const { token, email } = $route.query;
+    if (!token || !email) {
+      loading.value = false;
+      return (invalidLink.value = false);
+    }
 
-  if (!token || !email) {
-    loading.value = false;
-    return (invalidLink.value = false);
-  }
+    // todo: add validation for link expiration
 
-  // todo: add validation for link expiration
-
-  $fetch("/api/v1/auth/confirm", { method: "patch", body: { token, email } })
-    .catch(() => (success.value = false))
-    .finally(() => (loading.value = false));
-});
+    $fetch("/api/v1/auth/confirm", { method: "patch", body: { token, email } })
+      .catch(() => (success.value = false))
+      .finally(() => (loading.value = false));
+  });
 </script>
 
 <style lang="scss" scoped>
-a {
-  transition: 0.2s;
-  opacity: 0.8;
-
-  &:hover {
+  a {
     transition: 0.2s;
-    opacity: 1;
+    opacity: 0.8;
+
+    &:hover {
+      transition: 0.2s;
+      opacity: 1;
+    }
   }
-}
 </style>

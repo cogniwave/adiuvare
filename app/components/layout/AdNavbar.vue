@@ -3,12 +3,7 @@
     <template #title>
       <v-row no-gutters>
         <v-col cols="1">
-          <v-img
-            src="/assets/images/logo.png"
-            aspect-ratio="1"
-            width="78px"
-            @click="$router.push('/')"
-          />
+          <v-img src="/assets/images/logo.png" aspect-ratio="1" width="78px" @click="$router.push('/')" />
         </v-col>
 
         <template v-if="mdAndUp">
@@ -47,17 +42,15 @@
 </template>
 
 <script lang="ts" setup>
-// import { useNotificationsStore } from "@/stores/notifications.store";
-import { useRouter } from "#imports";
-import { useDisplay } from "vuetify";
+  // import { useNotificationsStore } from "app/stores/notifications.store";
 
-import { useMenu } from "@/store/menu";
+  import { useMenu } from "app/store/menu";
 
-const { menuOpen } = useMenu();
-const $router = useRouter();
-const { mdAndUp } = useDisplay();
+  const { menuOpen } = useMenu();
+  const $router = useRouter();
+  const { mdAndUp } = useDisplay();
 
-// const $notifStore = useNotificationsStore();
+  // const $notifStore = useNotificationsStore();
 
-const toggleMenu = () => (menuOpen.value = !menuOpen.value);
+  const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>

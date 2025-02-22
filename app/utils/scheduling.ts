@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 
-import type { HumanDay } from "~~/shared/types/form";
+import type { HumanDay } from "shared/types/form";
 
 export const getNewGroupTimes = () => {
   const d = new Date();

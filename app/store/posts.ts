@@ -1,10 +1,4 @@
-import type {
-  Post,
-  PostDeletePayload,
-  PostStateTogglePayload,
-  PostDisablePayload,
-  EmptyPost,
-} from "~~/shared/types/post";
+import type { Post, PostDeletePayload, PostStateTogglePayload, PostDisablePayload, EmptyPost } from "shared/types/post";
 
 type AnyPost = Post | PostStateTogglePayload | PostDeletePayload | PostDisablePayload | EmptyPost;
 

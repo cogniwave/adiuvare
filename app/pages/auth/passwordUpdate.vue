@@ -72,15 +72,12 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from "vue";
-  import { useRoute, useRouter } from "#vue-router";
+  import { required, isValidPassword, match } from "app/utils/validators";
+  import { useFormErrors } from "app/composables/formErrors";
+  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
 
-  import dayjs from "#shared/services/dayjs.service";
-  import { required, isValidPassword, match } from "@/utils/validators";
-  import { useFormErrors } from "@/composables/formErrors";
-  import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
-
-  import type { User } from "~~/shared/types/user";
+  import dayjs from "shared/services/dayjs.service";
+  import type { User } from "shared/types/user";
 
   let email: string = "";
   let token: string = "";

@@ -134,13 +134,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoute, useRouter } from "vue-router";
-  import { useDisplay } from "vuetify";
-
-  import { useAuth } from "@/store/auth";
-  import { usePosts } from "@/store/posts";
-  import dayjs from "#shared/services/dayjs.service";
-  import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "~~/shared/types/post";
+  import { usePosts } from "app/store/posts";
+  import dayjs from "shared/services/dayjs.service";
+  import type { Post, RecurringSchedule, ScheduleTime, SpecificSchedule } from "shared/types/post";
 
   definePageMeta({ path: "/posts/:slug", title: "pages.postDetails" });
 
@@ -153,7 +149,7 @@
   const { currPost, setPost } = usePosts<Post>();
   const $router = useRouter();
   const $route = useRoute();
-  const { data: user } = useAuth();
+  const { user } = useUserSession();
   const { d, t } = useI18n();
   const { mdAndDown } = useDisplay();
 

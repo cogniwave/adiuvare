@@ -3,7 +3,7 @@ import { sqliteTable, text, uniqueIndex, integer } from "drizzle-orm/sqlite-core
 import { createId } from "@paralleldrive/cuid2";
 
 import { posts } from "./posts.schema";
-import type { UserContact, UserType } from "~~/shared/types/user";
+import type { UserContact, UserType } from "shared/types/user";
 
 export const USER_TYPES: Readonly<[UserType, ...UserType[]]> = ["org", "volunteer"];
 

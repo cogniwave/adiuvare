@@ -5,8 +5,8 @@ import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import { useDrizzle } from "../db";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, User, UpdateUserPayload, UserContact } from "~~/shared/types/user";
-import { genToken } from "~~/server/utils";
+import type { BaseUser, User, UpdateUserPayload, UserContact } from "shared/types/user";
+import { genToken } from "server/utils";
 
 const SALT = 10;
 

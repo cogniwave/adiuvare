@@ -5,10 +5,10 @@ import { useDrizzle } from "../db";
 import { POST_NEEDS, posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
-import { FEED_PAGE_SIZE } from "@/utils";
+import { FEED_PAGE_SIZE } from "app/utils";
 
 import type { InsertPost } from "./schemas/posts.schema";
-import type { PostFilter, UpdatePostPayload } from "~~/shared/types/post";
+import type { PostFilter, UpdatePostPayload } from "shared/types/post";
 
 type Query = SQLWrapper[] | SQL<unknown>[] | undefined;
 

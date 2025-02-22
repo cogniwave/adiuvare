@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { useNotify } from "@/store/notify";
-  import { useOrganizations } from "@/store/organizations";
-  import type { GetOrganizationsResult } from "~~/shared/types/user";
+  import { useNotify } from "app/store/notify";
+  import { useOrganizations } from "app/store/organizations";
+  import type { GetOrganizationsResult } from "shared/types/user";
 
   definePageMeta({ path: "/organizations", title: "pages.orgList", layout: "listing" });
 

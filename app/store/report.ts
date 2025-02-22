@@ -1,4 +1,4 @@
-import type { PostDeletePayload } from "~~/shared/types/post";
+import type { PostDeletePayload } from "shared/types/post";
 
 export const useReport = () => {
   const post = useState<PostDeletePayload>("report:post", () => ({}) as PostDeletePayload);

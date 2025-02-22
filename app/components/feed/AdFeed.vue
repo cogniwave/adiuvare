@@ -179,22 +179,19 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from "vue";
+  import { useNotify } from "app/store/notify";
+  import { usePosts } from "app/store/posts";
+  import { useReport } from "app/store/report";
+  import { FEED_PAGE_SIZE } from "app/utils";
 
-  import { useAuth } from "@/store/auth";
-  import { useNotify } from "@/store/notify";
-  import { usePosts } from "@/store/posts";
-  import { useReport } from "@/store/report";
-  import { FEED_PAGE_SIZE } from "@/utils";
-
-  import type { Post, PostDeletePayload, PostStateTogglePayload, PostFilter } from "~~/shared/types/post";
-  import AdPost from "@/components/posts/AdPost.vue";
-  import type { SelectOption } from "~~/shared/types/form";
+  import type { Post, PostDeletePayload, PostStateTogglePayload, PostFilter } from "shared/types/post";
+  import AdPost from "app/components/posts/AdPost.vue";
+  import type { SelectOption } from "shared/types/form";
 
   const $route = useRoute();
 
   const { notifyError } = useNotify();
-  const { data: user } = useAuth();
+  const { user } = useUserSession();
   const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
   const { openDialog: _openReportDialog } = useReport();
   const { t } = useI18n();

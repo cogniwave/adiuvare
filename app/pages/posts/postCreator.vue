@@ -91,22 +91,20 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from "vue";
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
-  import { required } from "@/utils/validators";
-  import { useFormErrors } from "@/composables/formErrors";
-  import { debounce } from "@/utils";
-  import { getCities } from "@/services/geoapify.service";
-  import AdPostDialogNeed from "@/components/posts/AdPostDialogNeed.vue";
-  import AdPostSchedule from "@/components/posts/AdPostSchedule.vue";
-  import { useNotify } from "@/store/notify";
-  import { usePosts } from "@/store/posts";
-  import { useAuth } from "@/store/auth";
+  import { required } from "app/utils/validators";
+  import { useFormErrors } from "app/composables/formErrors";
+  import { debounce } from "app/utils";
+  import { getCities } from "app/services/geoapify.service";
+  import AdPostDialogNeed from "app/components/posts/AdPostDialogNeed.vue";
+  import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
+  import { useNotify } from "app/store/notify";
+  import { usePosts } from "app/store/posts";
 
-  import type { SelectOption } from "~~/shared/types/form";
-  import type { EmptyPost, Post, PostSchedule } from "~~/shared/types/post";
-  import type { User, UserContact } from "~~/shared/types/user";
+  import type { SelectOption } from "shared/types/form";
+  import type { EmptyPost, Post, PostSchedule } from "shared/types/post";
+  import type { User, UserContact } from "shared/types/user";
 
   definePageMeta({ path: "/posts/new", middleware: "org-only", title: "pages.postCreate" });
 
@@ -115,7 +113,7 @@
   const { errors, handleErrors, clearErrors } = useFormErrors();
   const { currPost, posts, setPost } = usePosts();
   const $router = useRouter();
-  const { data: user } = useAuth();
+  const { user } = useUserSession();
 
   const title = ref<string>("");
   const description = ref<string>("");

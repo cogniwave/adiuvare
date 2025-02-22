@@ -1,10 +1,7 @@
 <template>
   <v-navigation-drawer v-if="loggedIn" v-model:model-value="visible" temporary location="right">
     <template #prepend>
-      <v-list-item
-        v-if="notifications === null"
-        title="Something went wrong trying to fetch notifications"
-      />
+      <v-list-item v-if="notifications === null" title="Something went wrong trying to fetch notifications" />
 
       <v-list-item v-else-if="!notifications.length" title="You have no notifications" />
 
@@ -23,15 +20,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuth } from "@/store/auth";
-import { useNotifications } from "@/store/notification";
+  import { useNotifications } from "app/store/notification";
 
-const { loggedIn } = useAuth();
-const { notifications, visible } = useNotifications();
+  const { loggedIn } = useUserSession();
+  const { notifications, visible } = useNotifications();
 
-// watch(
-//   () => status,
-//   () => loggedIn.value && $notifStore.getNotifications(),
-//   { immediate: true },
-// );
+  // watch(
+  //   () => status,
+  //   () => loggedIn.value && $notifStore.getNotifications(),
+  //   { immediate: true },
+  // );
 </script>

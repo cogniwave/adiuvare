@@ -11,7 +11,5 @@
 </template>
 
 <script lang="ts" setup>
-import { useDisplay } from "vuetify";
-
-const { lgAndUp } = useDisplay();
+  const { lgAndUp } = useDisplay();
 </script>

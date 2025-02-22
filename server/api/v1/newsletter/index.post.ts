@@ -1,9 +1,9 @@
 import Joi from "joi";
 
-import { sanitizeInput, getValidatedInput } from "~~/server/utils/request";
-import { subscribeToNewsletter } from "~~/server/services/brevo";
+import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { subscribeToNewsletter } from "server/services/brevo";
 
-import type { NewsletterSubscribePayload } from "~~/shared/types/newsletter";
+import type { NewsletterSubscribePayload } from "shared/types/newsletter";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);

@@ -159,20 +159,19 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from "vue";
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
-  import { required, maxLength } from "@/utils/validators";
-  import { useFormErrors } from "@/composables/formErrors";
-  import { debounce } from "@/utils";
-  import { getCities } from "@/services/geoapify.service";
-  import AdPostDialogNeed from "@/components/posts/AdPostDialogNeed.vue";
-  import AdPostSchedule from "@/components/posts/AdPostSchedule.vue";
-  import { useNotify } from "@/store/notify";
-  import { usePosts } from "@/store/posts";
-  import type { Post, PostSchedule, PostState } from "~~/shared/types/post";
-  import type { SelectOption } from "~~/shared/types/form";
-  import type { UserContact } from "~~/shared/types/user";
+  import { required, maxLength } from "app/utils/validators";
+  import { useFormErrors } from "app/composables/formErrors";
+  import { debounce } from "app/utils";
+  import { getCities } from "app/services/geoapify.service";
+  import AdPostDialogNeed from "app/components/posts/AdPostDialogNeed.vue";
+  import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
+  import { useNotify } from "app/store/notify";
+  import { usePosts } from "app/store/posts";
+  import type { Post, PostSchedule, PostState } from "shared/types/post";
+  import type { SelectOption } from "shared/types/form";
+  import type { UserContact } from "shared/types/user";
 
   definePageMeta({ path: "/posts/:slug/edit", middleware: "protected", title: "pages.postEdit" });
 

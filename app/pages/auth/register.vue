@@ -129,15 +129,12 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from "vue";
-  import { useDisplay } from "vuetify";
+  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
+  import { required, isValidEmail, isValidPassword, match } from "app/utils/validators";
+  import { useNotify } from "app/store/notify";
+  import { useFormErrors } from "app/composables/formErrors";
 
-  import AdAuthFormCard from "@/components/common/AdAuthFormCard.vue";
-  import { required, isValidEmail, isValidPassword, match } from "@/utils/validators";
-  import { useNotify } from "@/store/notify";
-  import { useFormErrors } from "@/composables/formErrors";
-
-  import type { User, UserType } from "~~/shared/types/user";
+  import type { User, UserType } from "shared/types/user";
 
   definePageMeta({
     layout: "auth",

@@ -49,10 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-  import type { PropType } from "vue";
-  import { shortenText } from "#imports";
-
-  import type { User } from "~~/shared/types/user";
+  import type { User } from "shared/types/user";
 
   const $props = defineProps({
     org: { type: Object as PropType<User>, required: true },

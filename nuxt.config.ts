@@ -1,5 +1,17 @@
 import { defineNuxtConfig } from "nuxt/config";
+import { fileURLToPath, URL } from "url";
+import { aliases } from "vuetify/iconsets/fa";
+import { blueGrey } from "vuetify/util/colors";
+import pt from "dayjs/locale/pt";
+
 import { version } from "./package.json";
+
+const alias = {
+  app: fileURLToPath(new URL("./app", import.meta.url)),
+  server: fileURLToPath(new URL("./server", import.meta.url)),
+  shared: fileURLToPath(new URL("./shared", import.meta.url)),
+  public: fileURLToPath(new URL("./public", import.meta.url)),
+};
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -60,27 +72,25 @@ export default defineNuxtConfig({
     transpile: ["vuetify", "vue-i18n"],
   },
 
-  css: [
-    "~/scss/styles.scss", // you should add main.scss somewhere in your app
-  ],
+  css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
 
-  modules: [
-    "@nuxtjs/i18n",
-    "@nuxt/image",
-    "nuxt-auth-utils",
-    "vuetify-nuxt-module",
-    "@nuxthub/core",
-    "@vueuse/nuxt",
-    "nuxt-bugsnag",
-  ],
+  modules: ["@nuxtjs/i18n", "@nuxt/image", "nuxt-auth-utils", "vuetify-nuxt-module", "@nuxthub/core", "nuxt-bugsnag"],
+
+  features: {
+    inlineStyles: false,
+  },
 
   vite: {
+    resolve: { alias },
+
     css: {
       preprocessorOptions: {
         sass: { api: "modern-compiler" },
       },
     },
   },
+
+  alias,
 
   bugsnag: {
     publishRelease: true,
@@ -109,24 +119,80 @@ export default defineNuxtConfig({
       // styles: { configFile: '/settings.scss' }
     },
     vuetifyOptions: {
-      theme: {
-        defaultTheme: "dark",
-      },
       date: {
         adapter: "dayjs",
-        // locale: { en: enGB, pt },
+        locale: { pt },
+      },
+      theme: {
+        themes: {
+          light: {
+            colors: {
+              primary: blueGrey.base, // #607D8B
+              accent: blueGrey.darken4, // #263238
+              surface: "#f7f7f7",
+              background: blueGrey.lighten5, // #ECEFF1
+              text: blueGrey.darken4, // #263238
+            },
+          },
+        },
+        defaultTheme: "light",
       },
       defaults: {
+        VCard: {
+          variant: "outlined",
+          class: "post",
+          rounded: "xl",
+          color: blueGrey.darken4,
+          background: "#f7f7f7",
+        },
+        VIcon: {
+          size: "x-small",
+        },
         VTextField: {
-          density: "comfortable",
-          flat: true,
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
+          validateOn: "blur",
+          variant: "underlined",
         },
-        VForm: {
-          "validate-on": "input lazy",
+        VTextarea: {
+          variant: "underlined",
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
         },
-        VBtn: {
-          flat: true,
+        VAutocomplete: {
+          variant: "underlined",
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
+          autoGrow: true,
+          autoSelectFirst: true,
         },
+        VSelect: {
+          variant: "underlined",
+          density: "compact",
+          class: "pl-0 pr-0",
+          rounded: "4px",
+          hideDetails: "auto",
+          hideHint: true,
+        },
+        VTooltip: {
+          location: "top",
+        },
+      },
+      ssr: {
+        clientWidth: 1920,
+        clientHeight: 1080,
+      },
+      icons: {
+        defaultSet: "fa",
+        // @ts-ignore
+        aliases,
+        sets: "fa",
       },
     },
   },

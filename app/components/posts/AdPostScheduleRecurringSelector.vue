@@ -133,12 +133,10 @@
 </template>
 
 <script setup lang="ts">
-  import { onBeforeMount, ref, type PropType } from "vue";
-
-  import type { Day, RecurringSchedule, ScheduleTime, RecurringScheduleTimeGroup } from "~~/shared/types/post";
-  import { usePosts } from "@/store/posts";
+  import type { Day, RecurringSchedule, ScheduleTime, RecurringScheduleTimeGroup } from "shared/types/post";
+  import { usePosts } from "app/store/posts";
   import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
-  import { getNewGroupTimes, toHumanDay } from "@/utils/scheduling";
+  import { getNewGroupTimes, toHumanDay } from "app/utils/scheduling";
 
   // setup
 

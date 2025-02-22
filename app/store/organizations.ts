@@ -1,4 +1,4 @@
-import type { GetOrganizationsResult, User } from "~~/shared/types/user";
+import type { GetOrganizationsResult, User } from "shared/types/user";
 
 export const useOrganizations = () => {
   const orgs = useState<User[]>("orgs:orgs", () => []);

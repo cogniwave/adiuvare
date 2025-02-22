@@ -70,12 +70,10 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from "vue";
-
-  import type { ScheduleTime } from "~~/shared/types/post";
+  import type { ScheduleTime } from "shared/types/post";
 
   import AdTimePicker from "./AdTimePicker.vue";
-  import { getNewGroupTimes } from "@/utils/scheduling";
+  import { getNewGroupTimes } from "app/utils/scheduling";
 
   const $props = defineProps({
     modelValue: { type: Array<ScheduleTime>, required: true },

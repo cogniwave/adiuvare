@@ -61,17 +61,14 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoute, useRouter } from "vue-router";
+  import { useOrganizations } from "app/store/organizations";
 
-  import { useAuth } from "@/store/auth";
-  import { useOrganizations } from "@/store/organizations";
-
-  import type { User } from "~~/shared/types/user";
+  import type { User } from "shared/types/user";
 
   const { currOrg, setOrg } = useOrganizations();
   const $router = useRouter();
   const $route = useRoute();
-  const { data: user } = useAuth();
+  const { user } = useUserSession();
   const { t } = useI18n();
 
   const slug = $route.params.slug as string;

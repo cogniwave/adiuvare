@@ -170,11 +170,9 @@
 </template>
 
 <script setup lang="ts">
-  import { useDisplay } from "vuetify";
-
-  import { usePosts } from "@/store/posts";
-  import AdPostNeed from "@/components/posts/AdPostNeed.vue";
-  import type { Post, PostDeletePayload, PostStateTogglePayload } from "~~/shared/types/post";
+  import { usePosts } from "app/store/posts";
+  import AdPostNeed from "app/components/posts/AdPostNeed.vue";
+  import type { Post, PostDeletePayload, PostStateTogglePayload } from "shared/types/post";
 
   const MAX_DESC = 1300;
 

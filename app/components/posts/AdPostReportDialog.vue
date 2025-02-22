@@ -50,24 +50,22 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watch } from "vue";
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
-  import { useAuth } from "@/store/auth";
-  import { useReport } from "@/store/report";
-  import { useNotify } from "@/store/notify";
+  import { useReport } from "app/store/report";
+  import { useNotify } from "app/store/notify";
 
-  import { required } from "@/utils/validators";
-  import { useFormErrors } from "@/composables/formErrors";
+  import { required } from "app/utils/validators";
+  import { useFormErrors } from "app/composables/formErrors";
 
   const { errors, handleErrors, clearErrors } = useFormErrors();
-  const { data, loggedIn } = useAuth();
+  const { user, loggedIn } = useUserSession();
   const { t } = useI18n();
   const { dialogVisible, post } = useReport();
   const { notifySuccess } = useNotify();
 
   const reason = ref("");
-  const email = ref(data.value?.email || "");
+  const email = ref(user.value?.email || "");
 
   const submitting = ref(false);
   const form = ref<VForm>();
@@ -82,7 +80,7 @@
       clearErrors();
 
       reason.value = "";
-      email.value = data.value?.email || "";
+      email.value = user.value?.email || "";
     },
   );
 

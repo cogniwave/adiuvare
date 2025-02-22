@@ -1,4 +1,4 @@
-import { normalize } from "@/utils";
+import { normalize } from "app/utils";
 import localidades from "public/assets/localidades.json";
 
 export const useLocations = () => {

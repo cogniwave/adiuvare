@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-  import { usePosts } from "@/store/posts";
-  import type { PostDeletePayload } from "~~/shared/types/post";
+  import { usePosts } from "app/store/posts";
+  import type { PostDeletePayload } from "shared/types/post";
 
   const $emit = defineEmits<{
     (e: "delete", id: string): void;

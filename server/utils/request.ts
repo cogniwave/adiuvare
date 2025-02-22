@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { H3Error, type EventHandler, type EventHandlerRequest, type H3Event } from "h3";
-import { ValidationError } from "~~/shared/exceptions";
+import { ValidationError } from "shared/exceptions";
 
 // make this a separate function to call on functions where we need to get current logged user
 // this could be a middleware but we wouldn't use it in every request so it'd be wasted time

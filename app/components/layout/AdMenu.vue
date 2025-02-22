@@ -8,11 +8,7 @@
 
     <v-list-item :title="t('menu.home')" to="/" prepend-icon="fa-solid fa-house" />
 
-    <v-list-item
-      :title="t('menu.orgs')"
-      to="/organizations"
-      prepend-icon="fa-solid fa-building-ngo"
-    />
+    <v-list-item :title="t('menu.orgs')" to="/organizations" prepend-icon="fa-solid fa-building-ngo" />
 
     <!-- <v-list-item
             v-if="showUserPosts"
@@ -24,16 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from "@/store/auth";
-
-const { t } = useI18n();
-const { loggedIn } = useAuth();
+  const { t } = useI18n();
+  const { loggedIn } = useUserSession();
 </script>
 
 <style scoped>
-.v-list {
-  position: fixed;
-  max-width: 285px;
-  width: inherit;
-}
+  .v-list {
+    position: fixed;
+    max-width: 285px;
+    width: inherit;
+  }
 </style>

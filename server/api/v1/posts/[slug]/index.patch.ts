@@ -1,10 +1,10 @@
 import Joi from "joi";
 
-import { POST_NEEDS, POST_STATES } from "~~/server/db/schemas/posts.schema";
-import { updatePost } from "~~/server/db/posts";
-import { getSessionUser, getValidatedInput, sanitizeInput } from "~~/server/utils/request";
-import type { ScheduleType, UpdatePostPayload } from "~~/shared/types/post";
-import { isH3Error } from "~~/shared/types/guards";
+import { POST_NEEDS, POST_STATES } from "server/db/schemas/posts.schema";
+import { updatePost } from "server/db/posts";
+import { getSessionUser, getValidatedInput, sanitizeInput } from "server/utils/request";
+import type { ScheduleType, UpdatePostPayload } from "shared/types/post";
+import { isH3Error } from "shared/types/guards";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);

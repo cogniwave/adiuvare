@@ -1,11 +1,11 @@
 import Joi from "joi";
 
-import dayjs from "~~/shared/services/dayjs.service";
-import { updatePassword } from "~~/server/db/users";
-import { getValidatedInput } from "~~/server/utils/request";
-import { sendEmail } from "~~/server/services/brevo";
+import dayjs from "shared/services/dayjs.service";
+import { updatePassword } from "server/db/users";
+import { getValidatedInput } from "server/utils/request";
+import { sendEmail } from "server/services/brevo";
 
-// import type { PasswordUpdatePayload } from "@/types/user";
+// import type { PasswordUpdatePayload } from "app/types/user";
 
 interface PasswordUpdatePayload {
   email: string;

@@ -63,10 +63,8 @@
 </template>
 
 <script setup lang="ts">
-  import type { PropType } from "vue";
-
-  import { useNotify } from "@/store/notify";
-  import type { UserContact } from "~~/shared/types/user";
+  import { useNotify } from "app/store/notify";
+  import type { UserContact } from "shared/types/user";
 
   defineProps({
     contacts: { type: Array as PropType<UserContact[]>, required: true },

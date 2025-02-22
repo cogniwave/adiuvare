@@ -1,13 +1,11 @@
-import { useAuth } from "~//store/auth";
-
 export default defineNuxtRouteMiddleware(() => {
-  const { data } = useAuth();
+  const { user } = useUserSession();
 
-  if (!data.value) {
+  if (!user.value) {
     return navigateTo("/login");
   }
 
-  if (data.value.type !== "org") {
+  if (user.value.type !== "org") {
     return navigateTo("/");
   }
 });

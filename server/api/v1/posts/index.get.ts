@@ -1,6 +1,6 @@
-import { getPostsAndTotal } from "~~/server/db/posts";
-import type { TranslationFunction } from "~~/shared/types";
-import type { PostFilter } from "~~/shared/types/post";
+import { getPostsAndTotal } from "server/db/posts";
+import type { TranslationFunction } from "shared/types";
+import type { PostFilter } from "shared/types/post";
 
 // because free search with i18n, we need some magics to
 // convert users input into the value thats saved in the db

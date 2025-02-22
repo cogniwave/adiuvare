@@ -1,4 +1,4 @@
-import { getOrgs, getTotalOrgs } from "~~/server/db/users";
+import { getOrgs, getTotalOrgs } from "server/db/users";
 
 export default defineEventHandler(async (event) => {
   try {

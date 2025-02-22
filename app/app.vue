@@ -20,9 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoute } from "#imports";
-  import { useDisplay } from "vuetify";
-
   const { t } = useI18n();
   const $route = useRoute();
   const { smAndDown } = useDisplay();

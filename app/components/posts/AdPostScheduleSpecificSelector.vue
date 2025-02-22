@@ -26,14 +26,12 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from "vue";
-
-  import dayjs, { type Dayjs } from "#shared/services/dayjs.service";
-  import { required, validDate, futureDate } from "@/utils/validators";
+  import dayjs, { type Dayjs } from "shared/services/dayjs.service";
+  import { required, validDate, futureDate } from "app/utils/validators";
   import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
-  import { getNewGroupTimes } from "@/utils/scheduling";
-  import { usePosts } from "@/store/posts";
-  import type { Post, ScheduleTime, SpecificSchedule } from "~~/shared/types/post";
+  import { getNewGroupTimes } from "app/utils/scheduling";
+  import { usePosts } from "app/store/posts";
+  import type { Post, ScheduleTime, SpecificSchedule } from "shared/types/post";
 
   const { currPost } = usePosts<Post>();
   const { d, t } = useI18n();

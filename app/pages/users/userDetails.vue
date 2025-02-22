@@ -41,21 +41,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoute, useRouter } from "vue-router";
-
-  import AdContactsList from "@/components/contacts/AdContactsList.vue";
-  import { useUsers } from "@/store/users";
-  import { useAuth } from "@/store/auth";
-  import { useNotify } from "@/store/notify";
-
-  import type { User } from "~~/shared/types/user";
+  import AdContactsList from "app/components/contacts/AdContactsList.vue";
+  import { useUsers } from "app/store/users";
+  import { useNotify } from "app/store/notify";
+  import type { User } from "shared/types/user";
 
   definePageMeta({
     title: "pages.userDetails",
     path: "/users/:slug",
   });
 
-  const { data: auth } = useAuth();
+  const { data: auth } = useUserSession();
   const { t } = useI18n();
   const $route = useRoute();
   const $router = useRouter();

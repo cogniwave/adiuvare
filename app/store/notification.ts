@@ -1,4 +1,4 @@
-import type { Notification } from "~~/shared/types/notification";
+import type { Notification } from "shared/types/notification";
 
 export const useNotifications = () => {
   const notifications = useState<Notification[]>(() => []);

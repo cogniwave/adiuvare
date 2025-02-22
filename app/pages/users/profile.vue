@@ -171,24 +171,23 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRouter } from "vue-router";
-  import type { VForm } from "vuetify/components";
   import { vMaska } from "maska/vue";
+  import type { VForm } from "vuetify/lib/components/index.mjs";
 
   import distritos from "public/assets/distritos.json";
   import localidades from "public/assets/localidades.json";
 
-  import { fileSize, fileType } from "@/utils/validators";
-  import { useUsers } from "@/store/users";
-  import { useAuth } from "@/store/auth";
-  import { useNotify } from "@/store/notify";
-  import { normalize } from "@/utils";
-  import type { User, UserContact } from "~~/shared/types/user";
-  import type { FilterMatch } from "~~/shared/types/form";
+  import { fileSize, fileType } from "app/utils/validators";
+  import { useUsers } from "app/store/users";
+
+  import { useNotify } from "app/store/notify";
+  import { normalize } from "app/utils";
+  import type { User, UserContact } from "shared/types/user";
+  import type { FilterMatch } from "shared/types/form";
 
   definePageMeta({ path: "/profile", middleware: "protected", title: "pages.profile" });
 
-  const { data: auth, logout } = useAuth();
+  const { user: auth, clear } = useUserSession();
   const { t } = useI18n();
   const $router = useRouter();
   const { users, currUser, setUser } = useUsers();
@@ -379,7 +378,7 @@
       if (err.statusCode === 404) {
         $router.push("/not-found");
       } else if (err.statusCode === 401) {
-        logout().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
+        clear().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
       } else {
         notifyError(t("errors.fetchUser"));
         $router.push("/");

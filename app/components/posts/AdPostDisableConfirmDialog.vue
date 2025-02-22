@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-  import { usePosts } from "@/store/posts";
-  import { useNotify } from "@/store/notify";
-  import type { Post, PostDisablePayload } from "~~/shared/types/post";
+  import { usePosts } from "app/store/posts";
+  import { useNotify } from "app/store/notify";
+  import type { Post, PostDisablePayload } from "shared/types/post";
 
   const { notifyError } = useNotify();
   const { t } = useI18n();

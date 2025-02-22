@@ -1,14 +1,10 @@
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
-import { useAuth } from "~//store/auth";
-import { useNotify } from "~//store/notify";
+import { useNotify } from "app/store/notify";
 
 export function useFormErrors() {
   const { t } = useI18n();
   const { notifyError } = useNotify();
   const $router = useRouter();
-  const { logout } = useAuth();
+  const { clear } = useUserSession();
 
   const errors = ref<Record<string, string>>({});
   const hasErrors = ref(false);
@@ -21,7 +17,7 @@ export function useFormErrors() {
     }
 
     if (err.statusCode === 401) {
-      logout().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
+      clear().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
       return;
     }
 
