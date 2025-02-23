@@ -4,8 +4,6 @@ import { aliases } from "vuetify/iconsets/fa";
 import { blueGrey } from "vuetify/util/colors";
 import pt from "dayjs/locale/pt";
 
-import { version } from "./package.json";
-
 const alias = {
   app: fileURLToPath(new URL("./app", import.meta.url)),
   server: fileURLToPath(new URL("./server", import.meta.url)),
@@ -82,7 +80,7 @@ export default defineNuxtConfig({
 
   css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
 
-  modules: ["@nuxtjs/i18n", "nuxt-auth-utils", "vuetify-nuxt-module", "@nuxthub/core", "nuxt-bugsnag", "@nuxt/eslint"],
+  modules: ["@nuxtjs/i18n", "nuxt-auth-utils", "vuetify-nuxt-module", "@nuxthub/core", "@nuxt/eslint"],
 
   features: { inlineStyles: false },
 
@@ -97,19 +95,6 @@ export default defineNuxtConfig({
   },
 
   alias,
-
-  bugsnag: {
-    publishRelease: true,
-    disableLog: false,
-    baseUrl: process.env.APP_BASE_URL,
-
-    config: {
-      releaseStage: process.env.NODE_ENV,
-      apiKey: process.env.BUGSNAG_KEY!,
-      enabledReleaseStages: ["staging", "production"],
-      appVersion: version,
-    },
-  },
 
   i18n: {
     restructureDir: "./app/i18n",

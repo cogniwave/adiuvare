@@ -21,7 +21,6 @@
     "joi": "^17.13.3",
     "libphonenumber-js": "^1.11.20",
     "maska": "^3.1.0",
-    "nuxt-bugsnag": "^8.3.1",
     "pg": "^8.13.3"
   },
   "devDependencies": {
