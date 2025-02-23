@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { POST_NEEDS } from "server/db/schemas/posts.schema";
 
-type Types = number | boolean | string | Object | Array<Types> | null | undefined;
+type Types = number | boolean | string | object | Array<Types> | null | undefined;
 
 const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/;
 
@@ -51,7 +51,7 @@ const sanitizeObj = (value: Types) => {
 };
 
 const joi = Joi.defaults((schema) => {
-  schema.messages({
+  schema = schema.messages({
     "string.empty": "errors.joi.required",
     "string.max": "errors.joi.max",
     "string.email": "errors.joi.invalidEmail",

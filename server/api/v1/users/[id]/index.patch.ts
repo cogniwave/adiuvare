@@ -1,7 +1,7 @@
 import type { H3Event, EventHandlerRequest } from "h3";
 
 import { updateUser } from "server/db/users";
-import { getValidatedInput, sanitizeInput } from "server/utils/request";
+import { getValidatedInput } from "server/utils/request";
 
 import {
   OptionalEmail,
@@ -11,12 +11,11 @@ import {
   RequiredString,
 } from "shared/joi/validators";
 import type { UpdateProfilePayload, UpdateAccountPayload } from "shared/types/user";
-import type { TranslationFunction } from "shared/types";
 import { isH3Error } from "shared/types/guards";
 
 type UpdateAction = "account" | "profile";
 
-const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>, t: TranslationFunction) => {
+const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>) => {
   const body = await getValidatedInput<UpdateProfilePayload>(event, {
     name: RequiredString,
     slug: RequiredString,
@@ -30,17 +29,12 @@ const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>
     contacts: RequiredContacts,
   });
 
-  const updatedUser = await updateUser(userId, body);
+  await updateUser(userId, body);
 
-  if (!updatedUser) {
-    sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));
-    return;
-  }
-
-  return updatedUser;
+  return body;
 };
 
-const updateAccount = async (userId: string, event: H3Event<EventHandlerRequest>, t: TranslationFunction) => {
+const updateAccount = async (userId: string, event: H3Event<EventHandlerRequest>) => {
   const body = await getValidatedInput<UpdateAccountPayload>(event, {
     email: OptionalEmail,
     password: OptionalPassword,
@@ -62,39 +56,16 @@ export default defineProtectedRouteHandler(async (event) => {
     return;
   }
 
-  const id = sanitizeInput(getRouterParam(event, "id") || "");
-
-  if (event.context.user.id !== id) {
-    setResponseStatus(event, 401);
-    sendError(
-      event,
-      createError({
-        statusCode: 401,
-        statusMessage: "unauthorized",
-        message: t("errors.unauthenticated"),
-      }),
-    );
-    return;
-  }
-
   try {
     if (action === "profile") {
-      return await updateProfile(event.context.user.id, event, t);
+      return await updateProfile(event.context.user.id, event);
     }
 
-    await updateAccount(event.context.user.id, event, t);
+    await updateAccount(event.context.user.id, event);
 
     return { success: true };
   } catch (err: unknown) {
     if (isH3Error(err)) {
-      if (err.statusCode === 401) {
-        throw createError({
-          statusCode: 401,
-          statusMessage: "unauthorized",
-          message: t("errors.unauthenticated"),
-        });
-      }
-
       if (err.statusCode === 422) {
         throw createError(err);
       }

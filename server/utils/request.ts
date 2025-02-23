@@ -1,8 +1,10 @@
-import Joi from "joi";
-import { H3Error, type EventHandler, type EventHandlerRequest, type H3Event } from "h3";
-import { ValidationError } from "shared/exceptions";
+import type { PartialSchemaMap } from "joi";
+import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
-export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: Joi.PartialSchemaMap) => {
+import Joi from "shared/joi/validators";
+import { ValidationError, type Errors } from "shared/exceptions";
+
+export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap) => {
   let body;
   try {
     body = await readBody(event);
@@ -17,11 +19,14 @@ export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, 
   });
 
   if (error) {
-    throw createError({
-      data: error.details.map((d) => d.message),
-      message: "Invalid params",
-      statusCode: 422,
+    const t = await useTranslation(event);
+
+    const errors: Errors = {};
+    error.details.forEach(({ context, path, message }) => {
+      errors[path[0]!] = t(message, context || {});
     });
+
+    throw new ValidationError(errors);
   }
 
   return value;
@@ -67,6 +72,7 @@ export const desanitizeInput = (input?: string | null) => {
 
 const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, error: unknown) => {
   createApp();
+
   const t = await useTranslation(event);
 
   if (process.env.NODE_ENV === "development") {
@@ -75,16 +81,24 @@ const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, e
 
   // Handle specific errors
   if (error instanceof ValidationError) {
-    setResponseStatus(event, 422);
     throw createError({
       status: 422,
-      message: t("errors.validationError"),
-      data: error.toError(),
+      statusMessage: "Unprocessable content",
+      cause: t("errors.validationError"),
+      data: error.errors,
     });
   }
 
-  if (error instanceof H3Error && error.statusCode === 401) {
-    throw createError({ status: 401, message: t("errors.authRequired") });
+  if (isH3Error(error)) {
+    if (error.statusCode === 401) {
+      throw createError({ ...error, status: 401, cause: t("errors.authRequired") });
+    }
+
+    if (error.statusCode === 403) {
+      throw createError({ ...error, status: 403, cause: t("errors.noPermissions") });
+    }
+
+    throw error;
   }
 
   throw createError({ status: 500 });
@@ -96,7 +110,7 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
   return defineEventHandler<T>(async (event) => {
     try {
       return await handler(event);
-    } catch (error) {
+    } catch (error: unknown) {
       await errorHandling<T>(event, error);
     }
   });

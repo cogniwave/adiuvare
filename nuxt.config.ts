@@ -82,7 +82,15 @@ export default defineNuxtConfig({
 
   css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
 
-  modules: ["@nuxtjs/i18n", "@nuxt/image", "nuxt-auth-utils", "vuetify-nuxt-module", "@nuxthub/core", "nuxt-bugsnag"],
+  modules: [
+    "@nuxtjs/i18n",
+    "@nuxt/image",
+    "nuxt-auth-utils",
+    "vuetify-nuxt-module",
+    "@nuxthub/core",
+    "nuxt-bugsnag",
+    "@nuxt/eslint",
+  ],
 
   features: { inlineStyles: false },
 
@@ -196,7 +204,7 @@ export default defineNuxtConfig({
       },
       icons: {
         defaultSet: "fa",
-        // @ts-ignore
+        // @ts-expect-error ts complains about
         aliases,
         sets: "fa",
       },
@@ -207,5 +215,11 @@ export default defineNuxtConfig({
     analytics: true,
     blob: true,
     database: true,
+    // @ts-expect-error TS complains but it's correct and it's what the docs say
+    databaseMigrationsDirs: ["server/db/migrations"],
+  },
+
+  typescript: {
+    typeCheck: true,
   },
 });

@@ -177,11 +177,11 @@
 
   "errors": {
     "joi": {
-      "required": "{#label} é obrigatório",
-      "only": "{#label} tem que ser um de {#valids}",
-      "max": "{#label} não pode ter mais que {#limit} caracteres",
+      "required": "{label} é obrigatório",
+      "only": "{label} tem que ser um de {valids}",
+      "max": "{label} não pode ter mais que {limit} caracteres",
       "invalidEmail": "Email inválido",
-      "invalidPassword": "{#label} tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número"
+      "invalidPassword": "{label} tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número"
     },
 
     "unexpected": "Erro inesperado",
@@ -190,14 +190,15 @@
       "endHourHigherThanStart": "Hora inicio tem que ser antes de hora de fim",
       "empty": "Não pode ser vazio"
     },
+
+    "authRequired": "É necessária iniciar sessão para esta ação",
+    "noPermissions": "Não tem permissões para esta ação",
     "invalidCredentials": "Email ou palavra-passe errados",
     "invalidConfirmToken": "Token invalido",
-    "emptyRefreshToken": "No refresh token",
-    "noRefreshToken": "Unauthorized, no refreshToken in payload",
-    "invalidRefreshToken": "Unauthorized, refreshToken can`t be verified",
     "invalidUserType": "Tem que ser \"org\" ou \"voluntário\"",
     "emailExists": "Já existe uma conta com este email",
     "invalidEmail": "Email inválido",
+    "invalidPassword": "Palavra-passe tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
     "invalidField": "Invalid field",
     "fetchPost": "Publicação não encontrada",
     "fetchOrg": "Organização não encontrada",
@@ -364,5 +365,9 @@
       "subscribe": "Subscrever",
       "success": "Newsletter subscrita com sucesso"
     }
+  },
+
+  "$vuetify": {
+    "loading": "A carregar..."
   }
 }

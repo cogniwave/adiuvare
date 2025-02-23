@@ -2,7 +2,7 @@ import { useNotify } from "app/store/notify";
 
 export function useFormErrors() {
   const { t } = useI18n();
-  const { notifyError } = useNotify();
+  const { notifyError, notifyWarning } = useNotify();
   const $router = useRouter();
   const { clear } = useUserSession();
 
@@ -21,6 +21,11 @@ export function useFormErrors() {
       return;
     }
 
+    if (err.statusCode === 403) {
+      notifyError("errors.noPermissions");
+      return;
+    }
+
     if (err.statusCode === 422) {
       // show form errors
       for (const [field, error] of Object.entries(err.data?.data || {})) {
@@ -28,6 +33,22 @@ export function useFormErrors() {
       }
 
       hasErrors.value = true;
+      return;
+    }
+
+    if (err.statusCode === 422) {
+      // show form errors
+      for (const [field, error] of Object.entries(err.data?.data || {})) {
+        errors.value[field] = error;
+      }
+
+      hasErrors.value = true;
+      return;
+    }
+
+    if (err.statusCode === 409) {
+      notifyWarning(t("errors.unverifiedUser"));
+      hasErrors.value = false;
       return;
     }
 

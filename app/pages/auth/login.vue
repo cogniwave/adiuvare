@@ -5,7 +5,7 @@
         v-model:model-value="email"
         type="email"
         prepend-icon="fa-solid fa-at"
-        :label="t('form.name')"
+        :label="t('form.email')"
         :rules="[required(t), isValidEmail(t)]"
         :error-messages="errors.email"
       />
@@ -80,7 +80,7 @@
 
   const { t } = useI18n();
   const { errors, handleErrors, clearErrors } = useFormErrors();
-  const { notifyError, notifyInfo, notifyWarning } = useNotify();
+  const { notifyInfo, notifyWarning } = useNotify();
   const $route = useRoute();
   const $router = useRouter();
   const { fetch } = useUserSession();
@@ -122,20 +122,18 @@
     clearErrors();
     submitting.value = true;
 
-    fetch({ email: email.value, password: password.value })
-      .then(() => {
-        navigateTo({ path: "/" });
-      })
-      .catch((errs) => {
-        if (errs.statusCode === 401) {
-          notifyError(t("errors.invalidCredentials"));
-        } else if (errs.statusCode === 400) {
-          notifyWarning(t("errors.unverifiedUser"));
-        } else {
-          handleErrors(errs);
-        }
-
-        submitting.value = false;
+    try {
+      const result = await $fetch("/api/v1/auth/login", {
+        method: "POST",
+        body: { email: email.value, password: password.value },
       });
+      console.log(result);
+
+      fetch();
+      navigateTo({ path: "/" });
+    } catch (exc: unknown) {
+      handleErrors(exc);
+      submitting.value = false;
+    }
   };
 </script>

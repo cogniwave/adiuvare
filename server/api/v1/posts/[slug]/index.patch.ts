@@ -53,10 +53,10 @@ export default defineProtectedRouteHandler(async (event) => {
 
     sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));
   } catch (err: unknown) {
-    if (isH3Error(err) && err.statusCode === 401) {
+    if (isH3Error(err) && err.statusCode === 403) {
       throw createError({
-        statusCode: 401,
-        statusMessage: "unauthorized",
+        statusCode: 403,
+        statusMessage: "forbidden",
         message: t("errors.unauthenticated"),
       });
     }

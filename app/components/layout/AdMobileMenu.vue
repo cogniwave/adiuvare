@@ -45,5 +45,5 @@
   const { t } = useI18n();
   const { menuOpen } = useMenu();
 
-  const showCreateButton = computed(() => loggedIn && data.value?.type === "org");
+  const showCreateButton = computed(() => loggedIn && user.value?.type === "org");
 </script>

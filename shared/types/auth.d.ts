@@ -1,13 +1,6 @@
 import type { TokenUser } from "./user";
 import type { Dayjs } from "../services/dayjs.service";
 
-interface SessionUser {
-  id: string;
-  email: string;
-  slug: string;
-  logo: string;
-}
-
 declare module "#auth-utils" {
   interface UserSession {
     user: TokenUser;
@@ -21,7 +14,7 @@ declare module "#auth-utils" {
 
 declare module "h3" {
   interface H3EventContext {
-    user: SessionUser;
+    user: TokenUser;
   }
 }
 

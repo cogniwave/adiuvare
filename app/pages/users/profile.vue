@@ -28,7 +28,7 @@
                 width="128px"
                 :alt="t('form.user.picAlt')"
                 :src="pic"
-                :lazy-src="currUser.photoThumbnail"
+                :lazy-src="currUser.photoThumbnail!"
               />
 
               <v-fade-transition>

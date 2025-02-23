@@ -1,5 +1,4 @@
 import { updateUser } from "server/db/users";
-import { sanitizeInput } from "server/utils/request";
 
 import { uploadFile, FileSizeError, FileTypeError, MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "shared/services/fileUpload";
 
@@ -11,21 +10,7 @@ export default defineProtectedRouteHandler(async (event) => {
     return {};
   }
 
-  const id = sanitizeInput(getRouterParam(event, "id") || "");
   const t = await useTranslation(event);
-
-  if (event.context.user.id !== id) {
-    setResponseStatus(event, 401);
-    sendError(
-      event,
-      createError({
-        statusCode: 401,
-        statusMessage: "unauthorized",
-        message: t("errors.unauthenticated"),
-      }),
-    );
-    return;
-  }
 
   const file = formData.get("file") as File;
 
@@ -50,10 +35,10 @@ export default defineProtectedRouteHandler(async (event) => {
   try {
     const path = await uploadFile(file);
 
-    await updateUser(event.context.user.id, [
-      { field: "photo", value: path.url },
-      { field: "photoThumbnail", value: path.url },
-    ]);
+    await updateUser(event.context.user.id, {
+      photo: path.url,
+      photoThumbnail: path.url,
+    });
 
     return { photo: path.url, photoThumbnail: path.url };
   } catch (err: unknown) {
@@ -70,14 +55,6 @@ export default defineProtectedRouteHandler(async (event) => {
         statusCode: 422,
         data: { file: t("errors.invalidFileType") },
         statusMessage: t("errors.validationError"),
-      });
-    }
-
-    if (isNuxtError(err) && err.statusCode === 401) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: "unauthorized",
-        message: t("errors.unauthenticated"),
       });
     }
 

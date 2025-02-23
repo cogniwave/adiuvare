@@ -30,9 +30,9 @@ CREATE TABLE `posts` (
 	`created_user_id` text NOT NULL,
 	`slug` text,
 	`contacts` text NOT NULL,
-	`created_at` integer DEFAULT '"2025-02-22T23:44:27.825Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2025-02-23T21:31:45.080Z"' NOT NULL,
 	`updated_by` text,
-	`updated_at` integer DEFAULT '"2025-02-22T23:44:27.825Z"' NOT NULL,
+	`updated_at` integer DEFAULT '"2025-02-23T21:31:45.080Z"' NOT NULL,
 	FOREIGN KEY (`created_user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`updated_by`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );

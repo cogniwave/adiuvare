@@ -1,5 +1,5 @@
 <template>
-  <template v-if="!ready">
+  <template v-if="ready">
     <v-menu v-if="loggedIn">
       <template #activator="{ props }">
         <span v-bind="props" class="cursor-pointer ml-5">

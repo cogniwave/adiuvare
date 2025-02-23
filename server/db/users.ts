@@ -4,10 +4,8 @@ import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import { useDrizzle } from "../db";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, UpdateProfilePayload, User, UserContact } from "shared/types/user";
+import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
 import { genToken } from "server/utils";
-
-const SALT = 10;
 
 export const getUser = async <T = SelectUser>(
   email: string,
@@ -59,7 +57,10 @@ export const verifyUser = async (token: string, email: string): Promise<boolean>
   return (result.rowCount || 0) > 0;
 };
 
-export const updateUser = async (userId: string, payload: UpdateProfilePayload | UpdateAccountPayload) => {
+export const updateUser = async (
+  userId: string,
+  payload: UpdateProfilePayload | UpdateAccountPayload | UpdatePhotoPayload,
+) => {
   const old = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
 
   if (!old?.length) {

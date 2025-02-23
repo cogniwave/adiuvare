@@ -1,6 +1,4 @@
-export interface Errors {
-  [key: string]: string;
-}
+export type Errors = Record<string, string>;
 
 export class ValidationError extends Error {
   errors: Array<{ field: string; error: string }>;
@@ -30,8 +28,8 @@ export interface NuxtError {
     statusCode: number;
     url: string;
     statusMessage?: string;
+    data?: Record<string, string>;
     // only exists in dev
     stack?: string;
-    data?: Record<string, string>;
   };
 }

@@ -26,15 +26,16 @@ export default defineWrappedResponseHandler(async (event) => {
 
   if (!user || !(await verifyPassword(password, user.password!))) {
     throw createError({
-      statusCode: 401,
-      statusMessage: "unauthorized",
+      statusCode: 422,
+      statusMessage: "unprocessable content",
       message: t("errors.invalidCredentials"),
     });
   }
 
   if (!user.verified) {
     throw createError({
-      statusCode: 400,
+      statusCode: 409,
+      statusMessage: "conflict",
       message: t("errors.unverifiedUser"),
     });
   }
@@ -43,5 +44,5 @@ export default defineWrappedResponseHandler(async (event) => {
   delete user.password;
   await setUserSession(event, { user, loggedInAt: dayjs() });
   setResponseStatus(event, 201);
-  return user;
+  return user as TokenUser;
 });

@@ -20,8 +20,6 @@
       </v-col>
     </v-row>
   </v-main>
-
-  <speed-insights />
 </template>
 
 <script setup lang="ts">
