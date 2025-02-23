@@ -4,10 +4,9 @@ import type { Report } from "shared/types/report";
 import { createReport } from "server/db/reports";
 import { notifyNewReport } from "server/services/slack";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
+import { log } from "server/utils/logger";
 
 export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
-
   const body = await getValidatedInput<Report>(event, {
     post: RequiredObject,
     reason: RequiredString,
@@ -27,15 +26,8 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 201);
     return "ok";
   } catch (err) {
-    console.log(err);
-    useBugsnag().notify({
-      name: "couldnt create report",
-      message: JSON.stringify(err),
-    });
+    log("[reports] couldn't create report", JSON.stringify(err));
 
-    throw createError({
-      statusCode: 500,
-      statusMessage: t("errors.unexpected"),
-    });
+    throw err;
   }
 });

@@ -3,7 +3,6 @@ import { POST_STATES } from "server/db/schemas/posts.schema";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
 
 import type { ScheduleType, UpdatePostPayload } from "shared/types/post";
-import { isH3Error } from "shared/types/guards";
 import Joi, {
   RequiredNeeds,
   RequiredArray,
@@ -11,6 +10,7 @@ import Joi, {
   RequiredObject,
   RequiredString,
 } from "shared/joi/validators";
+import { log } from "server/utils/logger";
 
 export default defineProtectedRouteHandler(async (event) => {
   const t = await useTranslation(event);
@@ -53,19 +53,8 @@ export default defineProtectedRouteHandler(async (event) => {
 
     sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));
   } catch (err: unknown) {
-    if (isH3Error(err) && err.statusCode === 403) {
-      throw createError({
-        statusCode: 403,
-        statusMessage: "forbidden",
-        message: t("errors.unauthenticated"),
-      });
-    }
+    log("[post] couldn't delete post", JSON.stringify(err));
 
-    useBugsnag().notify({
-      name: "[post] couldn't delete post",
-      message: JSON.stringify(err),
-    });
-
-    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
+    throw err;
   }
 });

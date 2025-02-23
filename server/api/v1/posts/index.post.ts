@@ -1,3 +1,9 @@
+import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { createPost } from "server/db/posts";
+import { genToken } from "server/utils";
+import { notifyNewPost } from "server/services/slack";
+import { log } from "server/utils/logger";
+
 import Joi, {
   RequiredArray,
   RequiredContacts,
@@ -5,17 +11,9 @@ import Joi, {
   RequiredObject,
   RequiredString,
 } from "shared/joi/validators";
-
-import { sanitizeInput, getValidatedInput } from "server/utils/request";
-import { createPost } from "server/db/posts";
-import { genToken } from "server/utils";
-import { notifyNewPost } from "server/services/slack";
-
 import type { CreatePostPayload, ScheduleType } from "shared/types/post";
 
 export default defineProtectedRouteHandler(async (event) => {
-  const t = await useTranslation(event);
-
   const body = await getValidatedInput<CreatePostPayload>(event, {
     title: RequiredString,
     description: RequiredString,
@@ -47,15 +45,8 @@ export default defineProtectedRouteHandler(async (event) => {
 
     return { ...result, createdBy: event.context.user.slug, logo: event.context.user.logo };
   } catch (err) {
-    console.log(err);
-    useBugsnag().notify({
-      name: "couldn't create post",
-      message: JSON.stringify(err),
-    });
+    log("[posts]: couldn't create post", JSON.stringify(err));
 
-    throw createError({
-      statusCode: 500,
-      statusMessage: t("errors.unexpected"),
-    });
+    throw err;
   }
 });

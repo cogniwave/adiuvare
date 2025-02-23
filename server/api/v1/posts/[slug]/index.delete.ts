@@ -1,10 +1,9 @@
 import { deletePost, getPostByOwner } from "server/db/posts";
 import { sanitizeInput } from "server/utils/request";
+import { log } from "server/utils/logger";
 
 export default defineProtectedRouteHandler(async (event) => {
   const postId = sanitizeInput(getRouterParam(event, "id"));
-
-  const t = await useTranslation(event);
 
   // delete post
   try {
@@ -19,12 +18,8 @@ export default defineProtectedRouteHandler(async (event) => {
 
     return await deletePost(postId);
   } catch (err) {
-    console.log(err);
-    useBugsnag().notify({
-      name: "[post] couldn't delete post",
-      message: JSON.stringify(err),
-    });
+    log("[post] couldn't delete post", JSON.stringify(err));
 
-    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
+    throw err;
   }
 });

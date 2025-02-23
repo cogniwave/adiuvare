@@ -8,6 +8,7 @@ import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/joi
 import { isDrizzleError } from "shared/types/guards";
 import type { BaseUser, User, UserType } from "shared/types/user";
 import type { TranslationFunction } from "shared/types";
+import { log } from "server/utils/logger";
 
 const register = async (payload: BaseUser, t: TranslationFunction): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
@@ -84,11 +85,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    console.log(err);
-    useBugsnag().notify({
-      name: "[user] couldn't create user",
-      message: JSON.stringify(err),
-    });
+    log("[user] couldn't create user", JSON.stringify(err));
 
     throw createError({
       statusCode: 500,

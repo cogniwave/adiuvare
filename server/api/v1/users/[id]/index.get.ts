@@ -1,10 +1,10 @@
 import { getUserById } from "server/db/users";
 import { sanitizeInput, desanitizeInput } from "server/utils/request";
+import { log } from "server/utils/logger";
 
 export default defineProtectedRouteHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
   const id = sanitizeInput(getRouterParam(event, "id"));
-  const t = await useTranslation(event);
 
   try {
     const user = await getUserById(id);
@@ -30,12 +30,8 @@ export default defineProtectedRouteHandler(async (event) => {
 
     setResponseStatus(event, 404);
   } catch (err) {
-    console.log(err);
-    useBugsnag().notify({
-      name: "[user] couldn't get user",
-      message: JSON.stringify(err),
-    });
+    log("[user] couldn't get user", JSON.stringify(err));
 
-    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
+    throw err;
   }
 });

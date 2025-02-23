@@ -1,6 +1,7 @@
 import { updateUser } from "server/db/users";
 
 import { uploadFile, FileSizeError, FileTypeError, MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "shared/services/fileUpload";
+import { log } from "server/utils/logger";
 
 export default defineProtectedRouteHandler(async (event) => {
   const formData = await readFormData(event);
@@ -58,11 +59,8 @@ export default defineProtectedRouteHandler(async (event) => {
       });
     }
 
-    useBugsnag().notify({
-      name: "[user] couldn't upload photo",
-      message: JSON.stringify(err),
-    });
+    log("[user] couldn't upload photo", JSON.stringify(err));
 
-    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
+    throw err;
   }
 });

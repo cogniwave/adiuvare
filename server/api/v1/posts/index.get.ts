@@ -1,4 +1,6 @@
 import { getPostsAndTotal } from "server/db/posts";
+import { log } from "server/utils/logger";
+
 import type { TranslationFunction } from "shared/types";
 import { PostNeedEnum, type PostFilter } from "shared/types/post";
 
@@ -52,16 +54,8 @@ export default defineEventHandler(async (event) => {
 
     return await getPostsAndTotal(filter);
   } catch (err) {
-    console.log(err);
+    log("[posts]: failed to get posts", JSON.stringify(err));
 
-    useBugsnag().notify({
-      name: "failed to get posts",
-      message: JSON.stringify(err),
-    });
-
-    throw createError({
-      statusCode: 500,
-      statusMessage: t("errors.unexpected"),
-    });
+    throw err;
   }
 });

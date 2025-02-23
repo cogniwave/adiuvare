@@ -5,8 +5,9 @@ import { useDrizzle } from "server/db";
 import { posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
-
+import { log } from "server/utils/logger";
 import type { InsertPost } from "./schemas/posts.schema";
+
 import { FEED_PAGE_SIZE } from "shared/utils";
 import { PostStateEnum, type PostFilter, type PostNeed, type UpdatePostPayload } from "shared/types/post";
 import { isPostNeed } from "shared/types/guards";
@@ -55,10 +56,7 @@ const getDetailedFilter = (filter: PostFilter): Query => {
 
   // unexpected filtering
   if (!conditions.length) {
-    useBugsnag().notify({
-      name: "[posts] unexpected filtering in get posts",
-      message: JSON.stringify(conditions),
-    });
+    log("[posts] unexpected filtering in get posts", JSON.stringify(conditions));
 
     return undefined;
   }

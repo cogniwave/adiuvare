@@ -1,5 +1,6 @@
 import { getOrgBySlug } from "server/db/users";
 import { sanitizeInput } from "server/utils/request";
+import { log } from "server/utils/logger";
 
 export default defineEventHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
@@ -29,14 +30,8 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 404);
   } catch (err) {
-    console.log(err);
-    useBugsnag().notify({
-      name: "[organization] couldnt get user",
-      message: JSON.stringify(err),
-    });
+    log("[organization] couldn't get organization", JSON.stringify(err));
 
-    const t = await useTranslation(event);
-
-    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
+    throw err;
   }
 });

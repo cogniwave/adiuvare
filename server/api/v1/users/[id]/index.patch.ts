@@ -12,6 +12,7 @@ import {
 } from "shared/joi/validators";
 import type { UpdateProfilePayload, UpdateAccountPayload } from "shared/types/user";
 import { isH3Error } from "shared/types/guards";
+import { log } from "server/utils/logger";
 
 type UpdateAction = "account" | "profile";
 
@@ -79,12 +80,8 @@ export default defineProtectedRouteHandler(async (event) => {
       }
     }
 
-    console.log(err);
-    useBugsnag().notify({
-      name: "[user] couldn't update user",
-      message: JSON.stringify(err),
-    });
+    log("[user] couldn't update user", JSON.stringify(err));
 
-    throw createError({ statusCode: 500, statusMessage: t("errors.unexpected") });
+    throw err;
   }
 });

@@ -1,14 +1,14 @@
 import type { Report } from "shared/types/report";
 import type { NotifyPost } from "shared/types/post";
 import type { User } from "shared/types/user";
+import { log } from "../utils/logger";
 
 const sendToSlack = async (message: string) => {
   const webhook = process.env.SLACK_WEBHOOK_URL;
 
   if (!webhook) {
     if (process.env.NODE_ENV === "production") {
-      console.error("SLACK_WEBOOK NOT DEFINED");
-      useBugsnag().notify("SLACK_WEBOOK NOT DEFINED");
+      log("SLACK_WEBHOOK NOT DEFINED");
     }
 
     return;
@@ -23,11 +23,7 @@ const sendToSlack = async (message: string) => {
 
     console.log(`[slack]: ${message}`);
   } catch (err) {
-    console.log(`"[slack] failed to send message: ${err}`);
-    useBugsnag().notify({
-      name: "[slack] couldnt post to slack user",
-      message: JSON.stringify({ err, message }),
-    });
+    log("[slack] couldn't post to slack user", JSON.stringify({ err, message }));
   }
 };
 
