@@ -26,7 +26,7 @@
 
         <v-list-item :title="t('nav.profile')" append-icon="fa-solid fa-user" @click="$router.push('/profile')" />
 
-        <v-list-item :title="t('nav.logout')" append-icon="fa-solid fa-arrow-right-from-bracket" @click="logout" />
+        <v-list-item :title="t('nav.logout')" append-icon="fa-solid fa-arrow-right-from-bracket" @click="clear" />
       </template>
 
       <template v-else>
@@ -41,7 +41,7 @@
 <script setup lang="ts">
   import { useMenu } from "app/store/menu";
 
-  const { logout, loggedIn, user } = useUserSession();
+  const { clear, loggedIn, user } = useUserSession();
   const { t } = useI18n();
   const { menuOpen } = useMenu();
 

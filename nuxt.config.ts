@@ -82,15 +82,7 @@ export default defineNuxtConfig({
 
   css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
 
-  modules: [
-    "@nuxtjs/i18n",
-    "@nuxt/image",
-    "nuxt-auth-utils",
-    "vuetify-nuxt-module",
-    "@nuxthub/core",
-    "nuxt-bugsnag",
-    "@nuxt/eslint",
-  ],
+  modules: ["@nuxtjs/i18n", "nuxt-auth-utils", "vuetify-nuxt-module", "@nuxthub/core", "nuxt-bugsnag", "@nuxt/eslint"],
 
   features: { inlineStyles: false },
 

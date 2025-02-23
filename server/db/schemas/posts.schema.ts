@@ -3,12 +3,12 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
 import { users } from "./users.schema";
-import type { Need, PostState, PostSchedule } from "shared/types/post";
+import { PostNeedEnum, PostStateEnum, type PostSchedule } from "shared/types/post";
 import type { UserContact } from "shared/types/user";
 
-export const POST_STATES: Readonly<[PostState, ...PostState[]]> = ["pending", "active", "inactive", "rejected"];
+export const POST_STATES = Object.values(PostStateEnum) as [string, ...string[]];
 
-export const POST_NEEDS: Need[] = ["money", "volunteers", "goods", "other"];
+export const POST_NEEDS = Object.values(PostNeedEnum) as [string, ...string[]];
 
 export const posts = sqliteTable(
   "posts",
@@ -18,19 +18,16 @@ export const posts = sqliteTable(
     description: text("description").notNull(),
     locations: text("locations", { mode: "json" }).notNull().$type<string[]>(),
     schedule: text("schedule", { mode: "json" }).notNull().$type<PostSchedule>(),
-    state: text("state", { enum: POST_STATES }).notNull().default("pending").$type<PostState>(),
-    needs: text("needs", { mode: "json" }).notNull().$type<Need[]>(),
+    state: text("state", { enum: POST_STATES }).notNull().default("pending").$type<PostStateEnum>(),
+    needs: text("needs", { enum: POST_NEEDS }).notNull().$type<PostNeedEnum[]>(),
     createdUserId: text("created_user_id")
       .notNull()
       .references(() => users.id),
-    slug: text("slug"),
+    slug: text("slug").notNull(),
     contacts: text("contacts", { mode: "json" }).notNull().$type<UserContact[]>(),
     createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(new Date()),
     updatedBy: text("updated_by").references(() => users.id),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
-      .notNull()
-      .default(new Date())
-      .$onUpdateFn(() => new Date()),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(() => new Date()),
   },
   (posts) => [
     uniqueIndex("post_id_idx").on(posts.id),

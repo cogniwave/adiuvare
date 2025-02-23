@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { POST_NEEDS } from "server/db/schemas/posts.schema";
+import type { PostNeed } from "../types/post";
 
 type Types = number | boolean | string | object | Array<Types> | null | undefined;
 
@@ -94,7 +95,7 @@ export const OptionalPassword = Joi.string().pattern(PASSWORD_REGEX);
 
 export const RequiredPassword = OptionalPassword.required().min(1);
 
-export const RequiredContacts = RequiredArray.items(
+export const RequiredContacts: Joi.ArraySchema<UserContact[]> = RequiredArray.items(
   Joi.object().keys({
     type: Joi.string().valid("phone", "other", "email").required(),
     contact: Joi.string().min(5).max(264).required(),
@@ -103,7 +104,7 @@ export const RequiredContacts = RequiredArray.items(
   return value.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) }));
 });
 
-export const RequiredNeeds = RequiredArray.items(Joi.string().valid(...POST_NEEDS));
+export const RequiredNeeds: Joi.ArraySchema<PostNeed[]> = RequiredArray.items(Joi.string().valid(...POST_NEEDS));
 
 // export default (t: TranslationFunction) =>
 //   Joi.defaults((schema) => {

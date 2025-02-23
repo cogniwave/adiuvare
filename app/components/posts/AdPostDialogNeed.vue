@@ -15,14 +15,14 @@
 </template>
 
 <script setup lang="ts">
-  import type { Need } from "shared/types/post";
+  import type { PostNeed } from "shared/types/post";
 
   const props = defineProps({
-    need: { type: String as PropType<Need>, required: true },
+    need: { type: String as PropType<PostNeed>, required: true },
   });
 
   const emit = defineEmits<{
-    (e: "click" | "click:remove", payload: Need): void;
+    (e: "click" | "click:remove", payload: PostNeed): void;
   }>();
 
   const { getNeedDetails } = useNeed();

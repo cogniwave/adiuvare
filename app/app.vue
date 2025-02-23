@@ -27,7 +27,7 @@
 
   useHead({
     titleTemplate: () => {
-      return $route.meta.title ? `Adiuvare - ${t($route.meta.title as string)}` : "Adiuvare";
+      return $route.meta.title ? `${t($route.meta.title as string)} | Adiuvare` : "Adiuvare";
     },
   });
 

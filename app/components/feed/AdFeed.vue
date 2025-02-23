@@ -182,7 +182,7 @@
   import { useNotify } from "app/store/notify";
   import { usePosts } from "app/store/posts";
   import { useReport } from "app/store/report";
-  import { FEED_PAGE_SIZE } from "app/utils";
+  import { FEED_PAGE_SIZE } from "shared/utils";
 
   import type { Post, PostDeletePayload, PostStateTogglePayload, PostFilter } from "shared/types/post";
   import AdPost from "app/components/posts/AdPost.vue";

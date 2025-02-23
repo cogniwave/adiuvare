@@ -20,10 +20,10 @@
 </template>
 
 <script setup lang="ts">
-  import type { Need } from "shared/types/post";
+  import type { PostNeed } from "shared/types/post";
 
   const $props = defineProps({
-    need: { type: String as PropType<Need>, required: true },
+    need: { type: String as PropType<PostNeed>, required: true },
     size: { type: String, default: "x-small" },
     variant: {
       type: String as PropType<"text" | "flat" | "elevated" | "tonal" | "outlined" | "plain">,

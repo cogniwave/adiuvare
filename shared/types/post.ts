@@ -1,13 +1,6 @@
 import type { UserContact } from "./user";
 
-export type Day =
-  | "monday"
-  | "tuesday"
-  | "wednesday"
-  | "thursday"
-  | "friday"
-  | "saturday"
-  | "sunday";
+export type Day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 
 export interface ScheduleTime {
   id: string;
@@ -38,18 +31,33 @@ export interface PostSchedule {
   payload?: RecurringSchedule | SpecificSchedule;
 }
 
-export type Need = string | "volunteers" | "money" | "goods" | "other";
+export enum PostNeedEnum {
+  VOLUNTEERS = "volunteers",
+  MONEY = "money",
+  GOODS = "goods",
+  OTHER = "other",
+}
+
+export type PostNeed = (typeof PostNeedEnum)[keyof typeof PostNeedEnum];
 
 export interface EmptyPost {
   schedule: PostSchedule;
   description: string;
   title: string;
-  needs: Need[];
+  needs: PostNeed[];
   contacts: UserContact[];
   locations: string[];
 }
 
-export type PostState = "pending" | "active" | "inactive" | "rejected";
+export enum PostStateEnum {
+  SUSPENDED = "suspended",
+  PENDING = "pending",
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+  REJECTED = "rejected",
+}
+
+export type PostState = (typeof PostStateEnum)[keyof typeof PostStateEnum];
 
 export interface Post extends EmptyPost {
   id: string;
@@ -65,7 +73,7 @@ export interface CreatePostPayload {
   description: string;
   locations: string[];
   schedule: PostSchedule;
-  needs: Need[];
+  needs: PostNeed[];
   title: string;
   contacts: UserContact[];
 }
@@ -93,7 +101,7 @@ export interface PostHistory {
   description: string;
   locations: string[];
   schedule: PostSchedule;
-  needs: Need[];
+  needs: PostNeed[];
   title: string;
 }
 

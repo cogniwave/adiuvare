@@ -1,3 +1,9 @@
+import { updatePost } from "server/db/posts";
+import { POST_STATES } from "server/db/schemas/posts.schema";
+import { getValidatedInput, sanitizeInput } from "server/utils/request";
+
+import type { ScheduleType, UpdatePostPayload } from "shared/types/post";
+import { isH3Error } from "shared/types/guards";
 import Joi, {
   RequiredNeeds,
   RequiredArray,
@@ -6,18 +12,12 @@ import Joi, {
   RequiredString,
 } from "shared/joi/validators";
 
-import { POST_STATES } from "server/db/schemas/posts.schema";
-import { updatePost } from "server/db/posts";
-import { getValidatedInput, sanitizeInput } from "server/utils/request";
-import type { ScheduleType, UpdatePostPayload } from "shared/types/post";
-import { isH3Error } from "shared/types/guards";
-
 export default defineProtectedRouteHandler(async (event) => {
   const t = await useTranslation(event);
 
   const body = await getValidatedInput<UpdatePostPayload>(event, {
     title: RequiredString,
-    state: RequiredString.valid(...POST_STATES),
+    state: RequiredString.valid(POST_STATES),
     description: RequiredString,
     needs: RequiredNeeds,
     locations: RequiredArray.items(Joi.string()),

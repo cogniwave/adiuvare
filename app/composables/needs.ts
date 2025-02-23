@@ -1,4 +1,4 @@
-import type { Need } from "shared/types/post";
+import type { PostNeed } from "shared/types/post";
 
 interface ConfigItem {
   icon: string;
@@ -7,10 +7,10 @@ interface ConfigItem {
   description: string;
 }
 
-type Config = Record<Need, ConfigItem>;
+type Config = Record<PostNeed, ConfigItem>;
 
 export const useNeed = () => {
-  const getNeedDetails = (need: Need): ConfigItem => {
+  const getNeedDetails = (need: PostNeed): ConfigItem => {
     const NEED_MAPPING: Config = {
       money: {
         icon: "fa-solid fa-coins",

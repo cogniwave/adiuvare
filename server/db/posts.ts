@@ -1,14 +1,15 @@
 import type { SQLWrapper, SQL } from "drizzle-orm";
 import { and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
 
-import { useDrizzle } from "../db";
-import { POST_NEEDS, posts } from "./schemas/posts.schema";
+import { useDrizzle } from "server/db";
+import { posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
-import { FEED_PAGE_SIZE } from "app/utils";
 
 import type { InsertPost } from "./schemas/posts.schema";
-import type { PostFilter, UpdatePostPayload } from "shared/types/post";
+import { FEED_PAGE_SIZE } from "shared/utils";
+import { PostStateEnum, type PostFilter, type PostNeed, type UpdatePostPayload } from "shared/types/post";
+import { isPostNeed } from "shared/types/guards";
 
 type Query = SQLWrapper[] | SQL<unknown>[] | undefined;
 
@@ -24,7 +25,7 @@ const getFreeInputQuery = (query: string): Query => {
     arrayOverlaps(posts.locations, [query]),
   ];
 
-  if (Object.values(POST_NEEDS).includes(query)) {
+  if (isPostNeed(query)) {
     conditions.push(arrayOverlaps(posts.needs, [query]));
   }
 
@@ -49,7 +50,7 @@ const getDetailedFilter = (filter: PostFilter): Query => {
   }
 
   if (filter.needs?.length) {
-    conditions.push(arrayOverlaps(posts.needs, filter.needs));
+    conditions.push(arrayOverlaps(posts.needs, filter.needs as PostNeed[]));
   }
 
   // unexpected filtering
@@ -78,7 +79,9 @@ export const getPostsAndTotal = async (filter?: PostFilter) => {
 };
 
 export const getPosts = async (conditions?: Query) => {
-  const query = conditions ? and(eq(posts.state, "active"), ...conditions) : eq(posts.state, "active");
+  const query = conditions
+    ? and(eq(posts.state, PostStateEnum.ACTIVE), ...conditions)
+    : eq(posts.state, PostStateEnum.ACTIVE);
 
   const result = await useDrizzle()
     .select({
@@ -114,10 +117,10 @@ export const getTotalPosts = async (conditions?: Query) => {
         .select({ total: count() })
         .from(posts)
         .innerJoin(users, eq(posts.createdUserId, users.id))
-        .where(and(eq(posts.state, "active"), ...conditions));
+        .where(and(eq(posts.state, PostStateEnum.ACTIVE), ...conditions));
     } else {
       // if filter doesn't exist, we can just query all posts
-      result = await useDrizzle().select({ total: count() }).from(posts).where(eq(posts.state, "active"));
+      result = await useDrizzle().select({ total: count() }).from(posts).where(eq(posts.state, PostStateEnum.ACTIVE));
     }
 
     return result[0]!.total ?? 0;
@@ -167,7 +170,6 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
       await tx.insert(postHistory).values({
         postId: old.id,
         userId: userId,
-        updatedAt: new Date(),
         state: old.state,
         description: old.description,
         locations: old.locations,

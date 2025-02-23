@@ -1,5 +1,5 @@
 <template>
-  <template v-if="pending">
+  <template v-if="status === 'pending'">
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
@@ -51,7 +51,7 @@
     path: "/users/:slug",
   });
 
-  const { data: auth } = useUserSession();
+  const { user } = useUserSession();
   const { t } = useI18n();
   const $route = useRoute();
   const $router = useRouter();
@@ -60,7 +60,7 @@
 
   const _slug = $route.params.slug as string;
 
-  const { pending, error } = await useFetch<User>(`/api/v1/users/${_slug}`, {
+  const { status, error } = await useFetch<User>(`/api/v1/users/${_slug}`, {
     lazy: true,
     immediate: false,
     onResponse({ response }) {
@@ -68,7 +68,7 @@
     },
   });
 
-  const canEdit = computed(() => currUser.value?.slug === auth.value?.slug);
+  const canEdit = computed(() => currUser.value?.slug === user.value?.slug);
 
   onBeforeMount(() => {
     const usr = users.value.find(({ slug }) => slug === _slug);

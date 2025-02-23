@@ -169,7 +169,7 @@
   import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
   import { useNotify } from "app/store/notify";
   import { usePosts } from "app/store/posts";
-  import type { Post, PostSchedule, PostState } from "shared/types/post";
+  import { PostStateEnum, type Post, type PostSchedule, type PostState } from "shared/types/post";
   import type { SelectOption } from "shared/types/form";
   import type { UserContact } from "shared/types/user";
 
@@ -211,7 +211,7 @@
   const noDataText = ref(t("form.post.locationNoData"));
   const form = ref<VForm>();
   const slug = ref<string>(_slug);
-  const state = ref<PostState>("pending");
+  const state = ref<PostState>(PostStateEnum.PENDING);
   const needs = ref<string[]>([]);
   const needOptions = ref<SelectOption[]>([
     { title: t("posts.needs.money"), value: "money" },
