@@ -7,7 +7,7 @@ const sendToSlack = async (message: string) => {
   const webhook = process.env.SLACK_WEBHOOK_URL;
 
   if (!webhook) {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NUXT_ENV === "production") {
       log("SLACK_WEBHOOK NOT DEFINED");
     }
 

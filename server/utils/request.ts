@@ -75,7 +75,7 @@ const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, e
 
   const t = await useTranslation(event);
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NUXT_ENV === "development") {
     console.error(error);
   }
 

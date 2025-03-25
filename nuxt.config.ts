@@ -14,10 +14,8 @@ const alias = {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2025-02-21",
-
   future: { compatibilityVersion: 4 },
-
-  devtools: { enabled: process.env.NODE_ENV === "development" },
+  devtools: { enabled: process.env.NUXT_ENV === "development" },
 
   app: {
     head: {
@@ -80,7 +78,14 @@ export default defineNuxtConfig({
 
   css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
 
-  modules: ["@nuxtjs/i18n", "nuxt-auth-utils", "vuetify-nuxt-module", "@nuxthub/core", "@nuxt/eslint"],
+  modules: [
+    "@nuxtjs/i18n",
+    "nuxt-auth-utils",
+    "vuetify-nuxt-module",
+    "@nuxthub/core",
+    "@nuxt/eslint",
+    "@sentry/nuxt/module",
+  ],
 
   features: { inlineStyles: false },
 
@@ -99,7 +104,7 @@ export default defineNuxtConfig({
   i18n: {
     restructureDir: "./app/i18n",
     vueI18n: "./i18n.config.ts",
-
+    bundle: { optimizeTranslationDirective: false },
     experimental: {
       localeDetector: "./localeDetector.ts",
     },
@@ -198,5 +203,16 @@ export default defineNuxtConfig({
 
   typescript: {
     typeCheck: true,
+  },
+
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: "cogniwave",
+      project: "adiuvare",
+    },
+  },
+
+  sourcemap: {
+    client: "hidden",
   },
 });
