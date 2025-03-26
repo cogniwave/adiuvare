@@ -120,22 +120,44 @@ export default defineNuxtConfig({
       },
       theme: {
         themes: {
+          // primary: buttons, links, key interactive elements
+          // secondary: complementary highlights, secondary buttons, or less prominent UI features
+          // accent: attention-grabbing elements (e.g., alerts, highlights, hover states).
+          // surface: Cards, modals, and raised elements
+          // background: Page background to provide a calming and neutral base
+          // heading: Page titles, section headings, and any high-emphasis text.
+          // text: Main body text for high contrast and readability.
+          // subtext: Smaller, less prominent text (e.g., hints, secondary labels)
           light: {
             colors: {
-              primary: "#607D8B",
-              accent: "#263238",
-              surface: "#f7f7f7",
-              background: "#ECEFF1",
+              primary: "#4A90E2",
+              secondary: "#8E44AD",
+              accent: "#F5A623",
+              surface: "#FFFFFF",
+              background: "#F4F8FB",
+              heading: "#1C2833",
               text: "#263238",
+              subtext: "#6D7987",
+              success: "#27AE60",
+              warning: "#F39C12",
+              info: "#3498DB",
+              error: "#E74C3C",
             },
           },
           dark: {
             colors: {
-              primary: "#90A4AE",
-              accent: "#B0BEC5",
-              surface: "#2E3A3F",
-              background: "#263238",
-              text: "#ECEFF1",
+              primary: "#62A8EA",
+              secondary: "#A569BD",
+              accent: "#FFB45E",
+              surface: "#2B303B",
+              background: "#1A1D23",
+              title: "#fff",
+              text: "#E0E6ED",
+              subtext: "#8A94A6",
+              success: "#27AE60",
+              warning: "#F39C12",
+              info: "#3498DB",
+              error: "#E74C3C",
             },
           },
         },
