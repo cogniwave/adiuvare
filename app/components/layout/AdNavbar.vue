@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="white" density="compact" elevation="0">
+  <v-app-bar color="surface" density="compact" elevation="0">
     <template #title>
       <v-row no-gutters>
         <v-col cols="1">

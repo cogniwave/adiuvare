@@ -1,7 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config";
 import { fileURLToPath, URL } from "url";
 import { aliases } from "vuetify/iconsets/fa";
-import { blueGrey } from "vuetify/util/colors";
 import pt from "dayjs/locale/pt";
 
 const alias = {
@@ -123,11 +122,20 @@ export default defineNuxtConfig({
         themes: {
           light: {
             colors: {
-              primary: blueGrey.base, // #607D8B
-              accent: blueGrey.darken4, // #263238
+              primary: "#607D8B",
+              accent: "#263238",
               surface: "#f7f7f7",
-              background: blueGrey.lighten5, // #ECEFF1
-              text: blueGrey.darken4, // #263238
+              background: "#ECEFF1",
+              text: "#263238",
+            },
+          },
+          dark: {
+            colors: {
+              primary: "#90A4AE",
+              accent: "#B0BEC5",
+              surface: "#2E3A3F",
+              background: "#263238",
+              text: "#ECEFF1",
             },
           },
         },
@@ -138,8 +146,8 @@ export default defineNuxtConfig({
           variant: "outlined",
           class: "post",
           rounded: "xl",
-          color: blueGrey.darken4,
-          background: "#f7f7f7",
+          color: "text",
+          background: "background",
         },
         VIcon: {
           size: "x-small",

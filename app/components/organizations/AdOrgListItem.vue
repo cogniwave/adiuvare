@@ -124,6 +124,6 @@
   }
 
   .text-subtitle {
-    color: #000;
+    color: rgb(var(--v-theme-text));
   }
 </style>
