@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <ad-loading :loading="initLoading || isLoading" />
+    <ad-loading v-if="isLoading" />
 
     <ad-navbar />
 
@@ -33,13 +33,9 @@
 
   const { isLoading, start, finish } = useLoadingIndicator();
 
-  // show the loading screen on first render as loadingIndicator doesnt seem to be doing its job
-  const initLoading = ref(true);
-
-  onBeforeMount(() => start());
+  start();
 
   onMounted(() => {
-    initLoading.value = false;
     finish();
 
     if (!import.meta.dev) {
