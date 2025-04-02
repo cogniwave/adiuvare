@@ -72,7 +72,12 @@
 
     <div class="bg-white rounded px-10 py-5">
       <!-- contacts -->
-      <ad-contacts v-if="user" :contacts="user.contacts" @update="updatePost('contacts', $event)" />
+      <ad-contacts
+        v-if="user"
+        :contacts="user.contacts"
+        :error="errors.contacts"
+        @update="updatePost('contacts', $event)"
+      />
 
       <!-- horarios -->
       <ad-post-schedule />
@@ -104,9 +109,9 @@
 
   import type { SelectOption } from "shared/types/form";
   import type { EmptyPost, Post, PostSchedule } from "shared/types/post";
-  import type { User, UserContact } from "shared/types/user";
+  import type { UserContact } from "shared/types/user";
 
-  definePageMeta({ path: "/posts/new", middleware: "org-only", title: "pages.postCreate" });
+  definePageMeta({ path: "/posts/new", middleware: "org-only-server", title: "pages.postCreate" });
 
   const { notifySuccess } = useNotify();
   const { t } = useI18n();
@@ -134,7 +139,7 @@
   const submitting = ref<boolean>(false);
 
   onBeforeMount(() => {
-    setPost({ contacts: (user.value as User).contacts, schedule: { type: "anytime" } } as EmptyPost);
+    setPost({ contacts: user.value!.contacts, schedule: { type: "anytime" } } as EmptyPost);
   });
 
   const fetchLocations = (text: string) => {

@@ -138,7 +138,7 @@
 
   definePageMeta({
     layout: "auth",
-    middleware: "unauthed",
+    middleware: "unauthed-server",
     path: "/register",
     title: "pages.register",
   });

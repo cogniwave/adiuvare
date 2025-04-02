@@ -1,3 +1,5 @@
+import type { ValidationErrorPayload } from "../types/request";
+
 export type Errors = Record<string, string>;
 
 export class ValidationError extends Error {
@@ -21,15 +23,12 @@ export class ValidationError extends Error {
   }
 }
 
-export interface NuxtError {
+export interface RequestError {
+  message: string;
   statusCode: number;
-  data: {
-    message: string;
-    statusCode: number;
-    url: string;
-    statusMessage?: string;
-    data?: Record<string, string>;
-    // only exists in dev
-    stack?: string;
-  };
+  url: string;
+  statusMessage?: string;
+  // only exists in dev
+  stack?: string;
+  data?: ValidationErrorPayload;
 }

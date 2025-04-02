@@ -4,37 +4,32 @@ import { genToken } from "server/utils";
 import { notifyNewPost } from "server/services/slack";
 import { log } from "server/utils/logger";
 
-import Joi, {
-  RequiredArray,
-  RequiredContacts,
-  RequiredNeeds,
-  RequiredObject,
-  RequiredString,
-} from "shared/joi/validators";
-import type { CreatePostPayload, ScheduleType } from "shared/types/post";
+import Joi, { RequiredArray, RequiredContacts, RequiredNeeds, RequiredString } from "shared/validators";
+import { ScheduleType, type CreatePostPayload, type PostSchedule } from "shared/types/post";
+import { PostScheduleRule } from "shared/validators/posts";
 
 export default defineProtectedRouteHandler(async (event) => {
   const body = await getValidatedInput<CreatePostPayload>(event, {
     title: RequiredString,
     description: RequiredString,
     needs: RequiredNeeds,
-    locations: RequiredArray.items(Joi.string()),
-    schedule: RequiredObject,
+    locations: RequiredArray.items(Joi.string()).custom((value) => value.map(sanitizeInput)),
+    schedule: PostScheduleRule,
     contacts: RequiredContacts,
   });
 
   // validate and add token to event
   try {
-    const scheduleType: ScheduleType = sanitizeInput(body.schedule.type);
-
     const result = await createPost({
       title: sanitizeInput(body.title),
       description: sanitizeInput(body.description),
-      needs: body.needs.map((n) => sanitizeInput(n)),
-      locations: body.locations.map((l) => sanitizeInput(l)),
+      needs: body.needs,
+      locations: body.locations,
       schedule: {
-        type: scheduleType,
-        ...(scheduleType !== "anytime" && { payload: body.schedule.payload }),
+        type: body.schedule.type,
+        ...(body.schedule.type !== ScheduleType.ANYTIME && {
+          payload: (body.schedule as PostSchedule<typeof body.schedule.type>).payload,
+        }),
       },
       contacts: body.contacts,
       createdUserId: event.context.user.id,

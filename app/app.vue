@@ -15,7 +15,7 @@
       <NuxtPage />
     </NuxtLayout>
 
-    <ad-footer v-if="$route.meta.middleware !== 'unauthed'" />
+    <ad-footer />
   </v-app>
 </template>
 

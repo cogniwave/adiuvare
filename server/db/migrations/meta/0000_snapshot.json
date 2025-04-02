@@ -1,7 +1,7 @@
 {
-  "version": "1",
+  "version": "6",
   "dialect": "sqlite",
-  "id": "17c02878-4dbf-40f6-b5dc-ff1ff616ccc0",
+  "id": "0d1392a2-165c-4936-ba47-b5c3771f008b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "postHistory": {
@@ -32,7 +32,7 @@
           "name": "created_at",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "title": {
@@ -44,13 +44,6 @@
         },
         "description": {
           "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "state": {
-          "name": "state",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -81,8 +74,16 @@
           "name": "slug",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'pending'"
         },
         "needs": {
           "name": "needs",
@@ -95,22 +96,30 @@
       "indexes": {
         "postHistory_id_unique": {
           "name": "postHistory_id_unique",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": true
         },
         "report_history_id_idx": {
           "name": "report_history_id_idx",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": true
         },
         "report_history_post_idx": {
           "name": "report_history_post_idx",
-          "columns": ["post_id"],
+          "columns": [
+            "post_id"
+          ],
           "isUnique": false
         },
         "report_history_user_idx": {
           "name": "report_history_user_idx",
-          "columns": ["user_id"],
+          "columns": [
+            "user_id"
+          ],
           "isUnique": false
         }
       },
@@ -119,8 +128,12 @@
           "name": "postHistory_post_id_posts_id_fk",
           "tableFrom": "postHistory",
           "tableTo": "posts",
-          "columnsFrom": ["post_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "post_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -128,8 +141,12 @@
           "name": "postHistory_user_id_users_id_fk",
           "tableFrom": "postHistory",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -202,7 +219,7 @@
           "name": "slug",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "contacts": {
@@ -218,7 +235,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2025-02-23T21:31:45.080Z\"'"
+          "default": "'\"2025-04-01T13:21:27.332Z\"'"
         },
         "updated_by": {
           "name": "updated_by",
@@ -231,40 +248,51 @@
           "name": "updated_at",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'\"2025-02-23T21:31:45.080Z\"'"
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
         "posts_id_unique": {
           "name": "posts_id_unique",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": true
         },
         "post_id_idx": {
           "name": "post_id_idx",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": true
         },
         "post_slug_idx": {
           "name": "post_slug_idx",
-          "columns": ["slug"],
+          "columns": [
+            "slug"
+          ],
           "isUnique": true
         },
         "post_title_idx": {
           "name": "post_title_idx",
-          "columns": ["title"],
+          "columns": [
+            "title"
+          ],
           "isUnique": false
         },
         "post_needs_idx": {
           "name": "post_needs_idx",
-          "columns": ["needs"],
+          "columns": [
+            "needs"
+          ],
           "isUnique": false
         },
         "post_locations_idx": {
           "name": "post_locations_idx",
-          "columns": ["locations"],
+          "columns": [
+            "locations"
+          ],
           "isUnique": false
         }
       },
@@ -273,8 +301,12 @@
           "name": "posts_created_user_id_users_id_fk",
           "tableFrom": "posts",
           "tableTo": "users",
-          "columnsFrom": ["created_user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "created_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -282,8 +314,12 @@
           "name": "posts_updated_by_users_id_fk",
           "tableFrom": "posts",
           "tableTo": "users",
-          "columnsFrom": ["updated_by"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "updated_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -334,12 +370,16 @@
       "indexes": {
         "reports_id_unique": {
           "name": "reports_id_unique",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": true
         },
         "report_id_idx": {
           "name": "report_id_idx",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": false
         }
       },
@@ -481,32 +521,44 @@
       "indexes": {
         "users_id_unique": {
           "name": "users_id_unique",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": true
         },
         "users_email_unique": {
           "name": "users_email_unique",
-          "columns": ["email"],
+          "columns": [
+            "email"
+          ],
           "isUnique": true
         },
         "users_slug_unique": {
           "name": "users_slug_unique",
-          "columns": ["slug"],
+          "columns": [
+            "slug"
+          ],
           "isUnique": true
         },
         "user_id_idx": {
           "name": "user_id_idx",
-          "columns": ["id"],
+          "columns": [
+            "id"
+          ],
           "isUnique": true
         },
         "user_email_idx": {
           "name": "user_email_idx",
-          "columns": ["email"],
+          "columns": [
+            "email"
+          ],
           "isUnique": true
         },
         "user_slug_idx": {
           "name": "user_slug_idx",
-          "columns": ["slug"],
+          "columns": [
+            "slug"
+          ],
           "isUnique": true
         }
       },

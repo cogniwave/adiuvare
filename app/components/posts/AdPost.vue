@@ -27,7 +27,7 @@
               <span class="text-subtitle-2 d-block">
                 <!-- otherwise vue will complain because $t only "accepts"
              date and number but passing a string also works  -->
-                {{ d(post.createdAt as any) }}
+                {{ d(post.createdAt) }}
               </span>
             </div>
           </v-col>

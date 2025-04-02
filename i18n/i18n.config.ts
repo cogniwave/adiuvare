@@ -28,7 +28,7 @@ export default defineI18nConfig(() => ({
     { code: "en-GB", iso: "en-GB", file: "en.json" },
   ],
 
-  langDir: "./app/i18n",
+  langDir: "./i18n",
 
   datetimeFormats: {
     "pt-PT": {

@@ -173,7 +173,7 @@
   import type { SelectOption } from "shared/types/form";
   import type { UserContact } from "shared/types/user";
 
-  definePageMeta({ path: "/posts/:slug/edit", middleware: "protected", title: "pages.postEdit" });
+  definePageMeta({ path: "/posts/:slug/edit", middleware: "protected-server", title: "pages.postEdit" });
 
   const { notifySuccess } = useNotify();
   const { t } = useI18n();

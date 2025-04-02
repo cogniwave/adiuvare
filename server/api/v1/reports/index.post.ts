@@ -1,4 +1,4 @@
-import { RequiredObject, RequiredString } from "shared/joi/validators";
+import { RequiredObject, RequiredString } from "~~/shared/validators";
 
 import type { Report } from "shared/types/report";
 import { createReport } from "server/db/reports";

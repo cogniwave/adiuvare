@@ -185,7 +185,7 @@
   import type { User, UserContact } from "shared/types/user";
   import type { FilterMatch } from "shared/types/form";
 
-  definePageMeta({ path: "/profile", middleware: "protected", title: "pages.profile" });
+  definePageMeta({ path: "/profile", middleware: "protected-server", title: "pages.profile" });
 
   const { user: auth, clear } = useUserSession();
   const { t } = useI18n();

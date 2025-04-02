@@ -3,13 +3,11 @@
   "copied": "Copiado",
   "privacyPolicy": "Política de privacidade",
   "eula": "Termos de utilização",
-
   "login": {
     "title": "Iniciar sessão",
     "actionRequiresAuth": "É necessário iniciar sessão para essa ação",
     "passwordReset": "Palavra-passe atualizada, já pode iniciar sessão"
   },
-
   "reset": {
     "link": "Esqueci-me da palavra passe",
     "title": "Recuperar palavra passe",
@@ -23,7 +21,6 @@
     "updateExpiredBody": "O link expirou. O link de recuperação de palavra passe só dura 12 horas. Terá que fazer {0}",
     "update": "Atualizar"
   },
-
   "register": {
     "success": "Criado com sucesso",
     "successMessage": "Foi enviado um email para confirmar o registo",
@@ -39,7 +36,6 @@
       "expiredLink": "O link expirou. O link de recuperação de palavra passe só dura 48 horas. Contacte o apoio ao cliente"
     }
   },
-
   "form": {
     "name": "Nome",
     "email": "Email",
@@ -48,13 +44,11 @@
     "password": "Palavra-passe",
     "passwordDuplicateKey": "Palavras-passe",
     "passwordRepeat": "Repita a palavra-passe",
-
     "userType": {
       "title": "Tipo de utilizador",
       "volunteer": "Voluntário",
       "org": "Organização"
     },
-
     "post": {
       "title": "Título",
       "titlePlaceholder": "E.g.: Precisa-se voluntário",
@@ -100,20 +94,18 @@
         "pending": "Pendente",
         "pendingTooltip": "Publicação a ser aprovada pela equipa. Até lá ninguém conseguirá vê-la. Quando for aprovada receberá uma notificação",
         "rejected": "Rejeitado",
-        "rejectedTooltip": "Publicacão foi rejeitada porque não adere às políticas da plataforma"
+        "rejectedTooltip": "Publicação foi rejeitada porque não adere às políticas da plataforma"
       },
       "slug": "Slug",
       "slugPlaceholder": "o-meu-post",
-      "slugHint": "Slug é usado para a definição do link da publição. É único e quanto mais legível for melhor é a partilha"
+      "slugHint": "Slug é usado para a definição do link da publicação. É único e quanto mais legível for melhor é a partilha"
     },
-
     "report": {
       "reason": "Motivo",
       "reasonPlaceholder": "Qual é a motivo por estar a reportar esta publicação?",
       "email": "Email",
       "emailPlaceholder": "Qual o seu email para entrarmos em contacto se necessário"
     },
-
     "contacts": {
       "title": "Contactos",
       "phone": "Telefone",
@@ -125,7 +117,6 @@
       "remove": "Remover",
       "phoneHint": "Se não for um número português adicione também o indicativo"
     },
-
     "user": {
       "update": "Atualizar perfil",
       "delete": "Apagar conta",
@@ -153,44 +144,37 @@
       "districtPlaceholder": "Setúbal",
       "district": "Distrito"
     },
-
     "cancel": "Cancelar",
     "edit": "Editar",
-
     "privacyPolicy": "Li e aceito a {0}",
     "privacyPolicyLink": "política de privacidade",
     "eula": "Li e aceito os {0}",
     "eulaLink": "termos de utilização",
     "subscribeNewsletter": "Quero subscrever à newsletter e receber novidades"
   },
-
   "notFound": {
     "title": "Oops. Não encontrámos nada aqui...",
     "link": "Voltar para a página inicial"
   },
-
   "nav": {
     "profile": "Perfil",
     "logout": "Sair",
     "account": "Conta"
   },
-
   "errors": {
     "joi": {
       "required": "{label} é obrigatório",
       "only": "{label} tem que ser um de {valids}",
       "max": "{label} não pode ter mais que {limit} caracteres",
       "invalidEmail": "Email inválido",
-      "invalidPassword": "{label} tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número"
+      "invalidPassword": "{label} tem que ser entre 8-255 caracteres e conter pelo menos 1 maiúscula, 1 minúscula e 1 número"
     },
-
     "unexpected": "Erro inesperado",
     "unauthenticated": "É necessário iniciar sessão para esta ação",
     "post": {
       "endHourHigherThanStart": "Hora inicio tem que ser antes de hora de fim",
       "empty": "Não pode ser vazio"
     },
-
     "authRequired": "É necessária iniciar sessão para esta ação",
     "noPermissions": "Não tem permissões para esta ação",
     "invalidCredentials": "Email ou palavra-passe errados",
@@ -198,13 +182,13 @@
     "invalidUserType": "Tem que ser \"org\" ou \"voluntário\"",
     "emailExists": "Já existe uma conta com este email",
     "invalidEmail": "Email inválido",
-    "invalidPassword": "Palavra-passe tem que ser entre 8-255 caracters e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
+    "invalidPassword": "Palavra-passe tem que ser entre 8-255 caracteres e conter pelo menos 1 maiúscula, 1 minúscula e 1 número",
     "invalidField": "Invalid field",
     "fetchPost": "Publicação não encontrada",
     "fetchOrg": "Organização não encontrada",
-    "fetchOrgs": "Ocurreu um erro a buscar as organizações",
+    "fetchOrgs": "Ocorreu um erro a buscar as organizações",
     "fetchUser": "Utilizador não encontrado",
-    "fetchFeed": "Ocurreu um erro a buscar as publicações",
+    "fetchFeed": "Ocorreu um erro a buscar as publicações",
     "unverifiedUser": "Utilizador não confirmado. Siga os passos do email enviado quando a conta foi criada",
     "contactExists": "Contacto já existe",
     "requiredField": "Campo obrigatório",
@@ -221,7 +205,6 @@
     "expiredResetLink": "Link expirado",
     "invalidUrl": "Não é um link válido"
   },
-
   "posts": {
     "newPostTitle": "Nova publicação",
     "editPostTitle": "Editar publicação",
@@ -281,7 +264,6 @@
     "lastUpdatedAt": "Publicação atualizada a ",
     "viewMore": "Ver mais"
   },
-
   "feed": {
     "noPosts": "Não existem publicações, sê o {0}!",
     "noPostsButton": "primeiro",
@@ -289,25 +271,21 @@
     "emptySearchReset": "limpe a pesquisa",
     "filter": "Pesquisar"
   },
-
   "filter": {
     "placeholder": "Pesquise por zona, necessidade, organização, ..."
   },
-
   "menu": {
     "home": "Início",
     "orgs": "Organizações",
     "posts": "Publicações do autor"
   },
-
   "org": {
     "learnMore": "Ver mais",
     "bioPlaceholder": "Descreva a missão / objetivo da organização para melhor ajudar os voluntários à procura duma organização com a qual se identifiquem",
     "bio": "Missão / objetivo",
-    "noBio": "Esta organização ainda não expecificou a sua missão",
+    "noBio": "Esta organização ainda não especificou a sua missão",
     "showAllBio": "Ver texto completo"
   },
-
   "email": {
     "greetings": "Olá",
     "alternativeLinkText": "Se não conseguir usar o link em cima, experimenta este",
@@ -328,7 +306,6 @@
       "buttonText": "Confirmar conta"
     }
   },
-
   "pages": {
     "updatePassword": "Redefinir palavra-passe",
     "login": "Iniciar sessão",
@@ -345,19 +322,17 @@
     "error": "Algo correu mal",
     "profile": "Perfil"
   },
-
   "errorPage": {
     "404": {
       "title": "Página não encontrada",
-      "body": "A página que tentou aceder não existe. Verifice se o URL está correto e tente novamente, ou volte ao início"
+      "body": "A página que tentou aceder não existe. Verifique se o URL está correto e tente novamente, ou volte ao início"
     },
     "unexpected": {
       "title": "Erro inesperado",
-      "body": "Ocorreu um erro inesperado a processo o seu pedido e viémos aqui ter. Volte ao início e tente novamente"
+      "body": "Ocorreu um erro inesperado a processo o seu pedido e viemos aqui ter. Volte ao início e tente novamente"
     },
     "backButton": "Voltar ao início"
   },
-
   "footer": {
     "newsletter": {
       "text": "Subscreva à nossa newsletter e fique a par de todas as novidades à medida que elas vão acontecendo!",
@@ -366,8 +341,8 @@
       "success": "Newsletter subscrita com sucesso"
     }
   },
-
   "$vuetify": {
-    "loading": "A carregar..."
+    "loading": "A carregar...",
+    "open": "Abrir"
   }
 }

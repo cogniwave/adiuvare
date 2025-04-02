@@ -56,7 +56,7 @@
 
   definePageMeta({
     layout: "auth",
-    middleware: "unauthed",
+    middleware: "unauthed-server",
     title: "pages.resetPassword",
     path: "/reset-password",
   });

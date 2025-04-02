@@ -73,7 +73,7 @@
 
   definePageMeta({
     layout: "auth",
-    middleware: "unauthed",
+    middleware: "unauthed-server",
     title: "pages.login",
     path: "/login",
   });
@@ -123,12 +123,11 @@
     submitting.value = true;
 
     try {
-      const result = await $fetch("/api/v1/auth/login", {
+      await $fetch("/api/v1/auth/login", {
         method: "POST",
         body: { email: email.value, password: password.value },
       });
-      console.log(result);
-
+      // fetches user info
       fetch();
       navigateTo({ path: "/" });
     } catch (exc: unknown) {

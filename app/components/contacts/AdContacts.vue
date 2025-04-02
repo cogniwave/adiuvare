@@ -1,6 +1,10 @@
 <template>
   <v-input prepend-icon="fa-solid fa-address-book">
-    <v-label class="mr-2"> {{ t("form.contacts.title") }} </v-label>
+    <div>
+      <v-label class="mr-2"> {{ t("form.contacts.title") }} </v-label>
+
+      <small v-if="errors.contacts" class="d-block color-error">{{ errors.contacts }} </small>
+    </div>
 
     <template #append>
       <v-btn variant="tonal" color="primary" density="compact" flat @click="onAdd">
@@ -69,10 +73,10 @@
 
   const $props = defineProps({
     contacts: { type: Array as PropType<UserContact[]>, default: () => [] },
+    error: { type: String, default: "" },
   });
 
   const { t } = useI18n();
-
   const errors = ref<Record<string, string>>({});
   const proxyContacts = ref<Contact[]>(
     $props.contacts.map((c, i) => ({
@@ -81,11 +85,11 @@
     })),
   );
 
-  const options = ref([
+  const options = [
     { title: t("form.contacts.phone"), value: "phone" },
     { title: t("form.contacts.email"), value: "email" },
     { title: t("form.contacts.other"), value: "other" },
-  ]);
+  ];
 
   const contactEdits = ref<Record<number, Contact>>({});
 
@@ -126,6 +130,11 @@
       proxyContacts.value.map((c) => ({ contact: c.contact, type: c.type })),
     );
   };
+
+  watch(
+    () => $props.error,
+    (error) => (errors.value.contacts = error),
+  );
 </script>
 
 <style lang="scss">

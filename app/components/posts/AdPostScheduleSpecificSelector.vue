@@ -31,21 +31,20 @@
   import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
   import { getNewGroupTimes } from "app/utils/scheduling";
   import { usePosts } from "app/store/posts";
-  import type { Post, ScheduleTime, SpecificSchedule } from "shared/types/post";
+  import { ScheduleType, type Post, type ScheduleTime, type SpecificSchedule } from "shared/types/post";
 
-  const { currPost } = usePosts<Post>();
+  const { currPost } = usePosts<Post>(ScheduleType.SPECIFIC);
   const { d, t } = useI18n();
 
-  const initValue = ref((currPost.value.schedule?.payload as SpecificSchedule).day);
-
-  const date = ref(d((currPost.value.schedule?.payload as SpecificSchedule).day || ""));
+  const initValue = ref(currPost.value.schedule?.payload?.day || "");
+  const date = ref(d(currPost.value.schedule?.payload?.day || new Date()));
   const proxyDate = ref<Dayjs>(date.value ? dayjs(date.value) : dayjs());
-  const times = ref<ScheduleTime[]>((currPost.value.schedule?.payload as SpecificSchedule).times || []);
+  const times = ref<ScheduleTime[]>(currPost.value.schedule?.payload.times || []);
 
   const onUpdate = (payload: SpecificSchedule) => {
     currPost.value = {
       ...currPost.value,
-      schedule: { type: "recurring", payload },
+      schedule: { type: ScheduleType.SPECIFIC, payload },
     };
   };
 

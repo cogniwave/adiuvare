@@ -1,7 +1,7 @@
 import type { PartialSchemaMap } from "joi";
 import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
-import Joi from "shared/joi/validators";
+import Joi from "~~/shared/validators";
 import { ValidationError, type Errors } from "shared/exceptions";
 
 export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap) => {
@@ -85,7 +85,7 @@ const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, e
       status: 422,
       statusMessage: "Unprocessable content",
       cause: t("errors.validationError"),
-      data: error.errors,
+      data: error.toError(),
     });
   }
 

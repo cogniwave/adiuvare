@@ -80,7 +80,7 @@
   import { useNotify } from "app/store/notify";
   import type { TokenUser, Tokens } from "shared/types/user";
 
-  definePageMeta({ path: "/account", middleware: "protected", title: "pages.account" });
+  definePageMeta({ path: "/account", middleware: "protected-server", title: "pages.account" });
 
   const { user } = useUserSession();
   const { t } = useI18n();
@@ -120,7 +120,7 @@
     }
 
     try {
-      const result = await $fetch<Tokens | { success: boolean }>(`/api/v1/users/${(user.value as TokenUser).id}`, {
+      await $fetch<Tokens | { success: boolean }>(`/api/v1/users/${(user.value as TokenUser).id}`, {
         query: { action: "account" },
         body: {
           ...(emailChanged && { email: email.value }),

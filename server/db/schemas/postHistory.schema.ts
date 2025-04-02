@@ -40,7 +40,7 @@ export const postHistoryRelations = relations(postHistory, ({ one }) => ({
     references: [posts.id],
   }),
 
-  userid: one(users, {
+  userId: one(users, {
     fields: [postHistory.userId],
     references: [users.id],
   }),

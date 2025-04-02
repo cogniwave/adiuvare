@@ -1,4 +1,4 @@
-import { RequiredString } from "shared/joi/validators";
+import { RequiredEmail, RequiredPassword } from "~~/shared/validators";
 
 import dayjs from "shared/services/dayjs.service";
 import { getUser } from "server/db/users";
@@ -11,11 +11,11 @@ export default defineWrappedResponseHandler(async (event) => {
   const t = await useTranslation(event);
 
   const { email, password } = await getValidatedInput<LoginPayload>(event, {
-    email: RequiredString,
-    password: RequiredString,
+    email: RequiredEmail,
+    password: RequiredPassword,
   });
 
-  const user = await getUser<TokenUser & { password?: string; verified?: boolean }>(email, [], {
+  const user = await getUser<TokenUser & { password: string; verified: boolean }>(email, [], {
     password: users.password,
     slug: users.slug,
     contacts: users.contacts,
@@ -24,7 +24,7 @@ export default defineWrappedResponseHandler(async (event) => {
     verified: users.verified,
   });
 
-  if (!user || !(await verifyPassword(password, user.password!))) {
+  if (!user || !(await verifyPassword(user.password!, password))) {
     throw createError({
       statusCode: 422,
       statusMessage: "unprocessable content",
@@ -40,9 +40,16 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   }
 
-  delete user.verified;
-  delete user.password;
-  await setUserSession(event, { user, loggedInAt: dayjs() });
+  const authedUser: TokenUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    slug: user.slug,
+    type: user.type,
+    logo: user.logo,
+    contacts: user.contacts || [],
+  };
+  await setUserSession(event, { user: authedUser, loggedInAt: dayjs() });
   setResponseStatus(event, 201);
-  return user as TokenUser;
+  return authedUser;
 });

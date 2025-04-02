@@ -9,7 +9,7 @@ import {
   OptionalString,
   RequiredContacts,
   RequiredString,
-} from "shared/joi/validators";
+} from "~~/shared/validators";
 import type { UpdateProfilePayload, UpdateAccountPayload } from "shared/types/user";
 import { isH3Error } from "shared/types/guards";
 import { log } from "server/utils/logger";

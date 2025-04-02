@@ -80,3 +80,7 @@ p {
 .v-chip__content {
   overflow: hidden;
 }
+
+.color-error {
+  color: rgb(var(--v-theme-error));
+}

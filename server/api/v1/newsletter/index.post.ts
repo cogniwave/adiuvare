@@ -1,7 +1,7 @@
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { subscribeToNewsletter } from "server/services/brevo";
 
-import { RequiredEmail } from "shared/joi/validators";
+import { RequiredEmail } from "~~/shared/validators";
 import type { NewsletterSubscribePayload } from "shared/types/newsletter";
 import { log } from "server/utils/logger";
 

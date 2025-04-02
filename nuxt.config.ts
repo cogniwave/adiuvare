@@ -101,7 +101,7 @@ export default defineNuxtConfig({
   alias,
 
   i18n: {
-    restructureDir: "./app/i18n",
+    restructureDir: "./i18n",
     vueI18n: "./i18n.config.ts",
     bundle: { optimizeTranslationDirective: false },
     experimental: {
@@ -232,6 +232,16 @@ export default defineNuxtConfig({
   },
 
   typescript: {
+    tsConfig: {
+      compilerOptions: {
+        paths: {
+          app: [fileURLToPath(new URL("./app", import.meta.url))],
+          server: [fileURLToPath(new URL("./server", import.meta.url))],
+          shared: [fileURLToPath(new URL("./shared", import.meta.url))],
+          public: [fileURLToPath(new URL("./public", import.meta.url))],
+        },
+      },
+    },
     typeCheck: true,
   },
 

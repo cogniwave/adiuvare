@@ -133,7 +133,13 @@
 </template>
 
 <script setup lang="ts">
-  import type { Day, RecurringSchedule, ScheduleTime, RecurringScheduleTimeGroup } from "shared/types/post";
+  import {
+    type Day,
+    type RecurringSchedule,
+    type ScheduleTime,
+    type RecurringScheduleTimeGroup,
+    ScheduleType,
+  } from "shared/types/post";
   import { usePosts } from "app/store/posts";
   import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
   import { getNewGroupTimes, toHumanDay } from "app/utils/scheduling";
@@ -155,7 +161,7 @@
     },
   });
 
-  const { currPost } = usePosts();
+  const { currPost } = usePosts<Post>(ScheduleType.SPECIFIC);
   const { t } = useI18n();
 
   // data
@@ -203,7 +209,7 @@
     currPost.value = {
       ...currPost.value,
       schedule: {
-        type: "recurring",
+        type: ScheduleType.RECURRING,
         payload: Object.fromEntries(
           Object.entries(payload).filter(([_, value]) => value !== null),
         ) as RecurringSchedule,

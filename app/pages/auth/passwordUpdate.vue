@@ -85,7 +85,7 @@
   definePageMeta({
     layout: "auth",
     path: "/profile/password",
-    middleware: "unauthed",
+    middleware: "unauthed-server",
     title: "pages.updatePassword",
   });
 

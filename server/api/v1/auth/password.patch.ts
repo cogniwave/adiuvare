@@ -2,7 +2,7 @@ import { updatePassword } from "server/db/users";
 import { getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 
-import { RequiredEmail, RequiredPassword, RequiredString } from "shared/joi/validators";
+import { RequiredEmail, RequiredPassword, RequiredString } from "~~/shared/validators";
 import dayjs from "shared/services/dayjs.service";
 
 interface PasswordUpdatePayload {
@@ -21,8 +21,6 @@ export default defineEventHandler(async (event) => {
   });
 
   if (dayjs(body.token.split("-")[1]).isAfter(dayjs().add(12, "hours"))) {
-    const t = await useTranslation(event);
-
     throw createError({
       data: [t("errors.expiredResetLink")],
       message: "Invalid link",

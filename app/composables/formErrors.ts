@@ -10,10 +10,8 @@ export function useFormErrors() {
   const hasErrors = ref(false);
 
   const handleErrors = (err: unknown) => {
-    if (!isNuxtError<Record<string, string>>(err)) {
-      hasErrors.value = false;
-      notifyError("errors.unexpected");
-      return;
+    if (!isFetchError(err)) {
+      return notifyError(t("errors.unexpected"));
     }
 
     if (err.statusCode === 401) {
@@ -27,19 +25,13 @@ export function useFormErrors() {
     }
 
     if (err.statusCode === 422) {
-      // show form errors
-      for (const [field, error] of Object.entries(err.data?.data || {})) {
-        errors.value[field] = error;
-      }
-
-      hasErrors.value = true;
-      return;
-    }
-
-    if (err.statusCode === 422) {
-      // show form errors
-      for (const [field, error] of Object.entries(err.data?.data || {})) {
-        errors.value[field] = error;
+      if (err.data!.data) {
+        // show form errors
+        for (const [field, error] of Object.entries(err.data!.data || {})) {
+          errors.value[field] = error;
+        }
+      } else {
+        notifyError(err.data!.message);
       }
 
       hasErrors.value = true;

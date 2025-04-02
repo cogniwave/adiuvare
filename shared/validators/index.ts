@@ -104,7 +104,12 @@ export const RequiredContacts: Joi.ArraySchema<UserContact[]> = RequiredArray.it
   return value.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) }));
 });
 
-export const RequiredNeeds: Joi.ArraySchema<PostNeed[]> = RequiredArray.items(Joi.string().valid(...POST_NEEDS));
+export const RequiredNeeds: Joi.ArraySchema<PostNeed[]> = RequiredArray.items(Joi.string().valid(...POST_NEEDS)).custom(
+  (value: PostNeed[]) => {
+    console.log("dksoadks", value);
+    return value.map(sanitizeInput);
+  },
+);
 
 // export default (t: TranslationFunction) =>
 //   Joi.defaults((schema) => {

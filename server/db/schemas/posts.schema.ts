@@ -3,8 +3,8 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
 import { users } from "./users.schema";
-import { PostNeedEnum, PostStateEnum, type PostSchedule } from "shared/types/post";
-import type { UserContact } from "shared/types/user";
+import { PostNeedEnum, PostStateEnum, type PostSchedule } from "../../../shared/types/post";
+import type { UserContact } from "../../../shared/types/user";
 
 export const POST_STATES = Object.values(PostStateEnum) as [string, ...string[]];
 

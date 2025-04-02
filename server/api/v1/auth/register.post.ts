@@ -3,9 +3,7 @@ import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
-
-import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/joi/validators";
-import { isDrizzleError } from "shared/types/guards";
+import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "~~/shared/validators";
 import type { BaseUser, User, UserType } from "shared/types/user";
 import type { TranslationFunction } from "shared/types";
 import { log } from "server/utils/logger";
@@ -53,7 +51,7 @@ export default defineEventHandler(async (event) => {
     const user = await register(
       {
         name: sanitizeInput(body.name),
-        password: sanitizeInput(body.password),
+        password: body.password,
         type: sanitizeInput<UserType>(body.type),
         email,
       },
@@ -74,18 +72,19 @@ export default defineEventHandler(async (event) => {
 
     return user;
   } catch (err: unknown) {
-    // todo: validate this is still correct
-    if (isDrizzleError(err) && err.message === "users_email_unique") {
-      throw createError({
-        data: {
-          email: t("errors.emailExists"),
-        },
-        statusCode: 422,
-        statusMessage: t("errors.validationError"),
-      });
-    }
+    if (err instanceof Error) {
+      if (err.message.includes("UNIQUE constraint")) {
+        throw createError({
+          data: {
+            email: t("errors.emailExists"),
+          },
+          statusCode: 422,
+          statusMessage: t("errors.validationError"),
+        });
+      }
 
-    log("[user] couldn't create user", JSON.stringify(err));
+      log("[user] couldn't create user", JSON.stringify(err.message));
+    }
 
     throw createError({
       statusCode: 500,

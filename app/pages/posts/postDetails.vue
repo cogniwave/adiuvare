@@ -47,14 +47,14 @@
               location="bottom"
               close-on-content-click
               close-delay="0"
-              :text="`${t('posts.lastUpdatedAt')} ${d(currPost.updatedAt as any)}`"
+              :text="`${t('posts.lastUpdatedAt')} ${d(currPost.updatedAt)}`"
             >
               <template #activator="{ props }">
-                <small v-bind="props">¬ {{ d(currPost.createdAt as any) }}</small>
+                <small v-bind="props">¬ {{ d(currPost.createdAt) }}</small>
               </template>
             </v-tooltip>
 
-            <small v-else>¬ {{ d(currPost.createdAt as any) }}</small>
+            <small v-else>¬ {{ d(currPost.createdAt) }}</small>
           </template>
         </div>
       </div>
@@ -93,14 +93,14 @@
         {{ t("posts.schedule.detailsTitle") }}
       </div>
 
-      <v-row v-if="currPost.schedule.type === 'anytime'">
+      <v-row v-if="currPost.schedule.type === ScheduleType.ANYTIME">
         <v-col align="center">
           <span>{{ t("posts.schedule.anytime") }}</span>
         </v-col>
       </v-row>
 
       <!-- specific -->
-      <v-row v-if="currPost.schedule.type === 'specific'">
+      <v-row v-if="currPost.schedule.type === ScheduleType.SPECIFIC">
         <v-col align="center" cols="6">
           <span>{{ formatSpecificDay() }}</span>
         </v-col>
@@ -116,7 +116,7 @@
       </v-row>
 
       <!-- recurring -->
-      <template v-if="currPost.schedule.type === 'recurring'">
+      <template v-if="currPost.schedule.type === ScheduleType.RECURRING">
         <v-row>
           <v-col v-for="time in recurringTimes" :key="time.day" align="center">
             {{ time.day }}
@@ -208,7 +208,7 @@
   });
 
   const recurringTimes = computed<MappedRecurringTimes[]>(() => {
-    if (currPost.value.schedule.type !== "recurring") {
+    if (currPost.value.schedule.type !== ScheduleType.RECURRING) {
       return [];
     }
 

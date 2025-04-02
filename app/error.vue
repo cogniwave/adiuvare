@@ -27,10 +27,10 @@
 </template>
 
 <script setup lang="ts">
-  import type { NuxtError } from "shared/exceptions";
+  import type { RequestError } from "shared/exceptions";
 
   defineProps({
-    error: { type: Object as PropType<NuxtError>, required: true },
+    error: { type: Object as PropType<RequestError>, required: true },
   });
 
   const $router = useRouter();
