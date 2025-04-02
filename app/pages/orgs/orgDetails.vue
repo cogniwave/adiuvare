@@ -17,7 +17,7 @@
         size="small"
         rounded="md"
         class="ml-auto"
-        :to="`/organiations/${currOrg.slug}/edit`"
+        :to="`/organizations/${currOrg.slug}/edit`"
       >
         <v-icon class="mr-1">fa-solid fa-pencil</v-icon>
         {{ t("form.edit") }}
