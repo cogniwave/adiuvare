@@ -48,7 +48,7 @@ export const postsRelations = relations(posts, ({ one }) => ({
   updatedUserId: one(users, {
     fields: [posts.updatedBy],
     references: [users.id],
-    relationName: "post_updator",
+    relationName: "post_updater",
   }),
 }));
 

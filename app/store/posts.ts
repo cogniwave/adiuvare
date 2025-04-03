@@ -25,33 +25,33 @@ const DEFAULT_POST = {
 
 const cloneDefault = () => JSON.parse(JSON.stringify(DEFAULT_POST));
 
+const getTypeDefaultConfig = (type: ScheduleType) => {
+  if (type === ScheduleType.ANYTIME) {
+    return { type: ScheduleType.ANYTIME };
+  }
+
+  if (type === ScheduleType.SPECIFIC) {
+    return { type: ScheduleType.SPECIFIC, payload: { day: "", times: [] } };
+  }
+
+  return { type: ScheduleType.RECURRING, payload: {} };
+};
+
 export const usePosts = <T = AnyPost>(defaultType?: ScheduleType) => {
   const posts = useState<Post[]>("posts:posts", () => []);
   const currPost = useState<T>("posts:current", () => ({}) as T);
   const disableDialogVisible = useState<boolean>("posts:dialogVisible", () => true);
   const deleteDialogVisible = useState<boolean>("posts:dialogVisible", () => true);
 
+  const updateScheduleType = (newType: ScheduleType) => {
+    (currPost.value as Post).schedule = getTypeDefaultConfig(newType);
+  };
+
   const setDefaultCurrPost = () => {
-    if (defaultType === ScheduleType.RECURRING) {
-      currPost.value = {
-        ...cloneDefault(),
-        schedule: { type: ScheduleType.RECURRING },
-      };
-      return;
-    }
-
-    if (defaultType === ScheduleType.SPECIFIC) {
-      currPost.value = {
-        ...cloneDefault(),
-        schedule: {
-          type: ScheduleType.RECURRING,
-          payload: { day: "", times: [] },
-        },
-      };
-      return;
-    }
-
-    currPost.value = cloneDefault();
+    currPost.value =
+      defaultType === ScheduleType.ANYTIME
+        ? cloneDefault()
+        : { ...cloneDefault(), schedule: getTypeDefaultConfig(ScheduleType.RECURRING) };
   };
 
   const setPost = (post: T | null, useDefault: boolean = false) => {
@@ -73,5 +73,6 @@ export const usePosts = <T = AnyPost>(defaultType?: ScheduleType) => {
     deleteDialogVisible,
     setPost,
     setDefaultCurrPost,
+    updateScheduleType,
   };
 };

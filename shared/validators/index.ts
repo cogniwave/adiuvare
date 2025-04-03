@@ -23,7 +23,7 @@ const sanitizeArray = (arr: Types[]): Types[] => {
     }
 
     return sanitizeInput<string>(val);
-  }, {});
+  });
 };
 
 const sanitizeObj = (value: Types) => {
@@ -41,11 +41,17 @@ const sanitizeObj = (value: Types) => {
       result[prop] = sanitizeArray(val);
     }
     // obj
-    if (typeof val === "object") {
+    else if (typeof val === "object") {
       result[prop] = sanitizeObj(val);
     }
-
-    result[prop] = sanitizeInput<string>(val);
+    // str
+    else if (typeof val === "string") {
+      result[prop] = sanitizeInput<string>(val);
+    }
+    // anything else
+    else {
+      result[prop] = sanitizeInput<string>(val);
+    }
 
     return result;
   }, {});
@@ -105,10 +111,7 @@ export const RequiredContacts: Joi.ArraySchema<UserContact[]> = RequiredArray.it
 });
 
 export const RequiredNeeds: Joi.ArraySchema<PostNeed[]> = RequiredArray.items(Joi.string().valid(...POST_NEEDS)).custom(
-  (value: PostNeed[]) => {
-    console.log("dksoadks", value);
-    return value.map(sanitizeInput);
-  },
+  (value: PostNeed[]) => value.map(sanitizeInput),
 );
 
 // export default (t: TranslationFunction) =>

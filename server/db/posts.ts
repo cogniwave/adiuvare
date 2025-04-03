@@ -11,6 +11,7 @@ import type { InsertPost } from "./schemas/posts.schema";
 import { FEED_PAGE_SIZE } from "shared/utils";
 import { PostStateEnum, type PostFilter, type PostNeed, type UpdatePostPayload } from "shared/types/post";
 import { isPostNeed } from "shared/types/guards";
+import { formatFromDb as fromDb, formatToDb as toDb } from "./utils";
 
 type Query = SQLWrapper[] | SQL<unknown>[] | undefined;
 
@@ -64,6 +65,10 @@ const getDetailedFilter = (filter: PostFilter): Query => {
   return conditions;
 };
 
+const serializableFields = ["locations", "needs", "schedule", "contacts"];
+const formatFromDb = fromDb(serializableFields);
+const formatToDb = toDb(serializableFields);
+
 export const getPostsAndTotal = async (filter?: PostFilter) => {
   let query: Query = undefined;
 
@@ -101,7 +106,7 @@ export const getPosts = async (conditions?: Query) => {
     .orderBy(desc(posts.createdAt))
     .limit(FEED_PAGE_SIZE);
 
-  return result || [];
+  return (result || []).map(formatFromDb);
 };
 
 export const getTotalPosts = async (conditions?: Query) => {
@@ -128,7 +133,7 @@ export const getTotalPosts = async (conditions?: Query) => {
 };
 
 export const createPost = async (payload: InsertPost) => {
-  const result = await useDrizzle().insert(posts).values(payload).returning({
+  const result = await useDrizzle().insert(posts).values(formatToDb(payload)).returning({
     id: posts.id,
     title: posts.title,
     state: posts.state,
@@ -161,22 +166,24 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
     try {
       await tx
         .update(posts)
-        .set({ ...payload, updatedBy: userId })
+        .set(formatToDb({ ...payload, updatedBy: userId }))
         .where(eq(posts.slug, slug));
 
       // add entry to history
-      await tx.insert(postHistory).values({
-        postId: old.id,
-        userId: userId,
-        state: old.state,
-        description: old.description,
-        locations: old.locations,
-        schedule: old.schedule,
-        needs: old.needs,
-        title: old.title,
-        slug: old.slug,
-        contacts: old.contacts,
-      });
+      await tx.insert(postHistory).values(
+        formatToDb({
+          postId: old.id,
+          userId: userId,
+          state: old.state,
+          description: old.description,
+          locations: old.locations,
+          schedule: old.schedule,
+          needs: old.needs,
+          title: old.title,
+          slug: old.slug,
+          contacts: old.contacts,
+        }),
+      );
     } catch (_) {
       tx.rollback();
     }
@@ -192,7 +199,7 @@ export const deletePost = async (id: string) => {
 export const getPost = async (postId: string) => {
   const result = await useDrizzle().select().from(posts).where(eq(posts.id, postId)).limit(1);
 
-  return result.length === 1 ? result[0] : null;
+  return result.length === 1 ? formatFromDb(result[0]!) : null;
 };
 
 export const getPostByOwner = async (postId: string, userId: string) => {
@@ -202,7 +209,7 @@ export const getPostByOwner = async (postId: string, userId: string) => {
     .where(and(eq(posts.id, postId), eq(posts.createdUserId, userId)))
     .limit(1);
 
-  return result.length === 1 ? result[0] : null;
+  return result.length === 1 ? formatFromDb(result[0]!) : null;
 };
 
 export const getPostBySlug = async (slug: string, getId = false) => {
@@ -227,5 +234,5 @@ export const getPostBySlug = async (slug: string, getId = false) => {
     .innerJoin(users, eq(posts.createdUserId, users.id))
     .limit(1);
 
-  return result.length === 1 ? result[0] : null;
+  return result.length === 1 ? formatFromDb(result[0]!) : null;
 };
