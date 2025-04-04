@@ -7,7 +7,7 @@
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
   </template>
 
-  <!-- render users -->
+  <!-- render users séra que o erro nao esta na validação deste template if?-->
   <template v-if="currUser && Object.keys(currUser)">
     <div class="d-flex justify-end mb-1">
       <v-btn v-if="canEdit" variant="text" size="small" rounded="md" :to="`/profile`">
@@ -45,24 +45,28 @@
   import { useUsers } from "app/store/users";
   import { useNotify } from "app/store/notify";
   import type { User } from "shared/types/user";
+ 
 
-  definePageMeta({
-    title: "pages.userDetails",
-    path: "/users/:slug",
-  });
 
+  const { notifyError } = useNotify();
+  const { currUser, setUser } = useUsers();
+  const $router = useRouter();
+  const $route = useRoute();
   const { user } = useUserSession();
   const { t } = useI18n();
-  const $route = useRoute();
-  const $router = useRouter();
-  const { users, currUser, setUser } = useUsers();
-  const { notifyError } = useNotify();
+
 
   const _slug = $route.params.slug as string;
 
-  const { status, error } = await useFetch<User>(`/api/v1/users/${_slug}`, {
+  definePageMeta({ path: "/users/:slug", title: "pages.userDetails" });
+
+  const {
+    //  data: users,
+    status,
+    error,
+  } = await useFetch<User>(`/api/v1/users/${_slug}`, {
     lazy: true,
-    immediate: false,
+    // immediate: false,
     onResponse({ response }) {
       setUser(response._data);
     },
@@ -70,21 +74,21 @@
 
   const canEdit = computed(() => currUser.value?.slug === user.value?.slug);
 
-  onBeforeMount(() => {
-    const usr = users.value.find(({ slug }) => slug === _slug);
-
-    if (usr) {
-      setUser(usr);
-    }
-  });
-
   watch(
     () => error.value,
     (err) => {
-      if (err) {
-        $router.push("/not-found");
-        notifyError(t("errors.fetchUser"));
+      if (!err) {
+        return;
       }
+
+      notifyError(t("errors.fetchUser"));
+      $router.push("/not-found");
+      
+      
+     // throw createError(err);
     },
+    { immediate: true },
   );
+
+
 </script>
