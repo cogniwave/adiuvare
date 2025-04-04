@@ -7,7 +7,6 @@
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
   </template>
 
-  <!-- render users séra que o erro nao esta na validação deste template if?-->
   <template v-if="currUser && Object.keys(currUser)">
     <div class="d-flex justify-end mb-1">
       <v-btn v-if="canEdit" variant="text" size="small" rounded="md" :to="`/profile`">
@@ -43,33 +42,28 @@
 <script lang="ts" setup>
   import AdContactsList from "app/components/contacts/AdContactsList.vue";
   import { useUsers } from "app/store/users";
-  import { useNotify } from "app/store/notify";
   import type { User } from "shared/types/user";
 
-  const { notifyError } = useNotify();
   const { currUser, setUser } = useUsers();
-  const $router = useRouter();
+
   const $route = useRoute();
-  const { user } = useUserSession();
   const { t } = useI18n();
 
-  const _slug = $route.params.slug as string;
-
-  definePageMeta({ path: "/users/:slug", title: "pages.userDetails" });
-
   const {
-    //  data: users,
     status,
     error,
-  } = await useFetch<User>(`/api/v1/users/${_slug}`, {
+  } = await useFetch<User>(`/api/users/${$route.params.slug}`, {
     lazy: true,
-    // immediate: false,
+    
+    //immediate: false, //aqui está o bug
     onResponse({ response }) {
       setUser(response._data);
     },
   });
+  
+  definePageMeta({ path: "/users/:slug", title: "pages.userDetails" });
 
-  const canEdit = computed(() => currUser.value?.slug === user.value?.slug);
+  const canEdit = ref(false);
 
   watch(
     () => error.value,
@@ -78,9 +72,7 @@
         return;
       }
 
-      notifyError(t("errors.fetchUser"));
-      $router.push("/not-found");  
-     // throw createError(err);
+      throw createError(err);
     },
     { immediate: true },
   );
