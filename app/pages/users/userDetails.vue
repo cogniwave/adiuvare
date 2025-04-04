@@ -55,12 +55,11 @@
   } = await useFetch<User>(`/api/users/${$route.params.slug}`, {
     lazy: true,
     
-    //immediate: false, //aqui está o bug
     onResponse({ response }) {
       setUser(response._data);
     },
   });
-  
+
   definePageMeta({ path: "/users/:slug", title: "pages.userDetails" });
 
   const canEdit = ref(false);
