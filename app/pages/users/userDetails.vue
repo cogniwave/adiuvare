@@ -45,8 +45,6 @@
   import { useUsers } from "app/store/users";
   import { useNotify } from "app/store/notify";
   import type { User } from "shared/types/user";
- 
-
 
   const { notifyError } = useNotify();
   const { currUser, setUser } = useUsers();
@@ -54,7 +52,6 @@
   const $route = useRoute();
   const { user } = useUserSession();
   const { t } = useI18n();
-
 
   const _slug = $route.params.slug as string;
 
@@ -82,9 +79,7 @@
       }
 
       notifyError(t("errors.fetchUser"));
-      $router.push("/not-found");
-      
-      
+      $router.push("/not-found");  
      // throw createError(err);
     },
     { immediate: true },
