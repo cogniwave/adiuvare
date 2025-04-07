@@ -54,7 +54,7 @@
     error,
   } = await useFetch<User>(`/api/users/${$route.params.slug}`, {
     lazy: true,
-    
+
     onResponse({ response }) {
       setUser(response._data);
     },
