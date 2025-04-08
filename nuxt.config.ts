@@ -1,4 +1,4 @@
-import { defineNuxtConfig, } from "nuxt/config";
+import { defineNuxtConfig } from "nuxt/config";
 import { fileURLToPath, URL } from "url";
 import { aliases } from "vuetify/iconsets/fa";
 import pt from "dayjs/locale/pt";
@@ -246,38 +246,39 @@ export default defineNuxtConfig({
         },
       },
     },
+  },
 
+  hub: {
+    analytics: false,
+    blob: true,
+    database: true,
     // @ts-expect-error TS complains but it's correct and it's what the docs say
-    hub: {
-      analytics: false,
-      blob: true,
-      database: true,
-      databaseMigrationsDirs: ["server/db/migrations"],
-      remote: true,
-    },
-    typescript: {
-      tsConfig: {
-        compilerOptions: {
-          paths: {
-            app: [fileURLToPath(new URL("./app", import.meta.url))],
-            server: [fileURLToPath(new URL("./server", import.meta.url))],
-            shared: [fileURLToPath(new URL("./shared", import.meta.url))],
-            public: [fileURLToPath(new URL("./public", import.meta.url))],
-          },
+    databaseMigrationsDirs: ["server/db/migrations"],
+    remote: true,
+  },
+
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        paths: {
+          app: [fileURLToPath(new URL("./app", import.meta.url))],
+          server: [fileURLToPath(new URL("./server", import.meta.url))],
+          shared: [fileURLToPath(new URL("./shared", import.meta.url))],
+          public: [fileURLToPath(new URL("./public", import.meta.url))],
         },
       },
-      typeCheck: true,
     },
+    typeCheck: true,
+  },
 
-    sentry: {
-      sourceMapsUploadOptions: {
-        org: "cogniwave",
-        project: "adiuvare",
-      },
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: "cogniwave",
+      project: "adiuvare",
     },
+  },
 
-    sourcemap: {
-      client: "hidden",
-    },
+  sourcemap: {
+    client: "hidden",
   },
 });

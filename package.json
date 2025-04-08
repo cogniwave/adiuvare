@@ -9,7 +9,12 @@
     "prepare": "nuxt prepare",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "lint:ci": "eslint ./app ./shared ./server",
+    "lint": "yarn run lint:ci --fix",
+    "typing": "nuxi typecheck",
+    "format:ci": "yarn prettier . --check",
+    "format": "yarn prettier . --write"
   },
   "dependencies": {
     "@date-io/dayjs": "^3.2.0",
