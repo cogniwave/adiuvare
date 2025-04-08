@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt/config";
+import { defineNuxtConfig, } from "nuxt/config";
 import { fileURLToPath, URL } from "url";
 import { aliases } from "vuetify/iconsets/fa";
 import pt from "dayjs/locale/pt";
@@ -27,6 +27,13 @@ export default defineNuxtConfig({
         { name: "theme-color", content: "#ECEFF1" },
       ],
       link: [
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Montserrat:wght@700&display=swap",
+        },
+
         { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v6.7.2/css/brand.css" },
         { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v6.7.2/css/solid.css" },
         { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/favicon/apple-touch-icon.png" },
@@ -130,38 +137,51 @@ export default defineNuxtConfig({
           // subtext: Smaller, less prominent text (e.g., hints, secondary labels)
           light: {
             colors: {
-              primary: "#4A90E2",
-              secondary: "#8E44AD",
-              accent: "#F5A623",
-              surface: "#FFFFFF",
-              background: "#F4F8FB",
-              heading: "#1C2833",
-              text: "#263238",
-              subtext: "#6D7987",
-              success: "#27AE60",
-              warning: "#F39C12",
-              info: "#3498DB",
-              error: "#E74C3C",
+              primary: "#4A90E2", //verified
+              secondary: "#8E44AD", //verified
+              accent: "#F5A623", //verified
+              surface: "#FFFFFF", //verified
+              background: "#F4F8FB", //verified
+              heading: "#1C2833", //verified
+              text: "#263238", //verified
+              subtext: "#6D7987", //verified
+              success: "#27AE60", //verified
+              warning: "#F39C12", //verified
+              info: "#3498DB", //verified
+              error: "#E74C3C", //verified
             },
           },
           dark: {
             colors: {
-              primary: "#62A8EA",
-              secondary: "#A569BD",
-              accent: "#FFB45E",
-              surface: "#2B303B",
-              background: "#1A1D23",
-              title: "#fff",
-              text: "#E0E6ED",
-              subtext: "#8A94A6",
-              success: "#27AE60",
-              warning: "#F39C12",
-              info: "#3498DB",
-              error: "#E74C3C",
+              primary: "#62A8EA", //verified
+              secondary: "#A569BD", //verified
+              accent: "#FFB45E", //verified
+              surface: "#2B303B", //verified
+              background: "#1A1D23", //verified
+              headings: "#FFFFFF", //verified
+              text: "#E0E6ED", //verified
+              subtext: "#8A94A6", //verified
+              success: "#27AE60", //verified
+              warning: "#F39C12", //verified
+              info: "#3498DB", //verified
+              error: "#E74C3C", //verified
             },
           },
         },
         defaultTheme: "light",
+      },
+      blueprint: {
+        defaults: {
+          global: {
+            typography: {
+              fontFamily: "Inter, sans-serif",
+              h1: { fontFamily: "Montserrat, sans-serif", fontSize: "32px", fontWeight: 700 },
+              h2: { fontFamily: "Montserrat, sans-serif", fontSize: "24px", fontWeight: 700 },
+              body: { fontSize: "16px", fontWeight: 400, lineHeight: "24px" }, // 1.5x line-height
+              caption: { fontSize: "14px", fontWeight: 300, lineHeight: "21px" },
+            },
+          },
+        },
       },
       defaults: {
         VCard: {
@@ -209,50 +229,55 @@ export default defineNuxtConfig({
         VTooltip: {
           location: "top",
         },
-      },
-      ssr: {
-        clientWidth: 1920,
-        clientHeight: 1080,
-      },
-      icons: {
-        defaultSet: "fa",
-        // @ts-expect-error ts complains about
-        aliases,
-        sets: "fa",
-      },
-    },
-  },
+        VToolbar: {
+          title: {
+            fontSize: "clamp(20px, 2.5vw, 32px)", // Intervalo dinâmico
+          },
+        },
+        ssr: {
+          clientWidth: 1920,
+          clientHeight: 1080,
+        },
+        icons: {
+          defaultSet: "fa",
 
-  hub: {
-    analytics: true,
-    blob: true,
-    database: true,
-    // @ts-expect-error TS complains but it's correct and it's what the docs say
-    databaseMigrationsDirs: ["server/db/migrations"],
-  },
-
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        paths: {
-          app: [fileURLToPath(new URL("./app", import.meta.url))],
-          server: [fileURLToPath(new URL("./server", import.meta.url))],
-          shared: [fileURLToPath(new URL("./shared", import.meta.url))],
-          public: [fileURLToPath(new URL("./public", import.meta.url))],
+          aliases,
+          sets: "fa",
         },
       },
     },
-    typeCheck: true,
-  },
 
-  sentry: {
-    sourceMapsUploadOptions: {
-      org: "cogniwave",
-      project: "adiuvare",
+    // @ts-expect-error TS complains but it's correct and it's what the docs say
+    hub: {
+      analytics: false,
+      blob: true,
+      database: true,
+      databaseMigrationsDirs: ["server/db/migrations"],
+      remote: true,
     },
-  },
+    typescript: {
+      tsConfig: {
+        compilerOptions: {
+          paths: {
+            app: [fileURLToPath(new URL("./app", import.meta.url))],
+            server: [fileURLToPath(new URL("./server", import.meta.url))],
+            shared: [fileURLToPath(new URL("./shared", import.meta.url))],
+            public: [fileURLToPath(new URL("./public", import.meta.url))],
+          },
+        },
+      },
+      typeCheck: true,
+    },
 
-  sourcemap: {
-    client: "hidden",
+    sentry: {
+      sourceMapsUploadOptions: {
+        org: "cogniwave",
+        project: "adiuvare",
+      },
+    },
+
+    sourcemap: {
+      client: "hidden",
+    },
   },
 });
