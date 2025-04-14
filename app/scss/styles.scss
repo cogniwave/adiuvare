@@ -126,3 +126,103 @@ h6 {
 .color-error {
   color: rgb(var(--v-theme-error));
 }
+
+.color-success {
+  color: rgb(var(--v-theme-success));
+}
+
+.color-warning {
+  color: rgb(var(--v-theme-warning));
+}
+
+.color-info {
+  color: rgb(var(--v-theme-info));
+}
+
+.small-spacing {
+  margin-bottom: 8px; 
+}
+
+.medium-spacing {
+  margin-bottom: 16px; 
+}
+
+.large-spacing {
+  margin-bottom: 24px; 
+}
+
+.v-text-field .v-field__input,
+.v-textarea .v-field__input,
+.v-select .v-field__input {
+  &.std-padding {
+    padding: 12px 6px !important;
+  }
+  &.small-spacing {
+    margin-bottom: 8px !important;
+  }
+  &.medium-spacing {
+  margin-bottom: 16px !important; 
+  }
+  &.large-spacing {
+  margin-bottom: 24px !important; 
+  }
+}
+
+//add por mim R
+.v-input {
+  &.error--text {
+    .v-field__outline {
+      color: rgb(var(--v-theme-error)) !important;
+    }
+  }
+  &.success--text {
+    .v-field__outline {
+      color: rgb(var(--v-theme-success)) !important;
+    }
+  }
+}
+
+.v-btn, 
+.v-card,
+.v-dialog,
+.v-menu__content,
+.v-text-field .v-field,
+.v-textarea .v-field,
+.v-select .v-field,
+.v-autocomplete .v-field {
+  border-radius: 8px !important;
+}
+
+.v-btn,
+.v-card,
+.v-dialog,
+.v-menu__content,
+.v-field__input,
+.v-input__control,
+.v-list-item {
+  padding: 12px 6px !important;  
+}
+
+.v-field__outline {
+  border-radius: inherit !important;
+}
+
+.v-snackbar {
+  &.success {
+    color: rgb(var(--v-theme-success));
+    background-color: rgba(var(--v-theme-success), 0.3);
+  }
+  &.error {
+    color: rgb(var(--v-theme-error));
+    background-color: rgba(var(--v-theme-error), 0.3);
+  }
+  &.warning {
+    color: rgb(var(--v-theme-warning));
+    background-color: rgba(var(--v-theme-warning), 0.3);
+  }
+  &.info {
+    color: rgb(var(--v-theme-info));
+    background-color: rgba(var(--v-theme-info), 0.3);
+  }
+
+}

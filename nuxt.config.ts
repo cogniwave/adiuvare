@@ -137,34 +137,34 @@ export default defineNuxtConfig({
           // subtext: Smaller, less prominent text (e.g., hints, secondary labels)
           light: {
             colors: {
-              primary: "#4A90E2", //verified
-              secondary: "#8E44AD", //verified
-              accent: "#F5A623", //verified
-              surface: "#FFFFFF", //verified
-              background: "#F4F8FB", //verified
-              heading: "#1C2833", //verified
-              text: "#263238", //verified
-              subtext: "#6D7987", //verified
-              success: "#27AE60", //verified
-              warning: "#F39C12", //verified
-              info: "#3498DB", //verified
-              error: "#E74C3C", //verified
+              primary: "#4A90E2",
+              secondary: "#8E44AD",
+              accent: "#F5A623",
+              surface: "#FFFFFF",
+              background: "#F4F8FB",
+              heading: "#1C2833",
+              text: "#263238",
+              subtext: "#6D7987",
+              success: "#27AE60",
+              warning: "#F39C12",
+              info: "#3498DB",
+              error: "#E74C3C",
             },
           },
           dark: {
             colors: {
-              primary: "#62A8EA", //verified
-              secondary: "#A569BD", //verified
-              accent: "#FFB45E", //verified
-              surface: "#2B303B", //verified
-              background: "#1A1D23", //verified
-              headings: "#FFFFFF", //verified
-              text: "#E0E6ED", //verified
-              subtext: "#8A94A6", //verified
-              success: "#27AE60", //verified
-              warning: "#F39C12", //verified
-              info: "#3498DB", //verified
-              error: "#E74C3C", //verified
+              primary: "#62A8EA",
+              secondary: "#A569BD",
+              accent: "#FFB45E",
+              surface: "#2B303B",
+              background: "#1A1D23",
+              heading: "#FFFFFF",
+              text: "#E0E6ED",
+              subtext: "#8A94A6",
+              success: "#27AE60",
+              warning: "#F39C12",
+              info: "#3498DB",
+              error: "#E74C3C",
             },
           },
         },
@@ -180,69 +180,64 @@ export default defineNuxtConfig({
               body: { fontSize: "16px", fontWeight: 400, lineHeight: "24px" }, // 1.5x line-height
               caption: { fontSize: "14px", fontWeight: 300, lineHeight: "21px" },
             },
+            density: "comfortable",
+            class: "small-spacing",
           },
-        },
-      },
-      defaults: {
-        VCard: {
-          variant: "outlined",
-          class: "post",
-          rounded: "xl",
-          color: "text",
-          background: "background",
-        },
-        VIcon: {
-          size: "x-small",
-        },
-        VTextField: {
-          density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
-          hideDetails: "auto",
-          validateOn: "blur",
-          variant: "underlined",
-        },
-        VTextarea: {
-          variant: "underlined",
-          density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
-          hideDetails: "auto",
-        },
-        VAutocomplete: {
-          variant: "underlined",
-          density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
-          hideDetails: "auto",
-          autoGrow: true,
-          autoSelectFirst: true,
-        },
-        VSelect: {
-          variant: "underlined",
-          density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
-          hideDetails: "auto",
-          hideHint: true,
-        },
-        VTooltip: {
-          location: "top",
-        },
-        VToolbar: {
-          title: {
-            fontSize: "clamp(20px, 2.5vw, 32px)", // Intervalo dinâmico
+          VBtn: {
+            class: "!std-padding !small-spacing",
+            height: "auto",
           },
-        },
-        ssr: {
-          clientWidth: 1920,
-          clientHeight: 1080,
-        },
-        icons: {
-          defaultSet: "fa",
+          VCard: {
+            color: "text",
+            background: "background",
+            class: "!std-padding !small-spacing",
+          },
+          VIcon: {
+            size: "x-small",
+          },
+          VTextField: {
+            density: "comfortable",
+            class: "!std-padding !small-spacing",
+            hideDetails: "auto",
+            validateOn: "blur",
+            variant: "outlined", // Melhor para visualizar padding
+          },
+          VTextarea: {
+            //variant: "underlined",
+            variant: "outlined",
+            density: "compact",
+            hideDetails: "auto",
+            class: "!std-padding !small-spacing",
+            autoGrow: true, // Expansão automática
+          },
+          VAutocomplete: {
+            variant: "outlined",
+            density: "compact",
+            class: "!std-padding !small-spacing",
+            hideDetails: "auto",
+            autoGrow: true,
+            autoSelectFirst: true,
+          },
+          VSelect: {
+            variant: "outlined",
+            density: "compact",
+            class: "!std-padding !small-spacing",
+            hideDetails: "auto",
+            hideHint: true,
+          },
+          VTooltip: {
+            location: "top",
+          },
+          ssr: {
+            clientWidth: 1920,
+            clientHeight: 1080,
+          },
+          icons: {
+            defaultSet: "fa",
 
-          aliases,
-          sets: "fa",
+            aliases,
+            sets: "fa",
+          },
         },
       },
     },
@@ -254,7 +249,6 @@ export default defineNuxtConfig({
     database: true,
     // @ts-expect-error TS complains but it's correct and it's what the docs say
     databaseMigrationsDirs: ["server/db/migrations"],
-    remote: true,
   },
 
   typescript: {

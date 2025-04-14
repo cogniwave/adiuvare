@@ -7,7 +7,6 @@
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
   </template>
 
-  <!-- render users -->
   <template v-if="currUser && Object.keys(currUser)">
     <div class="d-flex justify-end mb-1">
       <v-btn v-if="canEdit" variant="text" size="small" rounded="md" :to="`/profile`">
@@ -43,48 +42,39 @@
 <script lang="ts" setup>
   import AdContactsList from "app/components/contacts/AdContactsList.vue";
   import { useUsers } from "app/store/users";
-  import { useNotify } from "app/store/notify";
   import type { User } from "shared/types/user";
 
-  definePageMeta({
-    title: "pages.userDetails",
-    path: "/users/:slug",
-  });
+  const { currUser, setUser } = useUsers();
 
-  const { user } = useUserSession();
-  const { t } = useI18n();
   const $route = useRoute();
-  const $router = useRouter();
-  const { users, currUser, setUser } = useUsers();
-  const { notifyError } = useNotify();
+  const { t } = useI18n();
 
-  const _slug = $route.params.slug as string;
-
-  const { status, error } = await useFetch<User>(`/api/v1/users/${_slug}`, {
+  const {
+    status,
+    error,
+  } = await useFetch<User>(`/api/users/${$route.params.slug}`, {
     lazy: true,
-    immediate: false,
+
     onResponse({ response }) {
       setUser(response._data);
     },
   });
 
-  const canEdit = computed(() => currUser.value?.slug === user.value?.slug);
+  definePageMeta({ path: "/users/:slug", title: "pages.userDetails" });
 
-  onBeforeMount(() => {
-    const usr = users.value.find(({ slug }) => slug === _slug);
-
-    if (usr) {
-      setUser(usr);
-    }
-  });
+  const canEdit = ref(false);
 
   watch(
     () => error.value,
     (err) => {
-      if (err) {
-        $router.push("/not-found");
-        notifyError(t("errors.fetchUser"));
+      if (!err) {
+        return;
       }
+
+      throw createError(err);
     },
+    { immediate: true },
   );
+
+
 </script>
