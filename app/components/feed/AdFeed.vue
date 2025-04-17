@@ -379,9 +379,7 @@
       white-space: initial !important;
     }
   }
-</style>
 
-<style lang="scss" scoped>
   h3 {
     text-align: center;
     font-weight: normal;

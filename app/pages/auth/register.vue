@@ -136,8 +136,7 @@
 
   import type { User, UserType } from "shared/types/user";
 
-  definePageMeta({
-    layout: "auth",
+  definePageMeta({    
     middleware: "unauthed-server",
     path: "/register",
     title: "pages.register",

@@ -71,8 +71,7 @@
   import { required, isValidEmail, isValidPassword } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
 
-  definePageMeta({
-    layout: "auth",
+  definePageMeta({  
     middleware: "unauthed-server",
     title: "pages.login",
     path: "/login",
