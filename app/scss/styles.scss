@@ -41,7 +41,8 @@ a {
 span,
 p {
   @include typography(14px);
-  font-weight: 400;
+  font-weight: 400;  
+  color: rgb(var(--v-theme-text)); 
 }
 
 h1,
@@ -104,7 +105,7 @@ h6 {
       color: rgb(var(--v-theme-text)) !important;
       text-decoration: none;
     }
-  }
+  }  
 }
 
 .reverse-label {
@@ -123,7 +124,12 @@ h6 {
   overflow: hidden;
 }
 
-.color-error {
+.color-error { //unico já feito
+  color: rgb(var(--v-theme-error));
+}
+
+/* talvez sejam desnecessarios
+.color-error { //unico já feito
   color: rgb(var(--v-theme-error));
 }
 
@@ -138,10 +144,10 @@ h6 {
 .color-info {
   color: rgb(var(--v-theme-info));
 }
-
+*/
 .small-spacing {
   margin-bottom: 8px; 
-}
+} 
 
 .medium-spacing {
   margin-bottom: 16px; 
@@ -168,19 +174,19 @@ h6 {
   }
 }
 
-//add por mim R
+/* talvez sejam desnecessarios
 .v-input {
   &.error--text {
     .v-field__outline {
-      color: rgb(var(--v-theme-error)) !important;
+      background: rgb(var(--v-theme-error)) !important;
     }
   }
   &.success--text {
     .v-field__outline {
-      color: rgb(var(--v-theme-success)) !important;
+     background: rgb(var(--v-theme-success)) !important;
     }
   }
-}
+} */
 
 .v-btn, 
 .v-card,
@@ -188,7 +194,7 @@ h6 {
 .v-menu__content,
 .v-text-field .v-field,
 .v-textarea .v-field,
-.v-select .v-field,
+.v-select .v-field, 
 .v-autocomplete .v-field {
   border-radius: 8px !important;
 }
@@ -200,7 +206,7 @@ h6 {
 .v-field__input,
 .v-input__control,
 .v-list-item {
-  padding: 12px 6px !important;  
+  padding: 12px 6px !important;   
 }
 
 .v-field__outline {

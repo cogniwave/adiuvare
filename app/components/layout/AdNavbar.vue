@@ -27,7 +27,6 @@
               <v-icon v-else size="x-small"> fa-solid fa-bell </v-icon>
             </v-btn> -->
 
-            <ad-profile-menu />
           </v-col>
         </template>
 
@@ -54,3 +53,4 @@
 
   const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>
+

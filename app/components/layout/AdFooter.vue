@@ -6,15 +6,8 @@
           {{ $t("footer.newsletter.text") }}
 
           <v-form v-if="!subscribed" ref="form" validate-on="submit lazy" class="mt-2" @submit.prevent="submit">
-            <v-text-field
-              v-model:model-value="email"
-              type="text"
-              class="w-100"
-              placeholder="email@gmail.com"
-              variant="outlined"
-              :label="$t('footer.newsletter.label')"
-              :error-messages="errors.email"
-            >
+            <v-text-field v-model:model-value="email" type="text" class="w-100" placeholder="email@gmail.com"
+                          variant="outlined" :label="$t('footer.newsletter.label')" :error-messages="errors.email">
               <template #append-inner>
                 <v-btn type="submit" color="primary" flat :rounded="false" :loading="submitting" @click="submit">
                   {{ $t("footer.newsletter.subscribe") }}
@@ -76,13 +69,18 @@
 </script>
 
 <style lang="scss" scoped>
-  :deep(.v-field--appended) {
-    padding-right: 0 !important;
-    --v-field-padding-end: 0 !important;
-  }
+  footer {
+    border-radius: 8px 8px 0px 0px !important;
+    box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.1);
 
-  a {
-    color: rgba(var(--v-theme-primary));
+    a {
+      color: rgba(var(--v-theme-primary));
+    }
+
+    :deep(.v-field--appended) {
+      padding-right: 0 !important;
+      --v-field-padding-end: 0 !important;
+    }
   }
 
   .v-footer {
