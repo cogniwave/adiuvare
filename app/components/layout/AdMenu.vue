@@ -10,6 +10,13 @@
 
     <v-list-item :title="t('menu.orgs')" to="/organizations" prepend-icon="fa-solid fa-building-ngo" />
 
+    <template v-if="!loggedIn">
+      <v-list-item :title="t('login.title')" to="/login" prepend-icon="fa-solid fa-arrow-right-to-bracket"
+                   :active="$route.path === '/login'" />
+      <v-list-item :title="t('register.title')" to="/register" prepend-icon="fa-solid fa-user-plus"
+                   :active="$route.path === '/register'" />
+    </template>
+
     <!-- <v-list-item
             v-if="showUserPosts"
             prepend-icon="fa-solid fa-file-lines"
