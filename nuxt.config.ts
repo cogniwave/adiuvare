@@ -1,6 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
 import { fileURLToPath, URL } from "url";
-import { aliases } from "vuetify/iconsets/fa";
+//import { aliases } from "vuetify/iconsets/fa";
+import { aliases, mdi } from "vuetify/iconsets/mdi";
 import pt from "dayjs/locale/pt";
 
 const alias = {
@@ -183,10 +184,6 @@ export default defineNuxtConfig({
             density: "comfortable",
             class: "small-spacing",
           },
-          VBtn: {
-            class: "!std-padding !small-spacing",
-            height: "auto",
-          },
           VCard: {
             color: "text",
             background: "background",
@@ -228,15 +225,20 @@ export default defineNuxtConfig({
           VTooltip: {
             location: "top",
           },
+          VBtn: {
+            class: "!std-padding !small-spacing",
+            height: "auto",
+          },
           ssr: {
             clientWidth: 1920,
             clientHeight: 1080,
           },
           icons: {
-            defaultSet: "fa",
-
+            defaultSet: "mdi",
             aliases,
-            sets: "fa",
+            sets: {
+              mdi,
+            },
           },
         },
       },

@@ -98,7 +98,7 @@ footer.v-footer {
 
 header.ad-navbar {
   border-radius: 0px 0px 8px 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .menu-list {
@@ -106,11 +106,17 @@ header.ad-navbar {
   max-width: 285px;
   width: inherit;
 
-  .v-list-item {
+  .v-list-item{
     &.active-menu-item {
       background: rgb(var(--v-theme-accent));
       border-radius: 0px 8px 8px 0px !important;
     }
+  }
+  .v-icon{
+    font-weight: bold;
+    color: black; // cor mais sólida
+    font-size: 20px;
+    margin-left: 12px    
   }
 }
 
@@ -158,12 +164,6 @@ header.ad-navbar {
 }
 
 .color-error {
-  //unico já feito
-  color: rgb(var(--v-theme-error));
-}
-
-/* talvez sejam desnecessarios
-.color-error { //unico já feito
   color: rgb(var(--v-theme-error));
 }
 
@@ -178,7 +178,7 @@ header.ad-navbar {
 .color-info {
   color: rgb(var(--v-theme-info));
 }
-*/
+
 .small-spacing {
   margin-bottom: 8px;
 }
