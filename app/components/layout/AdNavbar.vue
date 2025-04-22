@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="surface" density="compact" elevation="0">
+  <v-app-bar class="ad-navbar" color="surface" density="compact" elevation="0">
     <template #title>
       <v-row no-gutters>
         <v-col cols="1">
@@ -26,7 +26,7 @@
 
               <v-icon v-else size="x-small"> fa-solid fa-bell </v-icon>
             </v-btn> -->
-
+            <ad-profile-menu />
           </v-col>
         </template>
 
@@ -54,3 +54,6 @@
   const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>
 
+<style scoped lang="scss">
+  
+</style>

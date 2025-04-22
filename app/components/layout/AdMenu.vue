@@ -10,6 +10,12 @@
 
     <v-list-item :title="t('menu.orgs')" to="/organizations" prepend-icon="fa-solid fa-building-ngo"
                  active-class="active-menu-item" />
+    <!-- <v-list-item
+            v-if="showUserPosts"
+            prepend-icon="fa-solid fa-file-lines"
+            :title="t('menu.posts')"
+            :to="{ path: '/', query: { createdBy: $route.params.slug } }"
+          /> -->
 
     <template v-if="!loggedIn">
       <v-list-item :title="t('login.title')" to="/login" prepend-icon="fa-solid fa-arrow-right-to-bracket"
@@ -25,17 +31,3 @@
   const { loggedIn } = useUserSession();
 </script>
 
-<style scoped lang="scss">
-  .menu-list {
-    position: fixed;
-    max-width: 285px;
-    width: inherit;
-
-    .v-list-item {
-      &.active-menu-item {
-        background: rgb(var(--v-theme-accent));
-        border-radius: 0px 8px 8px 0px !important;
-      }
-    }
-  }
-</style>

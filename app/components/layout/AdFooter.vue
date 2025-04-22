@@ -68,22 +68,3 @@
   };
 </script>
 
-<style lang="scss" scoped>
-  footer {
-    border-radius: 8px 8px 0px 0px !important;
-    box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.1);
-
-    a {
-      color: rgba(var(--v-theme-primary));
-    }
-
-    :deep(.v-field--appended) {
-      padding-right: 0 !important;
-      --v-field-padding-end: 0 !important;
-    }
-  }
-
-  .v-footer {
-    flex: initial;
-  }
-</style>

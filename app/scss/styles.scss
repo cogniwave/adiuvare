@@ -41,8 +41,8 @@ a {
 span,
 p {
   @include typography(14px);
-  font-weight: 400;  
-  color: rgb(var(--v-theme-text)); 
+  font-weight: 400;
+  color: rgb(var(--v-theme-text));
 }
 
 h1,
@@ -81,6 +81,39 @@ h6 {
   font-size: 14px;
 }
 
+footer.v-footer {
+  border-radius: 8px 8px 0px 0px;
+  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.1);
+  flex: initial;
+
+  a {
+    color: rgba(var(--v-theme-primary));
+  }
+
+  .v-field--appended {
+    padding-right: 0;
+    --v-field-padding-end: 0;
+  }
+}
+
+header.ad-navbar {
+  border-radius: 0px 0px 8px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;  
+}
+
+.menu-list {
+  position: fixed;
+  max-width: 285px;
+  width: inherit;
+
+  .v-list-item {
+    &.active-menu-item {
+      background: rgb(var(--v-theme-accent));
+      border-radius: 0px 8px 8px 0px !important;
+    }
+  }
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -105,7 +138,7 @@ h6 {
       color: rgb(var(--v-theme-text)) !important;
       text-decoration: none;
     }
-  }  
+  }
 }
 
 .reverse-label {
@@ -124,7 +157,8 @@ h6 {
   overflow: hidden;
 }
 
-.color-error { //unico já feito
+.color-error {
+  //unico já feito
   color: rgb(var(--v-theme-error));
 }
 
@@ -146,15 +180,15 @@ h6 {
 }
 */
 .small-spacing {
-  margin-bottom: 8px; 
-} 
+  margin-bottom: 8px;
+}
 
 .medium-spacing {
-  margin-bottom: 16px; 
+  margin-bottom: 16px;
 }
 
 .large-spacing {
-  margin-bottom: 24px; 
+  margin-bottom: 24px;
 }
 
 .v-text-field .v-field__input,
@@ -167,10 +201,10 @@ h6 {
     margin-bottom: 8px !important;
   }
   &.medium-spacing {
-  margin-bottom: 16px !important; 
+    margin-bottom: 16px !important;
   }
   &.large-spacing {
-  margin-bottom: 24px !important; 
+    margin-bottom: 24px !important;
   }
 }
 
@@ -188,13 +222,13 @@ h6 {
   }
 } */
 
-.v-btn, 
+.v-btn,
 .v-card,
 .v-dialog,
 .v-menu__content,
 .v-text-field .v-field,
 .v-textarea .v-field,
-.v-select .v-field, 
+.v-select .v-field,
 .v-autocomplete .v-field {
   border-radius: 8px !important;
 }
@@ -206,7 +240,7 @@ h6 {
 .v-field__input,
 .v-input__control,
 .v-list-item {
-  padding: 12px 6px !important;   
+  padding: 12px 6px !important;
 }
 
 .v-field__outline {
@@ -230,5 +264,4 @@ h6 {
     color: rgb(var(--v-theme-info));
     background-color: rgba(var(--v-theme-info), 0.3);
   }
-
 }
