@@ -1,10 +1,10 @@
 <template>
   <template v-if="ready">
-    <v-menu v-if="loggedIn">
+    <v-menu v-if="!loggedIn">
       <template #activator="{ props }">
         <span v-bind="props" class="cursor-pointer ml-5">
-          {{ user?.name }}
-          <v-icon class="ml-2 mb-1">fa-solid fa-chevron-down</v-icon>
+          {{ t('greeting') }}, {{ user?.name || '<nome de user>' }}
+          <v-icon class="ml-2 mb-1">mdi-chevron-down</v-icon>
         </span>
       </template>
 
