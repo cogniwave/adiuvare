@@ -36,7 +36,7 @@ export const addUser = async (payload: BaseUser, token: string): Promise<User | 
       type: payload.type,
       slug: `${payload.email.split("@")[0]}-${genToken()}`,
       token,
-      verified: false,
+      verified: true,
     })
     .returning({
       id: users.id,

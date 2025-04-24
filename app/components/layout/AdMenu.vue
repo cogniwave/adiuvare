@@ -10,12 +10,12 @@
 
     <v-list-item :title="t('menu.orgs')" to="/organizations" prepend-icon="mdi-domain"
                  active-class="active-menu-item" />
-    <!-- <v-list-item
+   <!--  <v-list-item
             v-if="showUserPosts"
-            prepend-icon="fa-solid fa-file-lines"
+            prepend-icon="mdi-file-document-outline"
             :title="t('menu.posts')"
             :to="{ path: '/', query: { createdBy: $route.params.slug } }"
-          /> -->
+          />  -->
     <v-divider />
     <template v-if="!loggedIn">
       <v-list-item :title="t('login.title')" to="/login" prepend-icon="mdi-login"
