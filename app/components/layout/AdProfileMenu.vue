@@ -18,11 +18,6 @@
       </v-list>
     </v-menu>
 
-    <template v-else>
-      <v-btn variant="plain" class="px-0" to="/login"> {{ t("login.title") }} </v-btn>
-      <span class="mx-2 divider">|</span>
-      <v-btn variant="plain" class="px-0" to="/register"> {{ t("register.title") }} </v-btn>
-    </template>
   </template>
 </template>
 
