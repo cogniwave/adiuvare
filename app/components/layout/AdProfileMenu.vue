@@ -1,29 +1,17 @@
 <template>
-  <template v-if="ready">
-    <!-- reparar nisto amanha -->
+  <template v-if="ready">   
     <v-menu v-if="loggedIn">
       <template #activator="{ props }">
         <span v-bind="props" class="cursor-pointer ml-5">
-          {{ t('email.greetings') }} {{ user?.name || '<nome de user>' }}
-          <v-icon class="ml-2 mb-1">mdi-chevron-down</v-icon>
+          {{ t('email.greetings') }} {{ user?.name || '<nome de user>' }}       
         </span>
-      </template>
-
-      <v-list>
-        <v-list-item :title="t('nav.account')" append-icon="fa-solid fa-gear" @click="$router.push('/account')" />
-
-        <v-list-item :title="t('nav.profile')" append-icon="fa-solid fa-user" @click="$router.push('/profile')" />
-
-        <v-list-item :title="t('nav.logout')" append-icon="fa-solid fa-arrow-right-from-bracket" @click="clear" />
-      </v-list>
+      </template>      
     </v-menu>
-
   </template>
 </template>
 
-<script setup lang="ts">
-  const $router = useRouter();
-  const { clear, loggedIn, user, ready } = useUserSession();
+<script setup lang="ts">  
+  const { loggedIn, user, ready } = useUserSession();
   const { t } = useI18n();
 </script>
 
