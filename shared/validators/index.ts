@@ -106,7 +106,6 @@ export const RequiredContacts: Joi.ArraySchema<UserContact[]> = RequiredArray.it
 
 export const RequiredNeeds: Joi.ArraySchema<PostNeed[]> = RequiredArray.items(Joi.string().valid(...POST_NEEDS)).custom(
   (value: PostNeed[]) => {
-    console.log("dksoadks", value);
     return value.map(sanitizeInput);
   },
 );

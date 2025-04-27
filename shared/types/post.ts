@@ -29,25 +29,21 @@ export enum ScheduleType {
 
 interface PostSchedulePayload {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  anytime: {};
-  specific: { payload: SpecificSchedule };
-  recurring: { payload: RecurringSchedule };
+  [ScheduleType.ANYTIME]: { payload: {} };
+  [ScheduleType.SPECIFIC]: { payload: SpecificSchedule };
+  [ScheduleType.RECURRING]: { payload: RecurringSchedule };
 }
 
-export type PostSchedule<T extends ScheduleType = ScheduleType.ANYTIME> = {
-  type: ScheduleType;
-} & PostSchedulePayload[T];
+export type PostSchedule<T extends ScheduleType = ScheduleType> = PostSchedulePayload[T] & { type: T };
 
-export enum PostNeedEnum {
+export enum PostNeed {
   VOLUNTEERS = "volunteers",
   MONEY = "money",
   GOODS = "goods",
   OTHER = "other",
 }
 
-export type PostNeed = (typeof PostNeedEnum)[keyof typeof PostNeedEnum];
-
-export interface EmptyPost<T extends ScheduleType = ScheduleType.ANYTIME> {
+export interface EmptyPost<T extends ScheduleType = ScheduleType> {
   schedule: PostSchedule<T>;
   description: string;
   title: string;
@@ -66,7 +62,7 @@ export enum PostStateEnum {
 
 export type PostState = (typeof PostStateEnum)[keyof typeof PostStateEnum];
 
-export interface Post<T extends ScheduleType = any> extends EmptyPost<T> {
+export interface Post<T extends ScheduleType = ScheduleType> extends EmptyPost<T> {
   id: string;
   logo: string;
   state: PostState;
@@ -76,7 +72,16 @@ export interface Post<T extends ScheduleType = any> extends EmptyPost<T> {
   slug: string;
 }
 
-export interface CreatePostPayload<T extends ScheduleType = ScheduleType.ANYTIME> {
+export interface PostBySlug<T extends ScheduleType = ScheduleType> extends Omit<Post<T>, "logo"> {
+  schedule: PostSchedule<T>;
+  description: string;
+  title: string;
+  needs: PostNeed[];
+  contacts: UserContact[];
+  locations: string[];
+  createdById?: string;
+}
+export interface CreatePostPayload<T extends ScheduleType = ScheduleType> {
   description: string;
   locations: string[];
   schedule: PostSchedule<T>;
@@ -101,7 +106,7 @@ export interface UpdatePostPayload extends CreatePostPayload {
   // updatedBy: string;
 }
 
-export interface PostHistory<T extends ScheduleType = ScheduleType.ANYTIME> {
+export interface PostHistory<T extends ScheduleType = ScheduleType> {
   updatedBy: string;
   updatedAt: Date;
   state: PostState;

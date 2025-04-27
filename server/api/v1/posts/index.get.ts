@@ -2,25 +2,25 @@ import { getPostsAndTotal } from "server/db/posts";
 import { log } from "server/utils/logger";
 
 import type { TranslationFunction } from "shared/types";
-import { PostNeedEnum, type PostFilter } from "shared/types/post";
+import { PostNeed, type PostFilter } from "shared/types/post";
 
 // because free search with i18n, we need some magics to
 // convert users input into the value thats saved in the db
 const mapIfNeed = (filter: string, t: TranslationFunction) => {
   if (t("posts.needs.money").toLowerCase().includes(filter)) {
-    return PostNeedEnum.MONEY.toString();
+    return PostNeed.MONEY.toString();
   }
 
   if (t("posts.needs.goods").toLowerCase().includes(filter)) {
-    return PostNeedEnum.GOODS.toString();
+    return PostNeed.GOODS.toString();
   }
 
   if (t("posts.needs.volunteers").toLowerCase().includes(filter)) {
-    return PostNeedEnum.VOLUNTEERS.toString();
+    return PostNeed.VOLUNTEERS.toString();
   }
 
   if (t("posts.needs.other").toLowerCase().includes(filter)) {
-    return PostNeedEnum.OTHER.toString();
+    return PostNeed.OTHER.toString();
   }
 
   return filter;

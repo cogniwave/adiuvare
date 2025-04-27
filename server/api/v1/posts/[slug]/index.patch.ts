@@ -2,7 +2,6 @@ import { updatePost } from "server/db/posts";
 import { POST_STATES } from "server/db/schemas/posts.schema";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
 
-import { ScheduleType } from "shared/types/post";
 import type { UpdatePostPayload } from "shared/types/post";
 import Joi, { RequiredNeeds, RequiredArray, RequiredContacts, RequiredString } from "shared/validators";
 import { log } from "server/utils/logger";
@@ -32,12 +31,7 @@ export default defineProtectedRouteHandler(async (event) => {
         state: sanitizeInput(body.state),
         needs: body.needs.map((n) => sanitizeInput(n)),
         locations: body.locations.map((l) => sanitizeInput(l)),
-        schedule: {
-          type: body.schedule.type,
-          ...(body.schedule.type !== ScheduleType.ANYTIME && {
-            payload: (body.schedule as PostSchedule<typeof body.schedule.type>).payload,
-          }),
-        },
+        schedule: body.schedule,
         contacts: body.contacts,
       },
       event.context.user.id,

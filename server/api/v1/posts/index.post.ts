@@ -5,7 +5,7 @@ import { notifyNewPost } from "server/services/slack";
 import { log } from "server/utils/logger";
 
 import Joi, { RequiredArray, RequiredContacts, RequiredNeeds, RequiredString } from "shared/validators";
-import { ScheduleType, type CreatePostPayload, type PostSchedule } from "shared/types/post";
+import type { CreatePostPayload } from "shared/types/post";
 import { PostScheduleRule } from "shared/validators/posts";
 
 export default defineProtectedRouteHandler(async (event) => {
@@ -25,12 +25,7 @@ export default defineProtectedRouteHandler(async (event) => {
       description: sanitizeInput(body.description),
       needs: body.needs,
       locations: body.locations,
-      schedule: {
-        type: body.schedule.type,
-        ...(body.schedule.type !== ScheduleType.ANYTIME && {
-          payload: (body.schedule as PostSchedule<typeof body.schedule.type>).payload,
-        }),
-      },
+      schedule: body.schedule,
       contacts: body.contacts,
       createdUserId: event.context.user.id,
       slug: `${body.title.trim().slice(0, 20).replaceAll(" ", "_")}-${genToken(10)}`,

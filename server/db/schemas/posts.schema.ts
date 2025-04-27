@@ -3,12 +3,12 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
 import { users } from "./users.schema";
-import { PostNeedEnum, PostStateEnum, type PostSchedule } from "../../../shared/types/post";
+import { PostNeed, PostStateEnum, type PostSchedule } from "../../../shared/types/post";
 import type { UserContact } from "../../../shared/types/user";
 
 export const POST_STATES = Object.values(PostStateEnum) as [string, ...string[]];
 
-export const POST_NEEDS = Object.values(PostNeedEnum) as [string, ...string[]];
+export const POST_NEEDS = Object.values(PostNeed) as [string, ...string[]];
 
 export const posts = sqliteTable(
   "posts",
@@ -19,7 +19,7 @@ export const posts = sqliteTable(
     locations: text("locations", { mode: "json" }).notNull().$type<string[]>(),
     schedule: text("schedule", { mode: "json" }).notNull().$type<PostSchedule>(),
     state: text("state", { enum: POST_STATES }).notNull().default("pending").$type<PostStateEnum>(),
-    needs: text("needs", { enum: POST_NEEDS }).notNull().$type<PostNeedEnum[]>(),
+    needs: text("needs").notNull(),
     createdUserId: text("created_user_id")
       .notNull()
       .references(() => users.id),
@@ -33,7 +33,6 @@ export const posts = sqliteTable(
     uniqueIndex("post_id_idx").on(posts.id),
     uniqueIndex("post_slug_idx").on(posts.slug),
     index("post_title_idx").on(posts.title),
-    index("post_needs_idx").on(posts.needs),
     index("post_locations_idx").on(posts.locations),
   ],
 );
@@ -48,7 +47,7 @@ export const postsRelations = relations(posts, ({ one }) => ({
   updatedUserId: one(users, {
     fields: [posts.updatedBy],
     references: [users.id],
-    relationName: "post_updator",
+    relationName: "post_updater",
   }),
 }));
 
