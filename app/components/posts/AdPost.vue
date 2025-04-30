@@ -6,11 +6,8 @@
         <v-row no-gutters>
           <v-col cols="3" lg="2" xl="1">
             <v-avatar size="64">
-              <v-img
-                :alt="t('posts.logoAlt')"
-                src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
-                lazy-src="/assets/images/profile-placeholder.png"
-              >
+              <v-img :alt="t('posts.logoAlt')" src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
+                     lazy-src="/assets/images/profile-placeholder.png">
                 <template #error>
                   {{ post.createdBy[0] }}
                 </template>
@@ -59,15 +56,8 @@
       <v-divider />
 
       <v-card-actions>
-        <v-chip
-          v-for="location in visibleLocations"
-          :key="location"
-          label
-          class="cursor-pointer mr-1"
-          rounded="md"
-          size="small"
-          @click="onLocationClick"
-        >
+        <v-chip v-for="location in visibleLocations" :key="location" label class="cursor-pointer mr-1" rounded="md"
+                size="small" @click="onLocationClick">
           {{ location }}
         </v-chip>
 
@@ -93,67 +83,39 @@
         <v-menu>
           <template #activator="{ props }">
             <v-btn v-bind="props" variant="plain" size="x-small" class="ml-2" icon @click.stop.prevent>
-              <v-icon size="x-small">fa-solid fa-ellipsis-vertical</v-icon>
+              <v-icon size="large">mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
 
           <v-list density="compact" class="py-2">
             <template v-if="post.createdBy === user">
               <!-- edit post -->
-              <v-list-item
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-pencil"
-                :title="t('posts.options.edit')"
-                @click.stop.prevent="openPost()"
-              />
+              <v-list-item class="pl-2 pr-2" prepend-icon="mdi-pencil-outline"
+                           :title="t('posts.options.edit')" @click.stop.prevent="openPost()" />
 
               <!-- enable post -->
-              <v-list-item
-                v-if="post.state === 'active'"
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-check-double"
-                :title="t('posts.options.enable')"
-                @click="$emit('click:state', { enable: true, title: post.title, id: post.id })"
-              />
+              <v-list-item v-if="post.state === 'active'" class="pl-2 pr-2" prepend-icon="mdi-check-all"
+                           :title="t('posts.options.enable')"
+                           @click="$emit('click:state', { enable: true, title: post.title, id: post.id })" />
 
               <!-- disable post -->
-              <v-list-item
-                v-else
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-ban"
-                :title="t('posts.options.disable')"
-                @click="$emit('click:state', { enable: false, title: post.title, id: post.id })"
-              />
+              <v-list-item v-else class="pl-2 pr-2" prepend-icon="mdi-cancel" :title="t('posts.options.disable')"
+                           @click="$emit('click:state', { enable: false, title: post.title, id: post.id })" />
 
-              <v-list-item
-                class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-trash"
-                :title="t('posts.options.delete')"
-                @click="$emit('click:delete', post)"
-              />
+              <v-list-item class="pl-2 pr-2" prepend-icon="mdi-delete" :title="t('posts.options.delete')"
+                           @click="$emit('click:delete', post)" />
             </template>
 
-            <v-list-item
-              v-else
-              class="pl-2 pr-2"
-              prepend-icon="fa-solid fa-bullhorn"
-              :title="t('posts.options.report')"
-              @click="onReport"
-            />
+            <v-list-item v-else class="pl-2 pr-2" prepend-icon="mdi-bullhorn" :title="t('posts.options.report')"
+                         @click="onReport" />
           </v-list>
         </v-menu>
 
         <!-- contacts -->
         <v-menu v-if="smAndUp" :close-on-content-click="false">
           <template #activator="{ props }">
-            <v-btn
-              v-bind="props"
-              variant="outlined"
-              size="small"
-              rounded="md"
-              class="ml-auto ml-r btn-contact"
-              @click.stop.prevent
-            >
+            <v-btn v-bind="props" variant="outlined" size="small" rounded="md" class="ml-auto ml-r btn-contact"
+                   @click.stop.prevent>
               {{ t("posts.contacts.contact") }}
             </v-btn>
           </template>
@@ -223,61 +185,7 @@
   };
 </script>
 
-<style scoped lang="scss">
-  .post {
-    background-color: rgb(var(--v-theme-surface));
+<style scoped>
+  
 
-    :deep(.v-img__error) {
-      color: rgb(var(--v-theme-primary));
-      background-color: rgb(var(--v-theme-background));
-      font-size: 2rem;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .v-card-title {
-      a {
-        text-decoration: none;
-        color: rgb(var(--v-theme-accent));
-      }
-    }
-
-    .v-card-item {
-      color: rgb(var(--v-theme-accent));
-
-      h3 {
-        font-weight: normal;
-        text-transform: uppercase;
-      }
-
-      .v-card-actions {
-        .btn-contact {
-          color: rgb(var(--v-theme-primary));
-          background-color: rgb(var(--v-theme-background));
-        }
-      }
-    }
-
-    .expand-desc {
-      cursor: pointer;
-      color: rgb(var(--v-theme-primary));
-      font-weight: bold;
-    }
-
-    .text-subtitle {
-      a {
-        color: rgb(var(--v-theme-primary));
-        font-weight: bold;
-        opacity: 1;
-        transition: 100ms;
-
-        &:hover {
-          opacity: 0.7;
-          transition: 100ms;
-        }
-      }
-    }
-  }
 </style>

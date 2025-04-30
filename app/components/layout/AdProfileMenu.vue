@@ -16,7 +16,5 @@
 </script>
 
 <style scoped>
-  span {
-    color: rgba(var(--v-theme-primary));
-  }
+  
 </style>

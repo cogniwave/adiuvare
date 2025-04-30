@@ -99,6 +99,13 @@ footer.v-footer {
 header.ad-navbar {
   border-radius: 0px 0px 8px 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  span {
+    color: rgba(var(--v-theme-subtext));
+  }
+}
+
+.v-icon {
+  filter: drop-shadow(0.50px 0 0 currentColor);
 }
 
 .menu-list {
@@ -106,17 +113,17 @@ header.ad-navbar {
   max-width: 285px;
   width: inherit;
 
-  .v-list-item{
+  .v-list-item {
     &.active-menu-item {
       background: rgb(var(--v-theme-accent));
       border-radius: 0px 8px 8px 0px !important;
     }
   }
-  .v-icon{
+  .v-icon {
     font-weight: bold;
     color: black; // cor mais sólida
     font-size: 20px;
-    margin-left: 12px    
+    margin-left: 12px;
   }
 }
 
@@ -264,4 +271,59 @@ header.ad-navbar {
     color: rgb(var(--v-theme-info));
     background-color: rgba(var(--v-theme-info), 0.3);
   }
+}
+
+
+/* AdPost component styles */
+.post {
+  background-color: rgb(var(--v-theme-surface)) !important;  
+
+  .v-img__error {
+    color: rgb(var(--v-theme-primary));
+    background-color: rgb(var(--v-theme-background));
+    font-size: 2rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .v-card-title a {
+    text-decoration: none;
+    color: rgb(var(--v-theme-accent));
+  }
+
+  .v-card-item {
+    color: rgb(var(--v-theme-text));
+
+    h3 {
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+
+    .v-card-actions .btn-contact {
+      color: rgb(var(--v-theme-text));
+      background-color: rgb(var(--v-theme-primary));
+      
+    }
+  }
+
+  .expand-desc {
+    cursor: pointer;
+    color: rgb(var(--v-theme-primary));
+    font-weight: bold;
+  }
+
+  .text-subtitle a {
+    color: rgb(var(--v-theme-text));
+    font-weight: bold;
+    opacity: 1;
+    transition: 100ms;
+
+    &:hover {
+      opacity: 0.7;
+      transition: 100ms;
+    }
+  }
+  
 }
