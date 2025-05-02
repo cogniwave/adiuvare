@@ -73,7 +73,7 @@
           </div>
         </form>
 
-        <v-divider />
+        <v-divider />        
       </div>
     </v-expand-transition>
 
@@ -327,6 +327,10 @@
   :deep(.btn-reset .v-btn__content),
   :deep(.filter-actions .v-btn__content) {
     color: rgba(var(--v-theme-primary));
+  }
+
+  .v-virtual-scroll {
+    overflow: visible !important;
   }
 
 </style>

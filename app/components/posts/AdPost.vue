@@ -1,6 +1,6 @@
 <template>
   <!-- click event just to give it the nice ripple and hover effect xD -->
-  <v-card flat variant="text" class="post mb-3" rounded="xl">
+  <v-card class="post mb-3" rounded="xl">
     <v-card-item>
       <v-card-title class="d-flex align-start" :class="{ 'flex-column': mdAndDown }">
         <v-row no-gutters>

@@ -105,7 +105,7 @@ header.ad-navbar {
 }
 
 .v-icon {
-  filter: drop-shadow(0.50px 0 0 currentColor);
+  filter: drop-shadow(0.5px 0 0 currentColor);
 }
 
 .menu-list {
@@ -273,11 +273,11 @@ header.ad-navbar {
   }
 }
 
-
 /* AdPost component styles */
 .post {
-  background-color: rgb(var(--v-theme-surface)) !important;  
-
+  background-color: rgb(var(--v-theme-surface)) !important;
+  box-shadow: 0 0 8px 6px rgba(0, 0, 0, 0.1) !important;  
+  
   .v-img__error {
     color: rgb(var(--v-theme-primary));
     background-color: rgb(var(--v-theme-background));
@@ -304,7 +304,6 @@ header.ad-navbar {
     .v-card-actions .btn-contact {
       color: rgb(var(--v-theme-text));
       background-color: rgb(var(--v-theme-primary));
-      
     }
   }
 
@@ -325,5 +324,4 @@ header.ad-navbar {
       transition: 100ms;
     }
   }
-  
 }
