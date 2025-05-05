@@ -4,7 +4,7 @@
       <v-text-field
         v-model:model-value="email"
         type="email"
-        prepend-icon="fa-solid fa-at"
+        prepend-icon="mdi-at"
         :label="t('form.email')"
         :rules="[required(t), isValidEmail(t)]"
         :error-messages="errors.email"
@@ -12,7 +12,7 @@
 
       <v-text-field
         v-model:model-value="password"
-        prepend-icon="fa-solid fa-lock"
+        prepend-icon="mdi-lock"
         class="mt-8"
         autocorrect="off"
         autocapitalize="off"
@@ -24,7 +24,7 @@
         :error-messages="errors.password"
       >
         <template #append-inner>
-          <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
+          <v-icon class="cursor-pointer" @click="switchVisibility">{{ visibilityIcon === 'eye' ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
         </template>
       </v-text-field>
     </template>
@@ -135,3 +135,10 @@
     }
   };
 </script>
+
+<style scoped>
+  a {
+    color: rgb(var(--v-theme-secondary)) !important;
+  }
+
+</style>

@@ -91,9 +91,8 @@ footer.v-footer {
   }
 
   .v-field--appended {
-    padding-right: 0;
-    --v-field-padding-end: 0;
-  }
+    padding-right: 0px;          
+  }  
 }
 
 header.ad-navbar {
@@ -276,7 +275,7 @@ header.ad-navbar {
 /* AdPost component styles */
 .post {
   background-color: rgb(var(--v-theme-surface)) !important;
-  box-shadow: 0 0 8px 6px rgba(0, 0, 0, 0.1) !important;  
+  box-shadow: 0 0 8px 6px rgba(0, 0, 0, 0.1) !important;   
   
   .v-img__error {
     color: rgb(var(--v-theme-primary));
@@ -297,8 +296,7 @@ header.ad-navbar {
     color: rgb(var(--v-theme-text));
 
     h3 {
-      font-weight: normal;
-      text-transform: uppercase;
+      color: rgb(var(--v-theme-heading));
     }
 
     .v-card-actions .btn-contact {
@@ -314,8 +312,8 @@ header.ad-navbar {
   }
 
   .text-subtitle a {
-    color: rgb(var(--v-theme-text));
-    font-weight: bold;
+    color: rgb(var(--v-theme-subtext));
+    font-size: 14px;    
     opacity: 1;
     transition: 100ms;
 

@@ -12,7 +12,7 @@
   <template v-else-if="data && (data.total || !!filter)">
     <v-row class="mb-2">
       <v-col cols="12" sm="4" align-self="end">
-        <p>Recent posts</p>
+        <h4>Recent posts</h4>
       </v-col>
 
       <v-col align-self="end" class="d-flex">
@@ -31,7 +31,10 @@
 
     <v-expand-transition>
       <div v-show="expandedFilterVisible" class="pa-2 rounded-lg mb-2">
-        <h4>Pesquisa detalhada</h4>
+        <span>
+          <p>Pesquisa detalhada</p>
+        </span>
+
 
         <form class="mt-5 mb-3 w-100" @keypress.enter.prevent="onSearch(true)" @submit.prevent="onSearch(true)">
           <v-row>
@@ -62,7 +65,8 @@
           </v-row>
 
           <div class="pt-5 d-flex align-center justify-end">
-            <v-btn class="btn-reset" size="x-small" type="submit" variant="text" flat :loading="pending" @click="resetSearch">
+            <v-btn class="btn-reset" size="x-small" type="submit" variant="text" flat :loading="pending"
+                   @click="resetSearch">
               {{ t("feed.emptySearchReset") }}
             </v-btn>
 
@@ -73,7 +77,7 @@
           </div>
         </form>
 
-        <v-divider />        
+        <v-divider />
       </div>
     </v-expand-transition>
 
@@ -314,6 +318,11 @@
     .v-list-item-title {
       white-space: initial !important;
     }
+  }
+
+  h4 {
+    color: rgba(var(--v-theme-subtext));
+
   }
 
   .search-field :deep(.v-field__append-inner .v-icon) {

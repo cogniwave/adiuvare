@@ -16,25 +16,26 @@
           </v-col>
 
           <v-col cols="9" lg="4" xl="5">
-            <div class="text-subtitle">
+            <h3 class="mb-0">{{ post.title }}</h3>            
+              <span class="text-subtitle d-block">
               <nuxt-link :to="`/organizations/${post.createdBy}`" @click.stop>
-                {{ post.createdBy }}
+                {{ post.createdBy }} - {{ d(post.createdAt) }}
               </nuxt-link>
-
-              <span class="text-subtitle-2 d-block">
                 <!-- otherwise vue will complain because $t only "accepts"
-             date and number but passing a string also works  -->
-                {{ d(post.createdAt) }}
+             date and number but passing a string also works  -->               
               </span>
-            </div>
+       
           </v-col>
 
           <v-col cols="12" lg="6">
             <div class="d-flex flex-column" :class="lgAndUp ? 'ml-auto align-end' : 'mt-3'">
-              <h3 class="mb-0">{{ post.title }}</h3>
-
               <div style="line-height: 10px">
-                <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
+                <v-btn class="other_need">
+                  <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
+                </v-btn>
+                <v-btn class="people_need">
+                  <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
+                </v-btn>
               </div>
             </div>
           </v-col>
@@ -87,11 +88,11 @@
             </v-btn>
           </template>
 
-          <v-list density="compact" class="py-2">
+          <v-list density="compact" class=" px-3">
             <template v-if="post.createdBy === user">
               <!-- edit post -->
-              <v-list-item class="pl-2 pr-2" prepend-icon="mdi-pencil-outline"
-                           :title="t('posts.options.edit')" @click.stop.prevent="openPost()" />
+              <v-list-item class="pl-2 pr-2" prepend-icon="mdi-pencil-outline" :title="t('posts.options.edit')"
+                           @click.stop.prevent="openPost()" />
 
               <!-- enable post -->
               <v-list-item v-if="post.state === 'active'" class="pl-2 pr-2" prepend-icon="mdi-check-all"
@@ -175,7 +176,7 @@
     descVisible.value = true;
   };
 
-  const onLocationClick = () => {};
+  const onLocationClick = () => { };
 
   const onReport = () => $emit("click:report", $props.post);
 
@@ -186,6 +187,14 @@
 </script>
 
 <style scoped>
-  
+  .other_need {
+    color: rgb(var(--v-theme-surface));
+    background-color: rgb(var(--v-theme-info));
+  }
+
+  .people_need {
+    background-color: rgb(var(--v-theme-accent));
+    color: rgb(var(--v-theme-subtext));
+  }
 
 </style>
