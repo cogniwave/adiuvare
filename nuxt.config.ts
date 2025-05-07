@@ -1,8 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
 import { fileURLToPath, URL } from "url";
-//import { aliases } from "vuetify/iconsets/fa";
-import { aliases, mdi } from "vuetify/iconsets/mdi";
 import pt from "dayjs/locale/pt";
+import enGB from "dayjs/locale/en-gb";
 
 const alias = {
   app: fileURLToPath(new URL("./app", import.meta.url)),
@@ -13,9 +12,37 @@ const alias = {
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // base configs
   compatibilityDate: "2025-02-21",
   future: { compatibilityVersion: 4 },
-  devtools: { enabled: process.env.NUXT_ENV === "development" },
+
+  devtools: { enabled: process.env.NODE_ENV === "development" },
+  debug: process.env.NODE_ENV === "development",
+
+  ssr: true,
+  sourcemap: { server: "hidden", client: "hidden" },
+
+  experimental: { viewTransition: true, lazyHydration: true },
+  features: { inlineStyles: false },
+  typescript: { typeCheck: true },
+  css: ["app/assets/scss/styles.scss"],
+
+  // build related configs
+  nitro: {
+    compressPublicAssets: true,
+    experimental: { openAPI: true, tasks: true },
+  },
+
+  runtimeConfig: {
+    public: {
+      brevoConversationId: process.env.BREVO_CONVO_ID,
+      baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    },
+  },
+
+  build: {
+    transpile: ["vuetify", "vue-i18n"],
+  },
 
   app: {
     head: {
@@ -56,35 +83,22 @@ export default defineNuxtConfig({
     },
   },
 
-  runtimeConfig: {
-    public: {
-      brevoConversationId: process.env.BREVO_CONVO_ID,
-      baseUrl: process.env.BASE_URL || "http://localhost:3000",
+  vite: {
+    resolve: { alias },
+
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: "modern-compiler",
+          additionalData: '@use "@/assets/scss/variables.scss";',
+        },
+      },
     },
   },
 
-  ssr: true,
+  alias,
 
-  nitro: {
-    experimental: { openAPI: true },
-  },
-
-  build: {
-    transpile: ["vuetify", "vue-i18n"],
-  },
-
-  components: [
-    { path: "~/components/layout", pathPrefix: false },
-    { path: "~/components/common", pathPrefix: false },
-    { path: "~/components/feed", pathPrefix: false },
-    { path: "~/components/posts", pathPrefix: false },
-    { path: "~/components/contacts", pathPrefix: false },
-    { path: "~/components/organizations", pathPrefix: false },
-    "~/components",
-  ],
-
-  css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
-
+  // module related configs
   modules: [
     "@nuxtjs/i18n",
     "nuxt-auth-utils",
@@ -92,40 +106,71 @@ export default defineNuxtConfig({
     "@nuxthub/core",
     "@nuxt/eslint",
     "@sentry/nuxt/module",
+    "@nuxtjs/google-fonts",
+    "@nuxt/image",
+    "dayjs-nuxt",
+    "nuxt-security",
+    "nuxt-lazyload-files",
   ],
 
-  features: { inlineStyles: false },
+  // fucking dependencies not updating as they should
+  // unhead update (which is used by nuxt) broke vuetify styling injection
+  // this fixes it, but it's a temporary thing until vuetify nuxt module is updated
+  // https://github.com/vuetifyjs/nuxt-module/issues/298#issuecomment-2708812122
+  unhead: {
+    legacy: true,
+    renderSSRHeadOptions: { omitLineBreaks: false },
+  },
 
-  vite: {
-    resolve: { alias },
-
-    css: {
-      preprocessorOptions: {
-        sass: { api: "modern-compiler" },
-      },
+  hub: {
+    analytics: true,
+    blob: true,
+    database: true,
+    bindings: {
+      compatibilityFlags: ["nodejs_compat_v2"],
     },
   },
 
-  alias,
-
   i18n: {
-    restructureDir: "./i18n",
     vueI18n: "./i18n.config.ts",
+    langDir: "./locales",
+    defaultLocale: "pt-PT",
+
     bundle: { optimizeTranslationDirective: false },
-    experimental: {
-      localeDetector: "./localeDetector.ts",
-    },
+
+    locales: [
+      { code: "pt-PT", iso: "pt-PT", file: "pt.json", name: "Português" },
+      { code: "en-GB", iso: "en-GB", file: "en.json", name: "English" },
+    ],
+
+    baseUrl: process.env.BASE_URL || "http://localhost:3000",
+  },
+
+  googleFonts: {
+    families: { Inter: ["400", "300"], Montserrat: ["700"] },
+  },
+
+  image: {
+    quality: 100,
+    loading: "lazy",
+    domains: [process.env.BASE_URL!],
   },
 
   vuetify: {
     moduleOptions: {
-      // styles: { configFile: '/settings.scss' }
+      ssrClientHints: {
+        prefersColorScheme: true,
+        prefersColorSchemeOptions: { cookieName: "theme" },
+      },
+      styles: { configFile: "assets/scss/vuetify.scss" },
     },
     vuetifyOptions: {
       date: {
         adapter: "dayjs",
-        locale: { pt },
+        locale: { en: enGB, pt },
       },
+      ssr: { clientWidth: 1920, clientHeight: 1080 },
+      icons: { defaultSet: "fa-svg", svg: {} },
       theme: {
         themes: {
           // primary: buttons, links, key interactive elements
@@ -171,100 +216,83 @@ export default defineNuxtConfig({
         },
         defaultTheme: "light",
       },
-      blueprint: {
-        defaults: {
-          global: {
-            typography: {
-              fontFamily: "Inter, sans-serif",
-              h1: { fontFamily: "Montserrat, sans-serif", fontSize: "32px", fontWeight: 700 },
-              h2: { fontFamily: "Montserrat, sans-serif", fontSize: "24px", fontWeight: 700 },
-              body: { fontSize: "16px", fontWeight: 400, lineHeight: "24px" }, // 1.5x line-height
-              caption: { fontSize: "14px", fontWeight: 300, lineHeight: "21px" },
-            },
-            density: "comfortable",
-            class: "small-spacing",
+      defaults: {
+        global: {
+          typography: {
+            fontFamily: "Inter, sans-serif",
+            h1: { fontFamily: "Montserrat, sans-serif", fontSize: "32px", fontWeight: 700 },
+            h2: { fontFamily: "Montserrat, sans-serif", fontSize: "24px", fontWeight: 700 },
+            body: { fontSize: "16px", fontWeight: 400, lineHeight: "24px" },
+            caption: { fontSize: "14px", fontWeight: 300, lineHeight: "21px" },
           },
-          VCard: {
-            color: "text",
-            background: "background",
-            class: "!std-padding !small-spacing",
-          },
-          VIcon: {
-            size: "x-small",
-          },
-          VTextField: {
-            density: "comfortable",
-            class: "!std-padding !small-spacing",
-            hideDetails: "auto",
-            validateOn: "blur",
-            variant: "outlined", // Melhor para visualizar padding
-          },
-          VTextarea: {
-            //variant: "underlined",
-            variant: "outlined",
-            density: "compact",
-            hideDetails: "auto",
-            class: "!std-padding !small-spacing",
-            autoGrow: true, // Expansão automática
-          },
-          VAutocomplete: {
-            variant: "outlined",
-            density: "compact",
-            class: "!std-padding !small-spacing",
-            hideDetails: "auto",
-            autoGrow: true,
-            autoSelectFirst: true,
-          },
-          VSelect: {
-            variant: "outlined",
-            density: "compact",
-            class: "!std-padding !small-spacing",
-            hideDetails: "auto",
-            hideHint: true,
-          },
-          VTooltip: {
-            location: "top",
-          },
-          VBtn: {
-            class: "!std-padding !small-spacing",
-            height: "auto",
-          },
-          ssr: {
-            clientWidth: 1920,
-            clientHeight: 1080,
-          },
-          icons: {
-            defaultSet: "mdi",
-            aliases,
-            sets: {
-              mdi,
-            },
-          },
+          density: "comfortable",
+          class: "small-spacing",
+        },
+        VCard: {
+          color: "text",
+          background: "background",
+          class: "!std-padding !small-spacing",
+        },
+        VIcon: {
+          size: "x-small",
+        },
+        VTextField: {
+          density: "comfortable",
+          class: "!std-padding !small-spacing",
+          hideDetails: "auto",
+          validateOn: "blur",
+          variant: "outlined",
+        },
+        VTextarea: {
+          //variant: "underlined",
+          variant: "outlined",
+          density: "compact",
+          hideDetails: "auto",
+          class: "!std-padding !small-spacing",
+          autoGrow: true,
+        },
+        VAutocomplete: {
+          variant: "outlined",
+          density: "compact",
+          class: "!std-padding !small-spacing",
+          hideDetails: "auto",
+          autoGrow: true,
+          autoSelectFirst: true,
+        },
+        VSelect: {
+          variant: "outlined",
+          density: "compact",
+          class: "!std-padding !small-spacing",
+          hideDetails: "auto",
+          hideHint: true,
+        },
+        VTooltip: {
+          location: "top",
+        },
+        VBtn: {
+          class: "!std-padding !small-spacing",
+          height: "auto",
         },
       },
     },
   },
 
-  hub: {
-    analytics: false,
-    blob: true,
-    database: true,
-    // @ts-expect-error TS complains but it's correct and it's what the docs say
-    databaseMigrationsDirs: ["server/db/migrations"],
+  dayjs: {
+    locales: ["en", "pt"],
+    plugins: ["relativeTime", "utc", "timezone", "localizedFormat"],
+    defaultLocale: "pt",
+    defaultTimezone: "Europe/Lisbon",
   },
 
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        paths: {
-          app: [fileURLToPath(new URL("./app", import.meta.url))],
-          server: [fileURLToPath(new URL("./server", import.meta.url))],
-          shared: [fileURLToPath(new URL("./shared", import.meta.url))],
-          public: [fileURLToPath(new URL("./public", import.meta.url))],
+  lazyLoadFiles: {
+    files: {
+      css: [
+        {
+          filePath: "app/assets/scss/mobile.scss",
+          windowWidthLessThan: { width: 767 },
         },
-      },
+      ],
     },
-    typeCheck: true,
   },
 
   sentry: {
@@ -272,9 +300,5 @@ export default defineNuxtConfig({
       org: "cogniwave",
       project: "adiuvare",
     },
-  },
-
-  sourcemap: {
-    client: "hidden",
   },
 });
