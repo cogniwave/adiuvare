@@ -29,7 +29,6 @@
 <script setup lang="ts">
   definePageMeta({
     middleware: "unauthed-server",
-    layout: "auth",
     title: "pages.accountConfirm",
     path: "/confirmation",
   });

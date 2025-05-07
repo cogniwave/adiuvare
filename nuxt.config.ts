@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   future: { compatibilityVersion: 4 },
 
   devtools: { enabled: process.env.NODE_ENV === "development" },
-  debug: process.env.NODE_ENV === "development",
+  // debug: process.env.NODE_ENV === "development",
 
   ssr: true,
   sourcemap: { server: "hidden", client: "hidden" },
@@ -90,7 +90,7 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         scss: {
           api: "modern-compiler",
-          additionalData: '@use "@/assets/scss/variables.scss";',
+          // additionalData: '@use "@/assets/scss/variables.scss";',
         },
       },
     },
@@ -160,7 +160,7 @@ export default defineNuxtConfig({
     moduleOptions: {
       ssrClientHints: {
         prefersColorScheme: true,
-        prefersColorSchemeOptions: { cookieName: "theme" },
+        prefersColorSchemeOptions: { cookieName: "adtheme" },
       },
       styles: { configFile: "assets/scss/vuetify.scss" },
     },
@@ -170,7 +170,9 @@ export default defineNuxtConfig({
         locale: { en: enGB, pt },
       },
       ssr: { clientWidth: 1920, clientHeight: 1080 },
-      icons: { defaultSet: "fa-svg", svg: {} },
+      icons: {
+        defaultSet: "fa-svg",
+      },
       theme: {
         themes: {
           // primary: buttons, links, key interactive elements
@@ -218,15 +220,14 @@ export default defineNuxtConfig({
       },
       defaults: {
         global: {
-          typography: {
-            fontFamily: "Inter, sans-serif",
-            h1: { fontFamily: "Montserrat, sans-serif", fontSize: "32px", fontWeight: 700 },
-            h2: { fontFamily: "Montserrat, sans-serif", fontSize: "24px", fontWeight: 700 },
-            body: { fontSize: "16px", fontWeight: 400, lineHeight: "24px" },
-            caption: { fontSize: "14px", fontWeight: 300, lineHeight: "21px" },
-          },
           density: "comfortable",
           class: "small-spacing",
+        },
+        // VList: {
+        //   bgColor: "background",
+        // },
+        VListItem: {
+          activeColor: "accent",
         },
         VCard: {
           color: "text",

@@ -55,7 +55,6 @@
   import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
 
   definePageMeta({
-    layout: "auth",
     middleware: "unauthed-server",
     title: "pages.resetPassword",
     path: "/reset-password",

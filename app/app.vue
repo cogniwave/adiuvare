@@ -20,6 +20,12 @@
 </template>
 
 <script lang="ts" setup>
+  import AdLoading from "app/components/common/AdLoading.vue";
+  import AdNavbar from "app/components/layout/AdNavbar.vue";
+  import AdMobileMenu from "app/components/layout/AdMobileMenu.vue";
+  import AdSnackbar from "app/components/common/AdSnackbar.vue";
+  import AdFooter from "app/components/layout/AdFooter.vue";
+
   const { t } = useI18n();
   const $route = useRoute();
   const { smAndDown } = useDisplay();

@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+  import AdMenu from "app/components/layout/AdMenu.vue";
+
   const { lgAndUp, xs } = useDisplay();
 
   // TODO: implement this at a later date

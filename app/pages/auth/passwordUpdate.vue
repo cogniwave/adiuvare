@@ -83,7 +83,6 @@
   let token: string = "";
 
   definePageMeta({
-    layout: "auth",
     path: "/profile/password",
     middleware: "unauthed-server",
     title: "pages.updatePassword",
