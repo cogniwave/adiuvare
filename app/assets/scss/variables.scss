@@ -1,0 +1,7 @@
+@use "vuetify";
+
+$font-family: "Inter", sans-serif, system;
+
+// override vuetify's global variables
+$body-font-family: $font-family;
+$heading-font-family: "Montserrat", sans-serif, system;

@@ -6,10 +6,9 @@ import type { UpdatePostPayload } from "shared/types/post";
 import Joi, { RequiredNeeds, RequiredArray, RequiredContacts, RequiredString } from "shared/validators";
 import { log } from "server/utils/logger";
 import { PostScheduleRule } from "shared/validators/posts";
+import { translate } from "server/utils/i18n";
 
 export default defineProtectedRouteHandler(async (event) => {
-  const t = await useTranslation(event);
-
   const body = await getValidatedInput<UpdatePostPayload>(event, {
     title: RequiredString,
     state: RequiredString.valid(POST_STATES),
@@ -41,7 +40,7 @@ export default defineProtectedRouteHandler(async (event) => {
       return result;
     }
 
-    sendError(event, createError({ statusCode: 500, statusMessage: t("errors.unexpected") }));
+    sendError(event, createError({ statusCode: 500, statusMessage: translate("errors.unexpected") }));
   } catch (err: unknown) {
     log("[post] couldn't delete post", JSON.stringify(err));
 

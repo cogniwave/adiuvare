@@ -1,18 +1,5 @@
 body {
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue";
-
+  font-family: $font-family;
   background: rgb(var(--v-theme-background));
 }
 
@@ -52,7 +39,6 @@ h4,
 h5,
 h6,
 .v-toolbar-title {
-  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   margin-block: 0.5em;
 }
@@ -91,8 +77,8 @@ footer.v-footer {
   }
 
   .v-field--appended {
-    padding-right: 0px;          
-  }  
+    padding-right: 0px;
+  }
 }
 
 header.ad-navbar {
@@ -120,7 +106,7 @@ header.ad-navbar {
   }
   .v-icon {
     font-weight: bold;
-    color: black; // cor mais sólida
+    color: black;
     font-size: 20px;
     margin-left: 12px;
   }
@@ -214,20 +200,6 @@ header.ad-navbar {
   }
 }
 
-/* talvez sejam desnecessarios
-.v-input {
-  &.error--text {
-    .v-field__outline {
-      background: rgb(var(--v-theme-error)) !important;
-    }
-  }
-  &.success--text {
-    .v-field__outline {
-     background: rgb(var(--v-theme-success)) !important;
-    }
-  }
-} */
-
 .v-btn,
 .v-card,
 .v-dialog,
@@ -275,8 +247,8 @@ header.ad-navbar {
 /* AdPost component styles */
 .post {
   background-color: rgb(var(--v-theme-surface)) !important;
-  box-shadow: 0 0 8px 6px rgba(0, 0, 0, 0.1) !important;   
-  
+  box-shadow: 0 0 8px 6px rgba(0, 0, 0, 0.1) !important;
+
   .v-img__error {
     color: rgb(var(--v-theme-primary));
     background-color: rgb(var(--v-theme-background));
@@ -313,7 +285,7 @@ header.ad-navbar {
 
   .text-subtitle a {
     color: rgb(var(--v-theme-subtext));
-    font-size: 14px;    
+    font-size: 14px;
     opacity: 1;
     transition: 100ms;
 

@@ -44,12 +44,8 @@
         return;
       }
 
-      window.BrevoConversationsSetup = {
-        deferredLoading: true,
-      };
-
+      window.BrevoConversationsSetup = { deferredLoading: true };
       window.BrevoConversationsID = config.public.brevoConversationId;
-
       window.BrevoConversations =
         window.BrevoConversations ||
         function (...args: unknown[]) {
