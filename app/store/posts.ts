@@ -5,7 +5,7 @@ import {
   type PostDisablePayload,
   type EmptyPost,
   ScheduleType,
-} from "shared/types/post";
+} from "~/shared/types/post";
 
 type AnyPost<T extends ScheduleType = ScheduleType.ANYTIME> =
   | Post<T>

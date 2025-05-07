@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { POST_NEEDS } from "server/db/schemas/posts.schema";
+import { POST_NEEDS } from "~/server/db/schemas/posts.schema";
 import type { PostNeed } from "../types/post";
 
 type Types = number | boolean | string | object | Array<Types> | null | undefined;
@@ -110,6 +110,41 @@ export const RequiredNeeds: Joi.ArraySchema<PostNeed[]> = RequiredArray.items(Jo
   },
 );
 
+export const organizationValidator = Joi.object({
+  displayName: Joi.string()
+    .pattern(/^[a-zA-Z\s]+$/)
+    .required(),
+  category: Joi.string()
+    .valid(
+      "unknown",
+      "ipss",
+      "ongd",
+      "onga",
+      "onga_equiparada",
+      "ongm",
+      "assoc_def_direitos_humanos",
+      "assoc_def_animais",
+      "cooperativa",
+      "fundacoes",
+      "other",
+    )
+    .default("unknown"),
+  verified: Joi.boolean().default(false),
+  acceptSameDomainUsers: Joi.boolean().default(true),
+});
+
+export const organizationUserSchema = Joi.object({
+  userId: Joi.string().required(),
+  orgId: Joi.string().required(),
+  state: Joi.string().valid("pending", "accepted", "rejected").required(),
+  reason: Joi.string().when("state", {
+    is: "rejected",
+    then: Joi.string().required().messages({
+      "any.required": "Motivo é obrigatório quando o estado é 'rejected'",
+    }),
+    otherwise: Joi.string().optional(),
+  }),
+});
 // export default (t: TranslationFunction) =>
 //   Joi.defaults((schema) => {
 //     schema.messages({

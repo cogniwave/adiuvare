@@ -21,7 +21,7 @@ export const users = sqliteTable(
       .$defaultFn(() => new Date()),
     verified: integer("verified", { mode: "boolean" }).notNull(),
     token: text("token", { length: 128 }),
-    contacts: text("contacts", { mode: "json" }).$type<UserContact[]>(),
+    subscribedNewsletter: integer("subscribed_newsletter", { mode: "boolean" }).notNull().default(false),
     bio: text("bio"),
     website: text("website"),
     address: text("address", { length: 256 }),

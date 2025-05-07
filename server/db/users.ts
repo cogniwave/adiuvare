@@ -1,11 +1,11 @@
 import { and, asc, count, eq } from "drizzle-orm";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
-
+import { contacts } from "./schemas/contacts.schema";
 import { useDrizzle } from "../db";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
-import { genToken } from "server/utils";
+import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "~/shared/types/user";
+import { genToken } from "~/server/utils";
 
 export const getUser = async <T = SelectUser>(
   email: string,
@@ -79,7 +79,6 @@ export const getUserById = async (id: string) => {
       slug: users.slug,
       photo: users.photo,
       photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
       website: users.website,
       address: users.address,
       postalCode: users.postalCode,
@@ -89,8 +88,21 @@ export const getUserById = async (id: string) => {
     .from(users)
     .where(and(eq(users.id, id), eq(users.verified, true)))
     .limit(1);
+  if (result.length !== 1) return null;
 
-  return result.length === 1 ? result[0] : null;
+  const user = result[0];
+
+  const contactList = await useDrizzle()
+    .select({
+      contact: contacts.contact,
+    })
+    .from(contacts)
+    .where(and(eq(contacts.entityId, users.id), eq(contacts.entityType, "user")));
+
+  return {
+    ...users,
+    contacts: contactList,
+  };
 };
 
 export const updateUserToken = async (userId: string, token: string) => {
@@ -112,62 +124,3 @@ export const updatePassword = async (email: string, password: string, token: str
     .where(and(eq(users.email, email), eq(users.token, token)));
 };
 
-// **********
-// org specific stuffs
-export const getOrgs = async () => {
-  const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      slug: users.slug,
-      email: users.email,
-      bio: users.bio,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
-    .from(users)
-    .where(and(eq(users.type, "org"), eq(users.verified, true)))
-    .orderBy(asc(users.name))
-    .limit(50);
-
-  return result || [];
-};
-
-export const getTotalOrgs = async () => {
-  const result = await useDrizzle().select({ total: count() }).from(users).where(eq(users.type, "org"));
-
-  try {
-    return result[0]!.total ?? 0;
-  } catch (_) {
-    return 0;
-  }
-};
-
-export const getOrgBySlug = async (slug: string) => {
-  const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      bio: users.bio,
-      slug: users.slug,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
-    .from(users)
-    .where(and(eq(users.slug, slug), eq(users.verified, true)))
-    .limit(1);
-
-  return result.length === 1 ? result[0] : null;
-};

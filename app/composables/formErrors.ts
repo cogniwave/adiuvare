@@ -1,4 +1,4 @@
-import { useNotify } from "app/store/notify";
+import { useNotify } from "~/app/store/notify";
 
 export function useFormErrors() {
   const { t } = useI18n();

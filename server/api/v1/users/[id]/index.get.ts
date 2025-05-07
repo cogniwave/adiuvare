@@ -1,6 +1,6 @@
-import { getUserById } from "server/db/users";
-import { sanitizeInput, desanitizeInput } from "server/utils/request";
-import { log } from "server/utils/logger";
+import { getUserById } from "~/server/db/users";
+import { sanitizeInput, desanitizeInput } from "~/server/utils/request";
+import { log } from "~/server/utils/logger";
 
 export default defineProtectedRouteHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists

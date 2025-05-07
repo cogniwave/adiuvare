@@ -1,5 +1,5 @@
 import joi from ".";
-import { ScheduleType } from "shared/types/post";
+import { ScheduleType } from "~/shared/types/post";
 
 const scheduleTimeSchema = joi.object({
   start: joi
