@@ -1,6 +1,6 @@
-import { useDrizzle } from "~/server/db";
-import { organizationUsers } from "~/server/db/schemas/organizationUsers.schema";
-import { organizationUserSchema } from "~/shared/validators";
+import { useDrizzle } from "server/db";
+import { organizationUsers } from "server/db/schemas/organizationUsers.schema";
+import { organizationUserSchema } from "shared/validators";
 import { readBody } from "h3";
 
 export default defineEventHandler(async (event) => {

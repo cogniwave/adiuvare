@@ -1,7 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config";
 import { fileURLToPath, URL } from "url";
-//import { aliases } from "vuetify/iconsets/fa";
-import { aliases, mdi } from "vuetify/iconsets/mdi";
+import { aliases } from "vuetify/iconsets/fa";
 import pt from "dayjs/locale/pt";
 
 const alias = {
@@ -234,11 +233,9 @@ export default defineNuxtConfig({
             clientHeight: 1080,
           },
           icons: {
-            defaultSet: "mdi",
+            defaultSet: "fa",
             aliases,
-            sets: {
-              mdi,
-            },
+            sets: "fa",
           },
         },
       },

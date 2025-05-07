@@ -3,13 +3,7 @@ import type { H3Event, EventHandlerRequest } from "h3";
 import { updateUser } from "server/db/users";
 import { getValidatedInput } from "server/utils/request";
 
-import {
-  OptionalEmail,
-  OptionalPassword,
-  OptionalString,
-  RequiredContacts,
-  RequiredString,
-} from "~~/shared/validators";
+import { OptionalEmail, OptionalPassword, OptionalString, RequiredContacts, RequiredString } from "shared/validators";
 import type { UpdateProfilePayload, UpdateAccountPayload } from "shared/types/user";
 import { isH3Error } from "shared/types/guards";
 import { log } from "server/utils/logger";

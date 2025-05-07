@@ -3,7 +3,7 @@ import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 import { users } from "server/db/schemas/users.schema";
 
-import { RequiredEmail } from "~~/shared/validators";
+import { RequiredEmail } from "shared/validators";
 import type { LoginPayload } from "shared/types/user";
 
 interface User {

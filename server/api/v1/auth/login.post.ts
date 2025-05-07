@@ -1,4 +1,4 @@
-import { RequiredEmail, RequiredPassword } from "~~/shared/validators";
+import { RequiredEmail, RequiredPassword } from "shared/validators";
 
 import dayjs from "shared/services/dayjs.service";
 import { getUser } from "server/db/users";

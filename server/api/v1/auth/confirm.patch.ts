@@ -1,9 +1,9 @@
 import type { H3Error } from "h3";
 
-import { verifyUser } from "~/server/db/users";
-import { getValidatedInput, sanitizeInput } from "~/server/utils/request";
+import { verifyUser } from "server/db/users";
+import { getValidatedInput, sanitizeInput } from "server/utils/request";
 
-import { RequiredEmail, RequiredString } from "~/shared/validators";
+import { RequiredEmail, RequiredString } from "shared/validators";
 
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);

@@ -3,7 +3,7 @@ import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
-import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "~~/shared/validators";
+import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
 import type { BaseUser, User, UserType } from "shared/types/user";
 import type { TranslationFunction } from "shared/types";
 import { log } from "server/utils/logger";

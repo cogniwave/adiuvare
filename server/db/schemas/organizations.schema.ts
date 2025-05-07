@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { and, eq } from "drizzle-orm";
-import { useDrizzle } from "~/server/db";
-import { contacts } from "~/server/db/schemas/contacts.schema";
+import { useDrizzle } from "server/db";
+import { contacts } from "server/db/schemas/contacts.schema";
 
 export const organizations = sqliteTable("organizations", {
   id: text("id").primaryKey(), // displayName normalizado

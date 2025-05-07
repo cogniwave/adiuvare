@@ -2,7 +2,7 @@ import { updatePassword } from "server/db/users";
 import { getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 
-import { RequiredEmail, RequiredPassword, RequiredString } from "~~/shared/validators";
+import { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
 import dayjs from "shared/services/dayjs.service";
 
 interface PasswordUpdatePayload {

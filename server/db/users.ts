@@ -4,8 +4,8 @@ import { contacts } from "./schemas/contacts.schema";
 import { useDrizzle } from "../db";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "~/shared/types/user";
-import { genToken } from "~/server/utils";
+import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
+import { genToken } from "server/utils";
 
 export const getUser = async <T = SelectUser>(
   email: string,
@@ -123,4 +123,3 @@ export const updatePassword = async (email: string, password: string, token: str
     .set({ password: await hashPassword(password), token: null })
     .where(and(eq(users.email, email), eq(users.token, token)));
 };
-

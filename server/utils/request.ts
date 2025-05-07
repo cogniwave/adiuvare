@@ -1,7 +1,7 @@
 import type { PartialSchemaMap } from "joi";
 import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
-import Joi from "~~/shared/validators";
+import Joi from "shared/validators";
 import { ValidationError, type Errors } from "shared/exceptions";
 
 export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap) => {

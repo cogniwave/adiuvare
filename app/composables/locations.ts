@@ -1,5 +1,5 @@
-import { normalize } from "~/app/utils";
-import localidades from "~/public/assets/localidades.json";
+import { normalize } from "app/utils";
+import localidades from "public/assets/localidades.json";
 
 export const useLocations = () => {
   const { t } = useI18n();
