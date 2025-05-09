@@ -1,173 +1,110 @@
-import { and, asc, count, eq } from "drizzle-orm";
-import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
+export enum UserTypeEnum {
+  ORGANIZATION = "org",
+  VOLUNTEER = "volunteer",
+}
 
-import { useDrizzle } from "../db";
-import { users } from "./schemas/users.schema";
-import type { SelectUser } from "./schemas/users.schema";
-import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
-import { genToken } from "server/utils";
+export type UserType = "user" | "admin"; //Removo tbm?
 
-export const getUser = async <T = SelectUser>(
-  email: string,
-  filter: Array<Array<SQLiteColumn | string | number | boolean>> = [],
-  fields: Record<string, SQLiteColumn> = {},
-): Promise<T | undefined> => {
-  const result = await useDrizzle()
-    .select({
-      email: users.email,
-      type: users.type,
-      name: users.name,
-      ...fields,
-    })
-    .from(users)
-    .where(and(eq(users.email, email), ...filter.map(([key, value]) => eq(key as SQLiteColumn, value))))
-    .limit(1);
+export interface BaseUser {
+  name: string;
+  email: string;
+  password: string;
+  type: UserType;
+  newsletter?: boolean;
+}
 
-  return result.length ? (result[0] as T) : undefined;
-};
+export interface User extends Omit<BaseUser, "password"> {
+  id: string;
+  slug: string;
+  bio?: string;
+  website?: string;
+  address?: string;
+  postalCode?: string;
+  city?: string;
+  district?: string;
+  photo?: string;
+  photoThumbnail?: string;
+  contacts?: UserContact[];
+}
 
-export const addUser = async (payload: BaseUser, token: string): Promise<User | null> => {
-  const result = await useDrizzle()
-    .insert(users)
-    .values({
-      email: payload.email,
-      password: await hashPassword(payload.password),
-      name: payload.name,
-      type: payload.type,
-      slug: `${payload.email.split("@")[0]}-${genToken()}`,
-      token,
-      verified: true,
-    })
-    .returning({
-      id: users.id,
-      name: users.name,
-      email: users.email,
-      type: users.type,
-    });
+export interface Org extends Omit<BaseUser, "password"> {
+  id: string;
+  slug: string;
+  ownerId: string;
+  bio?: string;
+  website?: string;
+  address?: string;
+  postalCode?: string;
+  city?: string;
+  district?: string;
+  photo?: string;
+  photoThumbnail?: string;
+  contacts?: UserContact[];
+}
 
-  return result[0] as User;
-};
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
 
-export const verifyUser = async (token: string, email: string): Promise<boolean> => {
-  const result = await useDrizzle()
-    .update(users)
-    .set({ verified: true, token: null })
-    .where(and(eq(users.token, token), eq(users.email, email)));
+export interface DbUser extends User {
+  password?: string;
+  verified?: boolean;
+}
 
-  return (result.rowCount || 0) > 0;
-};
+export interface UnverifiedUser extends Omit<DbUser, "id"> {
+  token: string;
+}
 
-export const updateUser = async (
-  userId: string,
-  payload: UpdateProfilePayload | UpdateAccountPayload | UpdatePhotoPayload,
-) => {
-  const old = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
+export interface TokenUser {
+  id: string;
+  name: string;
+  email: string;
+  slug: string;
+  type: UserType;
+  logo: string;
+  contacts: UserContact[];
+}
 
-  if (!old?.length) {
-    return null;
-  }
+export type ContactType = "email" | "phone" | "other";
 
-  return await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
-};
+export interface UserContact {
+  type: ContactType;
+  contact: string;
+}
 
-export const getUserById = async (id: string) => {
-  const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      bio: users.bio,
-      slug: users.slug,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
-    .from(users)
-    .where(and(eq(users.id, id), eq(users.verified, true)))
-    .limit(1);
+export interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
 
-  return result.length === 1 ? result[0] : null;
-};
+export interface LoginResult extends Tokens {
+  user: TokenUser;
+}
 
-export const updateUserToken = async (userId: string, token: string) => {
-  const user = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
+export interface UpdateProfilePayload {
+  name: string;
+  slug: string;
+  bio?: string;
+  website?: string;
+  address?: string;
+  postalCode?: string;
+  city?: string;
+  district?: string;
+  contacts?: UserContact[];
+}
 
-  if (!user?.length) {
-    return false;
-  }
+export interface UpdateAccountPayload {
+  email?: string;
+  password?: string;
+}
 
-  await useDrizzle().update(users).set({ token }).where(eq(users.id, userId));
+export interface UpdatePhotoPayload {
+  photo?: string;
+  photoThumbnail?: string;
+}
 
-  return true;
-};
-
-export const updatePassword = async (email: string, password: string, token: string) => {
-  return await useDrizzle()
-    .update(users)
-    .set({ password: await hashPassword(password), token: null })
-    .where(and(eq(users.email, email), eq(users.token, token)));
-};
-
-// **********
-// org specific stuffs
-export const getOrgs = async () => {
-  const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      slug: users.slug,
-      email: users.email,
-      bio: users.bio,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
-    .from(users)
-    .where(and(eq(users.type, "org"), eq(users.verified, true)))
-    .orderBy(asc(users.name))
-    .limit(50);
-
-  return result || [];
-};
-
-export const getTotalOrgs = async () => {
-  const result = await useDrizzle().select({ total: count() }).from(users).where(eq(users.type, "org"));
-
-  try {
-    return result[0]!.total ?? 0;
-  } catch (_) {
-    return 0;
-  }
-};
-
-export const getOrgBySlug = async (slug: string) => {
-  const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      bio: users.bio,
-      slug: users.slug,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
-    .from(users)
-    .where(and(eq(users.slug, slug), eq(users.verified, true)))
-    .limit(1);
-
-  return result.length === 1 ? result[0] : null;
-};
+export interface UpdateUserPayload {
+  field: string;
+  value: string | UserContact[];
+}

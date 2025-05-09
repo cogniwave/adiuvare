@@ -1,83 +1,40 @@
 <template>
   <ad-auth-form-card ref="form" :title="t('register.title')" :show-form="!userCreated" @submit="submit">
     <template #form>
-      <v-text-field
-        v-model:model-value="name"
-        type="text"
-        prepend-icon="fa-solid fa-user"
-        :label="t('form.name')"
-        :error-messages="errors.name"
-        :rules="[required(t)]"
-      />
+      <v-text-field v-model:model-value="name" type="text" prepend-icon="fa-solid fa-user" :label="t('form.name')"
+                    :error-messages="errors.name" :rules="[required(t)]" />
 
-      <v-text-field
-        v-model:model-value="email"
-        type="email"
-        class="mt-6"
-        prepend-icon="fa-solid fa-at"
-        :label="t('form.email')"
-        :error-messages="errors.email"
-        :rules="[required(t), isValidEmail(t)]"
-      />
+      <v-text-field v-model:model-value="email" type="email" class="mt-6" prepend-icon="fa-solid fa-at"
+                    :label="t('form.email')" :error-messages="errors.email" :rules="[required(t), isValidEmail(t)]" />
 
-      <v-text-field
-        v-model:model-value="email2"
-        type="email"
-        prepend-icon="fa-solid fa-at"
-        class="mt-6"
-        :label="t('form.emailRepeat')"
-        :rules="[required(t), isValidEmail(t), match(t, email, t('form.emailDuplicateKey'))]"
-      />
+      <v-text-field v-model:model-value="email2" type="email" prepend-icon="fa-solid fa-at" class="mt-6"
+                    :label="t('form.emailRepeat')"
+                    :rules="[required(t), isValidEmail(t), match(t, email, t('form.emailDuplicateKey'))]" />
 
-      <v-text-field
-        v-model:model-value="password"
-        prepend-icon="fa-solid fa-lock"
-        class="mt-6"
-        autocorrect="off"
-        autocapitalize="off"
-        autocomplete="off"
-        spellcheck="false"
-        :label="t('form.password')"
-        :error-messages="errors.password"
-        :type="passwordFieldType"
-        :rules="[required(t), isValidPassword(t)]"
-      >
+      <v-text-field v-model:model-value="password" prepend-icon="fa-solid fa-lock" class="mt-6" autocorrect="off"
+                    autocapitalize="off" autocomplete="off" spellcheck="false" :label="t('form.password')"
+                    :error-messages="errors.password" :type="passwordFieldType"
+                    :rules="[required(t), isValidPassword(t)]">
         <template #append-inner>
           <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
         </template>
       </v-text-field>
 
-      <v-text-field
-        v-model:model-value="password2"
-        autocorrect="off"
-        class="mt-6"
-        prepend-icon="fa-solid fa-lock"
-        autocapitalize="off"
-        autocomplete="off"
-        spellcheck="false"
-        :label="t('form.passwordRepeat')"
-        :type="passwordFieldType"
-        :rules="[required(t), isValidPassword(t), match(t, password, t('form.passwordDuplicateKey'))]"
-      >
+      <v-text-field v-model:model-value="password2" autocorrect="off" class="mt-6" prepend-icon="fa-solid fa-lock"
+                    autocapitalize="off" autocomplete="off" spellcheck="false" :label="t('form.passwordRepeat')"
+                    :type="passwordFieldType"
+                    :rules="[required(t), isValidPassword(t), match(t, password, t('form.passwordDuplicateKey'))]">
         <template #append-inner>
           <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
         </template>
       </v-text-field>
 
-      <v-input hide-details prepend-icon="fa-solid fa-users">
-        <v-radio-group v-model:model-value="type" inline hide-details class="mt-6" :label="t('form.userType.title')">
-          <v-radio :label="t('form.userType.org')" value="org" />
-          <v-radio :label="t('form.userType.volunteer')" value="volunteer" />
-        </v-radio-group>
-      </v-input>
 
       <v-checkbox v-model:model-value="privacyPolicy" class="mt-10 mb-2" hide-details="auto" :rules="[required(t)]">
         <template #label>
           <i18n-t scope="global" keypath="form.privacyPolicy" tag="label" for="form.privacyPolicyLink">
-            <a
-              href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/pp-UDhf9fo8lpJMQUwNJeGnKkCpRyPGOe.pdf"
-              target="_blank"
-            >
+            <a href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/pp-UDhf9fo8lpJMQUwNJeGnKkCpRyPGOe.pdf"
+               target="_blank">
               {{ t("form.privacyPolicyLink") }}*
             </a>
           </i18n-t>
@@ -87,10 +44,8 @@
       <v-checkbox v-model:model-value="eula" class="mb-2" hide-details="auto" :rules="[required(t)]">
         <template #label>
           <i18n-t scope="global" keypath="form.eula" tag="label">
-            <a
-              href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/eula-0aoyOz5t1i4QBJVcoh2BtkjWI7j73r.pdf"
-              target="_blank"
-            >
+            <a href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/eula-0aoyOz5t1i4QBJVcoh2BtkjWI7j73r.pdf"
+               target="_blank">
               {{ t("form.eulaLink") }}*
             </a>
           </i18n-t>
@@ -134,9 +89,9 @@
   import { useNotify } from "app/store/notify";
   import { useFormErrors } from "app/composables/formErrors";
 
-  import type { User, UserType } from "shared/types/user";
+  import type { User } from "shared/types/user";
 
-  definePageMeta({    
+  definePageMeta({
     middleware: "unauthed-server",
     path: "/register",
     title: "pages.register",
@@ -153,7 +108,6 @@
   const name = ref<string>("");
   const privacyPolicy = ref<string>("");
   const eula = ref<string>("");
-  const type = ref<UserType>("org");
   const newsletter = ref<boolean>(false);
   const userCreated = ref<boolean>(false);
 
@@ -179,7 +133,6 @@
         email: email.value,
         password: password.value,
         name: name.value,
-        type: type.value,
         newsletter: newsletter.value,
       },
     })
