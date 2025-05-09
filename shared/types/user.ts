@@ -1,9 +1,9 @@
 export enum UserTypeEnum {
-  ORGANIZATION = "org",
-  VOLUNTEER = "volunteer",
+  ADMIN = "admin",
+  USER = "user",
 }
 
-export type UserType = "org" | "volunteer";
+export type UserType = "user" | "admin";
 
 export interface BaseUser {
   name: string;
