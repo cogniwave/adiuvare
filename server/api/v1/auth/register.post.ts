@@ -1,19 +1,47 @@
+import { getOrgBySlugOrName, createOrganization, addUserToOrg, notifyOrgOwner } from "server/services/orgs";
 import { addUser } from "server/db/users";
 import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
 import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
-import type { BaseUser, User, UserType } from "shared/types/user";
+import type { RegisterPayload, User, UserType } from "shared/types/user";
 import type { TranslationFunction } from "shared/types";
 import { log } from "server/utils/logger";
+import { genToken } from "server/utils";
 
-const register = async (payload: BaseUser, t: TranslationFunction): Promise<User> => {
+const register = async (payload: RegisterPayload, t: TranslationFunction): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
-  const newUser = await addUser(payload, token);
 
+  const newUser = await addUser(payload, token);
   if (!newUser) {
-    throw Error("Something went wrong");
+    throw new Error("Something went wrong");
+  }
+
+  if (payload.organizationName) {
+    const existingOrg = await getOrgBySlugOrName(payload.organizationName);
+
+    if (existingOrg) {
+      const emailDomain = payload.email.split("@")[1];
+      const orgDomain = existingOrg.website?.split("//")?.[1]?.split("/")?.[0];
+      const domainMatches = emailDomain === orgDomain;
+
+      if (domainMatches && existingOrg.acceptSameDomainUsers) {
+        await addUserToOrg(existingOrg.id, payload.email);
+        await notifyOrgOwner(existingOrg.ownerId, payload.name, "added");
+      } else {
+        await notifyOrgOwner(existingOrg.ownerId, payload.name, "pending");
+      }
+    } else {
+      const newOrg = await createOrganization({
+        name: payload.organizationName,
+        ownerEmail: payload.email,
+      });
+
+      if (!newOrg) {
+        throw new Error("Organization creation failed");
+      }
+    }
   }
 
   await sendEmail(
@@ -37,12 +65,13 @@ const register = async (payload: BaseUser, t: TranslationFunction): Promise<User
 export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
-  const body = await getValidatedInput<BaseUser>(event, {
+  const body = await getValidatedInput<RegisterPayload>(event, {
     name: RequiredString.max(255),
     password: RequiredPassword,
     email: RequiredEmail,
     type: RequiredString.valid("org", "volunteer"),
     newsletter: Joi.boolean().default(false),
+    organizationName: Joi.string().allow("", null).optional(),
   });
 
   const email = sanitizeInput(body.email);
@@ -54,17 +83,16 @@ export default defineEventHandler(async (event) => {
         password: body.password,
         type: sanitizeInput<UserType>(body.type),
         email,
+        organizationName: body.organizationName,
       },
       t,
     );
 
     if (body.newsletter) {
       const newsletters: NewsletterType[] = ["newsletter"];
-
       if (body.type === "admin") {
         newsletters.push("orgNewsletter");
       }
-
       await subscribeToNewsletter(email, newsletters);
     }
 
@@ -75,9 +103,7 @@ export default defineEventHandler(async (event) => {
     if (err instanceof Error) {
       if (err.message.includes("UNIQUE constraint")) {
         throw createError({
-          data: {
-            email: t("errors.emailExists"),
-          },
+          data: { email: t("errors.emailExists") },
           statusCode: 422,
           statusMessage: t("errors.validationError"),
         });
@@ -91,4 +117,12 @@ export default defineEventHandler(async (event) => {
       statusMessage: t("errors.unexpected"),
     });
   }
+});
+
+export const RegisterValidation = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  newsletter: Joi.boolean().optional(),
+  organizationName: Joi.string().allow("", null).optional(),
 });

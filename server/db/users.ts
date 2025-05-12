@@ -91,6 +91,21 @@ export const getUserById = async (id: string) => {
   return result.length === 1 ? formatFromDb<User>(result[0]) : null;
 };
 
+export const getUserByEmail = async (email: string) => {
+  const result = await useDrizzle()
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      verified: users.verified,
+    })
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  return result.length === 1 ? result[0] : null;
+};
+
 export const updateUserToken = async (userId: string, token: string) => {
   const user = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
 

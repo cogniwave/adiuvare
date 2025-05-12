@@ -18,7 +18,7 @@ export default defineWrappedResponseHandler(async (event) => {
   const user = await getUser<TokenUser & { password: string; verified: boolean }>(email, [], {
     password: users.password,
     slug: users.slug,
-    contacts: users.contacts,
+   // contacts: users.contacts,
     id: users.id,
     logo: users.photo,
     verified: users.verified,
