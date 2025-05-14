@@ -221,16 +221,11 @@ export default defineNuxtConfig({
       defaults: {
         global: {
           density: "comfortable",
-          class: "small-spacing",
         },
-        // VList: {
-        //   bgColor: "background",
-        // },
         VListItem: {
           activeColor: "accent",
         },
         VCard: {
-          color: "text",
           background: "background",
         },
         VIcon: {

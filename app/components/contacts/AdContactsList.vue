@@ -10,7 +10,6 @@
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
-                size="x-small"
                 base-color="transparent"
                 flat
                 class="ml-2"
@@ -30,7 +29,6 @@
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
-                size="x-small"
                 base-color="transparent"
                 flat
                 class="ml-2"
@@ -48,7 +46,6 @@
               <v-btn
                 v-bind="props"
                 icon="fa-solid fa-copy"
-                size="x-small"
                 base-color="transparent"
                 flat
                 class="ml-2"
