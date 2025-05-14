@@ -1,29 +1,50 @@
-import { and, eq } from "drizzle-orm";
-import { useDrizzle } from ".";
+import { and, eq, asc } from "drizzle-orm";
+import { useDrizzle } from "server/db";
 import { organizations } from "./schemas/organizations.schema";
 import { genToken } from "server/utils";
-import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import type { BaseOrganization, Organization, UpdateOrganizationPayload } from "shared/types/organizations";
 import { formatFromDb as fromDb } from "./utils";
+import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
 const formatFromDb = fromDb(["contacts"]);
 
-export const getOrganization = async <T = Organization>(
-  website: string,
-  filter: Array<Array<SQLiteColumn | string | number | boolean>> = [],
-  fields: Record<string, SQLiteColumn> = {},
-): Promise<T | undefined> => {
-  const result = await useDrizzle()
-    .select({
-      website: organizations.website,
-      name: organizations.displayName,
-      ...fields,
-    })
-    .from(organizations)
-    .where(and(eq(organizations.website, website), ...filter.map(([key, value]) => eq(key as SQLiteColumn, value))))
-    .limit(1);
+export const getOrgs = async (
+  website?: string,
+  filter: Array<[SQLiteColumn, string | number | boolean]> = [],
+  fields: Partial<Record<keyof Organization, SQLiteColumn>> = {},
+): Promise<Organization[]> => {
+  const db = useDrizzle();
 
-  return result.length ? (result[0] as T) : undefined;
+  const selectedFields = {
+    id: organizations.id,
+    name: organizations.displayName,
+    slug: organizations.slug,
+    email: organizations.email,
+    photo: organizations.photo,
+    photoThumbnail: organizations.photoThumbnail,
+    website: organizations.website,
+    address: organizations.address,
+    postalCode: organizations.postalCode,
+    city: organizations.city,
+    district: organizations.district,
+    ...fields,
+  };
+
+  const baseConditions = [
+    eq(organizations.category, "org"),
+    eq(organizations.verified, true),
+    ...(website ? [eq(organizations.website, website)] : []),
+    ...filter.map(([column, value]) => eq(column, value)),
+  ];
+
+  const result = await db
+    .select(selectedFields)
+    .from(organizations)
+    .where(and(...baseConditions))
+    .orderBy(asc(organizations.displayName))
+    .limit(50);
+
+  return formatFromDb<Organization[]>(result) || [];
 };
 
 export const addOrganization = async (payload: BaseOrganization): Promise<Organization | null> => {
@@ -92,5 +113,12 @@ export const getOrganizationById = async (id: string) => {
 
 export const getOrgBySlugOrName = async (name: string) => {
   const slug = name.toLowerCase().replace(/\s+/g, "-");
-  return await getOrganization(slug, []);
+  return await getOrgs(slug, []);
 };
+
+export async function getTotalOrgs() {
+  const db = useDrizzle();
+
+  const result = await db.select().from(organizations);
+  return result.length;
+}

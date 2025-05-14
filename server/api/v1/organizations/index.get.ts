@@ -1,4 +1,4 @@
-import { getOrgs, getTotalOrgs } from "server/db/users";
+import { getOrgs, getTotalOrgs } from "server/db/organization";
 import { log } from "server/utils/logger";
 
 export default defineEventHandler(async () => {
@@ -11,9 +11,8 @@ export default defineEventHandler(async () => {
           id: org.id,
           photo: org.photo,
           photoThumbnail: org.photoThumbnail,
-          name: desanitizeInput(org.name),
+          name: desanitizeInput(org.displayName),
           slug: desanitizeInput(org.slug),
-          bio: desanitizeInput(org.bio),
           // todo: these should only be fetched when checking org details
           // no need to send over data that is not used
           website: desanitizeInput(org.website),
@@ -21,9 +20,9 @@ export default defineEventHandler(async () => {
           postalCode: desanitizeInput(org.postalCode),
           city: desanitizeInput(org.city),
           district: desanitizeInput(org.district),
-          contacts: org.contacts
+          /* contacts: org.contacts
             ? org.contacts.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) }))
-            : [],
+            : [], */
         };
       }),
       total,

@@ -11,11 +11,10 @@ export interface BaseUser {
   password: string;
   type: UserType;
   newsletter?: boolean;
-  organizationName?: string | null;
 }
 
-export interface RegisterPayload extends BaseUser{  
-  newsletter?: boolean; 
+export interface RegisterPayload extends BaseUser {
+  newsletter?: boolean;
 }
 
 export interface User extends Omit<BaseUser, "password"> {
@@ -98,4 +97,3 @@ export interface UpdateUserPayload {
   field: string;
   value: string | UserContact[];
 }
-
