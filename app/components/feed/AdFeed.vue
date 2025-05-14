@@ -161,7 +161,7 @@
   </template>
 
   <!-- no posts exist -->
-  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton" class="no-posts">
+  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="p" for="feed.noPostsButton" class="no-posts">
     <nuxt-link to="/posts/new">
       {{ t("feed.noPostsButton") }}
     </nuxt-link>
@@ -379,14 +379,6 @@
 </script>
 
 <style scoped lang="scss">
-  // .v-autocomplete__content {
-  //   max-width: 200px !important;
-
-  //   .v-list-item-title {
-  //     white-space: initial !important;
-  //   }
-  // }
-
   h4 {
     color: rgba(var(--v-theme-subtext));
   }
@@ -395,16 +387,19 @@
     color: rgba(var(--v-theme-accent));
   }
 
-  // p {
-  //   color: rgba(var(--v-theme-subtext));
-  // }
+  .no-posts {
+    color: rgba(var(--v-theme-subtext));
+    font-weight: 500;
 
-  // :deep(.btn-reset .v-btn__content),
-  // :deep(.filter-actions .v-btn__content) {
-  //   color: rgba(var(--v-theme-primary));
-  // }
+    a {
+      font-weight: bold;
 
-  // .v-virtual-scroll {
-  //   overflow: visible !important;
-  // }
+      &:active,
+      &:focus,
+      &:visited,
+      &:hover {
+        color: rgba(var(--v-theme-primary));
+      }
+    }
+  }
 </style>

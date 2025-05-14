@@ -5,22 +5,22 @@ body {
   background: rgb(var(--v-theme-background));
 }
 
-// a {
-//   transition: 0.2s;
-//   opacity: 0.8;
-//   text-decoration: none;
+a {
+  transition: 0.2s;
+  opacity: 0.8;
+  text-decoration: none;
 
-//   &:visited,
-//   &:focus,
-//   &:active {
-//     text-decoration: none;
-//   }
+  &:visited,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
 
-//   &:hover {
-//     transition: 0.2s;
-//     opacity: 1;
-//   }
-// }
+  &:hover {
+    transition: 0.2s;
+    opacity: 1;
+  }
+}
 
 // @mixin typography($font-size) {
 //   font-size: $font-size;
