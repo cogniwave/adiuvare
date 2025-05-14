@@ -1,14 +1,9 @@
-import { getOrganization, addOrganization } from "server/db/organization";
+import { addOrganization } from "server/db/organization";
 import { getUserByEmail, getUserById } from "server/db/users";
 import type { Organization } from "shared/types/organizations";
 import { createId } from "@paralleldrive/cuid2";
 import { normalizeSlug, normalizeDisplayName } from "server/utils/normalize";
 import { sendEmail } from "server/services/brevo";
-
-export const getOrgBySlugOrName = async (name: string) => {
-  const slug = normalizeSlug(name);
-  return await getOrganization(slug, []);
-};
 
 export const createOrganization = async (data: { name: string; ownerEmail: string }): Promise<Organization | null> => {
   const owner = await getUserByEmail(data.ownerEmail);
@@ -70,6 +65,6 @@ export async function notifyOrgOwner(ownerId: string, newUserName: string, conte
     name: owner.name,
     body,
     buttonText: "Ver organização",
-    link: `${process.env.APP_BASE_URL}/dashboard/org`, // ajuste conforme o destino real
+    link: `${process.env.APP_BASE_URL}/dashboard/org`,
   });
 }

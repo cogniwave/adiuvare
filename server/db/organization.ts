@@ -111,9 +111,10 @@ export const getOrganizationById = async (id: string) => {
   return result.length === 1 ? formatFromDb<Organization>(result[0]) : null;
 };
 
-export const getOrgBySlugOrName = async (name: string) => {
+export const getOrgBySlug = async (name: string) => {
   const slug = name.toLowerCase().replace(/\s+/g, "-");
-  return await getOrgs(slug, []);
+  const org = await getOrgs(slug, []);
+  return org[0];
 };
 
 export async function getTotalOrgs() {

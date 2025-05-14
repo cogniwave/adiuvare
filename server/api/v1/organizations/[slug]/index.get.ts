@@ -1,4 +1,4 @@
-import { getOrgBySlug } from "server/db/users";
+import { getOrgBySlug } from "server/db/organization";
 import { sanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";
 
@@ -7,30 +7,26 @@ export default defineEventHandler(async (event) => {
   const slug = sanitizeInput(getRouterParam(event, "slug"));
 
   try {
-    const user = await getOrgBySlug(slug);
+    const org = await getOrgBySlug(slug);
 
-    if (user) {
+    if (org) {
       return {
-        id: user.id,
-        photo: user.photo,
-        photoThumbnail: user.photoThumbnail,
-        name: desanitizeInput(user.name),
-        slug: desanitizeInput(user.slug),
-        bio: desanitizeInput(user.bio),
-        website: desanitizeInput(user.website),
-        address: desanitizeInput(user.address),
-        postalCode: desanitizeInput(user.postalCode),
-        city: desanitizeInput(user.city),
-        district: desanitizeInput(user.district),
-        contacts: user.contacts
-          ? user.contacts.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) }))
-          : [],
+        id: org.id,
+        photo: org.photo,
+        photoThumbnail: org.photoThumbnail,
+        name: desanitizeInput(org.displayName),
+        slug: desanitizeInput(org.slug),
+        website: desanitizeInput(org.website),
+        address: desanitizeInput(org.address),
+        postalCode: desanitizeInput(org.postalCode),
+        city: desanitizeInput(org.city),
+        district: desanitizeInput(org.district),          
       };
     }
 
     setResponseStatus(event, 404);
   } catch (err) {
-    log("[organization] couldn't get organization", JSON.stringify(err));
+    log("[org] couldn't get organization", JSON.stringify(err));
 
     throw err;
   }

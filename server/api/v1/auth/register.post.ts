@@ -1,4 +1,5 @@
-import { getOrgBySlugOrName, createOrganization, addUserToOrg, notifyOrgOwner } from "server/services/orgs";
+import { createOrganization, addUserToOrg, notifyOrgOwner } from "server/services/orgs";
+import { getOrgBySlug } from "~~/server/db/organization";
 import { addUser } from "server/db/users";
 import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
@@ -14,7 +15,7 @@ import { normalizeDisplayName, normalizeSlug } from "server/utils/normalize";
 const register = async (payload: RegisterPayload, t: TranslationFunction): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
 
-  const normalizedDisplayName = payload.organizationName ? normalizeDisplayName(payload.organizationName) : undefined;
+  const normalizedDisplayName = payload.name ? normalizeDisplayName(payload.name) : undefined;
 
   const normalizedSlug = normalizedDisplayName ? normalizeSlug(normalizedDisplayName) : undefined;
 
@@ -23,9 +24,9 @@ const register = async (payload: RegisterPayload, t: TranslationFunction): Promi
     throw new Error("Something went wrong");
   }
 
-  if (payload.organizationName && normalizedDisplayName && normalizedSlug) {
+  if (payload.name && normalizedDisplayName && normalizedSlug) {
     const slug = normalizeSlug(normalizedDisplayName);
-    const existingOrg = await getOrgBySlugOrName(slug);
+    const existingOrg = await getOrgBySlug(slug);
 
     if (existingOrg) {
       const emailDomain = payload.email.split("@")[1];
@@ -77,7 +78,7 @@ export default defineEventHandler(async (event) => {
     email: RequiredEmail,
     type: RequiredString.valid("org", "volunteer"),
     newsletter: Joi.boolean().default(false),
-    organizationName: Joi.string().allow("", null).optional(),
+    //organizationName: Joi.string().allow("", null).optional(),
   });
 
   const email = sanitizeInput(body.email);
@@ -89,7 +90,6 @@ export default defineEventHandler(async (event) => {
         password: body.password,
         type: sanitizeInput<UserType>(body.type),
         email,
-        organizationName: body.organizationName,
       },
       t,
     );
@@ -130,5 +130,5 @@ export const RegisterValidation = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   newsletter: Joi.boolean().optional(),
-  organizationName: Joi.string().allow("", null).optional(),
+  // organizationName: Joi.string().allow("", null).optional(),
 });

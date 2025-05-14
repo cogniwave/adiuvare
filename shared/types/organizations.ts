@@ -47,11 +47,11 @@ export interface OrganizationAssociation {
   organizationName?: string | null;
 }
 
-export interface RegisterPayload extends BaseUser, OrganizationAssociation {
+export interface RegisterPayload extends BaseOrganization, OrganizationAssociation {
   newsletter?: boolean;  
 }
 
-/* export interface GetOrganizationsResult {
-  organizations: User[];
+export interface GetOrganizationsResult {
+  organizations: Organization[];
   total: number;
-} */
+} 
