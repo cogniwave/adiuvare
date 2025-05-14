@@ -1,9 +1,8 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { organizations } from "./organizations.schema";
+import { pgTable, varchar } from "drizzle-orm/pg-core";
 
-export const organizationUsers = sqliteTable("organization_users", {
-  userId: text("user_id").notNull(),
-  organizationId: text("organization_id").notNull().references(() => organizations.id),
-  state: text("status").notNull().$type<"pending" | "accepted" | "rejected">(),
-  reason: text("reason"), // obrigatório apenas se state for "rejected"
+export const organizationUsers = pgTable("organization_users", {
+  userId: varchar("user_id", { length: 255 }).notNull(),
+  orgId: varchar("org_id", { length: 255 }).notNull(),
+  state: varchar("state", { length: 50 }).notNull(),
+  reason: varchar("reason", { length: 255 }),
 });

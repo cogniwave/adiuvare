@@ -1,45 +1,75 @@
 import { getOrganization, addOrganization } from "server/db/organization";
-import { getUserByEmail } from "server/db/users";
-import type { BaseOrganization } from "shared/types/organizations";
+import { getUserByEmail, getUserById } from "server/db/users";
+import type { Organization } from "shared/types/organizations";
 import { createId } from "@paralleldrive/cuid2";
+import { normalizeSlug, normalizeDisplayName } from "server/utils/normalize";
+import { sendEmail } from "server/services/brevo";
 
-// buscar organização por slug ou nome
 export const getOrgBySlugOrName = async (name: string) => {
-  const slug = name.toLowerCase().replace(/\s+/g, "-");
+  const slug = normalizeSlug(name);
   return await getOrganization(slug, []);
 };
 
-// criar nova organização
-export const createOrganization = async (data: { name: string; ownerEmail: string }) => {
+export const createOrganization = async (data: { name: string; ownerEmail: string }): Promise<Organization | null> => {
   const owner = await getUserByEmail(data.ownerEmail);
   if (!owner) throw new Error("Owner user not found");
 
-  const baseOrg: BaseOrganization = {
+  const normalizedDisplayName = normalizeDisplayName(data.name);
+  const slug = normalizeSlug(normalizedDisplayName);
+
+  const organization: Organization = {
     id: createId(),
-    displayName: data.name,
+    displayName: normalizedDisplayName,
     email: data.ownerEmail,
-    password: "", // ainda não definida (talvez definida depois no primeiro login)
+    password: "", // pode ser preenchido futuramente
     ownerId: owner.id,
-    acceptSameDomainUsers: true,
-    category: "unknown",
     verified: owner.verified,
+    category: "unknown",
+    slug,
+    acceptSameDomainUsers: true,
+    nipc: undefined,
+    token: undefined,
+    about: undefined,
+    website: undefined,
+    address: undefined,
+    postalCode: undefined,
+    city: undefined,
+    district: undefined,
+    photo: undefined,
+    photoThumbnail: undefined,
   };
 
-  const org = await addOrganization(baseOrg);
-
+  const org = await addOrganization(organization);
   return org;
 };
 
-//  associar usuário a uma organização (mock inicial)
 export const addUserToOrg = async (orgId: string, email: string) => {
-  // a associação real será implementada depois com a tabela de associação user-org
+  // a associação real será implementada depois com a tabela de associação organizationUser
   console.log(`Mock: associar ${email} à organização ${orgId}`);
 };
 
-//  notificar o dono da organização (mock)
-export const notifyOrgOwner = async (ownerId: string, userName: string, status: "added" | "pending") => {
-  // enviar email ou mensagem interna. por enquanto, apenas log.
-  console.log(
-    `Notificar dono ${ownerId}: usuário ${userName} foi ${status === "added" ? "adicionado" : "marcado como pendente"}`,
-  );
-};
+export async function notifyOrgOwner(ownerId: string, newUserName: string, context: "added" | "pending") {
+  const owner = await getUserById(ownerId);
+  if (!owner) {
+    throw new Error("Organization owner not found");
+  }
+
+  let subject = "";
+  let body = "";
+
+  if (context === "added") {
+    subject = "Novo membro na sua organização";
+    body = `${newUserName} foi automaticamente adicionado à sua organização.`;
+  } else {
+    subject = "Validação pendente de novo membro";
+    body = `${newUserName} solicitou entrada na sua organização. Por favor, confirme a associação.`;
+  }
+
+  await sendEmail(subject, { email: owner.email, name: owner.name }, "orgNotification", {
+    greetings: "Olá",
+    name: owner.name,
+    body,
+    buttonText: "Ver organização",
+    link: `${process.env.APP_BASE_URL}/dashboard/org`, // ajuste conforme o destino real
+  });
+}

@@ -8,7 +8,7 @@ import {
   type HttpError,
 } from "@getbrevo/brevo";
 
-type Template = "userActionRequired" | "information";
+type Template = "userActionRequired" | "information" | "orgNotification";
 
 interface Receiver {
   name?: string;
@@ -18,14 +18,10 @@ interface Receiver {
 const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
   userActionRequired: Number(process.env.USER_ACTION_REQUIRED_TEMPLATE_ID),
   information: Number(process.env.INFORMATION_TEMPLATE_ID),
+  orgNotification: Number(process.env.ORG_NOTIFICATION_TEMPLATE_ID),
 };
 
-export const sendEmail = async (
-  subject: string,
-  to: Receiver,
-  template: Template,
-  data?: Record<string, string>,
-) => {
+export const sendEmail = async (subject: string, to: Receiver, template: Template, data?: Record<string, string>) => {
   const mailer = new SendSmtpEmail();
 
   mailer.subject = subject;

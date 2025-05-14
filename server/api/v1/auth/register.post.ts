@@ -9,17 +9,23 @@ import type { RegisterPayload, User, UserType } from "shared/types/user";
 import type { TranslationFunction } from "shared/types";
 import { log } from "server/utils/logger";
 import { genToken } from "server/utils";
+import { normalizeDisplayName, normalizeSlug } from "server/utils/normalize";
 
 const register = async (payload: RegisterPayload, t: TranslationFunction): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
+
+  const normalizedDisplayName = payload.organizationName ? normalizeDisplayName(payload.organizationName) : undefined;
+
+  const normalizedSlug = normalizedDisplayName ? normalizeSlug(normalizedDisplayName) : undefined;
 
   const newUser = await addUser(payload, token);
   if (!newUser) {
     throw new Error("Something went wrong");
   }
 
-  if (payload.organizationName) {
-    const existingOrg = await getOrgBySlugOrName(payload.organizationName);
+  if (payload.organizationName && normalizedDisplayName && normalizedSlug) {
+    const slug = normalizeSlug(normalizedDisplayName);
+    const existingOrg = await getOrgBySlugOrName(slug);
 
     if (existingOrg) {
       const emailDomain = payload.email.split("@")[1];
@@ -27,14 +33,14 @@ const register = async (payload: RegisterPayload, t: TranslationFunction): Promi
       const domainMatches = emailDomain === orgDomain;
 
       if (domainMatches && existingOrg.acceptSameDomainUsers) {
-        await addUserToOrg(existingOrg.id, payload.email);
+        await addUserToOrg(newUser.id, existingOrg.id);
         await notifyOrgOwner(existingOrg.ownerId, payload.name, "added");
       } else {
         await notifyOrgOwner(existingOrg.ownerId, payload.name, "pending");
       }
     } else {
       const newOrg = await createOrganization({
-        name: payload.organizationName,
+        name: normalizedDisplayName,
         ownerEmail: payload.email,
       });
 
