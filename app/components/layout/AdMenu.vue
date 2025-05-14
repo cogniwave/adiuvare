@@ -1,6 +1,6 @@
 <template>
   <v-list bg-color="transparent">
-    <template v-if="loggedIn">
+    <template v-if="loggedIn && user?.type === 'org'">
       <v-list-item :title="t('posts.submit')" to="/posts/new" prepend-icon="fa-solid fa-house" />
 
       <v-divider class="my-3" />
@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
   const { t } = useI18n();
-  const { loggedIn } = useUserSession();
+  const { loggedIn, user } = useUserSession();
 </script>
 
 <style scoped>
