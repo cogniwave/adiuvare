@@ -269,7 +269,8 @@
     "noPostsButton": "primeiro",
     "emptySearch": "Essa pesquisa não retornou resultados. Tente outra coisa ou {0}",
     "emptySearchReset": "limpe a pesquisa",
-    "filter": "Pesquisar"
+    "filter": "Pesquisar",
+    "recentPosts": "Últimas publicações"
   },
   "filter": {
     "placeholder": "Pesquise por zona, necessidade, organização, ..."
@@ -285,7 +286,7 @@
     "bio": "Missão / objetivo",
     "noBio": "Esta organização ainda não especificou a sua missão",
     "showAllBio": "Ver texto completo"
-  }, 
+  },
   "email": {
     "greetings": "Olá",
     "alternativeLinkText": "Se não conseguir usar o link em cima, experimenta este",

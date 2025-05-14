@@ -6,8 +6,11 @@
         <v-row no-gutters>
           <v-col cols="3" lg="2" xl="1">
             <v-avatar size="64">
-              <v-img :alt="t('posts.logoAlt')" src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
-                     lazy-src="/assets/images/profile-placeholder.png">
+              <v-img
+                :alt="t('posts.logoAlt')"
+                src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
+                lazy-src="/assets/images/profile-placeholder.png"
+              >
                 <template #error>
                   {{ post.createdBy[0] }}
                 </template>
@@ -16,15 +19,14 @@
           </v-col>
 
           <v-col cols="9" lg="4" xl="5">
-            <h3 class="mb-0">{{ post.title }}</h3>            
-              <span class="text-subtitle d-block">
+            <h3 class="mb-0">{{ post.title }}</h3>
+            <span class="text-subtitle d-block">
               <nuxt-link :to="`/organizations/${post.createdBy}`" @click.stop>
                 {{ post.createdBy }} - {{ d(post.createdAt) }}
               </nuxt-link>
-                <!-- otherwise vue will complain because $t only "accepts"
-             date and number but passing a string also works  -->               
-              </span>
-       
+              <!-- otherwise vue will complain because $t only "accepts"
+             date and number but passing a string also works  -->
+            </span>
           </v-col>
 
           <v-col cols="12" lg="6">
@@ -57,8 +59,15 @@
       <v-divider />
 
       <v-card-actions>
-        <v-chip v-for="location in visibleLocations" :key="location" label class="cursor-pointer mr-1" rounded="md"
-                size="small" @click="onLocationClick">
+        <v-chip
+          v-for="location in visibleLocations"
+          :key="location"
+          label
+          class="cursor-pointer mr-1"
+          rounded="md"
+          size="small"
+          @click="onLocationClick"
+        >
           {{ location }}
         </v-chip>
 
@@ -84,39 +93,67 @@
         <v-menu>
           <template #activator="{ props }">
             <v-btn v-bind="props" variant="plain" size="x-small" class="ml-2" icon @click.stop.prevent>
-              <v-icon size="large">mdi-dots-vertical</v-icon>
+              <v-icon size="large">fa-dots-vertical</v-icon>
             </v-btn>
           </template>
 
-          <v-list density="compact" class=" px-3">
+          <v-list density="compact" class="px-3">
             <template v-if="post.createdBy === user">
               <!-- edit post -->
-              <v-list-item class="pl-2 pr-2" prepend-icon="mdi-pencil-outline" :title="t('posts.options.edit')"
-                           @click.stop.prevent="openPost()" />
+              <v-list-item
+                class="pl-2 pr-2"
+                prepend-icon="fa-pencil-outline"
+                :title="t('posts.options.edit')"
+                @click.stop.prevent="openPost()"
+              />
 
               <!-- enable post -->
-              <v-list-item v-if="post.state === 'active'" class="pl-2 pr-2" prepend-icon="mdi-check-all"
-                           :title="t('posts.options.enable')"
-                           @click="$emit('click:state', { enable: true, title: post.title, id: post.id })" />
+              <v-list-item
+                v-if="post.state === 'active'"
+                class="pl-2 pr-2"
+                prepend-icon="fa-check-all"
+                :title="t('posts.options.enable')"
+                @click="$emit('click:state', { enable: true, title: post.title, id: post.id })"
+              />
 
               <!-- disable post -->
-              <v-list-item v-else class="pl-2 pr-2" prepend-icon="mdi-cancel" :title="t('posts.options.disable')"
-                           @click="$emit('click:state', { enable: false, title: post.title, id: post.id })" />
+              <v-list-item
+                v-else
+                class="pl-2 pr-2"
+                prepend-icon="fa-cancel"
+                :title="t('posts.options.disable')"
+                @click="$emit('click:state', { enable: false, title: post.title, id: post.id })"
+              />
 
-              <v-list-item class="pl-2 pr-2" prepend-icon="mdi-delete" :title="t('posts.options.delete')"
-                           @click="$emit('click:delete', post)" />
+              <v-list-item
+                class="pl-2 pr-2"
+                prepend-icon="fa-delete"
+                :title="t('posts.options.delete')"
+                @click="$emit('click:delete', post)"
+              />
             </template>
 
-            <v-list-item v-else class="pl-2 pr-2" prepend-icon="mdi-bullhorn" :title="t('posts.options.report')"
-                         @click="onReport" />
+            <v-list-item
+              v-else
+              class="pl-2 pr-2"
+              prepend-icon="fa-bullhorn"
+              :title="t('posts.options.report')"
+              @click="onReport"
+            />
           </v-list>
         </v-menu>
 
         <!-- contacts -->
         <v-menu v-if="smAndUp" :close-on-content-click="false">
           <template #activator="{ props }">
-            <v-btn v-bind="props" variant="outlined" size="small" rounded="md" class="ml-auto ml-r btn-contact"
-                   @click.stop.prevent>
+            <v-btn
+              v-bind="props"
+              variant="outlined"
+              size="small"
+              rounded="md"
+              class="ml-auto ml-r btn-contact"
+              @click.stop.prevent
+            >
               {{ t("posts.contacts.contact") }}
             </v-btn>
           </template>
@@ -176,7 +213,7 @@
     descVisible.value = true;
   };
 
-  const onLocationClick = () => { };
+  const onLocationClick = () => {};
 
   const onReport = () => $emit("click:report", $props.post);
 
@@ -196,5 +233,4 @@
     background-color: rgb(var(--v-theme-accent));
     color: rgb(var(--v-theme-subtext));
   }
-
 </style>

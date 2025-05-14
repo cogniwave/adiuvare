@@ -4,7 +4,7 @@
       <v-text-field
         v-model:model-value="email"
         type="email"
-        prepend-icon="mdi-at"
+        prepend-icon="fa-at"
         :label="t('form.email')"
         :rules="[required(t), isValidEmail(t)]"
         :error-messages="errors.email"
@@ -12,7 +12,7 @@
 
       <v-text-field
         v-model:model-value="password"
-        prepend-icon="mdi-lock"
+        prepend-icon="fa-lock"
         class="mt-8"
         autocorrect="off"
         autocapitalize="off"
@@ -24,7 +24,9 @@
         :error-messages="errors.password"
       >
         <template #append-inner>
-          <v-icon class="cursor-pointer" @click="switchVisibility">{{ visibilityIcon === 'eye' ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
+          <v-icon class="cursor-pointer" @click="switchVisibility">{{
+            visibilityIcon === "eye" ? "fa-eye" : "fa-eye-off"
+          }}</v-icon>
         </template>
       </v-text-field>
     </template>
@@ -71,7 +73,7 @@
   import { required, isValidEmail, isValidPassword } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
 
-  definePageMeta({  
+  definePageMeta({
     middleware: "unauthed-server",
     title: "pages.login",
     path: "/login",
@@ -140,5 +142,4 @@
   a {
     color: rgb(var(--v-theme-secondary)) !important;
   }
-
 </style>

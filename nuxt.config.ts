@@ -232,38 +232,36 @@ export default defineNuxtConfig({
         VCard: {
           color: "text",
           background: "background",
-          class: "!std-padding !small-spacing",
         },
         VIcon: {
           size: "x-small",
         },
         VTextField: {
           density: "comfortable",
-          class: "!std-padding !small-spacing",
           hideDetails: "auto",
           validateOn: "blur",
-          variant: "outlined",
+          variant: "underlined",
+          rounded: "lx",
+          flat: true,
         },
         VTextarea: {
-          //variant: "underlined",
-          variant: "outlined",
+          variant: "underlined",
           density: "compact",
           hideDetails: "auto",
-          class: "!std-padding !small-spacing",
           autoGrow: true,
         },
         VAutocomplete: {
-          variant: "outlined",
+          variant: "underlined",
           density: "compact",
-          class: "!std-padding !small-spacing",
+
           hideDetails: "auto",
           autoGrow: true,
           autoSelectFirst: true,
         },
         VSelect: {
-          variant: "outlined",
+          variant: "underlined",
           density: "compact",
-          class: "!std-padding !small-spacing",
+
           hideDetails: "auto",
           hideHint: true,
         },
@@ -271,8 +269,9 @@ export default defineNuxtConfig({
           location: "top",
         },
         VBtn: {
-          class: "!std-padding !small-spacing",
-          height: "auto",
+          color: "primary",
+          variant: "text",
+          flat: true,
         },
       },
     },
