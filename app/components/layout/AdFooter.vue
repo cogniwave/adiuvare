@@ -1,15 +1,31 @@
 <template>
-  <v-footer color="white" class="pt-5 pb-2 flex-column">
+  <v-footer color="surface" elevation="7" class="pt-5 pb-2 flex-column">
     <div class="w-100">
       <v-row>
         <v-col md="4" offset-md="2" cols="12" offset="0">
           {{ $t("footer.newsletter.text") }}
 
           <v-form v-if="!subscribed" ref="form" validate-on="submit lazy" class="mt-2" @submit.prevent="submit">
-            <v-text-field v-model:model-value="email" type="text" class="w-100" placeholder="email@gmail.com"
-                          variant="outlined" :label="$t('footer.newsletter.label')" :error-messages="errors.email">
+            <v-text-field
+              v-model:model-value="email"
+              type="text"
+              class="w-100"
+              density="compact"
+              variant="outlined"
+              placeholder="email@gmail.com"
+              :label="$t('footer.newsletter.label')"
+              :error-messages="errors.email"
+            >
               <template #append-inner>
-                <v-btn type="submit" color="primary" flat :rounded="false" :loading="submitting" @click="submit">
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  variant="flat"
+                  flat
+                  :rounded="false"
+                  :loading="submitting"
+                  @click="submit"
+                >
                   {{ $t("footer.newsletter.subscribe") }}
                 </v-btn>
               </template>
@@ -68,3 +84,24 @@
   };
 </script>
 
+<style lang="scss" scoped>
+  .v-footer {
+    max-height: 200px;
+
+    :deep(.v-field) {
+      overflow: hidden;
+
+      &.v-field--appended {
+        padding: 0 !important;
+      }
+
+      button {
+        height: 100%;
+      }
+    }
+
+    a {
+      color: rgba(var(--v-theme-primary));
+    }
+  }
+</style>

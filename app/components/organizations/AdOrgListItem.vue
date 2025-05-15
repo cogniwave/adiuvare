@@ -15,10 +15,7 @@
           </template>
 
           <v-expand-transition>
-            <div
-              v-if="isHovering"
-              class="transition-fast-in-fast-out v-card--reveal position-absolute py-3 px-4 bg-primary"
-            >
+            <div v-if="isHovering" class="transition-fast-in-fast-out v-card--reveal position-absolute py-3 px-4">
               <div class="d-flex align-center justify-space-between flex-column text-center">
                 <span>
                   {{ visibleText }}

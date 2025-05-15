@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="ad-navbar" color="surface" density="compact" elevation="0">
+  <v-app-bar color="surface" density="compact" elevation="3">
     <template #title>
       <v-row no-gutters>
         <v-col cols="1">
@@ -53,7 +53,3 @@
 
   const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>
-
-<style scoped lang="scss">
-  
-</style>

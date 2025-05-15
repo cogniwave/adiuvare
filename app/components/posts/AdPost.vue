@@ -195,7 +195,7 @@
   .text-subtext-1 {
     font-weight: normal;
     a {
-      color: var(--v-theme-subtext);
+      color: rgba(var(--v-theme-subtext));
     }
   }
 </style>

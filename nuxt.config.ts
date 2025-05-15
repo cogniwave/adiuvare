@@ -248,7 +248,6 @@ export default defineNuxtConfig({
         VAutocomplete: {
           variant: "underlined",
           density: "compact",
-
           hideDetails: "auto",
           autoGrow: true,
           autoSelectFirst: true,
@@ -256,7 +255,6 @@ export default defineNuxtConfig({
         VSelect: {
           variant: "underlined",
           density: "compact",
-
           hideDetails: "auto",
           hideHint: true,
         },
@@ -267,6 +265,7 @@ export default defineNuxtConfig({
           color: "primary",
           variant: "text",
           flat: true,
+          rounded: "lg",
         },
       },
     },

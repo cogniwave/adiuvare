@@ -28,65 +28,73 @@ h1,
 .text-h1 {
   font-size: 32px;
   line-height: 40px;
-  color: var(--v-theme-heading);
+  color: rgba(var(--v-theme-heading));
 }
 
 h2,
 .text-h2 {
   font-size: 24px;
   line-height: 28px;
-  color: var(--v-theme-heading);
+  color: rgba(var(--v-theme-heading));
 }
 
 h3,
 .text-h3 {
   font-size: 20px;
   line-height: 24px;
-  color: var(--v-theme-heading);
+  color: rgba(var(--v-theme-heading));
 }
 
 h4,
 .text-h4 {
   font-size: 18px;
   line-height: 20px;
-  color: var(--v-theme-heading);
+  color: rgba(var(--v-theme-heading));
 }
 
 h5,
 .text-h5 {
   font-size: 16px;
   line-height: 18px;
-  color: var(--v-theme-heading);
+  color: rgba(var(--v-theme-heading));
 }
 
 h6,
 .text-h6 {
   font-size: 14px;
   line-height: 16px;
-  color: var(--v-theme-heading);
+  color: rgba(var(--v-theme-heading));
 }
 
 p,
 span {
-  color: var(--v-theme-text);
+  color: rgba(var(--v-theme-text));
 }
 
 .text-subtext-1 {
   font-size: 12px;
   line-height: 14px;
-  color: var(--v-theme-subtext);
+  color: rgba(var(--v-theme-subtext));
 }
 
 .text-subtext-2 {
   font-size: 13px;
   line-height: 16px;
-  color: var(--v-theme-subtext);
+  color: rgba(var(--v-theme-subtext));
 }
 
 .text-subtext-3 {
   font-size: 14px;
   line-height: 18px;
-  color: var(--v-theme-subtext);
+  color: rgba(var(--v-theme-subtext));
+}
+
+.v-btn {
+  &.bg-primary {
+    .v-btn__content {
+      color: rgba(var(--v-theme-surface));
+    }
+  }
 }
 
 // @mixin typography($font-size) {

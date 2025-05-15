@@ -1,6 +1,6 @@
 <template>
   <v-card class="bg-white">
-    <v-card-title class="bg-primary">
+    <v-card-title>
       <h2 class="text-h5 text-white">{{ title }}</h2>
     </v-card-title>
 
