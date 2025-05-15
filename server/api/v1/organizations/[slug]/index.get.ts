@@ -1,13 +1,13 @@
-import { getOrgBySlug } from "server/db/organization";
+import { getOrganization } from "~~/server/db/organizations";
 import { sanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";
 
 export default defineEventHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
-  const slug = sanitizeInput(getRouterParam(event, "slug"));
+  const XX = sanitizeInput(getRouterParam(event, "slug"));
 
   try {
-    const org = await getOrgBySlug(slug);
+    const org = await getOrganization(XX);
 
     if (org) {
       return {
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
         address: desanitizeInput(org.address),
         postalCode: desanitizeInput(org.postalCode),
         city: desanitizeInput(org.city),
-        district: desanitizeInput(org.district),          
+        district: desanitizeInput(org.district),
       };
     }
 

@@ -1,32 +1,27 @@
-import { createOrganization, addUserToOrg, notifyOrgOwner } from "server/services/orgs";
-import { getOrgBySlug } from "~~/server/db/organization";
+import { getOrganization, createOrganization, notifyOrgOwner } from "server/db/organizations";
+import { organizations } from "~~/server/db/schemas/organizations.schema";
 import { addUser } from "server/db/users";
 import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
-import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
 import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
 import type { RegisterPayload, User, UserType } from "shared/types/user";
 import type { TranslationFunction } from "shared/types";
 import { log } from "server/utils/logger";
 import { genToken } from "server/utils";
 import { normalizeDisplayName, normalizeSlug } from "server/utils/normalize";
+import { addUserToOrg as _addUserToOrg } from "server/api/v1/organizations/common";
 
 const register = async (payload: RegisterPayload, t: TranslationFunction): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
-
   const normalizedDisplayName = payload.name ? normalizeDisplayName(payload.name) : undefined;
-
   const normalizedSlug = normalizedDisplayName ? normalizeSlug(normalizedDisplayName) : undefined;
 
   const newUser = await addUser(payload, token);
-  if (!newUser) {
-    throw new Error("Something went wrong");
-  }
+  if (!newUser) throw new Error("Something went wrong");
 
   if (payload.name && normalizedDisplayName && normalizedSlug) {
-    const slug = normalizeSlug(normalizedDisplayName);
-    const existingOrg = await getOrgBySlug(slug);
+    const existingOrg = await getOrganization([[organizations.slug, normalizedSlug]]);
 
     if (existingOrg) {
       const emailDomain = payload.email.split("@")[1];
@@ -34,9 +29,10 @@ const register = async (payload: RegisterPayload, t: TranslationFunction): Promi
       const domainMatches = emailDomain === orgDomain;
 
       if (domainMatches && existingOrg.acceptSameDomainUsers) {
-        await addUserToOrg(newUser.id, existingOrg.id);
+        await _addUserToOrg(newUser.id, existingOrg.id, payload.email, payload.name);
         await notifyOrgOwner(existingOrg.ownerId, payload.name, "added");
       } else {
+        await _addUserToOrg(newUser.id, existingOrg.id, payload.email, payload.name);
         await notifyOrgOwner(existingOrg.ownerId, payload.name, "pending");
       }
     } else {
@@ -78,7 +74,7 @@ export default defineEventHandler(async (event) => {
     email: RequiredEmail,
     type: RequiredString.valid("org", "volunteer"),
     newsletter: Joi.boolean().default(false),
-    //organizationName: Joi.string().allow("", null).optional(),
+    organizationName: Joi.string().allow("", null).optional(),
   });
 
   const email = sanitizeInput(body.email);
@@ -90,20 +86,12 @@ export default defineEventHandler(async (event) => {
         password: body.password,
         type: sanitizeInput<UserType>(body.type),
         email,
+        organizationName: sanitizeInput(body.organizationName),
       },
       t,
     );
 
-    if (body.newsletter) {
-      const newsletters: NewsletterType[] = ["newsletter"];
-      if (body.type === "admin") {
-        newsletters.push("orgNewsletter");
-      }
-      await subscribeToNewsletter(email, newsletters);
-    }
-
     await notifyNewUser(user);
-
     return user;
   } catch (err: unknown) {
     if (err instanceof Error) {
@@ -123,12 +111,4 @@ export default defineEventHandler(async (event) => {
       statusMessage: t("errors.unexpected"),
     });
   }
-});
-
-export const RegisterValidation = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  newsletter: Joi.boolean().optional(),
-  // organizationName: Joi.string().allow("", null).optional(),
 });

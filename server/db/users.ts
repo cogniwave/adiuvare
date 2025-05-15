@@ -5,9 +5,11 @@ import { genToken } from "server/utils";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
-import { formatFromDb as fromDb } from "./utils";
+import { formatEntityOfDb as fromDb } from "./utils";
 
-const formatFromDb = fromDb(["contacts"]);
+//const formatFromDb = fromDb(["contacts"]);
+
+export const formatFromUser = fromDb<User>([]);
 
 export const getUser = async <T = SelectUser>(
   email: string,
@@ -69,7 +71,7 @@ export const updateUser = async (
   return await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string): Promise<User | null> => {
   const result = await useDrizzle()
     .select({
       id: users.id,
@@ -83,12 +85,12 @@ export const getUserById = async (id: string) => {
       postalCode: users.postalCode,
       city: users.city,
       district: users.district,
+      email: users.email,
     })
     .from(users)
     .where(and(eq(users.id, id), eq(users.verified, true)))
     .limit(1);
-  //if (result.length !== 1) return null;
-  return result.length === 1 ? formatFromDb<User>(result[0]) : null;
+  return result.length === 1 ? formatFromUser(result[0]) : null;
 };
 
 export const getUserByEmail = async (email: string) => {

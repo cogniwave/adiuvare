@@ -3,6 +3,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { posts } from "./posts.schema";
 import { sqliteTable, text, uniqueIndex, integer } from "drizzle-orm/sqlite-core";
 import type { UserType } from "shared/types/user";
+import { addressSchema } from "~~/server/api/v1/organizations/common";
 
 export const users = sqliteTable(
   "users",
@@ -18,13 +19,9 @@ export const users = sqliteTable(
       .$defaultFn(() => new Date()),
     verified: integer("verified", { mode: "boolean" }).notNull(),
     token: text("token", { length: 128 }),
-    subscribedNewsletter: integer("subscribed_newsletter", { mode: "boolean" }).notNull().default(false),
     bio: text("bio"),
     website: text("website"),
-    address: text("address", { length: 256 }),
-    postalCode: text("postal_code", { length: 8 }),
-    city: text("city", { length: 256 }),
-    district: text("district", { length: 128 }),
+    ...addressSchema,
     photo: text("photo"),
     photoThumbnail: text("photo_thumbnail"),
   },

@@ -1,9 +1,11 @@
-import { getOrgs, getTotalOrgs } from "server/db/organization";
+import { getOrganization, getTotalOrgs } from "~~/server/db/organizations";
 import { log } from "server/utils/logger";
 
 export default defineEventHandler(async () => {
   try {
-    const [organizations, total] = await Promise.all([getOrgs(), getTotalOrgs()]);
+    const [org, total] = await Promise.all([getOrganization(), getTotalOrgs()]);
+
+    const organizations = org ? [org] : [];
 
     return {
       organizations: organizations.map((org) => {

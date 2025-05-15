@@ -1,9 +1,9 @@
 export interface BaseOrganization {
   id: string;
-  email: string;
+  // email: string;
+  //  password: string;
   displayName: string;
   verified: boolean;
-  password: string;
   category:
     | "unknown"
     | "ipss"
@@ -17,7 +17,7 @@ export interface BaseOrganization {
     | "fundacoes"
     | "other";
   ownerId: string;
-  acceptSameDomainUsers?: boolean; // default to true
+  acceptSameDomainUsers?: boolean;
 }
 
 export interface Organization extends BaseOrganization {
@@ -26,7 +26,7 @@ export interface Organization extends BaseOrganization {
   token?: string;
   about?: string;
   website?: string;
-  address?: string; // rua
+  address?: string;
   postalCode?: string;
   city?: string;
   district?: string;
@@ -48,10 +48,10 @@ export interface OrganizationAssociation {
 }
 
 export interface RegisterPayload extends BaseOrganization, OrganizationAssociation {
-  newsletter?: boolean;  
+  newsletter?: boolean;
 }
 
 export interface GetOrganizationsResult {
   organizations: Organization[];
   total: number;
-} 
+}
