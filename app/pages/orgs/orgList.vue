@@ -127,23 +127,7 @@
     </v-expand-transition> -->
 
     <section>
-      <ad-org-list-item
-        v-for="org in [
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-          ...orgs,
-        ]"
-        :key="org.slug"
-        :org="org"
-      />
+      <ad-org-list-item v-for="org in orgs" :key="org.slug" :org="org" />
     </section>
   </template>
 </template>
