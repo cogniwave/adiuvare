@@ -6,7 +6,7 @@ body {
 }
 
 a {
-  &:not(.v-btn) {
+  &:not(.v-btn, .v-list-item) {
     transition: 0.2s;
     opacity: 0.8;
     text-decoration: none;
@@ -29,6 +29,7 @@ h1,
   font-size: 32px;
   line-height: 40px;
   color: rgba(var(--v-theme-heading));
+  font-weight: bold;
 }
 
 h2,
@@ -36,6 +37,7 @@ h2,
   font-size: 24px;
   line-height: 28px;
   color: rgba(var(--v-theme-heading));
+  font-weight: bold;
 }
 
 h3,
@@ -43,6 +45,7 @@ h3,
   font-size: 20px;
   line-height: 24px;
   color: rgba(var(--v-theme-heading));
+  font-weight: bold;
 }
 
 h4,
@@ -50,6 +53,7 @@ h4,
   font-size: 18px;
   line-height: 20px;
   color: rgba(var(--v-theme-heading));
+  font-weight: bold;
 }
 
 h5,
@@ -57,6 +61,7 @@ h5,
   font-size: 16px;
   line-height: 18px;
   color: rgba(var(--v-theme-heading));
+  font-weight: bold;
 }
 
 h6,
@@ -64,6 +69,7 @@ h6,
   font-size: 14px;
   line-height: 16px;
   color: rgba(var(--v-theme-heading));
+  font-weight: bold;
 }
 
 p,
@@ -95,6 +101,13 @@ span {
       color: rgba(var(--v-theme-surface));
     }
   }
+}
+
+.v-card--variant-elevated {
+  box-shadow:
+    0px 0px 10px 0px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 1px 1px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 3px 0px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
 }
 
 // @mixin typography($font-size) {

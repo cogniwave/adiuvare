@@ -5,6 +5,9 @@
         v-model:model-value="email"
         type="email"
         prepend-icon="fa-at"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
         :label="t('form.email')"
         :rules="[required(t), isValidEmail(t)]"
         :error-messages="errors.email"
@@ -24,9 +27,9 @@
         :error-messages="errors.password"
       >
         <template #append-inner>
-          <v-icon class="cursor-pointer" @click="switchVisibility">{{
-            visibilityIcon === "eye" ? "fa-eye" : "fa-eye-off"
-          }}</v-icon>
+          <v-icon class="cursor-pointer" @click="switchVisibility">
+            {{ visibilityIcon === "eye" ? "fa-eye" : "fa-eye-slash" }}
+          </v-icon>
         </template>
       </v-text-field>
     </template>
@@ -34,31 +37,31 @@
     <template #actions>
       <!-- desktop -->
       <template v-if="mdAndUp">
-        <nuxt-link to="register" class="text-blue-grey">
+        <nuxt-link to="register" class="text-secondary">
           {{ t("register.link") }}
         </nuxt-link>
 
-        <span class="text-blue-grey mx-2">| </span>
+        <small class="text-secondary mt-1">|</small>
 
-        <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
+        <nuxt-link to="reset-password" class="text-secondary mr-auto">
           {{ t("reset.link") }}
         </nuxt-link>
 
-        <v-btn type="submit" color="primary" :loading="submitting">
+        <v-btn type="submit" variant="flat" :loading="submitting">
           {{ t("login.title") }}
         </v-btn>
       </template>
 
       <div v-else class="d-flex flex-column align-center w-100">
-        <v-btn type="submit" color="primary" class="mb-5" :loading="submitting">
+        <v-btn type="submit" variant="flat" class="mb-5" :loading="submitting">
           {{ t("login.title") }}
         </v-btn>
 
-        <nuxt-link to="register" class="text-blue-grey mb-3">
+        <nuxt-link to="register" class="text-secondary mb-3">
           {{ t("register.link") }}
         </nuxt-link>
 
-        <nuxt-link to="reset-password" class="text-blue-grey">
+        <nuxt-link to="reset-password" class="text-secondary">
           {{ t("reset.link") }}
         </nuxt-link>
       </div>
@@ -137,9 +140,3 @@
     }
   };
 </script>
-
-<style scoped>
-  a {
-    color: rgb(var(--v-theme-secondary)) !important;
-  }
-</style>

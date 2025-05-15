@@ -126,7 +126,6 @@
               :key="item.id"
               :post="item"
               :user="user?.slug || ''"
-              class="mb-5"
               @click:state="openDisableDialog"
               @click:delete="openDeleteDialog"
               @click:report="openReportDialog"

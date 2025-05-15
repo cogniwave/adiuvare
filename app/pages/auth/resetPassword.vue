@@ -17,31 +17,31 @@
 
     <template #actions>
       <template v-if="mdAndUp">
-        <nuxt-link to="register" class="text-blue-grey">
+        <nuxt-link to="register" class="text-secondary">
           {{ t("register.link") }}
         </nuxt-link>
 
-        <span class="text-blue-grey mx-2">|</span>
+        <small class="text-secondary mt-1">|</small>
 
-        <nuxt-link to="login" class="text-blue-grey mr-auto">
+        <nuxt-link to="login" class="text-secondary mr-auto">
           {{ t("login.title") }}
         </nuxt-link>
 
-        <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+        <v-btn type="submit" variant="flat" :loading="submitting" @click="submit">
           {{ t("reset.submit") }}
         </v-btn>
       </template>
 
       <div v-else class="d-flex flex-column align-center w-100">
-        <v-btn type="submit" color="primary" class="mb-5" :loading="submitting" @click="submit">
+        <v-btn type="submit" variant="flat" class="mb-5" :loading="submitting" @click="submit">
           {{ t("reset.submit") }}
         </v-btn>
 
-        <nuxt-link to="register" class="text-blue-grey mb-3">
+        <nuxt-link to="register" class="text-secondary mb-3">
           {{ t("register.link") }}
         </nuxt-link>
 
-        <nuxt-link to="login" class="text-blue-grey">
+        <nuxt-link to="login" class="text-secondary">
           {{ t("login.title") }}
         </nuxt-link>
       </div>

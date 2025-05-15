@@ -227,6 +227,7 @@ export default defineNuxtConfig({
         },
         VCard: {
           background: "background",
+          rounded: "xl",
         },
         VIcon: {
           size: "x-small",

@@ -1,11 +1,17 @@
 <template>
-  <v-card class="bg-white">
-    <v-card-title>
-      <h2 class="text-h5 text-white">{{ title }}</h2>
+  <v-card class="mt-10">
+    <v-card-title tag="h2" class="bg-background">
+      {{ title }}
     </v-card-title>
 
     <v-card-item v-if="!loading">
-      <v-form v-if="showForm" ref="form" class="px-4 pt-4" validate-on="submit lazy" @submit.prevent="submit">
+      <v-form
+        v-if="showForm"
+        ref="form"
+        class="w-75 px-4 pt-4 mx-auto"
+        validate-on="submit lazy"
+        @submit.prevent="submit"
+      >
         <slot name="form" />
 
         <v-divider class="mt-4" />
@@ -47,21 +53,3 @@
     },
   });
 </script>
-
-<style lang="scss" scoped>
-  :deep(p) {
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-  }
-
-  a {
-    transition: 0.2s;
-    opacity: 0.8;
-
-    &:hover {
-      transition: 0.2s;
-      opacity: 1;
-    }
-  }
-</style>
