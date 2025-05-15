@@ -1,31 +1,27 @@
 <template>
-  <v-card class="mt-10">
-    <v-card-title tag="h2" class="bg-background">
-      {{ title }}
-    </v-card-title>
+  <section class="d-flex align-center justify-center h-100 w-100">
+    <v-card class="w-75">
+      <v-card-title tag="h2" class="bg-background">
+        {{ title }}
+      </v-card-title>
 
-    <v-card-item v-if="!loading">
-      <v-form
-        v-if="showForm"
-        ref="form"
-        class="w-75 px-4 pt-4 mx-auto"
-        validate-on="submit lazy"
-        @submit.prevent="submit"
-      >
-        <slot name="form" />
+      <v-card-item v-if="!loading">
+        <v-form v-if="showForm" ref="form" class="px-5 pt-4 mx-auto" validate-on="submit lazy" @submit.prevent="submit">
+          <slot name="form" />
 
-        <v-divider class="mt-4" />
+          <v-divider class="mt-4" />
 
-        <v-card-actions class="px-5 d-flex align-center justify-end">
-          <slot name="actions" />
-        </v-card-actions>
-      </v-form>
+          <v-card-actions class="px-5 d-flex align-center justify-end">
+            <slot name="actions" />
+          </v-card-actions>
+        </v-form>
 
-      <div v-else class="py-5">
-        <slot name="content" />
-      </div>
-    </v-card-item>
-  </v-card>
+        <div v-else class="py-5">
+          <slot name="content" />
+        </div>
+      </v-card-item>
+    </v-card>
+  </section>
 </template>
 
 <script lang="ts" setup>
