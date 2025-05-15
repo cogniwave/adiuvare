@@ -44,21 +44,7 @@
       <v-divider />
 
       <v-card-actions>
-        <ad-location v-for="location in visibleLocations" :key="location" :location="location" />
-
-        <v-menu v-if="leftoverLocations.length" open-on-hover>
-          <template #activator="{ props }">
-            <span v-bind="props">
-              <v-chip label variant="outlined" color="secondary" size="small"> +{{ leftoverLocations.length }} </v-chip>
-            </span>
-          </template>
-
-          <v-list density="compact" class="pt-1 pb-2">
-            <v-list-item v-for="location in leftoverLocations" :key="location" class="pl-2 pr-2">
-              <ad-location :location="location" />
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <ad-location :locations="$props.post.locations" />
 
         <v-spacer />
 
@@ -118,7 +104,7 @@
                 @click="onReport"
               />
 
-              <v-menu v-if="post.contacts?.length && smAndUp" :close-on-content-click="false" submenu>
+              <v-menu v-if="post.contacts?.length && $vuetify.display.smAndUp" :close-on-content-click="false" submenu>
                 <template #activator="{ props }">
                   <v-list-item
                     v-bind="props"
@@ -159,16 +145,10 @@
 
   const $router = useRouter();
   const { setPost } = usePosts();
-  const { smAndUp, mdAndUp } = useDisplay();
 
   const desc = ref($props.post.description);
   const descTooLong = ref(false);
   const descVisible = ref(false);
-
-  const numVisibleLocations = computed(() => (mdAndUp.value ? 3 : 1));
-
-  const visibleLocations = ref<string[]>($props.post.locations.slice(0, numVisibleLocations.value));
-  const leftoverLocations = ref<string[]>($props.post.locations.slice(numVisibleLocations.value));
 
   onBeforeMount(() => {
     if ($props.post.description.length > MAX_DESC) {

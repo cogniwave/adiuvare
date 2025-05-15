@@ -73,7 +73,11 @@ h6,
 }
 
 p,
-span {
+span:not(.v-btn__content, .v-btn__prepend) {
+  color: rgba(var(--v-theme-text));
+}
+
+.text-regular {
   color: rgba(var(--v-theme-text));
 }
 

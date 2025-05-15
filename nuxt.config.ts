@@ -48,7 +48,6 @@ export default defineNuxtConfig({
     head: {
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
-      title: "Adiuvare",
       meta: [
         { name: "google-adsense-account", content: "ca-pub-1091633097511683" },
         { name: "msapplication-TileColor", content: "#eceff1" },
@@ -264,7 +263,6 @@ export default defineNuxtConfig({
         },
         VBtn: {
           color: "primary",
-          variant: "text",
           flat: true,
           rounded: "lg",
         },

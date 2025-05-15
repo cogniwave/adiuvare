@@ -8,7 +8,7 @@
 
     <v-list-item :title="$t('menu.home')" to="/" prepend-icon="fa-home" />
 
-    <v-list-item :title="$t('menu.orgs')" to="/organizations" prepend-icon="fa-building" />
+    <v-list-item :title="$t('orgs.title')" to="/organizations" prepend-icon="fa-building" />
 
     <v-divider class="my-1" />
 

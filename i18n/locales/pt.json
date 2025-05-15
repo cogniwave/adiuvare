@@ -277,8 +277,11 @@
   },
   "menu": {
     "home": "Início",
-    "orgs": "Organizações",
     "posts": "Publicações do autor"
+  },
+  "orgs": {
+    "title": "Organizações",
+    "create": "Criar organização"
   },
   "org": {
     "learnMore": "Ver mais",

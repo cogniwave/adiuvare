@@ -27,14 +27,11 @@
   import AdFooter from "app/components/layout/AdFooter.vue";
 
   const { t } = useI18n();
-  const $route = useRoute();
   const { smAndDown } = useDisplay();
   const config = useRuntimeConfig();
 
   useHead({
-    titleTemplate: () => {
-      return $route.meta.title ? `${t($route.meta.title as string)} | Adiuvare` : "Adiuvare";
-    },
+    titleTemplate: (page) => (page ? `${t(page)} | Adiuvare` : "Adiuvare"),
   });
 
   const { isLoading, start, finish } = useLoadingIndicator();

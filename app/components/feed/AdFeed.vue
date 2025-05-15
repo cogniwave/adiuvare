@@ -309,6 +309,7 @@
       expandedFilterVisible.value = !expandedFilterVisible.value;
     }
   };
+
   const resetSearch = () => {
     page.value = 1;
     filter.value = undefined;

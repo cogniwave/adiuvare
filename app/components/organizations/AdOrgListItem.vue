@@ -1,47 +1,29 @@
 <template>
-  <v-card class="mx-auto" variant="elevated" tile color="grey-lighten-4">
-    <nuxt-link :to="`/organizations/${org.slug}`">
-      <v-hover v-slot="{ isHovering, props }">
-        <v-img
-          v-bind="props"
-          :aspect-ratio="16 / 9"
-          :src="org.photo || '-'"
-          cover
-          lazy-src="/assets/images/profile-placeholder.png"
-          referrerpolicy="same-origin"
-        >
-          <template #error>
-            <v-icon size="100px">fa-solid fa-shop-slash</v-icon>
-          </template>
+  <v-card
+    color="surface"
+    :to="`/organizations/${org.slug}`"
+    :prepend-icon="!org.photo ? 'fa-solid fa-shop-slash' : undefined"
+    :prepend-avatar="org.photo"
+    :title="org.name"
+    subtitle="<org type>"
+  >
+    <template #title>
+      <v-card-title class="text-heading font-weight-bold">
+        {{ org.name }}
+      </v-card-title>
+    </template>
 
-          <v-expand-transition>
-            <div v-if="isHovering" class="transition-fast-in-fast-out v-card--reveal position-absolute py-3 px-4">
-              <div class="d-flex align-center justify-space-between flex-column text-center">
-                <span>
-                  {{ visibleText }}
+    <v-card-text class="text-regular">
+      <template v-if="org.bio">
+        {{ visibleText }}
 
-                  <small
-                    v-if="org.bio && org.bio.length > 180 && !showFullText"
-                    class="inline"
-                    @click.stop.prevent="showAllText"
-                  >
-                    {{ $t("org.showAllBio") }}
-                  </small>
-                </span>
+        <small v-if="org.bio.length > 180 && !showFullText" class="inline" @click.stop.prevent="showAllText">
+          {{ $t("org.showAllBio") }}
+        </small>
+      </template>
 
-                <v-btn flat class="text-secondary mt-3" :to="`/organizations/${org.slug}`">
-                  {{ $t("org.learnMore") }}
-                </v-btn>
-              </div>
-            </div>
-          </v-expand-transition>
-        </v-img>
-      </v-hover>
-
-      <v-card-text class="pt-2">
-        <h3 class="text-h6 ma-0 text-center font-weight-light text-primary">{{ org.name }}</h3>
-      </v-card-text>
-    </nuxt-link>
+      <span v-else class="font-italic"> {{ $t("org.noBio") }}</span>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -52,16 +34,12 @@
     org: { type: Object as PropType<User>, required: true },
   });
 
-  const { t } = useI18n();
-
   const visibleText = ref("");
   const showFullText = ref(false);
 
   onBeforeMount(() => {
     if ($props.org.bio) {
       visibleText.value = shortenText($props.org.bio, 180);
-    } else {
-      visibleText.value = t("org.noBio");
     }
   });
 
@@ -72,55 +50,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .v-card--reveal {
-    height: 100%;
-    width: 100%;
-    overflow: auto;
-
-    &::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(var(--v-theme-background));
-    }
-
-    > div {
-      min-height: 100%;
-    }
-
-    span {
-      font-size: 16px;
-      line-height: 22px;
-    }
-
-    small {
-      cursor: pointer;
-      transition: 0.2s;
-      opacity: 1;
-
-      &:hover {
-        opacity: 0.8;
-        transition: 0.2s;
-      }
-    }
-  }
-
-  :deep(.v-img__error) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    i {
-      opacity: 0.2;
-    }
-  }
-
-  .text-subtitle {
-    color: rgb(var(--v-theme-text));
+  .v-card {
+    max-width: 300px;
   }
 </style>
