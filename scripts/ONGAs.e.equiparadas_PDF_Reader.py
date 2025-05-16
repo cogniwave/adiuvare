@@ -4,14 +4,21 @@ import os
 
 # Path to the PDF file
 pdf_path = r"filestoParse/ONGAs.e.equiparadas.pdf"
-# Output CSV path
-output_csv = "generatedFiles/ONGAs.e.equiparadas.csv"
+# Output merged CSV path
+merged_csv = "generatedFiles/merged_output.csv"
+
+# All fields for the merged file (without "DENOMINAÇÃO")
+all_fields = [
+    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
+    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
+    "Código Postal", "SOURCE"
+]
 
 # Expected headers in the PDF (for reference)
 expected_headers = ["Nome", "Morada", "Código Postal", "e-mail"]
 
 # Ensure output directory exists
-os.makedirs(os.path.dirname(output_csv), exist_ok=True)
+os.makedirs(os.path.dirname(merged_csv), exist_ok=True)
 
 batch_size = 100
 
@@ -39,20 +46,29 @@ with pdfplumber.open(pdf_path) as pdf:
                 # Extract data rows
                 for data_row in table[header_idx+1:]:
                     if len(data_row) >= max([i for i in col_indices if i is not None])+1:
-                        extracted = []
-                        for i in col_indices:
-                            extracted.append(data_row[i].strip() if i is not None and data_row[i] else "")
+                        # Map to all fields in the unified header
+                        nome = data_row[col_indices[0]].strip() if col_indices[0] is not None and data_row[col_indices[0]] else ""
+                        morada = data_row[col_indices[1]].strip() if col_indices[1] is not None and data_row[col_indices[1]] else ""
+                        codigo_postal = data_row[col_indices[2]].strip() if col_indices[2] is not None and data_row[col_indices[2]] else ""
+                        email = data_row[col_indices[3]].strip() if col_indices[3] is not None and data_row[col_indices[3]] else ""
+                        extracted = [
+                            nome, "", email, "", morada,  # NOME ONGD, TELEPHONE / MOBILE, EMAIL, SITE, ADDRESS
+                            "", "", "", "", "",           # MUNICIPALITY, DISTRICT, LEGAL FORM, REGISTRATION YEAR, NIPC
+                            codigo_postal, "ONGAs"
+                        ]
                         all_rows.append(extracted)
 
-# Write to CSV
+# Write to merged CSV
 if all_rows:
-    with open(output_csv, "w", newline="", encoding="utf-8") as f:
+    write_header = not os.path.exists(merged_csv)
+    with open(merged_csv, "a", newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(expected_headers)
+        if write_header:
+            writer.writerow(all_fields)
         for i in range(0, len(all_rows), batch_size):
             batch = all_rows[i:i+batch_size]
             writer.writerows(batch)
-            print(f"✅ Batch {i//batch_size+1}: {len(batch)} rows written.")
-    print(f"✅ {len(all_rows)} rows saved to {output_csv} successfully.")
+            print(f"✅ Batch {i//batch_size+1}: {len(batch)} rows written from ONGAs.")
+    print(f"✅ {len(all_rows)} rows from ONGAs saved to {merged_csv} successfully.")
 else:
     print("⚠️ No valid table found in the PDF.")

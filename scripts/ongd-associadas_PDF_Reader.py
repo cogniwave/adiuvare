@@ -2,17 +2,13 @@ import csv
 import os
 
 input_csv = "filestoParse/ongd-associadas.csv"
-output_csv = "generatedFiles/ongd-associadas-parsed.csv"
+merged_csv = "generatedFiles/merged_output.csv"
 
-# Ensure output directory exists
-os.makedirs(os.path.dirname(output_csv), exist_ok=True)
-
-fields_to_extract = [
-    "NOME ONGD",
-    "TELEFONE / TELEMÓVEL",
-    "EMAIL",
-    "SITE",
-    "MORADA"
+# Unified header without "DENOMINAÇÃO"
+all_fields = [
+    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
+    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
+    "Código Postal", "SOURCE"
 ]
 
 batch_size = 100
@@ -21,15 +17,26 @@ rows = []
 with open(input_csv, newline='', encoding='latin1') as infile:
     reader = csv.DictReader(infile, delimiter=';')
     for row in reader:
-        extracted = [(row.get(field) or "").strip() for field in fields_to_extract]
-        rows.append(extracted)
+        # Fill the unified header fields, using "" for fields not present in this source
+        data = [
+            (row.get("NOME ONGD") or "").strip(),
+            (row.get("TELEFONE / TELEMÓVEL") or "").strip(),
+            (row.get("EMAIL") or "").strip(),
+            (row.get("SITE") or "").strip(),
+            (row.get("MORADA") or "").strip(),
+            "", "", "", "", "", "",  # Extra fields not present in this source
+            "ONGD"
+        ]
+        rows.append(data)
 
-with open(output_csv, "w", newline='', encoding='utf-8') as outfile:
+write_header = not os.path.exists(merged_csv)
+with open(merged_csv, "a", newline='', encoding='utf-8') as outfile:
     writer = csv.writer(outfile)
-    writer.writerow(fields_to_extract)
+    if write_header:
+        writer.writerow(all_fields)
     for i in range(0, len(rows), batch_size):
         batch = rows[i:i+batch_size]
         writer.writerows(batch)
-        print(f"✅ Batch {i//batch_size+1}: {len(batch)} rows written.")
+        print(f"✅ Batch {i//batch_size+1}: {len(batch)} rows written from ONGD.")
 
-print(f"✅ {len(rows)} rows saved to {output_csv} successfully.")
+print(f"✅ {len(rows)} rows from ONGD saved to {merged_csv} successfully.")
