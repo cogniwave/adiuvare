@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+import os
 
 def crawl_associacoes():
     url = "https://www.encontra-me.org/lista_associacoes"
@@ -30,7 +31,6 @@ def crawl_associacoes():
                 for a in element.find_all('a'):
                     nome = a.get_text(strip=True)
                     site = a.get('href', 'N/A')
-                    # The name may have text before <a>, so try to get the text immediately before <a>
                     dados.append({
                         'Nome': nome,
                         'Site': site,
@@ -38,14 +38,12 @@ def crawl_associacoes():
                         'Distrito': current_distrito
                     })
                 # Extract associations without link (plain text, except county name)
-                # Remove <strong> and <a> from text
                 text_parts = []
                 for content in element.contents:
                     if getattr(content, "name", None) in ['strong', 'a']:
                         continue
                     if isinstance(content, str):
                         text_parts.append(content.strip())
-                # Join, split by <br> if any, and filter valid names
                 for part in text_parts:
                     for nome in [n.strip() for n in part.split('\n') if n.strip()]:
                         if nome and nome != current_concelho:
@@ -55,14 +53,40 @@ def crawl_associacoes():
                                 'Concelho': current_concelho,
                                 'Distrito': current_distrito
                             })
-        # Save data to CSV
-        with open('associacoes.csv', 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['Nome', 'Site', 'Concelho', 'Distrito']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            for row in dados:
+
+        # Map to unified header
+        merged_csv = "generatedFiles/merged_output.csv"
+        all_fields = [
+            "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
+            "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
+            "Código Postal", "SOURCE"
+        ]
+        rows = []
+        for row in dados:
+            rows.append([
+                row.get('Nome', ''),
+                "",  # TELEFONE / TELEMÓVEL
+                "",  # EMAIL
+                row.get('Site', ''),
+                "",  # MORADA
+                row.get('Concelho', ''),
+                row.get('Distrito', ''),
+                "",  # FORMA JURÍDICA
+                "",  # ANO REGISTO
+                "",  # NIPC
+                "",  # Código Postal
+                "ENCONTRAME"
+            ])
+
+        write_header = not os.path.exists(merged_csv)
+        os.makedirs(os.path.dirname(merged_csv), exist_ok=True)
+        with open(merged_csv, 'a', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            if write_header:
+                writer.writerow(all_fields)
+            for row in rows:
                 writer.writerow(row)
-        print(f"Dados de {len(dados)} associações foram salvos em associacoes.csv")
+        print(f"Dados de {len(rows)} associações foram salvos em {merged_csv}")
     except requests.exceptions.RequestException as e:
         print(f"Erro ao acessar o site: {e}")
     except Exception as e:
