@@ -32,7 +32,7 @@ with pdfplumber.open(pdf_path) as pdf:
 
 # Save to CSV file
 if all_documents:
-    with open("../generatedFiles/IPSS.csv", "w", newline="", encoding="utf-8") as csvfile:
+    with open("generatedFiles/IPSS.csv", "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(headers)
         for i in range(0, len(all_documents), batch_size):
