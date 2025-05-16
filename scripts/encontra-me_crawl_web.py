@@ -18,7 +18,14 @@ def crawl_associacoes():
         current_distrito = ""
         current_concelho = ""
 
+        skip_intro = True
         for element in orgs_div.children:
+            if getattr(element, "name", None) == 'p':
+                # Skip the intro paragraph if it matches the known intro text
+                if skip_intro and element.get_text(strip=True).startswith("Segue-se abaixo uma lista de associações"):
+                    skip_intro = False
+                    continue
+                skip_intro = False
             if getattr(element, "name", None) == 'h2':
                 # Update current district
                 current_distrito = element.get_text(strip=True).replace('Distrito de ', '').replace('Região Autónoma dos ', '')
