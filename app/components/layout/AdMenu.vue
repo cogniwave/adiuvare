@@ -32,13 +32,7 @@
         prepend-icon="fa-user"
       />
 
-      <v-list-item
-        :title="$t('nav.logout')"
-        :active="$route.path.includes('logout')"
-        to="/logout"
-        prepend-icon="fa-right-from-bracket"
-        @click="clear"
-      />
+      <v-list-item :title="$t('nav.logout')" prepend-icon="fa-right-from-bracket" @click="logout" />
     </template>
 
     <template v-else>
@@ -60,7 +54,17 @@
 </template>
 
 <script setup lang="ts">
+  import { useNotify } from "app/store/notify";
+
   const { clear, loggedIn } = useUserSession();
+  const { notifySuccess } = useNotify();
+  const { t } = useI18n();
+
+  const logout = () => {
+    clear();
+    navigateTo("/");
+    notifySuccess(t("logoutSuccess"));
+  };
 </script>
 
 <style lang="scss" scoped>

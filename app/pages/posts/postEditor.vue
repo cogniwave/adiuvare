@@ -145,7 +145,7 @@
         {{ t("posts.cancel") }}
       </v-btn>
 
-      <v-btn type="submit" variant="flat" color="primary" :loading="submitting" @click="submit">
+      <v-btn type="submit" variant="flat" color="primary" :loading="submitting">
         {{ t("posts.update") }}
       </v-btn>
     </template>

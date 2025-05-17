@@ -56,7 +56,7 @@
 
       <v-spacer />
 
-      <v-btn type="submit" variant="flat" color="primary" :loading="submitting" @click="submit">
+      <v-btn type="submit" variant="flat" color="primary" :loading="submitting">
         {{ t("form.user.accountSubmit") }}
       </v-btn>
     </template>
