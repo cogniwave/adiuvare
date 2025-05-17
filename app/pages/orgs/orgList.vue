@@ -139,7 +139,7 @@
   import type { GetOrganizationsResult } from "shared/types/user";
 
   useSeoMeta({ title: "pages.orgList" });
-  definePageMeta({ path: "/organizations", layout: "listing" });
+  definePageMeta({ path: "/organizations", layout: "full-width" });
 
   const { orgs, setOrgs } = useOrganizations();
   const { notifyError } = useNotify();

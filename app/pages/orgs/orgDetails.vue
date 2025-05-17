@@ -105,7 +105,7 @@
     { title: slug },
   ];
 
-  definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails", layout: "listing" });
+  definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails", layout: "full-width" });
 
   const { status, error } = await useFetch<User>(`/api/v1/organizations/${slug}`, {
     lazy: true,

@@ -86,7 +86,7 @@
 
 <style lang="scss" scoped>
   .v-footer {
-    max-height: 200px;
+    flex: initial;
 
     :deep(.v-field) {
       overflow: hidden;
