@@ -281,13 +281,19 @@
   },
   "orgs": {
     "title": "Organizações",
-    "create": "Criar organização"
+    "create": "Criar organização",
+    "contact": "Contactar",
+    "morada": "Morada",
+    "website": "Website",
+    "nipc": "NIPC",
+    "noBio": "Esta organização ainda não especificou a sua missão",
+    "members": "Membros",
+    "posts": "Publicações"
   },
   "org": {
     "learnMore": "Ver mais",
     "bioPlaceholder": "Descreva a missão / objetivo da organização para melhor ajudar os voluntários à procura duma organização com a qual se identifiquem",
     "bio": "Missão / objetivo",
-    "noBio": "Esta organização ainda não especificou a sua missão",
     "showAllBio": "Ver texto completo"
   },
   "email": {
