@@ -1,0 +1,10 @@
+// todo: figure out how use from variables
+$font-family: "Inter", sans-serif, system;
+
+// vuetify component specific variables. Will be imported before each component
+@forward "vuetify/settings" with (
+  $layers: true,
+  $color-pack: false,
+  $body-font-family: $font-family,
+  $heading-font-family: "Montserrat"
+);

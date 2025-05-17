@@ -1,18 +1,25 @@
 <template>
-  <v-input prepend-icon="fa-solid fa-calendar-days">
+  <v-input prepend-icon="fa-solid fa-calendar-days" class="mt-10">
     <v-label class="mr-2"> {{ t("form.post.schedule.title") }} </v-label>
 
     <v-btn-toggle
       v-model:model-value="scheduleType"
       divided
-      color="primary"
+      color="secondary"
       density="compact"
       class="ml-auto"
       @update:model-value="updateScheduleType"
     >
       <v-tooltip :text="t('form.post.schedule.anytime')">
         <template #activator="{ props }">
-          <v-btn v-bind="props" size="x-small" value="anytime">
+          <v-btn
+            v-bind="props"
+            density="compact"
+            rounded="0"
+            size="x-small"
+            value="anytime"
+            @update:model-value="scheduleType = ScheduleType.ANYTIME"
+          >
             {{ t("form.post.schedule.anytime") }}
           </v-btn>
         </template>
@@ -20,7 +27,14 @@
 
       <v-tooltip :text="t('form.post.schedule.specific')">
         <template #activator="{ props }">
-          <v-btn v-bind="props" size="x-small" value="specific">
+          <v-btn
+            v-bind="props"
+            density="compact"
+            rounded="0"
+            size="x-small"
+            value="specific"
+            @update:model-value="scheduleType = ScheduleType.SPECIFIC"
+          >
             {{ t("form.post.schedule.specific") }}
           </v-btn>
         </template>
@@ -28,7 +42,14 @@
 
       <v-tooltip :text="t('form.post.schedule.recurring')">
         <template #activator="{ props }">
-          <v-btn v-bind="props" size="x-small" value="recurring">
+          <v-btn
+            v-bind="props"
+            density="compact"
+            rounded="0"
+            size="x-small"
+            value="recurring"
+            @update:model-value="scheduleType = ScheduleType.RECURRING"
+          >
             {{ t("form.post.schedule.recurring") }}
           </v-btn>
         </template>

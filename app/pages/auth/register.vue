@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card ref="form" :title="t('register.title')" :show-form="!userCreated" @submit="submit">
+  <ad-form-card ref="form" :title="t('register.title')" :show-form="!userCreated" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="name"
@@ -102,21 +102,21 @@
 
     <template #actions>
       <template v-if="!xs">
-        <nuxt-link to="login" class="text-blue-grey mr-auto">
+        <nuxt-link to="login" class="text-secondary mr-auto">
           {{ t("login.title") }}
         </nuxt-link>
 
-        <v-btn type="submit" color="primary" :loading="submitting">
+        <v-btn type="submit" variant="flat" :loading="submitting">
           {{ t("register.register") }}
         </v-btn>
       </template>
 
       <div v-else class="d-flex flex-column align-center w-100">
-        <v-btn type="submit" color="primary" :loading="submitting">
+        <v-btn type="submit" variant="flat" :loading="submitting">
           {{ t("register.register") }}
         </v-btn>
 
-        <nuxt-link to="login" class="text-blue-grey mt-4">
+        <nuxt-link to="login" class="text-secondary mt-4">
           {{ t("login.title") }}
         </nuxt-link>
       </div>
@@ -125,11 +125,11 @@
     <template #content>
       <p class="mb-3">{{ t("register.successMessage") }}</p>
     </template>
-  </ad-auth-form-card>
+  </ad-form-card>
 </template>
 
 <script setup lang="ts">
-  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
+  import AdFormCard from "app/components/common/AdFormCard.vue";
   import { required, isValidEmail, isValidPassword, match } from "app/utils/validators";
   import { useNotify } from "app/store/notify";
   import { useFormErrors } from "app/composables/formErrors";
@@ -137,7 +137,6 @@
   import type { User, UserType } from "shared/types/user";
 
   definePageMeta({
-    layout: "auth",
     middleware: "unauthed-server",
     path: "/register",
     title: "pages.register",
@@ -158,7 +157,7 @@
   const newsletter = ref<boolean>(false);
   const userCreated = ref<boolean>(false);
 
-  const form = ref<InstanceType<typeof AdAuthFormCard>>();
+  const form = ref<InstanceType<typeof AdFormCard>>();
   const submitting = ref<boolean>(false);
 
   const submit = async () => {

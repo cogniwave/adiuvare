@@ -20,15 +20,18 @@
 </template>
 
 <script lang="ts" setup>
+  import AdLoading from "app/components/common/AdLoading.vue";
+  import AdNavbar from "app/components/layout/AdNavbar.vue";
+  import AdMobileMenu from "app/components/layout/AdMobileMenu.vue";
+  import AdSnackbar from "app/components/common/AdSnackbar.vue";
+  import AdFooter from "app/components/layout/AdFooter.vue";
+
   const { t } = useI18n();
-  const $route = useRoute();
   const { smAndDown } = useDisplay();
   const config = useRuntimeConfig();
 
   useHead({
-    titleTemplate: () => {
-      return $route.meta.title ? `${t($route.meta.title as string)} | Adiuvare` : "Adiuvare";
-    },
+    titleTemplate: (page) => (page ? `${t(page)} | Adiuvare` : "Adiuvare"),
   });
 
   const { isLoading, start, finish } = useLoadingIndicator();
@@ -44,12 +47,8 @@
         return;
       }
 
-      window.BrevoConversationsSetup = {
-        deferredLoading: true,
-      };
-
+      window.BrevoConversationsSetup = { deferredLoading: true };
       window.BrevoConversationsID = config.public.brevoConversationId;
-
       window.BrevoConversations =
         window.BrevoConversations ||
         function (...args: unknown[]) {

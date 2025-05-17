@@ -1,5 +1,6 @@
 import { updateUser } from "server/db/users";
 
+import { translate } from "server/utils/i18n";
 import { uploadFile, FileSizeError, FileTypeError, MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "shared/services/fileUpload";
 import { log } from "server/utils/logger";
 
@@ -11,23 +12,21 @@ export default defineProtectedRouteHandler(async (event) => {
     return {};
   }
 
-  const t = await useTranslation(event);
-
   const file = formData.get("file") as File;
 
   if (file.size > MAX_FILE_SIZE) {
     throw createError({
       statusCode: 422,
-      data: { file: t("errors.fileTooBig") },
-      statusMessage: t("errors.validationError"),
+      data: { file: translate("errors.fileTooBig") },
+      statusMessage: translate("errors.validationError"),
     });
   }
 
   if (!ACCEPT_FILE_TYPES.includes(file.type)) {
     throw createError({
       statusCode: 422,
-      data: { file: t("errors.invalidFileType") },
-      statusMessage: t("errors.validationError"),
+      data: { file: translate("errors.invalidFileType") },
+      statusMessage: translate("errors.validationError"),
     });
   }
 
@@ -46,16 +45,16 @@ export default defineProtectedRouteHandler(async (event) => {
     if (err instanceof FileSizeError) {
       createError({
         statusCode: 422,
-        data: { file: t("errors.fileTooBig") },
-        statusMessage: t("errors.validationError"),
+        data: { file: translate("errors.fileTooBig") },
+        statusMessage: translate("errors.validationError"),
       });
     }
 
     if (err instanceof FileTypeError) {
       throw createError({
         statusCode: 422,
-        data: { file: t("errors.invalidFileType") },
-        statusMessage: t("errors.validationError"),
+        data: { file: translate("errors.invalidFileType") },
+        statusMessage: translate("errors.validationError"),
       });
     }
 

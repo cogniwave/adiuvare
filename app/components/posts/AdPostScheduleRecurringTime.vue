@@ -30,10 +30,9 @@
                 rounded="xl"
                 class="mr-1"
                 density="compact"
-                variant="tonal"
-                size="xs"
+                variant="text"
                 icon="fa-solid fa-circle-minus"
-                color="primary"
+                color="secondary"
                 @click="onRemove(time.id)"
               />
             </template>
@@ -51,10 +50,9 @@
                 v-bind="props"
                 rounded="xl"
                 density="compact"
-                variant="tonal"
-                size="xs"
+                variant="text"
                 icon="fa-solid fa-circle-plus"
-                color="primary"
+                color="secondary"
                 @click="onAdd"
               />
             </template>

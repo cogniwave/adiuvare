@@ -2,19 +2,18 @@ import type { H3Error } from "h3";
 
 import { verifyUser } from "server/db/users";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
+import { translate } from "server/utils/i18n";
 
-import { RequiredEmail, RequiredString } from "~~/shared/validators";
+import { RequiredEmail, RequiredString } from "shared/validators";
 
 export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
-
   const body = await getValidatedInput<{ email: string; token: string }>(event, {
     token: RequiredString.min(32)
       .max(50)
       .messages({
-        "string.empty": t("errors.invalidConfirmToken"),
-        "string.max": t("errors.invalidConfirmToken"),
-        "string.min": t("errors.invalidConfirmToken"),
+        "string.empty": translate("errors.invalidConfirmToken"),
+        "string.max": translate("errors.invalidConfirmToken"),
+        "string.min": translate("errors.invalidConfirmToken"),
       }),
 
     email: RequiredEmail,

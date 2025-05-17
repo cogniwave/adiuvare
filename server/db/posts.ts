@@ -9,9 +9,14 @@ import { log } from "server/utils/logger";
 import type { InsertPost } from "./schemas/posts.schema";
 
 import { FEED_PAGE_SIZE } from "shared/utils";
-import { PostStateEnum, type PostFilter, type PostNeed, type UpdatePostPayload } from "shared/types/post";
-import { isPostNeed } from "shared/types/guards";
-import { formatFromDb as fromDb, formatToDb as toDb } from "./utils";
+import {
+  PostStateEnum,
+  type PostNeed,
+  type PostFilter,
+  type UpdatePostPayload,
+  type PostBySlug,
+} from "shared/types/post";
+// import { isPostNeed } from "shared/types/guards";
 
 type Query = SQLWrapper[] | SQL<unknown>[] | undefined;
 
@@ -27,9 +32,10 @@ const getFreeInputQuery = (query: string): Query => {
     arrayOverlaps(posts.locations, [query]),
   ];
 
-  if (isPostNeed(query)) {
-    conditions.push(arrayOverlaps(posts.needs, [query]));
-  }
+  // todo: fix this
+  // if (isPostNeed(query)) {
+  //   conditions.push(arrayOverlaps(posts.needs, [query]));
+  // }
 
   return [or(...conditions) as SQL<unknown>];
 };
@@ -51,9 +57,10 @@ const getDetailedFilter = (filter: PostFilter): Query => {
     conditions.push(arrayOverlaps(posts.locations, filter.locations));
   }
 
-  if (filter.needs?.length) {
-    conditions.push(arrayOverlaps(posts.needs, filter.needs as PostNeed[]));
-  }
+  // todo: fix this
+  // if (filter.needs?.length) {
+  //   conditions.push(arrayOverlaps(posts.needs, filter.needs as PostNeed[]));
+  // }
 
   // unexpected filtering
   if (!conditions.length) {
@@ -65,9 +72,23 @@ const getDetailedFilter = (filter: PostFilter): Query => {
   return conditions;
 };
 
-const serializableFields = ["locations", "needs", "schedule", "contacts"];
-const formatFromDb = fromDb(serializableFields);
-const formatToDb = toDb(serializableFields);
+// todo: fix this to not use any
+type SerializedPost = { needs?: string } & any;
+
+type DeserializedPost = { needs?: PostNeed[] } & any;
+
+const serializePost = <T extends DeserializedPost>(payload: any): T => {
+  return payload.needs ? { ...payload, needs: payload.needs.join(",") } : payload;
+};
+
+const deserializePost = <T extends SerializedPost>(result: any[]): T | null => {
+  if (result?.length > 0) {
+    return null;
+  }
+
+  const p = result[0]!;
+  return p.needs ? { ...p, needs: p.needs.split(",") } : p;
+};
 
 export const getPostsAndTotal = async (filter?: PostFilter) => {
   let query: Query = undefined;
@@ -77,6 +98,8 @@ export const getPostsAndTotal = async (filter?: PostFilter) => {
   }
 
   const [result, total] = await Promise.all([getPosts(query), getTotalPosts(query)]);
+
+  console.log(typeof result[0]!.needs);
 
   return { posts: result, total };
 };
@@ -106,7 +129,7 @@ export const getPosts = async (conditions?: Query) => {
     .orderBy(desc(posts.createdAt))
     .limit(FEED_PAGE_SIZE);
 
-  return (result || []).map(formatFromDb);
+  return result.map((p) => ({ ...p, needs: p.needs.split(",") })) || [];
 };
 
 export const getTotalPosts = async (conditions?: Query) => {
@@ -132,8 +155,8 @@ export const getTotalPosts = async (conditions?: Query) => {
   }
 };
 
-export const createPost = async (payload: InsertPost) => {
-  const result = await useDrizzle().insert(posts).values(formatToDb(payload)).returning({
+export const createPost = async (payload: Omit<InsertPost, "needs"> & { needs: PostNeed[] }) => {
+  const result = await useDrizzle().insert(posts).values(serializePost<InsertPost>(payload)).returning({
     id: posts.id,
     title: posts.title,
     state: posts.state,
@@ -147,7 +170,11 @@ export const createPost = async (payload: InsertPost) => {
     updatedAt: posts.updatedAt,
   });
 
-  return result[0]!;
+  if (result[0]) {
+    return { ...result[0], needs: payload.needs };
+  }
+
+  throw new Error("Failed to insert post");
 };
 
 export const updatePost = async (slug: string, payload: UpdatePostPayload, userId: string) => {
@@ -166,12 +193,12 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
     try {
       await tx
         .update(posts)
-        .set(formatToDb({ ...payload, updatedBy: userId }))
+        .set(serializePost({ ...payload, updatedBy: userId }))
         .where(eq(posts.slug, slug));
 
       // add entry to history
       await tx.insert(postHistory).values(
-        formatToDb({
+        serializePost({
           postId: old.id,
           userId: userId,
           state: old.state,
@@ -192,47 +219,43 @@ export const updatePost = async (slug: string, payload: UpdatePostPayload, userI
   return { ...old, ...payload };
 };
 
-export const deletePost = async (id: string) => {
-  return await useDrizzle().delete(posts).where(eq(posts.id, id));
-};
+export const deletePost = async (id: string) => useDrizzle().delete(posts).where(eq(posts.id, id));
 
 export const getPost = async (postId: string) => {
-  const result = await useDrizzle().select().from(posts).where(eq(posts.id, postId)).limit(1);
-
-  return result.length === 1 ? formatFromDb(result[0]!) : null;
+  return deserializePost(await useDrizzle().select().from(posts).where(eq(posts.id, postId)).limit(1));
 };
 
 export const getPostByOwner = async (postId: string, userId: string) => {
-  const result = await useDrizzle()
-    .select({ createdBy: users.name })
-    .from(posts)
-    .where(and(eq(posts.id, postId), eq(posts.createdUserId, userId)))
-    .limit(1);
-
-  return result.length === 1 ? formatFromDb(result[0]!) : null;
+  return deserializePost<{ createdBy: string }>(
+    await useDrizzle()
+      .select({ createdBy: users.name })
+      .from(posts)
+      .where(and(eq(posts.id, postId), eq(posts.createdUserId, userId)))
+      .limit(1),
+  );
 };
 
 export const getPostBySlug = async (slug: string, getId = false) => {
-  const result = await useDrizzle()
-    .select({
-      id: posts.id,
-      title: posts.title,
-      description: posts.description,
-      locations: posts.locations,
-      needs: posts.needs,
-      schedule: posts.schedule,
-      createdAt: posts.createdAt,
-      updatedAt: posts.updatedAt,
-      state: posts.state,
-      slug: posts.slug,
-      contacts: posts.contacts,
-      createdBy: users.slug,
-      ...(getId && { createdById: posts.createdUserId }),
-    })
-    .from(posts)
-    .where(and(eq(posts.slug, slug)))
-    .innerJoin(users, eq(posts.createdUserId, users.id))
-    .limit(1);
-
-  return result.length === 1 ? formatFromDb(result[0]!) : null;
+  return deserializePost<PostBySlug>(
+    await useDrizzle()
+      .select({
+        id: posts.id,
+        title: posts.title,
+        description: posts.description,
+        locations: posts.locations,
+        needs: posts.needs,
+        schedule: posts.schedule,
+        createdAt: posts.createdAt,
+        updatedAt: posts.updatedAt,
+        state: posts.state,
+        slug: posts.slug,
+        contacts: posts.contacts,
+        createdBy: users.slug,
+        ...(getId && { createdById: posts.createdUserId }),
+      })
+      .from(posts)
+      .where(and(eq(posts.slug, slug)))
+      .innerJoin(users, eq(posts.createdUserId, users.id))
+      .limit(1),
+  );
 };

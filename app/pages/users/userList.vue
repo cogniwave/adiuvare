@@ -1,8 +1,7 @@
 <template>user list</template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "default",
-  path: "/users",
-});
+  definePageMeta({
+    path: "/users",
+  });
 </script>

@@ -3,12 +3,12 @@ import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
-import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "~~/shared/validators";
+import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
 import type { BaseUser, User, UserType } from "shared/types/user";
-import type { TranslationFunction } from "shared/types";
+import { translate } from "server/utils/i18n";
 import { log } from "server/utils/logger";
 
-const register = async (payload: BaseUser, t: TranslationFunction): Promise<User> => {
+const register = async (payload: BaseUser): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
   const newUser = await addUser(payload, token);
 
@@ -17,16 +17,16 @@ const register = async (payload: BaseUser, t: TranslationFunction): Promise<User
   }
 
   await sendEmail(
-    t("email.accountConfirm.subject"),
+    translate("email.accountConfirm.subject"),
     { email: payload.email, name: payload.name },
     "userActionRequired",
     {
-      greetings: t("email.greetings"),
+      greetings: translate("email.greetings"),
       name: payload.name,
-      body: t("email.accountConfirm.body"),
-      body2: t("email.accountConfirm.body2"),
-      buttonText: t("email.accountConfirm.buttonText"),
-      alternativeLinkText: t("email.alternativeLinkText"),
+      body: translate("email.accountConfirm.body"),
+      body2: translate("email.accountConfirm.body2"),
+      buttonText: translate("email.accountConfirm.buttonText"),
+      alternativeLinkText: translate("email.alternativeLinkText"),
       link: `${process.env.APP_BASE_URL}/confirmation?token=${token}&email=${payload.email}`,
     },
   );
@@ -35,8 +35,6 @@ const register = async (payload: BaseUser, t: TranslationFunction): Promise<User
 };
 
 export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
-
   const body = await getValidatedInput<BaseUser>(event, {
     name: RequiredString.max(255),
     password: RequiredPassword,
@@ -48,15 +46,12 @@ export default defineEventHandler(async (event) => {
   const email = sanitizeInput(body.email);
 
   try {
-    const user = await register(
-      {
-        name: sanitizeInput(body.name),
-        password: body.password,
-        type: sanitizeInput<UserType>(body.type),
-        email,
-      },
-      t,
-    );
+    const user = await register({
+      name: sanitizeInput(body.name),
+      password: body.password,
+      type: sanitizeInput<UserType>(body.type),
+      email,
+    });
 
     if (body.newsletter) {
       const newsletters: NewsletterType[] = ["newsletter"];
@@ -76,10 +71,10 @@ export default defineEventHandler(async (event) => {
       if (err.message.includes("UNIQUE constraint")) {
         throw createError({
           data: {
-            email: t("errors.emailExists"),
+            email: translate("errors.emailExists"),
           },
           statusCode: 422,
-          statusMessage: t("errors.validationError"),
+          statusMessage: translate("errors.validationError"),
         });
       }
 
@@ -88,7 +83,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: t("errors.unexpected"),
+      statusMessage: translate("errors.unexpected"),
     });
   }
 });

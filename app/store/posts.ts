@@ -44,6 +44,7 @@ export const usePosts = <T = AnyPost>(defaultType?: ScheduleType) => {
   const deleteDialogVisible = useState<boolean>("posts:dialogVisible", () => true);
 
   const updateScheduleType = (newType: ScheduleType) => {
+    // @ts-expect-error todo: fix this
     (currPost.value as Post).schedule = getTypeDefaultConfig(newType);
   };
 

@@ -12,8 +12,8 @@
     <v-date-picker
       v-model:model-value="proxyDate"
       landscape
-      color="primary"
-      class="mx-auto mt-5 bg-white"
+      color="secondary"
+      class="mx-auto"
       hide-header
       width="512px"
       @update:model-value="onProxyChange"
@@ -32,14 +32,17 @@
   import { getNewGroupTimes } from "app/utils/scheduling";
   import { usePosts } from "app/store/posts";
   import { ScheduleType, type Post, type ScheduleTime, type SpecificSchedule } from "shared/types/post";
+  import { getScheduleDay, getScheduleTimes } from "shared/utils/schedule";
 
-  const { currPost } = usePosts<Post>(ScheduleType.SPECIFIC);
+  const { currPost } = usePosts<Post<ScheduleType.SPECIFIC>>(ScheduleType.SPECIFIC);
   const { d, t } = useI18n();
 
-  const initValue = ref(currPost.value.schedule?.payload?.day || "");
-  const date = ref(d(currPost.value.schedule?.payload?.day || new Date()));
+  const day = getScheduleDay(currPost.value.schedule);
+
+  const initValue = ref(day);
+  const date = ref(d(day || new Date()));
   const proxyDate = ref<Dayjs>(date.value ? dayjs(date.value) : dayjs());
-  const times = ref<ScheduleTime[]>(currPost.value.schedule?.payload.times || []);
+  const times = ref<ScheduleTime[]>(getScheduleTimes(currPost.value.schedule));
 
   const onUpdate = (payload: SpecificSchedule) => {
     currPost.value = {

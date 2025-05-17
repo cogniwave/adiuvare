@@ -1,19 +1,17 @@
 <template>
-  <v-input prepend-icon="fa-solid fa-address-book">
+  <v-input prepend-icon="fa-solid fa-address-book" class="mt-10" :hide-details="!errors.contacts">
     <div>
       <v-label class="mr-2"> {{ t("form.contacts.title") }} </v-label>
 
-      <small v-if="errors.contacts" class="d-block color-error">{{ errors.contacts }} </small>
-    </div>
-
-    <template #append>
-      <v-btn variant="tonal" color="primary" density="compact" flat @click="onAdd">
+      <v-btn color="secondary" size="small" flat @click="onAdd">
         {{ t("form.contacts.add") }}
       </v-btn>
-    </template>
+
+      <small v-if="errors.contacts" class="d-block color-error">{{ errors.contacts }} </small>
+    </div>
   </v-input>
 
-  <div class="d-flex flex-column w-100 mb-10">
+  <div class="d-flex flex-column" :class="{ 'mt-10': proxyContacts.length }">
     <div v-for="c in proxyContacts" :key="c.contact" class="contact-group">
       <v-select
         :model-value="c.type"
@@ -47,10 +45,11 @@
               v-bind="props"
               rounded="xl"
               density="compact"
-              variant="tonal"
               size="xs"
               icon="fa-solid fa-circle-minus"
-              color="primary"
+              color="secondary"
+              flat
+              variant="text"
               @click="onRemove(c.id)"
             />
           </template>

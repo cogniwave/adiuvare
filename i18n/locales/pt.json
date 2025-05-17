@@ -3,6 +3,7 @@
   "copied": "Copiado",
   "privacyPolicy": "Política de privacidade",
   "eula": "Termos de utilização",
+  "logoutSuccess": "Sessão terminada com sucesso",
   "login": {
     "title": "Iniciar sessão",
     "actionRequiresAuth": "É necessário iniciar sessão para essa ação",
@@ -113,7 +114,7 @@
       "other": "Outro",
       "type": "Tipo",
       "label": "Contacto",
-      "add": "Adicionar contacto",
+      "add": "Adicionar",
       "remove": "Remover",
       "phoneHint": "Se não for um número português adicione também o indicativo"
     },
@@ -269,21 +270,31 @@
     "noPostsButton": "primeiro",
     "emptySearch": "Essa pesquisa não retornou resultados. Tente outra coisa ou {0}",
     "emptySearchReset": "limpe a pesquisa",
-    "filter": "Pesquisar"
+    "filter": "Pesquisar",
+    "recentPosts": "Últimas publicações"
   },
   "filter": {
     "placeholder": "Pesquise por zona, necessidade, organização, ..."
   },
   "menu": {
     "home": "Início",
-    "orgs": "Organizações",
     "posts": "Publicações do autor"
+  },
+  "orgs": {
+    "title": "Organizações",
+    "create": "Criar organização",
+    "contact": "Contactar",
+    "morada": "Morada",
+    "website": "Website",
+    "nipc": "NIPC",
+    "noBio": "Esta organização ainda não especificou a sua missão",
+    "members": "Membros",
+    "posts": "Publicações"
   },
   "org": {
     "learnMore": "Ver mais",
     "bioPlaceholder": "Descreva a missão / objetivo da organização para melhor ajudar os voluntários à procura duma organização com a qual se identifiquem",
     "bio": "Missão / objetivo",
-    "noBio": "Esta organização ainda não especificou a sua missão",
     "showAllBio": "Ver texto completo"
   },
   "email": {

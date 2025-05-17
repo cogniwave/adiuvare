@@ -1,16 +1,11 @@
 <template>
-  <!-- click event just to give it the nice ripple and hover effect xD -->
-  <v-card flat variant="text" class="post mb-3" rounded="xl">
+  <v-card class="ma-2">
     <v-card-item>
-      <v-card-title class="d-flex align-start" :class="{ 'flex-column': mdAndDown }">
+      <v-card-text class="pt-0">
         <v-row no-gutters>
           <v-col cols="3" lg="2" xl="1">
-            <v-avatar size="64">
-              <v-img
-                :alt="t('posts.logoAlt')"
-                src="https://re-food.org/wp-content/uploads/2020/02/RE-FOOD-logo-02.pn"
-                lazy-src="/assets/images/profile-placeholder.png"
-              >
+            <v-avatar size="96">
+              <v-img :alt="$t('posts.logoAlt')" lazy-src="/assets/images/profile-placeholder.png">
                 <template #error>
                   {{ post.createdBy[0] }}
                 </template>
@@ -18,40 +13,30 @@
             </v-avatar>
           </v-col>
 
-          <v-col cols="9" lg="4" xl="5">
-            <div class="text-subtitle">
-              <nuxt-link :to="`/organizations/${post.createdBy}`" @click.stop>
-                {{ post.createdBy }}
-              </nuxt-link>
+          <v-col cols="9" lg="10" xl="5">
+            <section class="d-flex align-start justify-space-between mb-3">
+              <h3>
+                {{ post.title }}
 
-              <span class="text-subtitle-2 d-block">
-                <!-- otherwise vue will complain because $t only "accepts"
-             date and number but passing a string also works  -->
-                {{ d(post.createdAt) }}
-              </span>
-            </div>
-          </v-col>
+                <span class="text-subtext-1 d-block mt-1">
+                  <nuxt-link :to="`/organizations/${post.createdBy}`" @click.stop>
+                    {{ post.createdBy }} - {{ $d(post.createdAt) }}
+                  </nuxt-link>
+                </span>
+              </h3>
 
-          <v-col cols="12" lg="6">
-            <div class="d-flex flex-column" :class="lgAndUp ? 'ml-auto align-end' : 'mt-3'">
-              <h3 class="mb-0">{{ post.title }}</h3>
-
-              <div style="line-height: 10px">
+              <div class="d-flex flex-column">
                 <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
               </div>
-            </div>
-          </v-col>
-        </v-row>
-      </v-card-title>
+            </section>
 
-      <v-card-text class="mt-5">
-        <v-row>
-          <v-col>
-            {{ desc }}
+            <p>
+              {{ desc }}
 
-            <span v-if="descTooLong && !descVisible" class="expand-desc" @click="viewAllDesc">
-              {{ t("posts.expandDesc") }}
-            </span>
+              <span v-if="descTooLong && !descVisible" class="expand-desc" @click="viewAllDesc">
+                {{ $t("posts.expandDesc") }}
+              </span>
+            </p>
           </v-col>
         </v-row>
       </v-card-text>
@@ -59,51 +44,29 @@
       <v-divider />
 
       <v-card-actions>
-        <v-chip
-          v-for="location in visibleLocations"
-          :key="location"
-          label
-          class="cursor-pointer mr-1"
-          rounded="md"
-          size="small"
-          @click="onLocationClick"
-        >
-          {{ location }}
-        </v-chip>
-
-        <v-menu v-if="leftoverLocations.length" open-on-hover>
-          <template #activator="{ props }">
-            <span v-bind="props">
-              <v-chip label size="small"> +{{ leftoverLocations.length }} </v-chip>
-            </span>
-          </template>
-
-          <v-list density="compact" class="pt-1 pb-2">
-            <v-list-item v-for="location in leftoverLocations" :key="location" class="pl-2 pr-2">
-              <v-chip label variant="text" class="cursor-pointer mr-1" rounded="md" size="small">
-                {{ location }}
-              </v-chip>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <ad-location :locations="$props.post.locations" />
 
         <v-spacer />
+
+        <v-btn variant="flat" rounded="md" :to="`/posts/${post.slug}`">
+          {{ $t("posts.viewMore") }}
+        </v-btn>
 
         <!-- post options -->
         <v-menu>
           <template #activator="{ props }">
-            <v-btn v-bind="props" variant="plain" size="x-small" class="ml-2" icon @click.stop.prevent>
-              <v-icon size="x-small">fa-solid fa-ellipsis-vertical</v-icon>
+            <v-btn v-bind="props" variant="plain" color="default" size="x-small" class="ml-2" icon @click.stop.prevent>
+              <v-icon size="large">fa-ellipsis-vertical</v-icon>
             </v-btn>
           </template>
 
-          <v-list density="compact" class="py-2">
+          <v-list density="compact" class="px-3">
             <template v-if="post.createdBy === user">
               <!-- edit post -->
               <v-list-item
                 class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-pencil"
-                :title="t('posts.options.edit')"
+                prepend-icon="fa-pen-to-square"
+                :title="$t('posts.options.edit')"
                 @click.stop.prevent="openPost()"
               />
 
@@ -111,8 +74,8 @@
               <v-list-item
                 v-if="post.state === 'active'"
                 class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-check-double"
-                :title="t('posts.options.enable')"
+                prepend-icon="fa-check"
+                :title="$t('posts.options.enable')"
                 @click="$emit('click:state', { enable: true, title: post.title, id: post.id })"
               />
 
@@ -120,50 +83,42 @@
               <v-list-item
                 v-else
                 class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-ban"
-                :title="t('posts.options.disable')"
+                prepend-icon="fa-cancel"
+                :title="$t('posts.options.disable')"
                 @click="$emit('click:state', { enable: false, title: post.title, id: post.id })"
               />
 
               <v-list-item
                 class="pl-2 pr-2"
-                prepend-icon="fa-solid fa-trash"
-                :title="t('posts.options.delete')"
+                prepend-icon="fa-trash"
+                :title="$t('posts.options.delete')"
                 @click="$emit('click:delete', post)"
               />
             </template>
 
-            <v-list-item
-              v-else
-              class="pl-2 pr-2"
-              prepend-icon="fa-solid fa-bullhorn"
-              :title="t('posts.options.report')"
-              @click="onReport"
-            />
+            <template v-else>
+              <v-list-item
+                class="pl-2 pr-2"
+                prepend-icon="fa-bullhorn"
+                :title="$t('posts.options.report')"
+                @click="onReport"
+              />
+
+              <v-menu v-if="post.contacts?.length && $vuetify.display.smAndUp" :close-on-content-click="false" submenu>
+                <template #activator="{ props }">
+                  <v-list-item
+                    v-bind="props"
+                    class="pl-2 pr-2"
+                    prepend-icon="fa-envelope-open-text"
+                    :title="$t('posts.contacts.contact')"
+                  />
+                </template>
+
+                <ad-contacts-list :contacts="post.contacts" />
+              </v-menu>
+            </template>
           </v-list>
         </v-menu>
-
-        <!-- contacts -->
-        <v-menu v-if="smAndUp" :close-on-content-click="false">
-          <template #activator="{ props }">
-            <v-btn
-              v-bind="props"
-              variant="outlined"
-              size="small"
-              rounded="md"
-              class="ml-auto ml-r btn-contact"
-              @click.stop.prevent
-            >
-              {{ t("posts.contacts.contact") }}
-            </v-btn>
-          </template>
-
-          <ad-contacts-list v-if="post.contacts?.length" :contacts="post.contacts" />
-        </v-menu>
-
-        <v-btn variant="outlined" size="small" rounded="md" class="btn-contact" :to="`/posts/${post.slug}`">
-          {{ t("posts.viewMore") }}
-        </v-btn>
       </v-card-actions>
     </v-card-item>
   </v-card>
@@ -172,6 +127,8 @@
 <script setup lang="ts">
   import { usePosts } from "app/store/posts";
   import AdPostNeed from "app/components/posts/AdPostNeed.vue";
+  import AdLocation from "app/components/common/AdLocation.vue";
+  import AdContactsList from "app/components/contacts/AdContactsList.vue";
   import type { Post, PostDeletePayload, PostStateTogglePayload } from "shared/types/post";
 
   const MAX_DESC = 1300;
@@ -187,18 +144,11 @@
   });
 
   const $router = useRouter();
-  const { t, d } = useI18n();
   const { setPost } = usePosts();
-  const { smAndUp, mdAndUp, mdAndDown, lgAndUp } = useDisplay();
 
   const desc = ref($props.post.description);
   const descTooLong = ref(false);
   const descVisible = ref(false);
-
-  const numVisibleLocations = computed(() => (mdAndUp.value ? 3 : 1));
-
-  const visibleLocations = ref<string[]>($props.post.locations.slice(0, numVisibleLocations.value));
-  const leftoverLocations = ref<string[]>($props.post.locations.slice(numVisibleLocations.value));
 
   onBeforeMount(() => {
     if ($props.post.description.length > MAX_DESC) {
@@ -213,8 +163,6 @@
     descVisible.value = true;
   };
 
-  const onLocationClick = () => {};
-
   const onReport = () => $emit("click:report", $props.post);
 
   const openPost = () => {
@@ -223,61 +171,11 @@
   };
 </script>
 
-<style scoped lang="scss">
-  .post {
-    background-color: rgb(var(--v-theme-surface));
-
-    :deep(.v-img__error) {
-      color: rgb(var(--v-theme-primary));
-      background-color: rgb(var(--v-theme-background));
-      font-size: 2rem;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .v-card-title {
-      a {
-        text-decoration: none;
-        color: rgb(var(--v-theme-accent));
-      }
-    }
-
-    .v-card-item {
-      color: rgb(var(--v-theme-accent));
-
-      h3 {
-        font-weight: normal;
-        text-transform: uppercase;
-      }
-
-      .v-card-actions {
-        .btn-contact {
-          color: rgb(var(--v-theme-primary));
-          background-color: rgb(var(--v-theme-background));
-        }
-      }
-    }
-
-    .expand-desc {
-      cursor: pointer;
-      color: rgb(var(--v-theme-primary));
-      font-weight: bold;
-    }
-
-    .text-subtitle {
-      a {
-        color: rgb(var(--v-theme-primary));
-        font-weight: bold;
-        opacity: 1;
-        transition: 100ms;
-
-        &:hover {
-          opacity: 0.7;
-          transition: 100ms;
-        }
-      }
+<style lang="scss" scoped>
+  .text-subtext-1 {
+    font-weight: normal;
+    a {
+      color: rgba(var(--v-theme-subtext));
     }
   }
 </style>

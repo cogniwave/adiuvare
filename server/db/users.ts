@@ -6,10 +6,9 @@ import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
 import { genToken } from "server/utils";
-import { formatFromDb as fromDb, formatToDb as toDb } from "./utils";
+import { formatFromDb as fromDb } from "./utils";
 
 const formatFromDb = fromDb(["contacts"]);
-const formatToDb = toDb(["contacts"]);
 
 export const getUser = async <T = SelectUser>(
   email: string,
@@ -33,17 +32,15 @@ export const getUser = async <T = SelectUser>(
 export const addUser = async (payload: BaseUser, token: string): Promise<User | null> => {
   const result = await useDrizzle()
     .insert(users)
-    .values(
-      formatToDb({
-        email: payload.email,
-        password: await hashPassword(payload.password),
-        name: payload.name,
-        type: payload.type,
-        slug: `${payload.email.split("@")[0]}-${genToken()}`,
-        token,
-        verified: false,
-      }),
-    )
+    .values({
+      email: payload.email,
+      password: await hashPassword(payload.password),
+      name: payload.name,
+      type: payload.type,
+      slug: `${payload.email.split("@")[0]}-${genToken()}`,
+      token,
+      verified: true,
+    })
     .returning({
       id: users.id,
       name: users.name,

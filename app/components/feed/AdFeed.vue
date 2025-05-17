@@ -1,6 +1,5 @@
 <template>
-  <!-- show loading -->
-  <template v-if="pending">
+  <template v-if="loading">
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
     <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
@@ -12,16 +11,17 @@
   <template v-else-if="data && (data.total || !!filter)">
     <v-row class="mb-2">
       <v-col cols="12" sm="4" align-self="end">
-        <p>Recent posts</p>
+        <h4>{{ t("feed.recentPosts") }}</h4>
       </v-col>
 
       <v-col align-self="end" class="d-flex">
         <form class="pr-2 w-100" @keypress.enter.prevent="onSearch()">
           <v-text-field
             v-model:model-value="search"
+            class="search-field"
             variant="solo"
-            flat
-            append-inner-icon="fa-solid fa-magnifying-glass"
+            color="accent"
+            append-inner-icon="fa-magnifying-glass"
             rounded="lx"
             density="compact"
             hide-details
@@ -33,23 +33,20 @@
           />
         </form>
 
-        <v-btn icon size="small" flat variant="text" color="primary" @click="toggleExpandedFilter">
-          <v-icon size="x-small">fa-solid fa-filter</v-icon>
+        <v-btn icon flat variant="text" @click="toggleExpandedFilter">
+          <v-icon color="accent" size="small">fa-filter</v-icon>
         </v-btn>
       </v-col>
     </v-row>
 
-    <v-expand-transition>
-      <div v-show="expandedFilterVisible" class="pa-2 rounded-lg mb-2">
-        <h4>Pesquisa detalhada</h4>
-
+    <v-expand-transition v-if="detailedSearchRendered">
+      <div v-show="expandedFilterVisible" class="mb-4">
         <form class="mt-5 mb-3 w-100" @keypress.enter.prevent="onSearch(true)" @submit.prevent="onSearch(true)">
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
                 v-model:model-value="title"
-                prepend-icon="fa-solid fa-heading"
-                rounded="lx"
+                prepend-icon="fa-heading"
                 density="compact"
                 flat
                 hide-details
@@ -62,10 +59,9 @@
               <v-textarea
                 v-model:model-value="description"
                 rows="1"
-                prepend-icon="fa-solid fa-quote-left"
+                prepend-icon="fa-quote-left"
                 rounded="lx"
                 density="compact"
-                flat
                 hide-details
                 persistent-clear
                 label="Pesquisar na descrição"
@@ -79,7 +75,7 @@
                 v-model:model-value="need"
                 hide-hint
                 multiple
-                prepend-icon="fa-solid fa-parachute-box"
+                prepend-icon="fa-parachute-box"
                 :label="t('form.post.category')"
                 :items="needs"
               />
@@ -90,7 +86,7 @@
                 v-model:model-value="location"
                 rounded="lx"
                 density="compact"
-                prepend-icon="fa-solid fa-location-dot"
+                prepend-icon="fa-map-location"
                 chips
                 class="detailed-filter"
                 hide-details
@@ -108,11 +104,11 @@
           </v-row>
 
           <div class="pt-5 d-flex align-center justify-end">
-            <v-btn size="x-small" type="submit" variant="text" flat :loading="pending" @click="resetSearch">
+            <v-btn class="btn-reset" type="button" :loading="loading" @click="resetSearch">
               {{ t("feed.emptySearchReset") }}
             </v-btn>
 
-            <v-btn size="x-small" type="submit" color="primary" variant="text" flat :loading="pending">
+            <v-btn class="filter-actions" type="submit" :loading="loading">
               {{ t("feed.filter") }}
             </v-btn>
           </div>
@@ -130,7 +126,6 @@
               :key="item.id"
               :post="item"
               :user="user?.slug || ''"
-              class="mb-5"
               @click:state="openDisableDialog"
               @click:delete="openDeleteDialog"
               @click:report="openReportDialog"
@@ -165,7 +160,7 @@
   </template>
 
   <!-- no posts exist -->
-  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="h3" for="feed.noPostsButton" class="no-posts">
+  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="p" for="feed.noPostsButton" class="no-posts">
     <nuxt-link to="/posts/new">
       {{ t("feed.noPostsButton") }}
     </nuxt-link>
@@ -183,9 +178,11 @@
   import { usePosts } from "app/store/posts";
   import { useReport } from "app/store/report";
   import { FEED_PAGE_SIZE } from "shared/utils";
-
   import type { Post, PostDeletePayload, PostStateTogglePayload, PostFilter } from "shared/types/post";
   import AdPost from "app/components/posts/AdPost.vue";
+  import AdPostReportDialog from "app/components/posts/AdPostReportDialog.vue";
+  import AdPostDisableConfirmDialog from "app/components/posts/AdPostDisableConfirmDialog.vue";
+  import AdPostDeleteConfirmDialog from "app/components/posts/AdPostDeleteConfirmDialog.vue";
   import type { SelectOption } from "shared/types/form";
 
   const $route = useRoute();
@@ -201,18 +198,12 @@
   const search = ref<string | undefined>();
   const reportDialogRendered = ref(false);
   const expandedFilterVisible = ref(false);
+  const detailedSearchRendered = ref(false);
 
   const title = ref<string | undefined>();
   const description = ref<string | undefined>();
   const location = ref<string[] | undefined>();
   const need = ref<string[] | undefined>();
-
-  const needs = ref<SelectOption[]>([
-    { title: t("posts.needs.money"), value: "money" },
-    { title: t("posts.needs.volunteers"), value: "volunteers" },
-    { title: t("posts.needs.goods"), value: "goods" },
-    { title: t("posts.needs.other"), value: "other" },
-  ]);
 
   const deleteDialogRendered = ref(false);
   const disableDialogRendered = ref(false);
@@ -220,7 +211,7 @@
   const page = ref(setupPage());
   const filter = ref<PostFilter | undefined>(setupQuery());
 
-  const { data, pending, refresh } = useFetch<{ posts: Post[]; total: number }>("/api/v1/posts", {
+  const { data, status, refresh } = useFetch<{ posts: Post[]; total: number }>("/api/v1/posts", {
     query: { filter: filter.value, page: page.value },
     lazy: true,
     onResponse({ response }) {
@@ -233,6 +224,15 @@
       notifyError(t("errors.fetchFeed"));
     },
   });
+
+  const loading = computed(() => status.value === "pending");
+
+  const needs: SelectOption[] = [
+    { title: t("posts.needs.money"), value: "money" },
+    { title: t("posts.needs.volunteers"), value: "volunteers" },
+    { title: t("posts.needs.goods"), value: "goods" },
+    { title: t("posts.needs.other"), value: "other" },
+  ];
 
   const openDisableDialog = (post: PostStateTogglePayload) => {
     currPost.value = post;
@@ -301,7 +301,14 @@
     refresh();
   };
 
-  const toggleExpandedFilter = () => (expandedFilterVisible.value = !expandedFilterVisible.value);
+  const toggleExpandedFilter = () => {
+    if (!detailedSearchRendered.value) {
+      detailedSearchRendered.value = true;
+      nextTick(() => (expandedFilterVisible.value = true));
+    } else {
+      expandedFilterVisible.value = !expandedFilterVisible.value;
+    }
+  };
 
   const resetSearch = () => {
     page.value = 1;
@@ -371,30 +378,27 @@
   });
 </script>
 
-<style lang="scss">
-  .v-autocomplete__content {
-    max-width: 200px !important;
-
-    .v-list-item-title {
-      white-space: initial !important;
-    }
+<style scoped lang="scss">
+  h4 {
+    color: rgba(var(--v-theme-subtext));
   }
-</style>
 
-<style lang="scss" scoped>
-  h3 {
-    text-align: center;
-    font-weight: normal;
+  .search-field :deep(.v-field__append-inner .v-icon) {
+    color: rgba(var(--v-theme-accent));
+  }
 
-    span {
-      font-size: inherit;
-      color: rgba(var(--v-theme-primary));
-      transition: 0.2s;
-      cursor: pointer;
+  .no-posts {
+    color: rgba(var(--v-theme-subtext));
+    font-weight: 500;
 
+    a {
+      font-weight: bold;
+
+      &:active,
+      &:focus,
+      &:visited,
       &:hover {
-        transition: 0.2s;
-        opacity: 0.6;
+        color: rgba(var(--v-theme-primary));
       }
     }
   }

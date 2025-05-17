@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card
+  <ad-form-card
     ref="form"
     :loading="loading"
     :title="t('reset.updateTitle')"
@@ -68,13 +68,13 @@
         </nuxt-link>
       </i18n-t>
     </template>
-  </ad-auth-form-card>
+  </ad-form-card>
 </template>
 
 <script setup lang="ts">
   import { required, isValidPassword, match } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
-  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
+  import AdFormCard from "app/components/common/AdFormCard.vue";
 
   import dayjs from "shared/services/dayjs.service";
   import type { User } from "shared/types/user";
@@ -83,7 +83,6 @@
   let token: string = "";
 
   definePageMeta({
-    layout: "auth",
     path: "/profile/password",
     middleware: "unauthed-server",
     title: "pages.updatePassword",
@@ -99,7 +98,7 @@
   const invalidLink = ref(false);
   const expiredLink = ref(false);
 
-  const form = ref<InstanceType<typeof AdAuthFormCard>>();
+  const form = ref<InstanceType<typeof AdFormCard>>();
   const submitting = ref<boolean>(false);
 
   onBeforeMount(() => {

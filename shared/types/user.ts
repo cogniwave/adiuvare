@@ -25,6 +25,7 @@ export interface User extends Omit<BaseUser, "password"> {
   photo?: string;
   photoThumbnail?: string;
   contacts?: UserContact[];
+  nipc?: string;
 }
 
 export interface LoginPayload {

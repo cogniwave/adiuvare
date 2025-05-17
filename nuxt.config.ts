@@ -1,7 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
 import { fileURLToPath, URL } from "url";
-import { aliases } from "vuetify/iconsets/fa";
 import pt from "dayjs/locale/pt";
+import enGB from "dayjs/locale/en-gb";
 
 const alias = {
   app: fileURLToPath(new URL("./app", import.meta.url)),
@@ -12,21 +12,55 @@ const alias = {
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // base configs
   compatibilityDate: "2025-02-21",
   future: { compatibilityVersion: 4 },
-  devtools: { enabled: process.env.NUXT_ENV === "development" },
+
+  devtools: { enabled: process.env.NODE_ENV === "development" },
+  // debug: process.env.NODE_ENV === "development",
+
+  ssr: true,
+  sourcemap: { server: "hidden", client: "hidden" },
+
+  experimental: { viewTransition: true, lazyHydration: true },
+  features: { inlineStyles: false },
+  typescript: { typeCheck: true },
+  css: ["app/assets/scss/styles.scss"],
+
+  // build related configs
+  nitro: {
+    compressPublicAssets: true,
+    experimental: { openAPI: true, tasks: true },
+  },
+
+  runtimeConfig: {
+    public: {
+      brevoConversationId: process.env.BREVO_CONVO_ID,
+      baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    },
+  },
+
+  build: {
+    transpile: ["vuetify", "vue-i18n"],
+  },
 
   app: {
     head: {
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
-      title: "Adiuvare",
       meta: [
         { name: "google-adsense-account", content: "ca-pub-1091633097511683" },
         { name: "msapplication-TileColor", content: "#eceff1" },
         { name: "theme-color", content: "#ECEFF1" },
       ],
       link: [
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Montserrat:wght@700&display=swap",
+        },
+
         { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v6.7.2/css/brand.css" },
         { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v6.7.2/css/solid.css" },
         { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/favicon/apple-touch-icon.png" },
@@ -48,35 +82,22 @@ export default defineNuxtConfig({
     },
   },
 
-  runtimeConfig: {
-    public: {
-      brevoConversationId: process.env.BREVO_CONVO_ID,
-      baseUrl: process.env.BASE_URL || "http://localhost:3000",
+  vite: {
+    resolve: { alias },
+
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: "modern-compiler",
+          // additionalData: '@use "@/assets/scss/variables.scss";',
+        },
+      },
     },
   },
 
-  ssr: true,
+  alias,
 
-  nitro: {
-    experimental: { openAPI: true },
-  },
-
-  build: {
-    transpile: ["vuetify", "vue-i18n"],
-  },
-
-  components: [
-    { path: "~/components/layout", pathPrefix: false },
-    { path: "~/components/common", pathPrefix: false },
-    { path: "~/components/feed", pathPrefix: false },
-    { path: "~/components/posts", pathPrefix: false },
-    { path: "~/components/contacts", pathPrefix: false },
-    { path: "~/components/organizations", pathPrefix: false },
-    "~/components",
-  ],
-
-  css: ["./app/scss/styles.scss", "vuetify/styles", "@fortawesome/fontawesome-free/css/all.css"],
-
+  // module related configs
   modules: [
     "@nuxtjs/i18n",
     "nuxt-auth-utils",
@@ -84,39 +105,72 @@ export default defineNuxtConfig({
     "@nuxthub/core",
     "@nuxt/eslint",
     "@sentry/nuxt/module",
+    "@nuxtjs/google-fonts",
+    "@nuxt/image",
+    "dayjs-nuxt",
+    "nuxt-security",
+    "nuxt-lazyload-files",
   ],
 
-  features: { inlineStyles: false },
+  // fucking dependencies not updating as they should
+  // unhead update (which is used by nuxt) broke vuetify styling injection
+  // this fixes it, but it's a temporary thing until vuetify nuxt module is updated
+  // https://github.com/vuetifyjs/nuxt-module/issues/298#issuecomment-2708812122
+  unhead: {
+    legacy: true,
+    renderSSRHeadOptions: { omitLineBreaks: false },
+  },
 
-  vite: {
-    resolve: { alias },
-
-    css: {
-      preprocessorOptions: {
-        sass: { api: "modern-compiler" },
-      },
+  hub: {
+    analytics: true,
+    blob: true,
+    database: true,
+    bindings: {
+      compatibilityFlags: ["nodejs_compat_v2"],
     },
   },
 
-  alias,
-
   i18n: {
-    restructureDir: "./i18n",
     vueI18n: "./i18n.config.ts",
+    langDir: "./locales",
+    defaultLocale: "pt-PT",
+
     bundle: { optimizeTranslationDirective: false },
-    experimental: {
-      localeDetector: "./localeDetector.ts",
-    },
+
+    locales: [
+      { code: "pt-PT", iso: "pt-PT", file: "pt.json", name: "Português" },
+      { code: "en-GB", iso: "en-GB", file: "en.json", name: "English" },
+    ],
+
+    baseUrl: process.env.BASE_URL || "http://localhost:3000",
+  },
+
+  googleFonts: {
+    families: { Inter: ["400", "300"], Montserrat: ["700"] },
+  },
+
+  image: {
+    quality: 100,
+    loading: "lazy",
+    domains: [process.env.BASE_URL!],
   },
 
   vuetify: {
     moduleOptions: {
-      // styles: { configFile: '/settings.scss' }
+      ssrClientHints: {
+        prefersColorScheme: true,
+        prefersColorSchemeOptions: { cookieName: "adtheme" },
+      },
+      styles: { configFile: "assets/scss/vuetify.scss" },
     },
     vuetifyOptions: {
       date: {
         adapter: "dayjs",
-        locale: { pt },
+        locale: { en: enGB, pt },
+      },
+      ssr: { clientWidth: 1920, clientHeight: 1080 },
+      icons: {
+        defaultSet: "fa-svg",
       },
       theme: {
         themes: {
@@ -151,7 +205,7 @@ export default defineNuxtConfig({
               accent: "#FFB45E",
               surface: "#2B303B",
               background: "#1A1D23",
-              title: "#fff",
+              heading: "#FFFFFF",
               text: "#E0E6ED",
               subtext: "#8A94A6",
               success: "#27AE60",
@@ -164,36 +218,36 @@ export default defineNuxtConfig({
         defaultTheme: "light",
       },
       defaults: {
+        global: {
+          density: "comfortable",
+        },
+        VListItem: {
+          activeColor: "accent",
+        },
         VCard: {
-          variant: "outlined",
-          class: "post",
-          rounded: "xl",
-          color: "text",
           background: "background",
+          rounded: "xl",
         },
         VIcon: {
           size: "x-small",
         },
         VTextField: {
-          density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
+          density: "comfortable",
           hideDetails: "auto",
           validateOn: "blur",
           variant: "underlined",
+          rounded: "lx",
+          flat: true,
         },
         VTextarea: {
           variant: "underlined",
           density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
           hideDetails: "auto",
+          autoGrow: true,
         },
         VAutocomplete: {
           variant: "underlined",
           density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
           hideDetails: "auto",
           autoGrow: true,
           autoSelectFirst: true,
@@ -201,48 +255,37 @@ export default defineNuxtConfig({
         VSelect: {
           variant: "underlined",
           density: "compact",
-          class: "pl-0 pr-0",
-          rounded: "4px",
           hideDetails: "auto",
           hideHint: true,
         },
         VTooltip: {
           location: "top",
         },
-      },
-      ssr: {
-        clientWidth: 1920,
-        clientHeight: 1080,
-      },
-      icons: {
-        defaultSet: "fa",
-        // @ts-expect-error ts complains about
-        aliases,
-        sets: "fa",
-      },
-    },
-  },
-
-  hub: {
-    analytics: true,
-    blob: true,
-    database: true,
-    // @ts-expect-error TS complains but it's correct and it's what the docs say
-    databaseMigrationsDirs: ["server/db/migrations"],
-  },
-
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        paths: {
-          app: [fileURLToPath(new URL("./app", import.meta.url))],
-          server: [fileURLToPath(new URL("./server", import.meta.url))],
-          shared: [fileURLToPath(new URL("./shared", import.meta.url))],
-          public: [fileURLToPath(new URL("./public", import.meta.url))],
+        VBtn: {
+          color: "primary",
+          flat: true,
+          rounded: "lg",
         },
       },
     },
-    typeCheck: true,
+  },
+
+  dayjs: {
+    locales: ["en", "pt"],
+    plugins: ["relativeTime", "utc", "timezone", "localizedFormat"],
+    defaultLocale: "pt",
+    defaultTimezone: "Europe/Lisbon",
+  },
+
+  lazyLoadFiles: {
+    files: {
+      css: [
+        {
+          filePath: "app/assets/scss/mobile.scss",
+          windowWidthLessThan: { width: 767 },
+        },
+      ],
+    },
   },
 
   sentry: {
@@ -250,9 +293,5 @@ export default defineNuxtConfig({
       org: "cogniwave",
       project: "adiuvare",
     },
-  },
-
-  sourcemap: {
-    client: "hidden",
   },
 });

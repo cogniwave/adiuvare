@@ -1,5 +1,5 @@
 <template>
-  <v-footer color="white" class="pt-5 pb-2 flex-column">
+  <v-footer color="surface" elevation="7" class="pt-5 pb-2 flex-column">
     <div class="w-100">
       <v-row>
         <v-col md="4" offset-md="2" cols="12" offset="0">
@@ -10,13 +10,22 @@
               v-model:model-value="email"
               type="text"
               class="w-100"
-              placeholder="email@gmail.com"
+              density="compact"
               variant="outlined"
+              placeholder="email@gmail.com"
               :label="$t('footer.newsletter.label')"
               :error-messages="errors.email"
             >
               <template #append-inner>
-                <v-btn type="submit" color="primary" flat :rounded="false" :loading="submitting" @click="submit">
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  variant="flat"
+                  flat
+                  :rounded="false"
+                  :loading="submitting"
+                  @click="submit"
+                >
                   {{ $t("footer.newsletter.subscribe") }}
                 </v-btn>
               </template>
@@ -76,16 +85,23 @@
 </script>
 
 <style lang="scss" scoped>
-  :deep(.v-field--appended) {
-    padding-right: 0 !important;
-    --v-field-padding-end: 0 !important;
-  }
-
-  a {
-    color: rgba(var(--v-theme-primary));
-  }
-
   .v-footer {
     flex: initial;
+
+    :deep(.v-field) {
+      overflow: hidden;
+
+      &.v-field--appended {
+        padding: 0 !important;
+      }
+
+      button {
+        height: 100%;
+      }
+    }
+
+    a {
+      color: rgba(var(--v-theme-primary));
+    }
   }
 </style>
