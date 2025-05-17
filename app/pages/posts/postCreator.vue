@@ -203,7 +203,7 @@
       }
 
       currPost.value = {} as Post;
-      $router.push("/");
+      // $router.push("/");
       notifySuccess(t("posts.created"));
     } catch (errs: unknown) {
       handleErrors(errs);

@@ -18,10 +18,9 @@ const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>
     bio: OptionalString,
     website: OptionalString.max(256),
     address: OptionalString.max(256),
-    postalcode: OptionalString.max(8),
+    postalCode: OptionalString.max(8),
     city: OptionalString.max(256),
     district: OptionalString.max(128),
-    postalCode: OptionalString,
     contacts: RequiredContacts,
   });
 

@@ -150,7 +150,7 @@
     modelValue: {
       type: Object as PropType<RecurringSchedule>,
       default: () => ({
-        monday: [getNewGroupTimes()],
+        monday: null,
         tuesday: null,
         wednesday: null,
         thursday: null,

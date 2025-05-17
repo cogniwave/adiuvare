@@ -6,6 +6,9 @@ import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
 import { genToken } from "server/utils";
+import { formatFromDb as fromDb } from "./utils";
+
+const formatFromDb = fromDb(["contacts"]);
 
 export const getUser = async <T = SelectUser>(
   email: string,
@@ -23,7 +26,7 @@ export const getUser = async <T = SelectUser>(
     .where(and(eq(users.email, email), ...filter.map(([key, value]) => eq(key as SQLiteColumn, value))))
     .limit(1);
 
-  return result.length ? (result[0] as T) : undefined;
+  return result.length ? formatFromDb<T>(result[0]!) : undefined;
 };
 
 export const addUser = async (payload: BaseUser, token: string): Promise<User | null> => {
@@ -67,7 +70,9 @@ export const updateUser = async (
     return null;
   }
 
-  return await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
+  await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
+
+  return true;
 };
 
 export const getUserById = async (id: string) => {
@@ -90,7 +95,7 @@ export const getUserById = async (id: string) => {
     .where(and(eq(users.id, id), eq(users.verified, true)))
     .limit(1);
 
-  return result.length === 1 ? result[0] : null;
+  return result.length === 1 ? formatFromDb<User>(result[0]) : null;
 };
 
 export const updateUserToken = async (userId: string, token: string) => {
@@ -106,10 +111,12 @@ export const updateUserToken = async (userId: string, token: string) => {
 };
 
 export const updatePassword = async (email: string, password: string, token: string) => {
-  return await useDrizzle()
+  await useDrizzle()
     .update(users)
     .set({ password: await hashPassword(password), token: null })
     .where(and(eq(users.email, email), eq(users.token, token)));
+
+  return true;
 };
 
 // **********
@@ -136,7 +143,7 @@ export const getOrgs = async () => {
     .orderBy(asc(users.name))
     .limit(50);
 
-  return result || [];
+  return formatFromDb<User[]>(result) || [];
 };
 
 export const getTotalOrgs = async () => {
@@ -169,5 +176,5 @@ export const getOrgBySlug = async (slug: string) => {
     .where(and(eq(users.slug, slug), eq(users.verified, true)))
     .limit(1);
 
-  return result.length === 1 ? result[0] : null;
+  return result.length === 1 ? formatFromDb<User>(result[0]) : null;
 };

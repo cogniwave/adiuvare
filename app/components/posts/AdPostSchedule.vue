@@ -2,7 +2,14 @@
   <v-input prepend-icon="fa-solid fa-calendar-days" class="mt-10">
     <v-label class="mr-2"> {{ t("form.post.schedule.title") }} </v-label>
 
-    <v-btn-toggle v-model:model-value="scheduleType" divided color="secondary" density="compact" class="ml-auto">
+    <v-btn-toggle
+      v-model:model-value="scheduleType"
+      divided
+      color="secondary"
+      density="compact"
+      class="ml-auto"
+      @update:model-value="updateScheduleType"
+    >
       <v-tooltip :text="t('form.post.schedule.anytime')">
         <template #activator="{ props }">
           <v-btn
@@ -65,7 +72,7 @@
   import AdPostScheduleSpecificSelector from "./AdPostScheduleSpecificSelector.vue";
   import type { Post, ScheduleType } from "shared/types/post";
 
-  const { currPost } = usePosts<Post>();
+  const { currPost, updateScheduleType } = usePosts<Post>();
   const { t } = useI18n();
 
   const scheduleType = ref<ScheduleType>(currPost.value?.schedule?.type || "anytime");

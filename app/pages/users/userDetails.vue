@@ -49,10 +49,7 @@
   const $route = useRoute();
   const { t } = useI18n();
 
-  const {
-    status,
-    error,
-  } = await useFetch<User>(`/api/users/${$route.params.slug}`, {
+  const { status, error } = await useFetch<User>(`/api/users/${$route.params.slug}`, {
     lazy: true,
 
     onResponse({ response }) {
@@ -75,6 +72,4 @@
     },
     { immediate: true },
   );
-
-
 </script>

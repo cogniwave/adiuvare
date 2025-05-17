@@ -1,11 +1,11 @@
 import type { PartialSchemaMap } from "joi";
 import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
-import Joi from "shared/validators";
+import joi from "shared/validators";
 import { ValidationError, type Errors } from "shared/exceptions";
 import { translate } from "server/utils/i18n";
 
-export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap) => {
+export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap<T>) => {
   let body;
   try {
     body = await readBody(event);
@@ -13,10 +13,11 @@ export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, 
     throw createError(error as H3Error);
   }
 
-  const { value, error } = Joi.object<T>(schema).validate(body, {
+  const { value, error } = joi.object<T>(schema).validate(body, {
     abortEarly: false,
     stripUnknown: true,
     externals: true,
+    convert: true,
   });
 
   if (error) {
