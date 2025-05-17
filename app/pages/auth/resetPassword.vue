@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card ref="form" :title="t('reset.title')" :show-form="!submitted" @submit="submit">
+  <ad-form-card ref="form" :title="t('reset.title')" :show-form="!submitted" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"
@@ -46,13 +46,13 @@
         </nuxt-link>
       </div>
     </template>
-  </ad-auth-form-card>
+  </ad-form-card>
 </template>
 
 <script setup lang="ts">
   import { required, isValidEmail } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
-  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
+  import AdFormCard from "app/components/common/AdFormCard.vue";
 
   definePageMeta({
     middleware: "unauthed-server",
@@ -65,7 +65,7 @@
   const { mdAndUp } = useDisplay();
 
   const email = ref<string>("");
-  const form = ref<InstanceType<typeof AdAuthFormCard>>();
+  const form = ref<InstanceType<typeof AdFormCard>>();
   const submitting = ref<boolean>(false);
   const submitted = ref<boolean>(false);
 

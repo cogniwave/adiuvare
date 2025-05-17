@@ -5,9 +5,9 @@
         v-bind="props"
         :variant="selected['monday'] ? 'flat' : 'outlined'"
         density="compact"
-        size="48"
+        size="32"
         rounded="xl"
-        color="primary"
+        color="secondary"
         @click="toggleDay('monday')"
       >
         {{ t("form.post.schedule.day.mondayShort") }}
@@ -22,9 +22,9 @@
         :variant="selected['tuesday'] ? 'flat' : 'outlined'"
         class="ml-3"
         density="compact"
-        size="48"
+        size="32"
         rounded="xl"
-        color="primary"
+        color="secondary"
         @click="toggleDay('tuesday')"
       >
         {{ t("form.post.schedule.day.tuesdayShort") }}
@@ -39,9 +39,9 @@
         :variant="selected['wednesday'] ? 'flat' : 'outlined'"
         class="ml-3"
         density="compact"
-        size="48"
+        size="32"
         rounded="xl"
-        color="primary"
+        color="secondary"
         @click="toggleDay('wednesday')"
       >
         {{ t("form.post.schedule.day.wednesdayShort") }}
@@ -56,9 +56,9 @@
         :variant="selected['thursday'] ? 'flat' : 'outlined'"
         class="ml-3"
         density="compact"
-        size="48"
+        size="32"
         rounded="xl"
-        color="primary"
+        color="secondary"
         @click="toggleDay('thursday')"
       >
         {{ t("form.post.schedule.day.thursdayShort") }}
@@ -73,9 +73,9 @@
         :variant="selected['friday'] ? 'flat' : 'outlined'"
         class="ml-3"
         density="compact"
-        size="48"
+        size="32"
         rounded="xl"
-        color="primary"
+        color="secondary"
         @click="toggleDay('friday')"
       >
         {{ t("form.post.schedule.day.fridayShort") }}
@@ -90,9 +90,9 @@
         :variant="selected['saturday'] ? 'flat' : 'outlined'"
         class="ml-3"
         density="compact"
-        size="48"
+        size="32"
         rounded="xl"
-        color="primary"
+        color="secondary"
         @click="toggleDay('saturday')"
       >
         {{ t("form.post.schedule.day.saturdayShort") }}
@@ -107,9 +107,9 @@
         :variant="selected['sunday'] ? 'flat' : 'outlined'"
         class="ml-3"
         density="compact"
-        size="48"
+        size="32"
         rounded="xl"
-        color="primary"
+        color="secondary"
         @click="toggleDay('sunday')"
       >
         {{ t("form.post.schedule.day.sundayShort") }}
