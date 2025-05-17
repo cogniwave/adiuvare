@@ -1,81 +1,72 @@
 <template>
-  <template v-if="loading">
-    <v-skeleton-loader type="article" class="rounded-xl" />
-  </template>
+  <v-skeleton-loader v-if="loading" type="article" class="rounded-xl" />
 
-  <template v-else>
-    <h2 class="text-h5 mb-5">{{ t("form.user.accountTitle") }}</h2>
+  <ad-form-card v-else ref="form" :title="t('form.user.accountTitle')" @submit="submit">
+    <template #form>
+      <v-text-field
+        v-model:model-value="email"
+        type="email"
+        prepend-icon="fa-solid fa-at"
+        :label="t('form.email')"
+        :error-messages="errors.email"
+        :rules="[required(t), isValidEmail(t)]"
+      />
 
-    <v-form ref="form" validate-on="submit lazy" @keydown.enter="submit" @submit.prevent="submit">
-      <div class="bg-white rounded px-10 py-5">
-        <v-text-field
-          v-model:model-value="email"
-          type="email"
-          prepend-icon="fa-solid fa-at"
-          :label="t('form.email')"
-          :error-messages="errors.email"
-          :rules="[required(t), isValidEmail(t)]"
-        />
+      <v-text-field
+        v-model:model-value="password"
+        prepend-icon="fa-solid fa-lock"
+        class="mt-3"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        :label="t('form.password')"
+        :error-messages="errors.password"
+        :type="passwordFieldType"
+        :rules="[isValidPassword(t, true)]"
+      >
+        <template #append-inner>
+          <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
+        </template>
+      </v-text-field>
 
-        <v-text-field
-          v-model:model-value="password"
-          prepend-icon="fa-solid fa-lock"
-          class="mt-3"
-          autocorrect="off"
-          autocapitalize="off"
-          autocomplete="off"
-          spellcheck="false"
-          :label="t('form.password')"
-          :error-messages="errors.password"
-          :type="passwordFieldType"
-          :rules="[isValidPassword(t, true)]"
-        >
-          <template #append-inner>
-            <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
-          </template>
-        </v-text-field>
+      <v-text-field
+        v-model:model-value="password2"
+        autocorrect="off"
+        class="mt-3"
+        prepend-icon="fa-solid fa-lock"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        :label="t('form.passwordRepeat')"
+        :type="passwordFieldType"
+        :rules="[isValidPassword(t, true), match(t, password, t('form.passwordDuplicateKey'))]"
+      >
+        <template #append-inner>
+          <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
+        </template>
+      </v-text-field>
+    </template>
 
-        <v-text-field
-          v-model:model-value="password2"
-          autocorrect="off"
-          class="mt-3"
-          prepend-icon="fa-solid fa-lock"
-          autocapitalize="off"
-          autocomplete="off"
-          spellcheck="false"
-          :label="t('form.passwordRepeat')"
-          :type="passwordFieldType"
-          :rules="[isValidPassword(t, true), match(t, password, t('form.passwordDuplicateKey'))]"
-        >
-          <template #append-inner>
-            <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
-          </template>
-        </v-text-field>
-      </div>
-    </v-form>
-
-    <div class="py-5 d-flex align-center justify-end">
-      <!-- todo: implement this functionality -->
+    <template #actions>
+      <!-- todo: implement -->
       <!-- <v-btn :disable="submitting" color="error" class="mr-2" @click="$router.go(-1)">
         {{ t("form.user.delete") }}
       </v-btn> -->
 
       <v-spacer />
 
-      <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
-        {{ t("form.cancel") }}
-      </v-btn>
-
-      <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+      <v-btn type="submit" variant="flat" color="primary" :loading="submitting" @click="submit">
         {{ t("form.user.accountSubmit") }}
       </v-btn>
-    </div>
-  </template>
+    </template>
+  </ad-form-card>
 </template>
 
 <script lang="ts" setup>
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
+  import AdFormCard from "app/components/common/AdFormCard.vue";
   import { useUsers } from "app/store/users";
   import { useNotify } from "app/store/notify";
   import type { TokenUser, Tokens } from "shared/types/user";
@@ -84,7 +75,6 @@
 
   const { user } = useUserSession();
   const { t } = useI18n();
-  const $router = useRouter();
   const { users } = useUsers();
   const { notifySuccess } = useNotify();
   const { errors, handleErrors, clearErrors } = useFormErrors();
