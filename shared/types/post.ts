@@ -28,7 +28,6 @@ export enum ScheduleType {
 }
 
 interface PostSchedulePayload {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   [ScheduleType.ANYTIME]: { payload: {} };
   [ScheduleType.SPECIFIC]: { payload: SpecificSchedule };
   [ScheduleType.RECURRING]: { payload: RecurringSchedule };
@@ -67,8 +66,8 @@ export interface Post<T extends ScheduleType = ScheduleType> extends EmptyPost<T
   logo: string;
   state: PostState;
   createdBy: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   slug: string;
 }
 

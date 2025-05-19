@@ -1,92 +1,116 @@
 <template>
-  <template v-if="pending">
+  <template v-if="status === 'pending'">
     <v-skeleton-loader type="card" class="rounded-xl mt-5" />
     <v-skeleton-loader type="list-item@3" class="rounded-xl mt-5" />
   </template>
 
   <template v-if="currOrg && Object.keys(currOrg)">
-    <div class="d-flex mb-1">
-      <v-btn variant="text" size="small" @click="$router.go(-1)">
-        <v-icon>fa-solid fa-chevron-left</v-icon>
-        {{ t("posts.back") }}
-      </v-btn>
+    <div class="d-flex align-center justify-space-between mb-5">
+      <div>
+        <v-btn variant="outlined" color="subtext" @click="$router.go(-1)">
+          <v-icon>fa-chevron-left</v-icon>
+          {{ t("posts.back") }}
+        </v-btn>
 
-      <v-btn
-        v-if="canEdit"
-        variant="text"
-        size="small"
-        rounded="md"
-        class="ml-auto"
-        :to="`/organiations/${currOrg.slug}/edit`"
-      >
-        <v-icon class="mr-1">fa-solid fa-pencil</v-icon>
-        {{ t("form.edit") }}
-      </v-btn>
-    </div>
+        <!-- to be implemented later -->
+        <!-- <v-btn variant="outlined" color="accent" class="ml-2" :to="`/organizations/${currOrg.slug}/edit`">
+          <v-icon class="mr-1">fa-pencil</v-icon>
+          {{ t("form.edit") }}
+        </v-btn>
 
-    <div class="bg-white rounded pa-5">
-      <div class="d-flex align-center">
-        <v-avatar size="100">
-          <v-img :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail">
-            <template #error>
-              <v-img :src="currOrg.photoThumbnail" cover referrerpolicy="same-origin" />
-            </template>
-          </v-img>
-        </v-avatar>
+        <v-btn variant="outlined" color="secondary" class="ml-2" :to="`/organizations/${currOrg.slug}/members`">
+          <v-icon class="mr-1">fa-users</v-icon>
+          {{ t("orgs.members") }}
+        </v-btn>
 
-        <div class="ml-5">
-          <h1>{{ currOrg.name }}</h1>
-
-          <v-list-item
-            v-if="currOrg.address || currOrg.postalCode || currOrg.city || currOrg.district"
-            density="compact"
-            class="px-0"
-            :title="currOrg.address"
-            :subtitle="`${currOrg.postalCode} ${currOrg.city} ${currOrg.district}`.trim()"
-          />
-
-          <v-list-item v-if="currOrg.website" density="compact" class="px-0" :title="currOrg.website" />
-        </div>
+        <v-btn variant="outlined" color="secondary" class="ml-2" :to="`/organizations/${currOrg.slug}/posts`">
+          <v-icon class="mr-1">fa-passport</v-icon>
+          {{ t("orgs.posts") }}
+        </v-btn> -->
       </div>
+
+      <v-breadcrumbs :items="breadcrumbs" />
     </div>
 
-    <div v-if="currOrg.bio" class="bg-white rounded pa-5 mt-3">
-      <div class="bio">{{ currOrg.bio }}</div>
-    </div>
+    <v-row>
+      <v-col cols="2">
+        <ad-avatar :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail" />
 
-    <div v-if="currOrg.contacts?.length" class="bg-white rounded pa-5 mt-3">
-      <ad-contacts-list :contacts="currOrg.contacts" bg-color="transparent" />
-    </div>
+        <div v-if="currOrg.contacts?.length">
+          <h6>{{ t("orgs.contact") }}</h6>
+
+          <ad-contacts-list :contacts="currOrg.contacts" bg-color="transparent" />
+        </div>
+
+        <div v-if="currOrg.address">
+          <h6>{{ t("orgs.morada") }}</h6>
+
+          <span>
+            {{ currOrg.address }}
+
+            <ad-external-link :href="`https://www.google.com/maps/place/${currOrg.address.replace(' ', '+')}`" />
+          </span>
+        </div>
+
+        <div v-if="currOrg.website">
+          <h6>{{ t("orgs.website") }}</h6>
+
+          <span>
+            {{ currOrg.website }}
+
+            <ad-external-link :href="currOrg.website" />
+          </span>
+        </div>
+
+        <div v-if="currOrg.nipc">
+          <h6>{{ t("orgs.nipc") }}</h6>
+
+          <span>{{ currOrg.nipc }}</span>
+        </div>
+      </v-col>
+
+      <v-col>
+        <h3>{{ currOrg.name }}</h3>
+
+        <small>typo{{ currOrg.type }}</small>
+
+        <p v-if="currOrg.bio" class="mt-3">
+          {{ currOrg.bio }}
+        </p>
+
+        <p v-else class="mt-3 font-italic">{{ t("orgs.noBio") }}</p>
+      </v-col>
+    </v-row>
   </template>
 </template>
 
 <script lang="ts" setup>
   import { useOrganizations } from "app/store/organizations";
+  import AdAvatar from "app/components/common/AdAvatar.vue";
+  import AdExternalLink from "app/components/common/AdExternalLink.vue";
+  import AdContactsList from "app/components/contacts/AdContactsList.vue";
 
   import type { User } from "shared/types/user";
 
   const { currOrg, setOrg } = useOrganizations();
   const $router = useRouter();
   const $route = useRoute();
-  const { user } = useUserSession();
   const { t } = useI18n();
 
   const slug = $route.params.slug as string;
 
-  definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails" });
+  const breadcrumbs = [
+    { title: t("menu.home"), href: "/" },
+    { title: t("orgs.title"), href: "/organizations" },
+    { title: slug },
+  ];
 
-  const {
-    data: org,
-    pending,
-    error,
-  } = await useFetch<User>(`/api/v1/organizations/${slug}`, {
+  definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails", layout: "full-width" });
+
+  const { status, error } = await useFetch<User>(`/api/v1/organizations/${slug}`, {
     lazy: true,
-    onResponse({ response }) {
-      setOrg(response._data);
-    },
+    onResponse: ({ response }) => setOrg(response._data),
   });
-
-  const canEdit = computed(() => org.value?.slug === user.value?.slug);
 
   watch(
     () => error.value,

@@ -1,19 +1,19 @@
 <template>
-  <v-tooltip :text="t(details.description)">
+  <v-tooltip :text="$t(details.description)">
     <template #activator="{ props }">
       <v-chip
         v-bind="props"
         text-color="white"
         rounded="md"
         label
+        variant="flat"
         class="cursor-pointer pr-1"
-        :class="lgAndUp ? 'ml-2' : 'mr-2'"
-        :variant="variant"
+        :class="$vuetify.display.lgAndUp ? 'ml-2' : 'mr-2'"
         :size="size"
         :prepend-icon="details.icon"
         :color="details.color"
       >
-        {{ t(details.label) }}
+        {{ $t(details.label) }}
       </v-chip>
     </template>
   </v-tooltip>
@@ -24,16 +24,10 @@
 
   const $props = defineProps({
     need: { type: String as PropType<PostNeed>, required: true },
-    size: { type: String, default: "x-small" },
-    variant: {
-      type: String as PropType<"text" | "flat" | "elevated" | "tonal" | "outlined" | "plain">,
-      default: "text",
-    },
+    size: { type: String, default: "small" },
   });
 
-  const { t } = useI18n();
   const { getNeedDetails } = useNeed();
-  const { lgAndUp } = useDisplay();
 
   const details = ref(getNeedDetails($props.need));
 </script>

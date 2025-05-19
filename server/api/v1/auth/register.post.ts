@@ -1,18 +1,19 @@
 import { getOrganization, createOrganization, notifyOrgOwner } from "server/db/organizations";
-import { organizations } from "~~/server/db/schemas/organizations.schema";
+import { organizations } from "server/db/schemas/organizations.schema";
 import { addUser } from "server/db/users";
 import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
 import type { RegisterPayload, User, UserType } from "shared/types/user";
-import type { TranslationFunction } from "shared/types";
+
+import { translate } from "server/utils/i18n";
 import { log } from "server/utils/logger";
 import { genToken } from "server/utils";
 import { normalizeDisplayName, normalizeSlug } from "server/utils/normalize";
 import { addUserToOrg as _addUserToOrg } from "server/api/v1/organizations/common";
 
-const register = async (payload: RegisterPayload, t: TranslationFunction): Promise<User> => {
+const register = async (payload: RegisterPayload): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
   const normalizedDisplayName = payload.name ? normalizeDisplayName(payload.name) : undefined;
   const normalizedSlug = normalizedDisplayName ? normalizeSlug(normalizedDisplayName) : undefined;
@@ -48,16 +49,16 @@ const register = async (payload: RegisterPayload, t: TranslationFunction): Promi
   }
 
   await sendEmail(
-    t("email.accountConfirm.subject"),
+    translate("email.accountConfirm.subject"),
     { email: payload.email, name: payload.name },
     "userActionRequired",
     {
-      greetings: t("email.greetings"),
+      greetings: translate("email.greetings"),
       name: payload.name,
-      body: t("email.accountConfirm.body"),
-      body2: t("email.accountConfirm.body2"),
-      buttonText: t("email.accountConfirm.buttonText"),
-      alternativeLinkText: t("email.alternativeLinkText"),
+      body: translate("email.accountConfirm.body"),
+      body2: translate("email.accountConfirm.body2"),
+      buttonText: translate("email.accountConfirm.buttonText"),
+      alternativeLinkText: translate("email.alternativeLinkText"),
       link: `${process.env.APP_BASE_URL}/confirmation?token=${token}&email=${payload.email}`,
     },
   );
@@ -66,8 +67,6 @@ const register = async (payload: RegisterPayload, t: TranslationFunction): Promi
 };
 
 export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
-
   const body = await getValidatedInput<RegisterPayload>(event, {
     name: RequiredString.max(255),
     password: RequiredPassword,
@@ -80,16 +79,13 @@ export default defineEventHandler(async (event) => {
   const email = sanitizeInput(body.email);
 
   try {
-    const user = await register(
-      {
-        name: sanitizeInput(body.name),
-        password: body.password,
-        type: sanitizeInput<UserType>(body.type),
-        email,
-        organizationName: sanitizeInput(body.organizationName),
-      },
-      t,
-    );
+    const user = await register({
+      name: sanitizeInput(body.name),
+      password: body.password,
+      type: sanitizeInput<UserType>(body.type),
+      email,
+      organizationName: sanitizeInput(body.organizationName),
+    });
 
     await notifyNewUser(user);
     return user;
@@ -97,9 +93,11 @@ export default defineEventHandler(async (event) => {
     if (err instanceof Error) {
       if (err.message.includes("UNIQUE constraint")) {
         throw createError({
-          data: { email: t("errors.emailExists") },
+          data: {
+            email: translate("errors.emailExists"),
+          },
           statusCode: 422,
-          statusMessage: t("errors.validationError"),
+          statusMessage: translate("errors.validationError"),
         });
       }
 
@@ -108,7 +106,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: t("errors.unexpected"),
+      statusMessage: translate("errors.unexpected"),
     });
   }
 });

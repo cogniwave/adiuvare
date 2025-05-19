@@ -12,8 +12,8 @@
     <v-date-picker
       v-model:model-value="proxyDate"
       landscape
-      color="primary"
-      class="mx-auto mt-5 bg-white"
+      color="secondary"
+      class="mx-auto"
       hide-header
       width="512px"
       @update:model-value="onProxyChange"

@@ -1,15 +1,14 @@
-import { RequiredEmail, RequiredPassword } from "~~/shared/validators";
+import { RequiredEmail, RequiredPassword } from "shared/validators";
 
 import dayjs from "shared/services/dayjs.service";
 import { getUser } from "server/db/users";
 import { getValidatedInput, defineWrappedResponseHandler } from "server/utils/request";
 import { users } from "server/db/schemas/users.schema";
+import { translate } from "server/utils/i18n";
 
 import type { LoginPayload, TokenUser } from "shared/types/user";
 
 export default defineWrappedResponseHandler(async (event) => {
-  const t = await useTranslation(event);
-
   const { email, password } = await getValidatedInput<LoginPayload>(event, {
     email: RequiredEmail,
     password: RequiredPassword,
@@ -28,7 +27,7 @@ export default defineWrappedResponseHandler(async (event) => {
     throw createError({
       statusCode: 422,
       statusMessage: "unprocessable content",
-      message: t("errors.invalidCredentials"),
+      message: translate("errors.invalidCredentials"),
     });
   }
 
@@ -36,7 +35,7 @@ export default defineWrappedResponseHandler(async (event) => {
     throw createError({
       statusCode: 409,
       statusMessage: "conflict",
-      message: t("errors.unverifiedUser"),
+      message: translate("errors.unverifiedUser"),
     });
   }
 

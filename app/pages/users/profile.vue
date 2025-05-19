@@ -5,175 +5,174 @@
     class="rounded-xl"
   />
 
-  <!-- render users -->
-  <template v-else>
-    <h2 class="text-h5 mb-5">{{ t("form.user.editDetails") }}</h2>
+  <ad-form-card v-else ref="form" :title="t('form.user.editDetails')" @submit="submit">
+    <template #form>
+      <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
+        <v-hover v-slot="{ isHovering, props }">
+          <div v-bind="props" class="pic-wrapper" @click="fileInput?.click()">
+            <input
+              id="avatar"
+              ref="fileInput"
+              type="file"
+              accept="image/png, image/jpeg"
+              class="d-none"
+              @change="onFileChange"
+            />
 
-    <v-form ref="form" validate-on="submit lazy" @keypress.enter.prevent="submit" @submit.prevent="submit">
-      <div class="bg-white rounded px-10 py-5">
-        <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
-          <v-hover v-slot="{ isHovering, props }">
-            <div v-bind="props" class="pic-wrapper" @click="fileInput?.click()">
-              <input
-                id="avatar"
-                ref="fileInput"
-                type="file"
-                accept="image/png, image/jpeg"
-                class="d-none"
-                @change="onFileChange"
-              />
+            <ad-img
+              height="128px"
+              width="128px"
+              :alt="t('form.user.picAlt')"
+              :src="pic"
+              :lazy-src="currUser.photoThumbnail!"
+            />
 
-              <ad-img
-                height="128px"
-                width="128px"
-                :alt="t('form.user.picAlt')"
-                :src="pic"
-                :lazy-src="currUser.photoThumbnail!"
-              />
+            <v-fade-transition>
+              <div v-show="isHovering" class="camera-wrapper">
+                <v-icon color="white" size="large"> fa-solid fa-camera </v-icon>
+              </div>
+            </v-fade-transition>
+          </div>
+        </v-hover>
+      </v-input>
 
-              <v-fade-transition>
-                <div v-show="isHovering" class="camera-wrapper">
-                  <v-icon color="white" size="large"> fa-solid fa-camera </v-icon>
-                </div>
-              </v-fade-transition>
-            </div>
-          </v-hover>
-        </v-input>
+      <!-- name -->
+      <v-text-field
+        v-model:model-value="name"
+        prepend-icon="fa-solid fa-heading"
+        class="mb-8"
+        counter="264"
+        persistent-counter
+        :placeholder="t('form.user.namePlaceholder')"
+        :label="t('form.user.name')"
+        :rules="[required(t), maxLength($t, 264)]"
+        :error-messages="errors.name"
+        @update:model-value="(value) => updateUser('name', value)"
+      />
 
-        <!-- name -->
-        <v-text-field
-          v-model:model-value="name"
-          prepend-icon="fa-solid fa-heading"
-          class="mb-8"
-          counter="264"
-          persistent-counter
-          :placeholder="t('form.user.namePlaceholder')"
-          :label="t('form.user.name')"
-          :rules="[required(t), maxLength($t, 264)]"
-          :error-messages="errors.name"
-          @update:model-value="(value) => updateUser('name', value)"
-        />
+      <!-- slug -->
+      <v-text-field
+        v-model:model-value="slug"
+        prepend-icon="fa-solid fa-id-badge"
+        class="mb-8"
+        persistent-counter
+        counter="264"
+        required
+        :hint="t('form.user.slugHint')"
+        :placeholder="t('form.user.slugPlaceholder')"
+        :label="t('form.user.slug')"
+        :rules="[required(t), maxLength($t, 264)]"
+        :error-messages="errors.slug"
+        @blur="onSlugBlur"
+      />
 
-        <!-- slug -->
-        <v-text-field
-          v-model:model-value="slug"
-          prepend-icon="fa-solid fa-id-badge"
-          class="mb-8"
-          persistent-counter
-          counter="264"
-          required
-          :hint="t('form.user.slugHint')"
-          :placeholder="t('form.user.slugPlaceholder')"
-          :label="t('form.user.slug')"
-          :rules="[required(t), maxLength($t, 264)]"
-          :error-messages="errors.slug"
-          @blur="onSlugBlur"
-        />
+      <!-- bio -->
+      <v-textarea
+        v-model:model-value="bio"
+        class="my-10"
+        prepend-icon="fa-solid fa-quote-left"
+        :placeholder="t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')"
+        :label="t(currUser.type === 'org' ? 'form.org.bio' : 'form.user.bio')"
+        @update:model-value="(value) => updateUser('bio', value)"
+      />
 
-        <!-- bio -->
-        <v-textarea
-          v-model:model-value="bio"
-          class="my-10"
-          prepend-icon="fa-solid fa-quote-left"
-          :placeholder="t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')"
-          :label="t(currUser.type === 'org' ? 'form.org.bio' : 'form.user.bio')"
-          @update:model-value="(value) => updateUser('bio', value)"
-        />
+      <!-- website -->
+      <v-text-field
+        v-model:model-value="website"
+        prepend-icon="fa-solid fa-globe"
+        class="mb-8"
+        persistent-counter
+        counter="256"
+        :placeholder="t('form.user.websitePlaceholder')"
+        :label="t('form.user.website')"
+        :rules="[maxLength($t, 256), isValidUrl($t)]"
+        :error-messages="errors.website"
+        @update:model-value="(value) => updateUser('website', value)"
+      />
 
-        <!-- website -->
-        <v-text-field
-          v-model:model-value="website"
-          prepend-icon="fa-solid fa-globe"
-          class="mb-8"
-          persistent-counter
-          counter="256"
-          :placeholder="t('form.user.websitePlaceholder')"
-          :label="t('form.user.website')"
-          :rules="[maxLength($t, 256), isValidUrl($t)]"
-          :error-messages="errors.website"
-          @update:model-value="(value) => updateUser('website', value)"
-        />
+      <!-- morada -->
+      <v-text-field
+        v-model:model-value="address"
+        prepend-icon="fa-solid fa-map"
+        class="mb-8"
+        persistent-counter
+        counter="256"
+        :placeholder="t('form.user.addressPlaceholder')"
+        :label="t('form.user.address')"
+        :rules="[maxLength($t, 256)]"
+        :error-messages="errors.address"
+        @update:model-value="(value) => updateUser('address', value)"
+      />
 
-        <!-- morada -->
-        <v-text-field
-          v-model:model-value="address"
-          prepend-icon="fa-solid fa-map"
-          class="mb-8"
-          persistent-counter
-          counter="256"
-          :placeholder="t('form.user.addressPlaceholder')"
-          :label="t('form.user.address')"
-          :rules="[maxLength($t, 256)]"
-          :error-messages="errors.address"
-          @update:model-value="(value) => updateUser('address', value)"
-        />
+      <!-- código postal -->
+      <v-text-field
+        v-model:model-value="postalCode"
+        v-maska="'####-###'"
+        prepend-icon="fa-solid fa-address-book"
+        class="mb-8"
+        persistent-counter
+        counter="8"
+        :placeholder="t('form.user.postalCodePlaceholder')"
+        :label="t('form.user.postalCode')"
+        :rules="[maxLength($t, 8)]"
+        :error-messages="errors.postalCode"
+        @update:model-value="(value) => updateUser('postalCode', value)"
+      />
 
-        <!-- código postal -->
-        <v-text-field
-          v-model:model-value="postalCode"
-          v-maska="'####-###'"
-          prepend-icon="fa-solid fa-address-book"
-          class="mb-8"
-          persistent-counter
-          counter="8"
-          :placeholder="t('form.user.postalCodePlaceholder')"
-          :label="t('form.user.postalCode')"
-          :rules="[maxLength($t, 8)]"
-          :error-messages="errors.postalCode"
-          @update:model-value="(value) => updateUser('postalCode', value)"
-        />
+      <!-- city -->
+      <v-autocomplete
+        v-model:model-value="city"
+        prepend-icon="fa-solid fa-map-location"
+        class="mb-10"
+        :items="localidades"
+        :placeholder="t('form.user.cityPlaceholder')"
+        :label="t('form.user.city')"
+        :error-messages="errors.city"
+        :no-data-text="t('form.post.locationNoResults')"
+        :custom-filter="filterAutocomplete"
+        @update:model-value="(value) => updateUser('city', value)"
+      />
 
-        <!-- city -->
-        <v-autocomplete
-          v-model:model-value="city"
-          prepend-icon="fa-solid fa-map-location"
-          class="mb-10"
-          :items="localidades"
-          :placeholder="t('form.user.cityPlaceholder')"
-          :label="t('form.user.city')"
-          :error-messages="errors.city"
-          :no-data-text="t('form.post.locationNoResults')"
-          :custom-filter="filterAutocomplete"
-          @update:model-value="(value) => updateUser('city', value)"
-        />
+      <!-- district -->
+      <v-autocomplete
+        v-model:model-value="district"
+        prepend-icon="fa-solid fa-location-dot"
+        class="mb-8"
+        :items="distritos"
+        :placeholder="t('form.user.districtPlaceholder')"
+        :label="t('form.user.district')"
+        :no-data-text="t('form.post.locationNoResults')"
+        :error-messages="errors.district"
+        :custom-filter="filterAutocomplete"
+        @update:model-value="(value) => updateUser('district', value)"
+      />
 
-        <!-- district -->
-        <v-autocomplete
-          v-model:model-value="district"
-          prepend-icon="fa-solid fa-location-dot"
-          class="mb-8"
-          :items="distritos"
-          :placeholder="t('form.user.districtPlaceholder')"
-          :label="t('form.user.district')"
-          :no-data-text="t('form.post.locationNoResults')"
-          :error-messages="errors.district"
-          :custom-filter="filterAutocomplete"
-          @update:model-value="(value) => updateUser('district', value)"
-        />
-      </div>
+      <!-- contacts -->
+      <ad-contacts :contacts="contacts" :error="errors.contacts" @update="updateUser('contacts', $event)" />
+    </template>
 
-      <div class="bg-white rounded px-10 py-5">
-        <!-- contacts -->
-        <ad-contacts :contacts="contacts" @update="updateUser('contacts', $event)" />
-      </div>
-    </v-form>
+    <template #actions>
+      <!-- todo: implement -->
+      <!-- <v-btn :disable="submitting" color="error" class="mr-2" @click="$router.go(-1)">
+        {{ t("form.user.delete") }}
+      </v-btn> -->
 
-    <div class="py-5 d-flex align-center justify-end">
-      <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
-        {{ t("form.cancel") }}
-      </v-btn>
+      <v-spacer />
 
-      <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
+      <v-btn type="submit" variant="flat" color="primary" :loading="submitting">
         {{ t("form.user.update") }}
       </v-btn>
-    </div>
-  </template>
+    </template>
+  </ad-form-card>
 </template>
 
 <script lang="ts" setup>
   import { vMaska } from "maska/vue";
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
+  import AdImg from "app/components/common/AdImg.vue";
+  import AdContacts from "app/components/contacts/AdContacts.vue";
+  import AdFormCard from "app/components/common/AdFormCard.vue";
   import distritos from "public/assets/distritos.json";
   import localidades from "public/assets/localidades.json";
 

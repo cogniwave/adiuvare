@@ -1,7 +1,7 @@
 <template>
   <v-dialog :model-value="dialogVisible" width="65vw" persistent @update:model-value="dialogVisible = false">
     <v-card>
-      <v-card-title class="bg-primary">
+      <v-card-title>
         {{ t("posts.report.title") }}
       </v-card-title>
 

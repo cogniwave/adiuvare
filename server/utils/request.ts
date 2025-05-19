@@ -1,10 +1,11 @@
 import type { PartialSchemaMap } from "joi";
 import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
-import Joi from "~~/shared/validators";
+import joi from "shared/validators";
 import { ValidationError, type Errors } from "shared/exceptions";
+import { translate } from "server/utils/i18n";
 
-export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap) => {
+export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap<T>) => {
   let body;
   try {
     body = await readBody(event);
@@ -12,18 +13,17 @@ export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, 
     throw createError(error as H3Error);
   }
 
-  const { value, error } = Joi.object<T>(schema).validate(body, {
+  const { value, error } = joi.object<T>(schema).validate(body, {
     abortEarly: false,
     stripUnknown: true,
     externals: true,
+    convert: true,
   });
 
   if (error) {
-    const t = await useTranslation(event);
-
     const errors: Errors = {};
     error.details.forEach(({ context, path, message }) => {
-      errors[path[0]!] = t(message, context || {});
+      errors[path[0]!] = translate(message, context || {});
     });
 
     throw new ValidationError(errors);
@@ -73,8 +73,6 @@ export const desanitizeInput = (input?: string | null) => {
 const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, error: unknown) => {
   createApp();
 
-  const t = await useTranslation(event);
-
   if (process.env.NUXT_ENV === "development") {
     console.error(error);
   }
@@ -84,18 +82,18 @@ const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, e
     throw createError({
       status: 422,
       statusMessage: "Unprocessable content",
-      cause: t("errors.validationError"),
+      cause: translate("errors.validationError"),
       data: error.toError(),
     });
   }
 
   if (isH3Error(error)) {
     if (error.statusCode === 401) {
-      throw createError({ ...error, status: 401, cause: t("errors.authRequired") });
+      throw createError({ ...error, status: 401, cause: translate("errors.authRequired") });
     }
 
     if (error.statusCode === 403) {
-      throw createError({ ...error, status: 403, cause: t("errors.noPermissions") });
+      throw createError({ ...error, status: 403, cause: translate("errors.noPermissions") });
     }
 
     throw error;

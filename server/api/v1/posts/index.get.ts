@@ -1,25 +1,25 @@
 import { getPostsAndTotal } from "server/db/posts";
 import { log } from "server/utils/logger";
+import { translate } from "server/utils/i18n";
 
-import type { TranslationFunction } from "shared/types";
 import { PostNeed, type PostFilter } from "shared/types/post";
 
 // because free search with i18n, we need some magics to
 // convert users input into the value thats saved in the db
-const mapIfNeed = (filter: string, t: TranslationFunction) => {
-  if (t("posts.needs.money").toLowerCase().includes(filter)) {
+const mapIfNeed = (filter: string) => {
+  if (translate("posts.needs.money").toLowerCase().includes(filter)) {
     return PostNeed.MONEY.toString();
   }
 
-  if (t("posts.needs.goods").toLowerCase().includes(filter)) {
+  if (translate("posts.needs.goods").toLowerCase().includes(filter)) {
     return PostNeed.GOODS.toString();
   }
 
-  if (t("posts.needs.volunteers").toLowerCase().includes(filter)) {
+  if (translate("posts.needs.volunteers").toLowerCase().includes(filter)) {
     return PostNeed.VOLUNTEERS.toString();
   }
 
-  if (t("posts.needs.other").toLowerCase().includes(filter)) {
+  if (translate("posts.needs.other").toLowerCase().includes(filter)) {
     return PostNeed.OTHER.toString();
   }
 
@@ -27,8 +27,6 @@ const mapIfNeed = (filter: string, t: TranslationFunction) => {
 };
 
 export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
-
   try {
     const qs = getQuery<{ filter: string } | undefined>(event);
 
@@ -43,11 +41,11 @@ export default defineEventHandler(async (event) => {
 
       if (filter) {
         if (filter.query) {
-          filter.query = mapIfNeed(filter.query, t);
+          filter.query = mapIfNeed(filter.query);
         }
 
         if (filter.needs) {
-          filter.needs = filter.needs.map<string>((n) => mapIfNeed(n, t));
+          filter.needs = filter.needs.map<string>((n) => mapIfNeed(n));
         }
       }
     }

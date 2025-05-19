@@ -1,8 +1,6 @@
 <template>
-  <h2 class="text-h5 mb-5">{{ t("posts.newPostTitle") }}</h2>
-
-  <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
-    <div class="bg-white rounded px-10 py-5">
+  <ad-form-card ref="form" :title="t('posts.newPostTitle')" @submit="submit">
+    <template #form>
       <!-- title -->
       <v-text-field
         v-model:model-value="title"
@@ -26,9 +24,7 @@
         :error-messages="errors.description"
         @update:model-value="(value) => updatePost('description', value)"
       />
-    </div>
 
-    <div class="bg-white rounded px-10 py-5 my-5">
       <!-- locations -->
       <!-- TODO: improve ux on this -->
       <v-autocomplete
@@ -36,6 +32,7 @@
         multiple
         prepend-icon="fa-solid fa-location-dot"
         chips
+        class="mt-10"
         closable-chips
         :label="t('form.post.location')"
         :placeholder="t('form.post.locationPlaceholder')"
@@ -68,9 +65,7 @@
           <ad-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
         </template>
       </v-select>
-    </div>
 
-    <div class="bg-white rounded px-10 py-5">
       <!-- contacts -->
       <ad-contacts
         v-if="user"
@@ -81,18 +76,18 @@
 
       <!-- horarios -->
       <ad-post-schedule />
-    </div>
-  </v-form>
+    </template>
 
-  <div class="py-5 d-flex align-center justify-end">
-    <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
-      {{ t("posts.cancel") }}
-    </v-btn>
+    <template #actions>
+      <v-btn :disable="submitting" variant="text" color="secondary" class="mr-2" @click="$router.go(-1)">
+        {{ t("posts.cancel") }}
+      </v-btn>
 
-    <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-      {{ t("posts.submit") }}
-    </v-btn>
-  </div>
+      <v-btn type="submit" variant="flat" color="primary" :loading="submitting">
+        {{ t("posts.submit") }}
+      </v-btn>
+    </template>
+  </ad-form-card>
 </template>
 
 <script lang="ts" setup>
@@ -104,6 +99,8 @@
   import { getCities } from "app/services/geoapify.service";
   import AdPostDialogNeed from "app/components/posts/AdPostDialogNeed.vue";
   import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
+  import AdContacts from "app/components/contacts/AdContacts.vue";
+  import AdFormCard from "app/components/common/AdFormCard.vue";
   import { useNotify } from "app/store/notify";
   import { usePosts } from "app/store/posts";
 
@@ -206,7 +203,7 @@
       }
 
       currPost.value = {} as Post;
-      $router.push("/");
+      // $router.push("/");
       notifySuccess(t("posts.created"));
     } catch (errs: unknown) {
       handleErrors(errs);

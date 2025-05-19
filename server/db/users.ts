@@ -26,7 +26,7 @@ export const getUser = async <T = SelectUser>(
     .where(and(eq(users.email, email), ...filter.map(([key, value]) => eq(key as SQLiteColumn, value))))
     .limit(1);
 
-  return result.length ? (result[0] as T) : undefined;
+  return result.length ? formatFromDb<T>(result[0]!) : undefined;
 };
 
 export const addUser = async (payload: BaseUser, token: string): Promise<User | null> => {
@@ -68,7 +68,9 @@ export const updateUser = async (
     return null;
   }
 
-  return await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
+  await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
+
+  return true;
 };
 
 export const getUserById = async (id: string): Promise<User | null> => {
@@ -105,7 +107,7 @@ export const getUserByEmail = async (email: string) => {
     .where(eq(users.email, email))
     .limit(1);
 
-  return result.length === 1 ? result[0] : null;
+  return result.length === 1 ? formatFromDb<User>(result[0]) : null;
 };
 
 export const updateUserToken = async (userId: string, token: string) => {
@@ -121,8 +123,10 @@ export const updateUserToken = async (userId: string, token: string) => {
 };
 
 export const updatePassword = async (email: string, password: string, token: string) => {
-  return await useDrizzle()
+  await useDrizzle()
     .update(users)
     .set({ password: await hashPassword(password), token: null })
     .where(and(eq(users.email, email), eq(users.token, token)));
+
+  return true;
 };
