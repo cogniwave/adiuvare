@@ -42,8 +42,8 @@
               <v-icon color="accent">fa-filter</v-icon>
             </v-btn>
           </template>
-        </v-text-field>
-      </form> -->
+</v-text-field>
+</form> -->
     </section>
 
     <!-- add with #22 -->
@@ -136,7 +136,7 @@
   import { useNotify } from "app/store/notify";
   import AdOrgListItem from "app/components/organizations/AdOrgListItem.vue";
   import { useOrganizations } from "app/store/organizations";
-  import type { GetOrganizationsResult } from "shared/types/user";
+  import type { GetOrganizationsResult } from "shared/types/organizations";
 
   useSeoMeta({ title: "pages.orgList" });
   definePageMeta({ path: "/organizations", layout: "full-width" });

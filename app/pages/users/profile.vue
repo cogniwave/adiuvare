@@ -1,31 +1,17 @@
 <template>
-  <v-skeleton-loader
-    v-if="status === 'pending' || !currUser || !Object.keys(currUser).length"
-    type="article@5"
-    class="rounded-xl"
-  />
+  <v-skeleton-loader v-if="status === 'pending' || !currUser || !Object.keys(currUser).length" type="article@5"
+                     class="rounded-xl" />
 
   <ad-form-card v-else ref="form" :title="t('form.user.editDetails')" @submit="submit">
     <template #form>
       <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
         <v-hover v-slot="{ isHovering, props }">
           <div v-bind="props" class="pic-wrapper" @click="fileInput?.click()">
-            <input
-              id="avatar"
-              ref="fileInput"
-              type="file"
-              accept="image/png, image/jpeg"
-              class="d-none"
-              @change="onFileChange"
-            />
+            <input id="avatar" ref="fileInput" type="file" accept="image/png, image/jpeg" class="d-none"
+                   @change="onFileChange" />
 
-            <ad-img
-              height="128px"
-              width="128px"
-              :alt="t('form.user.picAlt')"
-              :src="pic"
-              :lazy-src="currUser.photoThumbnail!"
-            />
+            <ad-img height="128px" width="128px" :alt="t('form.user.picAlt')" :src="pic"
+                    :lazy-src="currUser.photoThumbnail!" />
 
             <v-fade-transition>
               <div v-show="isHovering" class="camera-wrapper">
@@ -35,120 +21,74 @@
           </div>
         </v-hover>
       </v-input>
+      <v-form ref="form" validate-on="submit lazy" @keypress.enter.prevent="submit" @submit.prevent="submit">
+        <div class="bg-white rounded px-10 py-5">
+          <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
+            <v-hover v-slot="{ isHovering, props }">
+              <div v-bind="props" class="pic-wrapper" @click="fileInput?.click()">
+                <input id="avatar" ref="fileInput" type="file" accept="image/png, image/jpeg" class="d-none"
+                       @change="onFileChange" />
+
+                <ad-img height="128px" width="128px" :alt="t('form.user.picAlt')" :src="pic"
+                        :lazy-src="currUser.photoThumbnail!" />
+              </div>
+            </v-hover>
+          </v-input>
+        </div>
+      </v-form>
 
       <!-- name -->
-      <v-text-field
-        v-model:model-value="name"
-        prepend-icon="fa-solid fa-heading"
-        class="mb-8"
-        counter="264"
-        persistent-counter
-        :placeholder="t('form.user.namePlaceholder')"
-        :label="t('form.user.name')"
-        :rules="[required(t), maxLength($t, 264)]"
-        :error-messages="errors.name"
-        @update:model-value="(value) => updateUser('name', value)"
-      />
+      <v-text-field v-model:model-value="name" prepend-icon="fa-solid fa-heading" class="mb-8" counter="264"
+                    persistent-counter :placeholder="t('form.user.namePlaceholder')" :label="t('form.user.name')"
+                    :rules="[required(t), maxLength($t, 264)]" :error-messages="errors.name"
+                    @update:model-value="(value) => updateUser('name', value)" />
 
       <!-- slug -->
-      <v-text-field
-        v-model:model-value="slug"
-        prepend-icon="fa-solid fa-id-badge"
-        class="mb-8"
-        persistent-counter
-        counter="264"
-        required
-        :hint="t('form.user.slugHint')"
-        :placeholder="t('form.user.slugPlaceholder')"
-        :label="t('form.user.slug')"
-        :rules="[required(t), maxLength($t, 264)]"
-        :error-messages="errors.slug"
-        @blur="onSlugBlur"
-      />
+      <v-text-field v-model:model-value="slug" prepend-icon="fa-solid fa-id-badge" class="mb-8" persistent-counter
+                    counter="264" required :hint="t('form.user.slugHint')" :placeholder="t('form.user.slugPlaceholder')"
+                    :label="t('form.user.slug')" :rules="[required(t), maxLength($t, 264)]"
+                    :error-messages="errors.slug" @blur="onSlugBlur" />
 
       <!-- bio -->
-      <v-textarea
-        v-model:model-value="bio"
-        class="my-10"
-        prepend-icon="fa-solid fa-quote-left"
-        :placeholder="t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')"
-        :label="t(currUser.type === 'org' ? 'form.org.bio' : 'form.user.bio')"
-        @update:model-value="(value) => updateUser('bio', value)"
-      />
+      <v-textarea v-model:model-value="bio" class="my-10" prepend-icon="fa-solid fa-quote-left"
+                  :placeholder="t(currUser.type === 'admin' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')"
+                  :label="t(currUser.type === 'admin' ? 'form.org.bio' : 'form.user.bio')"
+                  @update:model-value="(value) => updateUser('bio', value)" />
 
       <!-- website -->
-      <v-text-field
-        v-model:model-value="website"
-        prepend-icon="fa-solid fa-globe"
-        class="mb-8"
-        persistent-counter
-        counter="256"
-        :placeholder="t('form.user.websitePlaceholder')"
-        :label="t('form.user.website')"
-        :rules="[maxLength($t, 256), isValidUrl($t)]"
-        :error-messages="errors.website"
-        @update:model-value="(value) => updateUser('website', value)"
-      />
+      <v-text-field v-model:model-value="website" prepend-icon="fa-solid fa-globe" class="mb-8" persistent-counter
+                    counter="256" :placeholder="t('form.user.websitePlaceholder')" :label="t('form.user.website')"
+                    :rules="[maxLength($t, 256), isValidUrl($t)]" :error-messages="errors.website"
+                    @update:model-value="(value) => updateUser('website', value)" />
 
       <!-- morada -->
-      <v-text-field
-        v-model:model-value="address"
-        prepend-icon="fa-solid fa-map"
-        class="mb-8"
-        persistent-counter
-        counter="256"
-        :placeholder="t('form.user.addressPlaceholder')"
-        :label="t('form.user.address')"
-        :rules="[maxLength($t, 256)]"
-        :error-messages="errors.address"
-        @update:model-value="(value) => updateUser('address', value)"
-      />
+      <v-text-field v-model:model-value="address" prepend-icon="fa-solid fa-map" class="mb-8" persistent-counter
+                    counter="256" :placeholder="t('form.user.addressPlaceholder')" :label="t('form.user.address')"
+                    :rules="[maxLength($t, 256)]" :error-messages="errors.address"
+                    @update:model-value="(value) => updateUser('address', value)" />
 
       <!-- código postal -->
-      <v-text-field
-        v-model:model-value="postalCode"
-        v-maska="'####-###'"
-        prepend-icon="fa-solid fa-address-book"
-        class="mb-8"
-        persistent-counter
-        counter="8"
-        :placeholder="t('form.user.postalCodePlaceholder')"
-        :label="t('form.user.postalCode')"
-        :rules="[maxLength($t, 8)]"
-        :error-messages="errors.postalCode"
-        @update:model-value="(value) => updateUser('postalCode', value)"
-      />
+      <v-text-field v-model:model-value="postalCode" v-maska="'####-###'" prepend-icon="fa-solid fa-address-book"
+                    class="mb-8" persistent-counter counter="8" :placeholder="t('form.user.postalCodePlaceholder')"
+                    :label="t('form.user.postalCode')" :rules="[maxLength($t, 8)]" :error-messages="errors.postalCode"
+                    @update:model-value="(value) => updateUser('postalCode', value)" />
 
       <!-- city -->
-      <v-autocomplete
-        v-model:model-value="city"
-        prepend-icon="fa-solid fa-map-location"
-        class="mb-10"
-        :items="localidades"
-        :placeholder="t('form.user.cityPlaceholder')"
-        :label="t('form.user.city')"
-        :error-messages="errors.city"
-        :no-data-text="t('form.post.locationNoResults')"
-        :custom-filter="filterAutocomplete"
-        @update:model-value="(value) => updateUser('city', value)"
-      />
+      <v-autocomplete v-model:model-value="city" prepend-icon="fa-solid fa-map-location" class="mb-10"
+                      :items="localidades" :placeholder="t('form.user.cityPlaceholder')" :label="t('form.user.city')"
+                      :error-messages="errors.city" :no-data-text="t('form.post.locationNoResults')"
+                      :custom-filter="filterAutocomplete" @update:model-value="(value) => updateUser('city', value)" />
 
       <!-- district -->
-      <v-autocomplete
-        v-model:model-value="district"
-        prepend-icon="fa-solid fa-location-dot"
-        class="mb-8"
-        :items="distritos"
-        :placeholder="t('form.user.districtPlaceholder')"
-        :label="t('form.user.district')"
-        :no-data-text="t('form.post.locationNoResults')"
-        :error-messages="errors.district"
-        :custom-filter="filterAutocomplete"
-        @update:model-value="(value) => updateUser('district', value)"
-      />
+      <v-autocomplete v-model:model-value="district" prepend-icon="fa-solid fa-location-dot" class="mb-8"
+                      :items="distritos" :placeholder="t('form.user.districtPlaceholder')"
+                      :label="t('form.user.district')" :no-data-text="t('form.post.locationNoResults')"
+                      :error-messages="errors.district" :custom-filter="filterAutocomplete"
+                      @update:model-value="(value) => updateUser('district', value)" />
 
       <!-- contacts -->
-      <ad-contacts :contacts="contacts" :error="errors.contacts" @update="updateUser('contacts', $event)" />
+      <ad-contacts :contacts="contacts" :entity-id="currUser.id" entity-type="user" :error="errors.contacts"
+                   @update="updateUser('contacts', $event)" />
     </template>
 
     <template #actions>
@@ -181,7 +121,8 @@
 
   import { useNotify } from "app/store/notify";
   import { normalize } from "app/utils";
-  import type { User, UserContact } from "shared/types/user";
+  import type { User } from "shared/types/user";
+  import type { Contact } from "shared/types/contacts";
   import type { FilterMatch } from "shared/types/form";
 
   definePageMeta({ path: "/profile", middleware: "protected-server", title: "pages.profile" });
@@ -216,7 +157,7 @@
   const bio = ref<string>("");
   const slug = ref<string>("");
   const pic = ref<string>("");
-  const contacts = ref<UserContact[]>([]);
+  const contacts = ref<Contact[]>([]);
   const website = ref<string>("");
   const address = ref<string>("");
   const postalCode = ref<string>("");
@@ -232,6 +173,9 @@
   onBeforeMount(() => userId.value && status.value !== "pending" && init());
 
   const _updateUser = async () => {
+    if (!currUser.value) {
+      throw new Error("User not loaded.");
+    }
     return await $fetch<User>(`/api/v1/users/${currUser.value.id}`, {
       query: { action: "profile" },
       body: {
@@ -251,6 +195,9 @@
   };
 
   const _uploadFile = async () => {
+    if (!currUser.value) {
+      throw new Error("User not loaded.");
+    }
     const formData = new FormData();
 
     if (!fileInput.value) {
@@ -273,6 +220,7 @@
     }
 
     const result = await form.value.validate();
+
     if (!result.valid || !!errors.value.file) {
       return;
     }
@@ -281,6 +229,7 @@
     submitting.value = true;
 
     try {
+      if (!currUser.value) { throw new Error("User not loaded."); }
       const requests: Array<ReturnType<typeof _updateUser | typeof _uploadFile>> = [_updateUser()];
 
       if (pic.value && pic.value !== currUser.value.photo) {
@@ -289,10 +238,12 @@
 
       const [user, urls] = await Promise.all(requests);
 
-      if (user) {
-        users.value = users.value.map((p) => {
-          return p.id === currUser.value.id ? { ...currUser.value, ...urls } : p;
-        });
+      if (user && currUser.value) {
+        const userCopy = currUser.value;
+
+        users.value = users.value.map((p) =>
+          p.id === userCopy.id ? { ...userCopy, ...urls } : p
+        );
       }
 
       notifySuccess(t("form.user.updated"));
@@ -303,7 +254,8 @@
     }
   };
 
-  const updateUser = (prop: string, val: string | UserContact[]) => {
+  const updateUser = (prop: string, val: string | Contact[]) => {
+    if (!currUser.value) return;
     currUser.value = { ...currUser.value, [prop]: val };
   };
 

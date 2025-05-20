@@ -44,7 +44,30 @@ export const formatFromDb =
     };
   }; */
 
-export const formatEntityOfDb = <T>(fields: string[] = []) => {
+export const formatEntityToDb = <T>(fields: string[] = []) => {
+  return (payload: T): T => {
+    if (!fields.length) return payload;
+
+    const result = {
+      ...(payload as Record<string, unknown>),
+      ...fields.reduce<Record<string, unknown>>((acc, field) => {
+        const value = (payload as Record<string, unknown>)[field];
+        if (value && typeof value === "object") {
+          try {
+            acc[field] = JSON.stringify(value);
+          } catch {
+            acc[field] = value;
+          }
+        }
+        return acc;
+      }, {}),
+    };
+
+    return result as T;
+  };
+};
+
+export const formatEntityFromDb = <T>(fields: string[] = []) => {
   return (payload: unknown): T => {
     if (!fields.length) return payload as T;
 

@@ -4,20 +4,21 @@ import { createId } from "@paralleldrive/cuid2";
 import { organizations } from "./schemas/organizations.schema";
 import { genToken } from "server/utils";
 import type { BaseOrganization, Organization, UpdateOrganizationPayload } from "shared/types/organizations";
-import { formatEntityOfDb } from "server/db/utils";
+import { formatEntityFromDb } from "server/db/utils";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import { getUserByEmail, getUserById } from "server/db/users";
 import { organizationUsers } from "./schemas/organizationsUsers.schema";
-
+import { contacts } from "./schemas/contacts.schema";
+import type { Contact } from "shared/types/contacts";
 import { normalizeSlug, normalizeDisplayName } from "server/utils/normalize";
 import { sendEmail } from "server/services/brevo";
 
-const formatOrgOfDb = formatEntityOfDb<Organization>(["contacts"]);
+const formatOrgOfDb = formatEntityFromDb<Organization & { contacts?: Contact[] }>();
 
 export const getOrganization = async (
   filter: Array<[SQLiteColumn, string | number | boolean]> = [],
   fields: Partial<Record<keyof Organization, SQLiteColumn>> = {},
-): Promise<Organization | null> => {
+): Promise<(Organization & { contacts?: Contact[] }) | null> => {
   const db = useDrizzle();
 
   const selectedFields = {
@@ -35,7 +36,6 @@ export const getOrganization = async (
     ownerId: organizations.ownerId,
     ...fields,
   };
-
   const baseConditions = [eq(organizations.verified, true), ...filter.map(([col, val]) => eq(col, val))];
 
   const result = await db
@@ -44,7 +44,18 @@ export const getOrganization = async (
     .where(and(...baseConditions))
     .limit(1);
 
-  return result.length ? formatOrgOfDb(result[0]) : null;
+  if (!result.length) return null;
+
+  const org = result[0];
+
+  if (!org) return null;
+
+  const orgContacts = await db
+    .select()
+    .from(contacts)
+    .where(and(eq(contacts.entityType, "organization"), eq(contacts.entityId, org.id)));
+
+  return formatOrgOfDb({ ...org, contacts: orgContacts }) as Organization & { contacts: Contact[] };
 };
 
 export const addOrganization = async (payload: BaseOrganization): Promise<Organization | null> => {
@@ -74,14 +85,14 @@ export const updateOrganization = async (
   return result.length ? (formatOrgOfDb(result[0]) as Organization) : null;
 };
 
-export const getOrganizationById = async (id: string) => {
+/* export const getOrganizationById = async (id: string) => {
   return await getOrganization([[organizations.id, id]]);
-};
+}; */
 
-/* export const getOrgBySlug = async (slugInput: string): Promise<Organization | null> => {
+export const getOrgBySlug = async (slugInput: string): Promise<Organization | null> => {
   const slug = normalizeSlug(slugInput);
   return await getOrganization([[organizations.slug, slug]]);
-}; */
+};
 
 export const getTotalOrgs = async () => {
   const result = await useDrizzle().select().from(organizations);
@@ -99,7 +110,7 @@ export const createOrganization = async (data: { name: string; ownerEmail: strin
     id: createId(),
     displayName: normalizedDisplayName,
     ownerId: owner.id,
-    verified: owner.verified,
+    verified: false,
     category: "unknown",
     slug,
     acceptSameDomainUsers: true,

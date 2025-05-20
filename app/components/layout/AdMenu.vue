@@ -4,6 +4,7 @@
   </v-list>
 </template>
 
+
 <script setup lang="ts">
   import AdMenuContent from "app/components/layout/AdMenuContent.vue";
 </script>

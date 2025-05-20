@@ -34,12 +34,12 @@ export interface Organization extends BaseOrganization {
   photoThumbnail?: string;
 }
 
-export interface OrganizationUser {
+/* export interface OrganizationUser {
   userId: string;
   organizationId: string;
   approved: boolean;
   createdAt: Date;
-}
+} */
 
 export type UpdateOrganizationPayload = Partial<Omit<Organization, "id" | "createdAt" | "updatedAt">>;
 
@@ -55,3 +55,5 @@ export interface GetOrganizationsResult {
   organizations: Organization[];
   total: number;
 }
+
+export type OrganizationContacts = Organization & { contacts: Contact[] };

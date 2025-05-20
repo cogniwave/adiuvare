@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
     email: RequiredEmail,
     type: RequiredString.valid("org", "volunteer"),
     newsletter: Joi.boolean().default(false),
-    organizationName: Joi.string().allow("", null).optional(),
+    orgName: Joi.string().allow("", null).optional(),
   });
 
   const email = sanitizeInput(body.email);
@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
       password: body.password,
       type: sanitizeInput<UserType>(body.type),
       email,
-      organizationName: sanitizeInput(body.organizationName),
+      orgName: sanitizeInput(body.orgName),
     });
 
     await notifyNewUser(user);

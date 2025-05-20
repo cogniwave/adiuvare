@@ -2,77 +2,46 @@
   <ad-form-card ref="form" :title="t('posts.newPostTitle')" @submit="submit">
     <template #form>
       <!-- title -->
-      <v-text-field
-        v-model:model-value="title"
-        prepend-icon="fa-solid fa-heading"
-        class="mb-10"
-        :placeholder="t('form.post.titlePlaceholder')"
-        :label="t('form.post.title')"
-        :rules="[required(t)]"
-        :error-messages="errors.title"
-        @update:model-value="(value) => updatePost('title', value)"
-      />
+      <v-text-field v-model:model-value="title" prepend-icon="fa-solid fa-heading" class="mb-10"
+                    :placeholder="t('form.post.titlePlaceholder')" :label="t('form.post.title')" :rules="[required(t)]"
+                    :error-messages="errors.title" @update:model-value="(value) => updatePost('title', value)" />
 
       <!-- description -->
-      <v-textarea
-        v-model:model-value="description"
-        class="mt-10"
-        prepend-icon="fa-solid fa-quote-left"
-        :placeholder="t('form.post.descriptionPlaceholder')"
-        :label="t('form.post.description')"
-        :rules="[required(t)]"
-        :error-messages="errors.description"
-        @update:model-value="(value) => updatePost('description', value)"
-      />
+      <v-textarea v-model:model-value="description" class="mt-10" prepend-icon="fa-solid fa-quote-left"
+                  :placeholder="t('form.post.descriptionPlaceholder')" :label="t('form.post.description')"
+                  :rules="[required(t)]" :error-messages="errors.description"
+                  @update:model-value="(value) => updatePost('description', value)" />
+
 
       <!-- locations -->
       <!-- TODO: improve ux on this -->
-      <v-autocomplete
-        v-model:model-value="locationInput"
-        multiple
-        prepend-icon="fa-solid fa-location-dot"
-        chips
-        class="mt-10"
-        closable-chips
-        :label="t('form.post.location')"
-        :placeholder="t('form.post.locationPlaceholder')"
-        :no-data-text="noDataText"
-        :rules="[required(t)]"
-        :error-messages="errors.locations"
-        :items="locations"
-        :loading="fetchingLocations"
-        @update:search="fetchLocations"
-        @update:model-value="updatePost('locations', $event)"
-        @click:remove-chip="onRemoveLocation"
-      />
+      <<<<<<< Updated upstream <v-autocomplete v-model:model-value="locationInput" multiple
+              prepend-icon="fa-solid fa-location-dot" chips class="mt-10" closable-chips
+              :label="t('form.post.location')" :placeholder="t('form.post.locationPlaceholder')"
+              :no-data-text="noDataText" :rules="[required(t)]" :error-messages="errors.locations" :items="locations"
+              :loading="fetchingLocations" @update:search="fetchLocations"
+              @update:model-value="updatePost('locations', $event)" @click:remove-chip="onRemoveLocation" />
+      =======
+      <v-autocomplete v-model:model-value="locationInput" multiple prepend-icon="fa-solid fa-location-dot" chips
+                      closable-chips :label="t('form.post.location')" :placeholder="t('form.post.locationPlaceholder')"
+                      :no-data-text="noDataText" :rules="[required(t)]" :error-messages="errors.locations"
+                      :items="locations" :loading="fetchingLocations" @update:search="fetchLocations"
+                      @update:model-value="updatePost('locations', $event)" @click:remove-chip="onRemoveLocation" />
+      >>>>>>> Stashed changes
 
       <!-- category -->
-      <v-select
-        v-model:model-value="categoryInput"
-        multiple
-        options-dense
-        use-chips
-        hide-hint
-        prepend-icon="fa-solid fa-parachute-box"
-        class="mt-10"
-        :label="t('form.post.category')"
-        :rules="[required(t)]"
-        :error-messages="errors.category"
-        :items="helpOptions"
-        @update:model-value="updatePost('needs', $event)"
-      >
+      <v-select v-model:model-value="categoryInput" multiple options-dense use-chips hide-hint
+                prepend-icon="fa-solid fa-parachute-box" class="mt-10" :label="t('form.post.category')"
+                :rules="[required(t)]" :error-messages="errors.category" :items="helpOptions"
+                @update:model-value="updatePost('needs', $event)">
         <template #chip="{ item }">
           <ad-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
         </template>
       </v-select>
 
       <!-- contacts -->
-      <ad-contacts
-        v-if="user"
-        :contacts="user.contacts"
-        :error="errors.contacts"
-        @update="updatePost('contacts', $event)"
-      />
+      <ad-contacts v-if="user" :contacts="user.contacts" :entity-id="user.id" entity-type="user"
+                   :error="errors.contacts" @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
       <ad-post-schedule />
@@ -106,7 +75,7 @@
 
   import type { SelectOption } from "shared/types/form";
   import type { EmptyPost, Post, PostSchedule } from "shared/types/post";
-  import type { UserContact } from "shared/types/user";
+  import type { Contact } from "shared/types/contacts";
 
   definePageMeta({ path: "/posts/new", middleware: "org-only-server", title: "pages.postCreate" });
 
@@ -173,7 +142,7 @@
     updatePost("location", locationInput.value);
   };
 
-  const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
+  const updatePost = (prop: string, val: string | string[] | PostSchedule | Contact[]) => {
     currPost.value = { ...currPost.value, [prop]: val };
   };
 

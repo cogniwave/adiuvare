@@ -61,10 +61,10 @@
 
 <script setup lang="ts">
   import { useNotify } from "app/store/notify";
-  import type { UserContact } from "shared/types/user";
+  import type { Contact } from "shared/types/contacts";
 
   defineProps({
-    contacts: { type: Array as PropType<UserContact[]>, required: true },
+    contacts: { type: Array as PropType<Contact[]>, required: true },
   });
 
   const { notifyInfo } = useNotify();

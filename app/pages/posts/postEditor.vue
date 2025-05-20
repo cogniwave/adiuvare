@@ -7,58 +7,29 @@
   <ad-form-card v-else-if="post" ref="form" :title="t('posts.newPostTitle')" @submit="submit">
     <template #form>
       <!-- title -->
-      <v-text-field
-        v-model:model-value="title"
-        prepend-icon="fa-solid fa-heading"
-        class="mb-10"
-        counter="264"
-        persistent-counter
-        :placeholder="t('form.post.titlePlaceholder')"
-        :label="t('form.post.title')"
-        :rules="[required(t), maxLength($t, 264)]"
-        :error-messages="errors.title"
-        @update:model-value="(value) => updatePost('title', value)"
-      />
+      <v-text-field v-model:model-value="title" prepend-icon="fa-solid fa-heading" class="mb-10" counter="264"
+                    persistent-counter :placeholder="t('form.post.titlePlaceholder')" :label="t('form.post.title')"
+                    :rules="[required(t), maxLength($t, 264)]" :error-messages="errors.title"
+                    @update:model-value="(value) => updatePost('title', value)" />
 
       <!-- slug -->
-      <v-text-field
-        v-model:model-value="slug"
-        prepend-icon="fa-solid fa-id-badge"
-        class="mb-10"
-        persistent-counter
-        counter="264"
-        :hint="t('form.post.slugHint')"
-        :placeholder="t('form.post.slugPlaceholder')"
-        :label="t('form.post.slug')"
-        :rules="[required(t), maxLength($t, 264)]"
-        :error-messages="errors.slug"
-        @blur="onSlugBlur"
-      />
+      <v-text-field v-model:model-value="slug" prepend-icon="fa-solid fa-id-badge" class="mb-10" persistent-counter
+                    counter="264" :hint="t('form.post.slugHint')" :placeholder="t('form.post.slugPlaceholder')"
+                    :label="t('form.post.slug')" :rules="[required(t), maxLength($t, 264)]"
+                    :error-messages="errors.slug" @blur="onSlugBlur" />
 
       <!-- description -->
-      <v-textarea
-        v-model:model-value="description"
-        class="mt-10"
-        prepend-icon="fa-solid fa-quote-left"
-        :placeholder="t('form.post.descriptionPlaceholder')"
-        :label="t('form.post.description')"
-        :rules="[required(t)]"
-        :error-messages="errors.description"
-        @update:model-value="(value) => updatePost('description', value)"
-      />
+      <v-textarea v-model:model-value="description" class="mt-10" prepend-icon="fa-solid fa-quote-left"
+                  :placeholder="t('form.post.descriptionPlaceholder')" :label="t('form.post.description')"
+                  :rules="[required(t)]" :error-messages="errors.description"
+                  @update:model-value="(value) => updatePost('description', value)" />
 
       <!-- state -->
       <v-input prepend-icon="fa-solid fa-film" hide-details class="mt-10">
         <v-label class="mr-2"> {{ t("form.post.state.title") }} </v-label>
 
-        <v-btn-toggle
-          v-if="['active', 'inactive'].includes(post.state)"
-          v-model:model-value="state"
-          divided
-          color="primary"
-          density="compact"
-          class="ml-auto"
-        >
+        <v-btn-toggle v-if="['active', 'inactive'].includes(post.state)" v-model:model-value="state" divided
+                      color="primary" density="compact" class="ml-auto">
           <v-tooltip :text="t('form.post.state.activeTooltip')">
             <template #activator="{ props }">
               <v-btn v-bind="props" size="x-small" value="active" @update:model-value="updatePost('state', 'active')">
@@ -66,15 +37,89 @@
               </v-btn>
             </template>
           </v-tooltip>
+          <v-form v-if="post" ref="form" validate-on="submit lazy" @submit.prevent="submit" />
+          <div class="bg-white rounded px-10 py-5">
+            <!-- title -->
+            <v-text-field v-model:model-value="title" prepend-icon="fa-solid fa-heading" class="mb-8" counter="264"
+                          persistent-counter :placeholder="t('form.post.titlePlaceholder')"
+                          :label="t('form.post.title')" :rules="[required(t), maxLength($t, 264)]"
+                          :error-messages="errors.title" @update:model-value="(value) => updatePost('title', value)" />
+
+            <!-- slug -->
+            <v-text-field v-model:model-value="slug" prepend-icon="fa-solid fa-id-badge" class="mb-8" persistent-counter
+                          counter="264" :hint="t('form.post.slugHint')" :placeholder="t('form.post.slugPlaceholder')"
+                          :label="t('form.post.slug')" :rules="[required(t)]" :error-messages="errors.slug"
+                          @blur="onSlugBlur" />
+
+            <!-- description -->
+            <v-textarea v-model:model-value="description" class="mt-10" prepend-icon="fa-solid fa-quote-left"
+                        :placeholder="t('form.post.descriptionPlaceholder')" :label="t('form.post.description')"
+                        :rules="[required(t)]" :error-messages="errors.description"
+                        @update:model-value="(value) => updatePost('description', value)" />
+
+            <!-- state -->
+            <v-input prepend-icon="fa-solid fa-film" hide-details class="mt-10">
+              <v-label class="mr-2"> {{ t("form.post.state.title") }} </v-label>
+
+              <v-btn-toggle v-if="['active', 'inactive'].includes(post.state)" v-model:model-value="state" divided
+                            color="primary" density="compact" class="ml-auto">
+                <v-tooltip :text="t('form.post.state.activeTooltip')">
+                  <template #activator="{ props }">
+                    <v-btn v-bind="props" size="x-small" value="active"
+                           @update:model-value="updatePost('state', 'active')">
+                      {{ t("form.post.state.active") }}
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+
+                <v-tooltip :text="t('form.post.state.inactiveTooltip')">
+                  <template #activator="{ props }">
+                    <v-btn v-bind="props" size="x-small" value="inactive"
+                           @update:model-value="updatePost('state', 'inactive')">
+                      {{ t("form.post.state.inactive") }}
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+              </v-btn-toggle>
+
+              <template v-else>
+                <v-tooltip :text="t(`form.post.state.${post.state}Tooltip`)">
+                  <template #activator="{ props }">
+                    {{ t(`form.post.state.${post.state}`) }}
+
+                    <v-icon v-bind="props" color="primary" class="ml-1"> fa-solid fa-circle-question </v-icon>
+                  </template>
+                </v-tooltip>
+              </template>
+            </v-input>
+          </div>
+
+          <div class="bg-white rounded px-10 py-5 my-5">
+            <!-- locations -->
+            <!-- TODO: improve ux on this -->
+            <v-autocomplete v-model:model-value="locationInput" multiple prepend-icon="fa-solid fa-location-dot" chips
+                            closable-chips :label="t('form.post.location')"
+                            :placeholder="t('form.post.locationPlaceholder')" :no-data-text="noDataText"
+                            :rules="[required(t)]" :error-messages="errors.locations" :items="locations"
+                            :loading="fetchingLocations" @update:search="fetchLocations"
+                            @update:model-value="updatePost('locations', $event)"
+                            @click:remove-chip="onRemoveLocation" />
+
+            <!-- category -->
+            <v-select v-model:model-value="needs" multiple use-chips prepend-icon="fa-solid fa-parachute-box" clearable
+                      class="mt-10" :label="t('form.post.category')" :rules="[required(t)]"
+                      :error-messages="errors.category && t(errors.category)" :items="needOptions"
+                      @update:model-value="updatePost('needs', $event)">
+              <template #chip="{ item }">
+                <ad-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
+              </template>
+            </v-select>
+          </div>
 
           <v-tooltip :text="t('form.post.state.inactiveTooltip')">
             <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                size="x-small"
-                value="inactive"
-                @update:model-value="updatePost('state', 'inactive')"
-              >
+              <v-btn v-bind="props" size="x-small" value="inactive"
+                     @update:model-value="updatePost('state', 'inactive')">
                 {{ t("form.post.state.inactive") }}
               </v-btn>
             </template>
@@ -93,48 +138,26 @@
       </v-input>
       <!-- locations -->
       <!-- TODO: improve ux on this -->
-      <v-autocomplete
-        v-model:model-value="locationInput"
-        multiple
-        prepend-icon="fa-solid fa-location-dot"
-        chips
-        class="mt-10"
-        closable-chips
-        :label="t('form.post.location')"
-        :placeholder="t('form.post.locationPlaceholder')"
-        :no-data-text="noDataText"
-        :rules="[required(t)]"
-        :error-messages="errors.locations"
-        :items="locations"
-        :loading="fetchingLocations"
-        @update:search="fetchLocations"
-        @update:model-value="updatePost('locations', $event)"
-        @click:remove-chip="onRemoveLocation"
-      />
+      <v-autocomplete v-model:model-value="locationInput" multiple prepend-icon="fa-solid fa-location-dot" chips
+                      class="mt-10" closable-chips :label="t('form.post.location')"
+                      :placeholder="t('form.post.locationPlaceholder')" :no-data-text="noDataText"
+                      :rules="[required(t)]" :error-messages="errors.locations" :items="locations"
+                      :loading="fetchingLocations" @update:search="fetchLocations"
+                      @update:model-value="updatePost('locations', $event)" @click:remove-chip="onRemoveLocation" />
 
       <!-- category -->
-      <v-select
-        v-model:model-value="needs"
-        multiple
-        options-dense
-        use-chips
-        hide-hint
-        prepend-icon="fa-solid fa-parachute-box"
-        clearable
-        class="mt-10"
-        :label="t('form.post.category')"
-        :rules="[required(t)]"
-        :error-messages="errors.category && t(errors.category)"
-        :items="needOptions"
-        @update:model-value="updatePost('needs', $event)"
-      >
+      <v-select v-model:model-value="needs" multiple options-dense use-chips hide-hint
+                prepend-icon="fa-solid fa-parachute-box" clearable class="mt-10" :label="t('form.post.category')"
+                :rules="[required(t)]" :error-messages="errors.category && t(errors.category)" :items="needOptions"
+                @update:model-value="updatePost('needs', $event)">
         <template #chip="{ item }">
           <ad-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
         </template>
       </v-select>
 
       <!-- contacts -->
-      <ad-contacts :contacts="post.contacts" :error="errors.contacts" @update="updatePost('contacts', $event)" />
+      <ad-contacts :contacts="post.contacts" :entity-id="post.id" entity-type="organization" :error="errors.contacts"
+                   @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
       <ad-post-schedule />
@@ -167,7 +190,8 @@
   import { usePosts } from "app/store/posts";
   import { PostStateEnum, type Post, type PostSchedule, type PostState } from "shared/types/post";
   import type { SelectOption } from "shared/types/form";
-  import type { UserContact } from "shared/types/user";
+
+  import type { Contact } from "shared/types/contacts";
 
   definePageMeta({ path: "/posts/:slug/edit", middleware: "protected-server", title: "pages.postEdit" });
 
@@ -252,7 +276,7 @@
     updatePost("location", locationInput.value);
   };
 
-  const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
+  const updatePost = (prop: string, val: string | string[] | PostSchedule | Contact[]) => {
     currPost.value = { ...currPost.value, [prop]: val };
   };
 

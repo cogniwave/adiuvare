@@ -5,7 +5,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { users } from "./users.schema";
 import { posts, POST_STATES } from "./posts.schema";
 import type { PostSchedule, PostStateEnum } from "shared/types/post";
-import type { UserContact } from "shared/types/user";
+import type { Contact } from "shared/types/contacts";
 
 export const postHistory = sqliteTable(
   "postHistory",
@@ -22,7 +22,7 @@ export const postHistory = sqliteTable(
     description: text("description").notNull(),
     locations: text("locations", { mode: "json" }).notNull().$type<string[]>(),
     schedule: text("schedule", { mode: "json" }).notNull().$type<PostSchedule>(),
-    contacts: text("contacts", { mode: "json" }).notNull().$type<UserContact[]>(),
+    contacts: text("contacts", { mode: "json" }).notNull().$type<Contact[]>(),
     slug: text("slug").notNull(),
     state: text("state", { enum: POST_STATES }).notNull().default("pending").$type<PostStateEnum>(),
     needs: text("needs").notNull(),

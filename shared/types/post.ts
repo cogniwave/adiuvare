@@ -1,4 +1,4 @@
-import type { UserContact } from "./user";
+import type { Contact } from "./contacts";
 
 export type Day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 
@@ -47,7 +47,7 @@ export interface EmptyPost<T extends ScheduleType = ScheduleType> {
   description: string;
   title: string;
   needs: PostNeed[];
-  contacts: UserContact[];
+  contacts: Contact[];
   locations: string[];
 }
 
@@ -76,7 +76,7 @@ export interface PostBySlug<T extends ScheduleType = ScheduleType> extends Omit<
   description: string;
   title: string;
   needs: PostNeed[];
-  contacts: UserContact[];
+  contacts: Contact[];
   locations: string[];
   createdById?: string;
 }
@@ -86,7 +86,7 @@ export interface CreatePostPayload<T extends ScheduleType = ScheduleType> {
   schedule: PostSchedule<T>;
   needs: PostNeed[];
   title: string;
-  contacts: UserContact[];
+  contacts: Contact[];
 }
 
 export interface PostDeletePayload {

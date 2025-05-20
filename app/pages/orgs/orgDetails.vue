@@ -70,12 +70,12 @@
       </v-col>
 
       <v-col>
-        <h3>{{ currOrg.name }}</h3>
+        <h3>{{ currOrg.displayName }}</h3>
 
-        <small>typo{{ currOrg.type }}</small>
+        <small>typo{{ currOrg.about }}</small>
 
-        <p v-if="currOrg.bio" class="mt-3">
-          {{ currOrg.bio }}
+        <p v-if="currOrg.about" class="mt-3">
+          {{ currOrg.about }}
         </p>
 
         <p v-else class="mt-3 font-italic">{{ t("orgs.noBio") }}</p>
@@ -89,8 +89,10 @@
   import AdAvatar from "app/components/common/AdAvatar.vue";
   import AdExternalLink from "app/components/common/AdExternalLink.vue";
   import AdContactsList from "app/components/contacts/AdContactsList.vue";
+  import type { OrganizationContacts } from "shared/types/organizations";
 
-  import type { User } from "shared/types/user";
+
+
 
   const { currOrg, setOrg } = useOrganizations();
   const $router = useRouter();
@@ -107,7 +109,7 @@
 
   definePageMeta({ path: "/organizations/:slug", title: "pages.orgDetails", layout: "full-width" });
 
-  const { status, error } = await useFetch<User>(`/api/v1/organizations/${slug}`, {
+  const { status, error } = await useFetch<OrganizationContacts>(`/api/v1/organizations/${slug}`, {
     lazy: true,
     onResponse: ({ response }) => setOrg(response._data),
   });

@@ -13,45 +13,23 @@
 
   <div class="d-flex flex-column" :class="{ 'mt-10': proxyContacts.length }">
     <div v-for="c in proxyContacts" :key="c.contact" class="contact-group">
-      <v-select
-        :model-value="c.type"
-        :items="options"
-        :label="t('form.contacts.type')"
-        @update:model-value="onUpdateType($event, c.contact, c.id)"
-        @blur="persistUpdate"
-      />
+      <v-select :model-value="c.type" :items="options" :label="t('form.contacts.type')"
+                @update:model-value="onUpdateType($event, c.contact, c.id)" @blur="persistUpdate" />
 
-      <v-text-field
-        type="text"
-        class="w-100"
-        :model-value="c.contact"
-        :hint="c.type === 'phone' ? t('form.contacts.phoneHint') : undefined"
-        :label="t('form.contacts.label')"
-        :error-messages="errors[c.id]"
-        :rules="[
-          required(t),
-          contactExists(c.id),
-          ...(c.type === 'email' ? [isValidEmail(t)] : []),
-          ...(c.type === 'phone' ? [isValidPhone(t)] : []),
-        ]"
-        @update:model-value="onUpdateValue(c.type, $event, c.id)"
-        @blur="persistUpdate"
-      />
+      <v-text-field type="text" class="w-100" :model-value="c.contact"
+                    :hint="c.type === 'phone' ? t('form.contacts.phoneHint') : undefined"
+                    :label="t('form.contacts.label')" :error-messages="errors[c.id]" :rules="[
+                      required(t),
+                      contactExists(c.id),
+                      ...(c.type === 'email' ? [isValidEmail(t)] : []),
+                      ...(c.type === 'phone' ? [isValidPhone(t)] : []),
+                    ]" @update:model-value="onUpdateValue(c.type, $event, c.id)" @blur="persistUpdate" />
 
       <div class="button-group">
         <v-tooltip :text="t('form.contacts.remove')" location="bottom" close-on-content-click close-delay="0">
           <template #activator="{ props }">
-            <v-btn
-              v-bind="props"
-              rounded="xl"
-              density="compact"
-              size="xs"
-              icon="fa-solid fa-circle-minus"
-              color="secondary"
-              flat
-              variant="text"
-              @click="onRemove(c.id)"
-            />
+            <v-btn v-bind="props" rounded="xl" density="compact" size="xs" icon="fa-solid fa-circle-minus"
+                   color="secondary" flat variant="text" @click="onRemove(c.id)" />
           </template>
         </v-tooltip>
       </div>
@@ -60,28 +38,31 @@
 </template>
 
 <script setup lang="ts">
-  import type { ContactType, UserContact } from "shared/types/user";
+  import type { ContactType, ContactEntityType, Contact } from "shared/types/contacts";
 
-  interface Contact extends UserContact {
-    id: number;
-  }
+
+  type LocalContact = Contact & { id: number; };
 
   const $emit = defineEmits<{
-    (e: "update", payload: UserContact[]): void;
+    (e: "update", payload: LocalContact[]): void;
   }>();
 
-  const $props = defineProps({
-    contacts: { type: Array as PropType<UserContact[]>, default: () => [] },
-    error: { type: String, default: "" },
+  const $props = withDefaults(defineProps<{
+    contacts: Contact[];
+    entityId: string;
+    entityType: ContactEntityType;
+    error?: string;
+  }>(), {
+    error: "",
   });
 
   const { t } = useI18n();
   const errors = ref<Record<string, string>>({});
-  const proxyContacts = ref<Contact[]>(
-    $props.contacts.map((c, i) => ({
+  const proxyContacts = ref<LocalContact[]>(
+    ($props.contacts as Contact[]).map((c, i) => ({
       ...c,
       id: i,
-    })),
+    }))
   );
 
   const options = [
@@ -90,19 +71,19 @@
     { title: t("form.contacts.other"), value: "other" },
   ];
 
-  const contactEdits = ref<Record<number, Contact>>({});
-
-  const onUpdateType = (type: ContactType, contact: string, id: number) => {
-    contactEdits.value[id] = { id, type, contact };
-
-    proxyContacts.value = proxyContacts.value.map((c) => {
-      return c.id === id ? { type, contact, id } : c;
-    });
-  };
+  const contactEdits = ref<Record<number, LocalContact>>({});
 
   const onUpdateValue = (type: ContactType, contact: string, id: number) => {
-    contactEdits.value[id] = { id, type, contact };
+    const base = proxyContacts.value.find((c) => c.id === id);
+    if (!base) return;
+
+    contactEdits.value[id] = {
+      ...base,
+      type,
+      contact,
+    };
   };
+
 
   const contactExists = (id: number) => (val: string) => {
     return !proxyContacts.value.some((c) => c.id !== id && c.contact === val) || t("errors.contactExists");
@@ -116,7 +97,13 @@
   };
 
   const onAdd = () => {
-    proxyContacts.value.push({ contact: "", type: "phone", id: proxyContacts.value.length });
+    proxyContacts.value.push({
+      id: proxyContacts.value.length,
+      contact: "",
+      type: "phone",
+      entityId: $props.entityId,
+      entityType: $props.entityType,
+    });
   };
 
   const persistUpdate = () => {
@@ -126,7 +113,13 @@
 
     $emit(
       "update",
-      proxyContacts.value.map((c) => ({ contact: c.contact, type: c.type })),
+      proxyContacts.value.map((c) => ({
+        id: c.id,
+        contact: c.contact,
+        type: c.type,
+        entityId: c.entityId,
+        entityType: c.entityType,
+      })),
     );
   };
 
@@ -134,6 +127,18 @@
     () => $props.error,
     (error) => (errors.value.contacts = error),
   );
+
+  const onUpdateType = (type: ContactType, contact: string, id: number) => {
+    contactEdits.value[id] = {
+      ...contactEdits.value[id],
+      id,
+      contact,
+      type,
+      entityId: $props.entityId,
+      entityType: $props.entityType,
+    };
+  };
+
 </script>
 
 <style lang="scss">
@@ -142,7 +147,7 @@
     width: 100%;
     margin-bottom: 12px;
 
-    & > * {
+    &>* {
       flex: initial;
     }
 

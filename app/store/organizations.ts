@@ -1,11 +1,10 @@
-import type { GetOrganizationsResult, Organization } from "shared/types/organizations";
+import type { GetOrganizationsResult, Organization, OrganizationContacts } from "shared/types/organizations";
 
 export const useOrganizations = () => {
   const orgs = useState<Organization[]>("orgs:orgs", () => []);
   const totalOrgs = useState<number>("orgs:totalOrgs", () => 0);
-  const currOrg = useState<Organization>("orgs:current", () => ({}) as Organization);
-
-  const setOrg = (org: Organization | null) => (currOrg.value = org as Organization);
+  const currOrg = useState<OrganizationContacts | null>("orgs:current", () => null);
+  const setOrg = (org: OrganizationContacts | null) => (currOrg.value = org as OrganizationContacts);
 
   const setOrgs = ({ organizations, total }: GetOrganizationsResult) => {
     orgs.value = organizations;

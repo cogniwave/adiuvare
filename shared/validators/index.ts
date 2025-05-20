@@ -101,12 +101,12 @@ export const OptionalPassword = Joi.string().pattern(PASSWORD_REGEX);
 
 export const RequiredPassword = OptionalPassword.required().min(1);
 
-export const RequiredContacts: Joi.ArraySchema<UserContact[]> = RequiredArray.items(
+export const RequiredContacts: Joi.ArraySchema<Contact[]> = RequiredArray.items(
   Joi.object().keys({
     type: Joi.string().valid("phone", "other", "email").required(),
     contact: Joi.string().min(5).max(264).required(),
   }),
-).custom((value: UserContact[]) => {
+).custom((value: Contact[]) => {
   return value.map((c) => ({ type: c.type, contact: sanitizeInput(c.contact) }));
 });
 

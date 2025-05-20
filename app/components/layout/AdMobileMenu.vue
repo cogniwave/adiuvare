@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+
   import { useMenu } from "app/store/menu";
   import AdMenuContent from "app/components/layout/AdMenuContent.vue";
 

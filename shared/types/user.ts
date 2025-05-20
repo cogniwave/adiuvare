@@ -11,7 +11,8 @@ export interface BaseUser {
   password: string;
   type: UserType;
   newsletter?: boolean;
-  organizationName: string;
+  // organizationName?: string;
+  organizationUser?: OrganizationUser;
 }
 
 export interface RegisterPayload extends BaseUser {
@@ -35,8 +36,7 @@ export interface User extends Omit<BaseUser, "password"> {
   district?: string;
   photo?: string;
   photoThumbnail?: string;
-  contacts?: UserContact[];
-  nipc?: string;
+  contacts?: Contact[];
 }
 
 export interface LoginPayload {
@@ -60,15 +60,15 @@ export interface TokenUser {
   slug: string;
   type: UserType;
   logo: string;
-  contacts: UserContact[];
+  contacts: Contact[];
 }
 
 export type ContactType = "email" | "phone" | "other";
 
-export interface UserContact {
+/* export interface UserContact {
   type: ContactType;
   contact: string;
-}
+} */
 
 export interface Tokens {
   accessToken: string;
@@ -88,7 +88,7 @@ export interface UpdateProfilePayload {
   postalCode?: string;
   city?: string;
   district?: string;
-  contacts?: UserContact[];
+  contacts?: Contact[];
 }
 
 export interface UpdateAccountPayload {
@@ -103,6 +103,5 @@ export interface UpdatePhotoPayload {
 
 export interface UpdateUserPayload {
   field: string;
-  value: string | UserContact[];
+  value: string | Contact[];
 }
-

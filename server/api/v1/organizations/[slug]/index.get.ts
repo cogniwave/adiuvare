@@ -1,13 +1,13 @@
-import { getOrganization } from "~~/server/db/organizations";
+import { getOrgBySlug } from "server/db/organizations";
 import { sanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";
 
 export default defineEventHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
-  const XX = sanitizeInput(getRouterParam(event, "slug"));
+  const slug = sanitizeInput(getRouterParam(event, "slug"));
 
   try {
-    const org = await getOrganization(XX);
+    const org = await getOrgBySlug(slug);
 
     if (org) {
       return {
