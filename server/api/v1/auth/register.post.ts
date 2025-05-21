@@ -5,7 +5,7 @@ import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
-import type { RegisterPayload, User, UserType } from "shared/types/user";
+import type { UserRegisterPayload, User, UserType } from "shared/types/user";
 
 import { translate } from "server/utils/i18n";
 import { log } from "server/utils/logger";
@@ -13,7 +13,7 @@ import { genToken } from "server/utils";
 import { normalizeDisplayName, normalizeSlug } from "server/utils/normalize";
 import { addUserToOrg as _addUserToOrg } from "server/api/v1/organizations/common";
 
-const register = async (payload: RegisterPayload): Promise<User> => {
+const register = async (payload: UserRegisterPayload): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
   const normalizedDisplayName = payload.name ? normalizeDisplayName(payload.name) : undefined;
   const normalizedSlug = normalizedDisplayName ? normalizeSlug(normalizedDisplayName) : undefined;
@@ -67,7 +67,7 @@ const register = async (payload: RegisterPayload): Promise<User> => {
 };
 
 export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<RegisterPayload>(event, {
+  const body = await getValidatedInput<UserRegisterPayload>(event, {
     name: RequiredString.max(255),
     password: RequiredPassword,
     email: RequiredEmail,

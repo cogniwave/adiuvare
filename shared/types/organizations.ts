@@ -47,7 +47,7 @@ export interface OrganizationAssociation {
   organizationName?: string | null;
 }
 
-export interface RegisterPayload extends BaseOrganization, OrganizationAssociation {
+export interface OrgRegisterPayload extends BaseOrganization, OrganizationAssociation {
   newsletter?: boolean;
 }
 

@@ -15,7 +15,7 @@ export interface BaseUser {
   organizationUser?: OrganizationUser;
 }
 
-export interface RegisterPayload extends BaseUser {
+export interface UserRegisterPayload extends BaseUser {
   name: string;
   email: string;
   password: string;
@@ -62,8 +62,6 @@ export interface TokenUser {
   logo: string;
   contacts: Contact[];
 }
-
-export type ContactType = "email" | "phone" | "other";
 
 /* export interface UserContact {
   type: ContactType;
