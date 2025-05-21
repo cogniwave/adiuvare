@@ -99,8 +99,6 @@ export const getPostsAndTotal = async (filter?: PostFilter) => {
 
   const [result, total] = await Promise.all([getPosts(query), getTotalPosts(query)]);
 
-  console.log(typeof result[0]!.needs);
-
   return { posts: result, total };
 };
 
