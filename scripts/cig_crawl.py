@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import csv
 from urllib.parse import urljoin
 import time
+import os
 
 def get_association_links(main_url):
     """Obtém todos os links das associações da página principal"""
@@ -141,9 +142,45 @@ def save_to_csv(data, filename):
     
     print(f"Dados salvos em {filename}")
 
+def save_to_merged_csv(data, filename):
+    """Salva os dados no formato padronizado do merged_output.csv"""
+    if not data:
+        return
+    all_fields = [
+        "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
+        "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
+        "Código Postal", "SOURCE"
+    ]
+    rows = []
+    for row in data:
+        rows.append([
+            row.get('Nome', ''),
+            row.get('Telefone', ''),
+            row.get('E-mail', ''),
+            row.get('URL', ''),
+            row.get('Morada', ''),
+            "",  # CONCELHO
+            "",  # DISTRITO
+            "",  # FORMA JURÍDICA
+            "",  # ANO REGISTO
+            "",  # NIPC
+            "",  # Código Postal
+            "CIG"
+        ])
+    write_header = not os.path.exists(filename)
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, 'a', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        if write_header:
+            writer.writerow(all_fields)
+        for row in rows:
+            writer.writerow(row)
+    print(f"Dados também salvos em {filename}")
+
 def main():
     main_url = "https://www.cig.gov.pt/registo-ongm-e-ong/diretorio/"
     output_file = "generatedFiles/associacoes_cig_detalhadas.csv"
+    merged_file = "generatedFiles/merged_output.csv"
     
     print("Iniciando coleta de dados...")
     
@@ -163,6 +200,7 @@ def main():
     
     # Salvar os dados
     save_to_csv(all_data, output_file)
+    save_to_merged_csv(all_data, merged_file)
     print("Processo concluído!")
 
 if __name__ == "__main__":
