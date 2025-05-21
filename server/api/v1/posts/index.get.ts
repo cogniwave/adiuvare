@@ -1,4 +1,4 @@
-import { getPostsAndTotal } from "server/db/posts";
+import { getPostsAndTotal } from "server/database/posts";
 import { log } from "server/utils/logger";
 import { translate } from "server/utils/i18n";
 

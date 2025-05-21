@@ -3,9 +3,8 @@ import {
   createOrganization,
   notifyOrgOwner,
   addUserToOrg as _addUserToOrg,
-} from "server/db/organizations";
-import { text } from "drizzle-orm/sqlite-core";
-import { organizations } from "server/db/schemas/organizations.schema";
+} from "server/database/organizations";
+import { organizations } from "server/database/schemas/organizations.schema";
 
 export const createOrg = async (ownerId: string, name: string) => {
   const newOrg = await createOrganization({ name, ownerEmail: ownerId });
@@ -28,11 +27,4 @@ export const addUserToOrg = async (userId: string, orgId: string, userEmail: str
 
   await _addUserToOrg(orgId, userId, state);
   await notifyOrgOwner(org.ownerId, userName, state === "accepted" ? "added" : "pending");
-};
-
-export const addressSchema = {
-  address: text("address", { length: 256 }),
-  postalCode: text("postal_code", { length: 8 }),
-  city: text("city", { length: 256 }),
-  district: text("district", { length: 128 }),
 };

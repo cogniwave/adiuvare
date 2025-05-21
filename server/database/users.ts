@@ -1,10 +1,11 @@
 import { and, eq } from "drizzle-orm";
-import { useDrizzle } from "../db";
-import { users } from "./schemas/users.schema";
-import { genToken } from "server/utils";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
-import type { SelectUser } from "./schemas/users.schema";
+
+import { useDrizzle } from "server/database";
+import { genToken } from "server/utils";
 import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
+import type { SelectUser } from "./schemas/users.schema";
+import { users } from "./schemas/users.schema";
 import { formatEntityFromDb as fromDb } from "./utils";
 
 export const formatFromUser = fromDb<User>([]);

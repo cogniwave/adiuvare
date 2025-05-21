@@ -1,9 +1,9 @@
 import { RequiredEmail, RequiredPassword } from "shared/validators";
 
 import dayjs from "shared/services/dayjs.service";
-import { getUser } from "server/db/users";
+import { getUser } from "server/database/users";
 import { getValidatedInput, defineWrappedResponseHandler } from "server/utils/request";
-import { users } from "server/db/schemas/users.schema";
+import { users } from "server/database/schemas/users.schema";
 import { translate } from "server/utils/i18n";
 
 import type { LoginPayload, TokenUser } from "shared/types/user";
@@ -17,7 +17,7 @@ export default defineWrappedResponseHandler(async (event) => {
   const user = await getUser<TokenUser & { password: string; verified: boolean }>(email, [], {
     password: users.password,
     slug: users.slug,
-   // contacts: users.contacts,
+    // contacts: users.contacts,
     id: users.id,
     logo: users.photo,
     verified: users.verified,

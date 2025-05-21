@@ -1,4 +1,4 @@
-import { getOrgBySlug } from "server/db/organizations";
+import { getOrgBySlug } from "server/database/organizations";
 import { sanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";
 

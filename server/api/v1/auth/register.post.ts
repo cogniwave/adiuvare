@@ -1,17 +1,16 @@
-import { getOrganization, createOrganization, notifyOrgOwner } from "server/db/organizations";
-import { organizations } from "server/db/schemas/organizations.schema";
-import { addUser } from "server/db/users";
+import { addUser } from "server/database/users";
 import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
 import type { UserRegisterPayload, User, UserType } from "shared/types/user";
-
 import { translate } from "server/utils/i18n";
 import { log } from "server/utils/logger";
 import { genToken } from "server/utils";
 import { normalizeDisplayName, normalizeSlug } from "server/utils/normalize";
 import { addUserToOrg as _addUserToOrg } from "server/api/v1/organizations/common";
+import { getOrganization, createOrganization, notifyOrgOwner } from "server/database/organizations";
+import { organizations } from "server/database/schemas/organizations.schema";
 
 const register = async (payload: UserRegisterPayload): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
@@ -29,11 +28,11 @@ const register = async (payload: UserRegisterPayload): Promise<User> => {
       const orgDomain = existingOrg.website?.split("//")?.[1]?.split("/")?.[0];
       const domainMatches = emailDomain === orgDomain;
 
+      await _addUserToOrg(newUser.id, existingOrg.id, payload.email, payload.name);
+
       if (domainMatches && existingOrg.acceptSameDomainUsers) {
-        await _addUserToOrg(newUser.id, existingOrg.id, payload.email, payload.name);
         await notifyOrgOwner(existingOrg.ownerId, payload.name, "added");
       } else {
-        await _addUserToOrg(newUser.id, existingOrg.id, payload.email, payload.name);
         await notifyOrgOwner(existingOrg.ownerId, payload.name, "pending");
       }
     } else {
