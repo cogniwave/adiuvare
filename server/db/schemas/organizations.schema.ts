@@ -3,8 +3,7 @@ import { sqliteTable, text, integer, uniqueIndex } from "drizzle-orm/sqlite-core
 import { createId } from "@paralleldrive/cuid2";
 import { posts } from "./posts.schema";
 import { users } from "./users.schema";
-import { addressSchema } from "~~/server/api/v1/organizations/common";
-//import { organizationUsers } from "./schemas/organizationUsers.schema";
+import { addressSchema } from "../partials/addressSchema";
 
 export const organizations = sqliteTable(
   "organizations",

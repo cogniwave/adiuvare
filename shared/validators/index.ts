@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { POST_NEEDS } from "server/db/schemas/posts.schema";
+import { POST_NEEDS } from "shared/constants/post";
 import type { PostNeed } from "../types/post";
 
 type Types = number | boolean | string | object | Array<Types> | null | undefined;

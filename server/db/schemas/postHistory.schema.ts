@@ -3,7 +3,8 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
 import { users } from "./users.schema";
-import { posts, POST_STATES } from "./posts.schema";
+import { posts } from "./posts.schema";
+import { POST_STATES } from "../../../shared/constants/post";
 import type { PostSchedule, PostStateEnum } from "shared/types/post";
 import type { Contact } from "shared/types/contacts";
 

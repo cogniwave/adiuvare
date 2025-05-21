@@ -13,6 +13,7 @@ const alias = {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // base configs
+  srcDir: "app/",
   compatibilityDate: "2025-02-21",
   future: { compatibilityVersion: 4 },
 

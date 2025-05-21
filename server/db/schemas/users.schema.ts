@@ -3,8 +3,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { posts } from "./posts.schema";
 import { sqliteTable, text, uniqueIndex, integer } from "drizzle-orm/sqlite-core";
 import type { UserType } from "shared/types/user";
-import { addressSchema } from "~~/server/api/v1/organizations/common";
-
+import { addressSchema } from "../partials/addressSchema";
 export const users = sqliteTable(
   "users",
   {

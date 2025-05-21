@@ -1,5 +1,5 @@
 import { updatePost } from "server/db/posts";
-import { POST_STATES } from "server/db/schemas/posts.schema";
+import { POST_STATES } from "shared/constants/post";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
 
 import type { UpdatePostPayload } from "shared/types/post";
