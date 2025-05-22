@@ -11,7 +11,7 @@ merged_csv = "generatedFiles/merged_output.csv"
 all_fields = [
     "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
     "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "SOURCE"
+    "Código Postal", "LOGOTIPO", "SOURCE"
 ]
 
 # Expected headers in the PDF (for reference)
@@ -54,7 +54,7 @@ with pdfplumber.open(pdf_path) as pdf:
                         extracted = [
                             nome, "", email, "", morada,  # NOME ONGD, TELEPHONE / MOBILE, EMAIL, SITE, ADDRESS
                             "", "", "", "", "",           # MUNICIPALITY, DISTRICT, LEGAL FORM, REGISTRATION YEAR, NIPC
-                            codigo_postal, "ONGAs"
+                            codigo_postal, "", "ONGAs"
                         ]
                         all_rows.append(extracted)
 

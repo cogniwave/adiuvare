@@ -57,7 +57,7 @@ def crawl_associacoes():
     all_fields = [
         "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
         "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-        "Código Postal", "SOURCE"
+        "Código Postal", "LOGOTIPO", "SOURCE"
     ]
     write_header = not os.path.exists(merged_csv)
     os.makedirs(os.path.dirname(merged_csv), exist_ok=True)
@@ -67,7 +67,7 @@ def crawl_associacoes():
             writer.writerow(all_fields)
         for name, site in orgs:
             writer.writerow([
-                name, "", "", site, "", "", "", "", "", "", "", "UNIDOS_DH"
+                name, "", "", site, "", "", "", "", "", "", "", "", "UNIDOS_DH"
             ])
     print(f"Dados de {len(orgs)} organizações foram salvos em {merged_csv}")
 

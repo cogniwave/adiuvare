@@ -8,7 +8,7 @@ merged_csv = "generatedFiles/merged_output.csv"
 all_fields = [
     "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
     "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "SOURCE"
+    "Código Postal", "LOGOTIPO", "SOURCE"
 ]
 
 batch_size = 100
@@ -25,6 +25,7 @@ with open(input_csv, newline='', encoding='latin1') as infile:
             (row.get("SITE") or "").strip(),
             (row.get("MORADA") or "").strip(),
             "", "", "", "", "", "",  # Extra fields not present in this source
+            "",  # LOGOTIPO
             "ONGD"
         ]
         rows.append(data)

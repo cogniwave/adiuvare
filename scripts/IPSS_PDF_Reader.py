@@ -17,7 +17,7 @@ merged_csv = "generatedFiles/merged_output.csv"
 all_fields = [
     "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
     "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "SOURCE"
+    "Código Postal", "LOGOTIPO", "SOURCE"
 ]
 
 # Open the PDF
@@ -50,6 +50,7 @@ def map_ipss_row(row):
         row[5] if len(row) > 5 else "",  # ANO REGISTO
         row[6] if len(row) > 6 else "",  # NIPC
         "",  # Código Postal
+        "",  # LOGOTIPO
         "IPSS"
     ]
 

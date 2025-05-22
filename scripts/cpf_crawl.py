@@ -21,7 +21,7 @@ def crawl_cpf():
         all_fields = [
             "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
             "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-            "Código Postal", "SOURCE"
+            "Código Postal", "LOGOTIPO", "SOURCE"
         ]
         rows = []
         for unit in container.find_all('div', class_='unit'):
@@ -47,6 +47,7 @@ def crawl_cpf():
                 "",  # ANO REGISTO
                 "",  # NIPC
                 "",  # Código Postal
+                "",  # LOGOTIPO
                 "CPF"
             ])
 

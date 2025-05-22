@@ -140,7 +140,7 @@ def crawl_plataforma_dh():
         all_fields = [
             "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
             "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-            "Código Postal", "SOURCE"
+            "Código Postal", "LOGOTIPO", "SOURCE"
         ]
         rows = []
         for li in org_list.find_all('li', class_='organizations__item'):
@@ -165,6 +165,7 @@ def crawl_plataforma_dh():
                     "",  # ANO REGISTO
                     "",  # NIPC
                     "",  # Código Postal
+                    "",  # LOGOTIPO
                     "PLATAFORMADH"
                 ])
 

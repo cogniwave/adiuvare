@@ -149,7 +149,7 @@ def save_to_merged_csv(data, filename):
     all_fields = [
         "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
         "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-        "Código Postal", "SOURCE"
+        "Código Postal", "LOGOTIPO", "SOURCE"
     ]
     rows = []
     for row in data:
@@ -165,6 +165,7 @@ def save_to_merged_csv(data, filename):
             "",  # ANO REGISTO
             "",  # NIPC
             "",  # Código Postal
+            "",  # LOGOTIPO
             "CIG"
         ])
     write_header = not os.path.exists(filename)

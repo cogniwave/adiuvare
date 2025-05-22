@@ -66,7 +66,7 @@ def crawl_associacoes():
         all_fields = [
             "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
             "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-            "Código Postal", "SOURCE"
+            "Código Postal", "LOGOTIPO", "SOURCE"
         ]
         rows = []
         for row in dados:
@@ -82,6 +82,7 @@ def crawl_associacoes():
                 "",  # ANO REGISTO
                 "",  # NIPC
                 "",  # Código Postal
+                "",  # LOGOTIPO
                 "ENCONTRAME"
             ])
 
