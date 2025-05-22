@@ -1,6 +1,6 @@
 import type { H3Event, EventHandlerRequest } from "h3";
 
-import { updateUser } from "server/db/users";
+import { updateUser } from "server/database/users";
 import { getValidatedInput } from "server/utils/request";
 import { translate } from "server/utils/i18n";
 import { log } from "server/utils/logger";

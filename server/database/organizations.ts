@@ -1,12 +1,13 @@
 import { and, eq } from "drizzle-orm";
-import { useDrizzle } from "server/db";
 import { createId } from "@paralleldrive/cuid2";
+import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
+
+import { useDrizzle } from "server/database";
 import { organizations } from "./schemas/organizations.schema";
 import { genToken } from "server/utils";
 import type { BaseOrganization, Organization, UpdateOrganizationPayload } from "shared/types/organizations";
-import { formatEntityFromDb } from "server/db/utils";
-import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
-import { getUserByEmail, getUserById } from "server/db/users";
+import { formatEntityFromDb } from "server/database/utils";
+import { getUserByEmail, getUserById } from "server/database/users";
 import { organizationUsers } from "./schemas/organizationsUsers.schema";
 import { contacts } from "./schemas/contacts.schema";
 import type { Contact } from "shared/types/contacts";

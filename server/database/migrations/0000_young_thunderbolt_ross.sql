@@ -1,3 +1,29 @@
+CREATE TABLE `organizations` (
+	`id` text PRIMARY KEY NOT NULL,
+	`display_name` text NOT NULL,
+	`owner_id` text NOT NULL,
+	`verified` integer DEFAULT false NOT NULL,
+	`slug` text,
+	`created_at` integer,
+	`nipc` text,
+	`accept_same_domain_users` integer DEFAULT false NOT NULL,
+	`token` text(128),
+	`about` text,
+	`website` text,
+	`address` text(256),
+	`postal_code` text(8),
+	`city` text(256),
+	`district` text(128),
+	`photo` text,
+	`photo_thumbnail` text,
+	`category` text DEFAULT 'unknown' NOT NULL,
+	FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `organizations_id_unique` ON `organizations` (`id`);--> statement-breakpoint
+CREATE UNIQUE INDEX `organizations_slug_unique` ON `organizations` (`slug`);--> statement-breakpoint
+CREATE UNIQUE INDEX `orgs_id_idx` ON `organizations` (`id`);--> statement-breakpoint
+CREATE UNIQUE INDEX `orgs_slug_idx` ON `organizations` (`slug`);--> statement-breakpoint
 CREATE TABLE `postHistory` (
 	`id` text PRIMARY KEY NOT NULL,
 	`post_id` text NOT NULL,
@@ -30,7 +56,7 @@ CREATE TABLE `posts` (
 	`created_user_id` text NOT NULL,
 	`slug` text NOT NULL,
 	`contacts` text NOT NULL,
-	`created_at` integer DEFAULT '"2025-04-01T13:21:27.332Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2025-05-21T20:53:03.680Z"' NOT NULL,
 	`updated_by` text,
 	`updated_at` integer,
 	FOREIGN KEY (`created_user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
@@ -41,7 +67,6 @@ CREATE UNIQUE INDEX `posts_id_unique` ON `posts` (`id`);--> statement-breakpoint
 CREATE UNIQUE INDEX `post_id_idx` ON `posts` (`id`);--> statement-breakpoint
 CREATE UNIQUE INDEX `post_slug_idx` ON `posts` (`slug`);--> statement-breakpoint
 CREATE INDEX `post_title_idx` ON `posts` (`title`);--> statement-breakpoint
-CREATE INDEX `post_needs_idx` ON `posts` (`needs`);--> statement-breakpoint
 CREATE INDEX `post_locations_idx` ON `posts` (`locations`);--> statement-breakpoint
 CREATE TABLE `reports` (
 	`id` text PRIMARY KEY NOT NULL,
@@ -58,12 +83,11 @@ CREATE TABLE `users` (
 	`name` text NOT NULL,
 	`email` text NOT NULL,
 	`password` text NOT NULL,
-	`type` text NOT NULL,
+	`type` text DEFAULT 'user' NOT NULL,
 	`slug` text,
 	`created_at` integer NOT NULL,
 	`verified` integer NOT NULL,
 	`token` text(128),
-	`contacts` text,
 	`bio` text,
 	`website` text,
 	`address` text(256),

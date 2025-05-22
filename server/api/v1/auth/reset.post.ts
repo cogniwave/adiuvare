@@ -1,7 +1,7 @@
-import { getUser, updateUserToken } from "server/db/users";
+import { getUser, updateUserToken } from "server/database/users";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
-import { users } from "server/db/schemas/users.schema";
+import { users } from "server/database/schemas/users.schema";
 import { translate } from "server/utils/i18n";
 
 import { RequiredEmail } from "shared/validators";

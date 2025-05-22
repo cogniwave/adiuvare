@@ -1,4 +1,4 @@
-server/db/migrations
+server/database/migrations
 dist
 node_modules
 output

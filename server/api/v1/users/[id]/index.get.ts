@@ -1,4 +1,4 @@
-import { getUserById } from "server/db/users";
+import { getUserById } from "server/database/users";
 import { sanitizeInput, desanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";
 

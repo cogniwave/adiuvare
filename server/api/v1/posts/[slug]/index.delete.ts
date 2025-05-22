@@ -1,4 +1,4 @@
-import { deletePost, getPostByOwner } from "server/db/posts";
+import { deletePost, getPostByOwner } from "server/database/posts";
 import { sanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";
 

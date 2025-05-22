@@ -1,5 +1,5 @@
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
-import { createPost } from "server/db/posts";
+import { createPost } from "server/database/posts";
 import { genToken } from "server/utils";
 import { notifyNewPost } from "server/services/slack";
 import { log } from "server/utils/logger";

@@ -1,4 +1,4 @@
-import { updateUser } from "server/db/users";
+import { updateUser } from "server/database/users";
 
 import { translate } from "server/utils/i18n";
 import { uploadFile, FileSizeError, FileTypeError, MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "shared/services/fileUpload";

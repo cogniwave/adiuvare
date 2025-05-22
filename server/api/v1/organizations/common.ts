@@ -3,9 +3,8 @@ import {
   createOrganization,
   notifyOrgOwner,
   addUserToOrg as _addUserToOrg,
-} from "server/db/organizations";
-
-import { organizations } from "server/db/schemas/organizations.schema";
+} from "server/database/organizations";
+import { organizations } from "server/database/schemas/organizations.schema";
 
 export const createOrg = async (ownerId: string, name: string) => {
   const newOrg = await createOrganization({ name, ownerEmail: ownerId });

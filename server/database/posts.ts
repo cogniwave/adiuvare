@@ -1,7 +1,7 @@
 import type { SQLWrapper, SQL } from "drizzle-orm";
 import { and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
 
-import { useDrizzle } from "server/db";
+import { useDrizzle } from "server/database";
 import { posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
@@ -98,8 +98,6 @@ export const getPostsAndTotal = async (filter?: PostFilter) => {
   }
 
   const [result, total] = await Promise.all([getPosts(query), getTotalPosts(query)]);
-
-  console.log(typeof result[0]!.needs);
 
   return { posts: result, total };
 };

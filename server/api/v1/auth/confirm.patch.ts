@@ -1,6 +1,6 @@
 import type { H3Error } from "h3";
 
-import { verifyUser } from "server/db/users";
+import { verifyUser } from "server/database/users";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
 import { translate } from "server/utils/i18n";
 
