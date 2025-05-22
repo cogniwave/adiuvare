@@ -1,0 +1,19 @@
+# todo: adicionar manualmente as infos para csv
+
+nome: Amnistia Internacional Portugal
+email: aiportugal@amnistia.pt
+Telefone: +351 213 861 652
+Morada: Rua dos Remolares, 7, 2º, com o código postal 1200-370
+Site: https://www.amnistia.pt/
+
+nome: ORBIS - Cooperação e Desenvolvimento
+email: info@orbis.org
+Telefone: +351 912 923 815
+morada: Av. Dr. Lourenço Peixinho 146, 1º andar, loja 303, 3800-159, Aveiro.
+site: https://www.orbis.org.pt/
+
+nome: Akto – Associação para a Promoção dos Direitos Humanos e Democracia
+email: geral@akto.org
+Telefone: +351 910 061 663
+Morada: Rua Aires de Campos, nº 6, 3000-014 Coimbra
+Site: https://www.akto.org/pt/
