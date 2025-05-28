@@ -4,16 +4,12 @@ import csv
 import urllib3
 import os
 from crawl_helper import crawl_pages
+from crawl_constants import CSV_FIELDS
 
 BASE_URL = "https://ong.pt/dir/242-ambito-nacional-1?site={}"
 ORG_BASE = "https://ong.pt"
 OUTPUT_CSV = "generatedFiles/merged_output.csv"
 
-CSV_FIELDS = [
-    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "LOGOTIPO", "SOURCE"
-]
 
 def extract_detail_data(soup):
     entry = soup.find("div", class_="SPDetailEntry")
@@ -100,8 +96,10 @@ def extract_detail_data(soup):
         "SOURCE": "ONG.PT"
     }
 
+
 def main():
     crawl_pages(BASE_URL, ORG_BASE, OUTPUT_CSV, CSV_FIELDS, range(1, 5), extract_detail_data)
+
 
 if __name__ == "__main__":
     main()
