@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import csv
 import urllib3
 import os
-from ong_dir_animais_crawl import crawl_pages
+from crawl_helper import crawl_pages
 
 BASE_URL = "https://ong.pt/dir/66-ambito-nacional-1-1"
 ORG_BASE = "https://ong.pt"
@@ -101,8 +101,7 @@ def extract_detail_data(soup):
     }
 
 def main():
-    # Só existe uma página, então range(1, 2)
-    crawl_pages(BASE_URL, ORG_BASE, OUTPUT_CSV, CSV_FIELDS, range(1, 2))
+    crawl_pages(BASE_URL, ORG_BASE, OUTPUT_CSV, CSV_FIELDS, range(1, 2), extract_detail_data)
 
 if __name__ == "__main__":
     main()
