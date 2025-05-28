@@ -1,9 +1,20 @@
-# The warning "CropBox missing from /Page, defaulting to MediaBox" can be safely ignored.
-# The script will run as normal.
-
-import pdfplumber
-import csv
+import sys
 import os
+import io
+import warnings
+
+# Suppress "CropBox missing from /Page, defaulting to MediaBox" messages printed to stderr
+class SuppressStderr:
+    def __enter__(self):
+        self._stderr = sys.stderr
+        sys.stderr = io.StringIO()
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stderr = self._stderr
+
+with SuppressStderr():
+    import pdfplumber
+
+import csv
 from crawl_constants import CSV_FIELDS  
 
 # Path to the PDF file
@@ -22,22 +33,23 @@ merged_csv = "generatedFiles/merged_output.csv"
 # ]
 
 # Open the PDF
-with pdfplumber.open(pdf_path) as pdf:
-    all_documents = []
-    for page in pdf.pages:
-        tables = page.extract_tables()
-        page_rows = []
+with SuppressStderr():
+    with pdfplumber.open(pdf_path) as pdf:
+        all_documents = []
+        for page in pdf.pages:
+            tables = page.extract_tables()
+            page_rows = []
 
-        # Combine all rows from all tables on the page
-        for table in tables:
-            for row in table:
-                if len(row) == len(headers):
-                    page_rows.append(row)
+            # Combine all rows from all tables on the page
+            for table in tables:
+                for row in table:
+                    if len(row) == len(headers):
+                        page_rows.append(row)
 
-        # Skip the first row of the page (usually header)
-        for row in page_rows[1:]:
-            document = [cell.strip() if cell else "" for cell in row]
-            all_documents.append(document)
+            # Skip the first row of the page (usually header)
+            for row in page_rows[1:]:
+                document = [cell.strip() if cell else "" for cell in row]
+                all_documents.append(document)
 
 # Map IPSS fields to unified fields
 def map_ipss_row(row):
