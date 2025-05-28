@@ -6,19 +6,53 @@ import os
 from crawl_helper import crawl_pages
 from crawl_constants import CSV_FIELDS
 
-BASE_URL = "https://ong.pt/dir/66-ambito-nacional-1-1"
-ORG_BASE = "https://ong.pt"
+ONG_CRAWLERS = [
+    {
+        "name": "animais",
+        "BASE_URL": "https://ong.pt/dir/56-ambito-nacionalsite={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 4),
+    },
+    {
+        "name": "defs",
+        "BASE_URL": "https://ong.pt/dir/242-ambito-nacional-1?site={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 5),
+    },
+    {
+        "name": "direitos_humanos",
+        "BASE_URL": "https://ong.pt/dir/83-ambito-nacional-1?site={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 12),
+    },
+    {
+        "name": "doentes",
+        "BASE_URL": "https://ong.pt/dir/74-ambito-nacional-1?site={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 10),
+    },
+    {
+        "name": "idosos",
+        "BASE_URL": "https://ong.pt/dir/66-ambito-nacional-1-1",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 2),
+    },
+    {
+        "name": "familia",
+        "BASE_URL": "https://ong.pt/dir/67-ambito-nacional-1-1",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 2),
+    },
+]
+
 OUTPUT_CSV = "generatedFiles/merged_output.csv"
 
 def extract_detail_data(soup):
     entry = soup.find("div", class_="SPDetailEntry")
     if not entry:
         return None
-    # Nome
     name_tag = entry.find("h1")
     name = name_tag.get_text(strip=True) if name_tag else ""
-
-    # Objeto da Organização
     obj_div = entry.find("div", class_="field_objeto_da_organizacao")
     objeto = ""
     if obj_div:
@@ -27,8 +61,6 @@ def extract_detail_data(soup):
             objeto = obj_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             objeto = obj_div.get_text(strip=True)
-
-    # NIF
     nif_div = entry.find("div", class_="field_nif")
     nif = ""
     if nif_div:
@@ -37,8 +69,6 @@ def extract_detail_data(soup):
             nif = nif_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             nif = nif_div.get_text(strip=True)
-
-    # Morada
     morada_div = entry.find("div", class_="field_morada")
     morada = ""
     if morada_div:
@@ -47,8 +77,6 @@ def extract_detail_data(soup):
             morada = morada_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             morada = morada_div.get_text(strip=True)
-
-    # Telefone
     tel_div = entry.find("div", class_="field_telefone")
     telefone = ""
     if tel_div:
@@ -57,28 +85,20 @@ def extract_detail_data(soup):
             telefone = tel_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             telefone = tel_div.get_text(strip=True)
-
-    # Email
     email = ""
     email_a = entry.find("a", class_="spClassEmail field_email")
     if email_a:
         email = email_a.get("href", "").replace("mailto:", "").strip()
         if not email:
             email = email_a.get_text(strip=True)
-
-    # Site
     site = ""
     site_a = entry.find("a", class_="spClassUrl field_site")
     if site_a and site_a.has_attr("href"):
         site = site_a["href"].strip()
-
-    # Logotipo
     logo = ""
     logo_img = entry.find("img", class_="spClassImage field_logo")
     if logo_img and logo_img.has_attr("src"):
         logo = logo_img["src"].strip()
-
-    # Monta linha para o CSV
     return {
         "NOME ONGD": name,
         "TELEFONE / TELEMÓVEL": telefone,
@@ -95,8 +115,17 @@ def extract_detail_data(soup):
         "SOURCE": "ONG.PT"
     }
 
-def main():
-    crawl_pages(BASE_URL, ORG_BASE, OUTPUT_CSV, CSV_FIELDS, range(1, 2), extract_detail_data)
+def run_all_ong_crawlers():
+    for crawler in ONG_CRAWLERS:
+        print(f"\n=== Running ONG Crawler: {crawler['name']} ===")
+        crawl_pages(
+            crawler["BASE_URL"],
+            crawler["ORG_BASE"],
+            OUTPUT_CSV,
+            CSV_FIELDS,
+            crawler["PAGES"],
+            extract_detail_data
+        )
 
 if __name__ == "__main__":
-    main()
+    run_all_ong_crawlers()

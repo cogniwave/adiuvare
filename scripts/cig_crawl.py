@@ -5,6 +5,8 @@ from urllib.parse import urljoin
 import time
 import os
 
+#todo: fix crawl name remove first letter
+
 def get_association_links(main_url):
     """Get all association links from the main page"""
     headers = {
