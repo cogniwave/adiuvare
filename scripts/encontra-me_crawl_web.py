@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
+from crawl_constants import CSV_FIELDS  
 
 def crawl_associacoes():
     url = "https://www.encontra-me.org/lista_associacoes"
@@ -63,11 +64,6 @@ def crawl_associacoes():
 
         # Map to unified header
         merged_csv = "generatedFiles/merged_output.csv"
-        all_fields = [
-            "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-            "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-            "Código Postal", "LOGOTIPO", "SOURCE"
-        ]
         rows = []
         for row in dados:
             rows.append([
@@ -91,7 +87,7 @@ def crawl_associacoes():
         with open(merged_csv, 'a', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
             if write_header:
-                writer.writerow(all_fields)
+                writer.writerow(CSV_FIELDS)  
             for row in rows:
                 writer.writerow(row)
         print(f"Dados de {len(rows)} associações foram salvos em {merged_csv}")

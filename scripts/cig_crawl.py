@@ -4,6 +4,7 @@ import csv
 from urllib.parse import urljoin
 import time
 import os
+from crawl_constants import CSV_FIELDS  
 
 #todo: fix crawl name remove first letter
 
@@ -148,11 +149,6 @@ def save_to_merged_csv(data, filename):
     """Save data in the standard merged_output.csv format"""
     if not data:
         return
-    all_fields = [
-        "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-        "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-        "Código Postal", "LOGOTIPO", "SOURCE"
-    ]
     rows = []
     for row in data:
         rows.append([
@@ -175,7 +171,7 @@ def save_to_merged_csv(data, filename):
     with open(filename, 'a', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         if write_header:
-            writer.writerow(all_fields)
+            writer.writerow(CSV_FIELDS)  
         for row in rows:
             writer.writerow(row)
     print(f"Data also saved to {filename}")

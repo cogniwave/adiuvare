@@ -2,8 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
-
-# Manual info mapping (from info.txt)
+from crawl_constants import CSV_FIELDS 
 MANUAL_INFO = {
     "Amnistia Internacional Portugal": {
         "email": "aiportugal@amnistia.pt",
@@ -137,11 +136,6 @@ def crawl_plataforma_dh():
             return
 
         merged_csv = "generatedFiles/merged_output.csv"
-        all_fields = [
-            "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-            "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-            "Código Postal", "LOGOTIPO", "SOURCE"
-        ]
         rows = []
         for li in org_list.find_all('li', class_='organizations__item'):
             a = li.find('a', href=True)
@@ -174,7 +168,7 @@ def crawl_plataforma_dh():
         with open(merged_csv, 'a', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
             if write_header:
-                writer.writerow(all_fields)
+                writer.writerow(CSV_FIELDS)
             for row in rows:
                 writer.writerow(row)
         print(f"Saved {len(rows)} organizations to {merged_csv}")

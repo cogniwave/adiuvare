@@ -4,6 +4,7 @@
 import pdfplumber
 import csv
 import os
+from crawl_constants import CSV_FIELDS  
 
 # Path to the PDF file
 pdf_path = r"filestoParse/IPSS.pdf"
@@ -14,11 +15,11 @@ headers = ["DENOMINAÇÃO", "MORADA", "CONCELHO", "DISTRITO", "FORMA JURÍDICA",
 batch_size = 100
 
 merged_csv = "generatedFiles/merged_output.csv"
-all_fields = [
-    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "LOGOTIPO", "SOURCE"
-]
+# all_fields = [
+#     "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
+#     "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
+#     "Código Postal", "LOGOTIPO", "SOURCE"
+# ]
 
 # Open the PDF
 with pdfplumber.open(pdf_path) as pdf:
@@ -60,7 +61,7 @@ if all_documents:
     with open(merged_csv, "a", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile)
         if write_header:
-            writer.writerow(all_fields)
+            writer.writerow(CSV_FIELDS)  
         mapped_rows = [map_ipss_row(row) for row in all_documents]
         for i in range(0, len(mapped_rows), batch_size):
             batch = mapped_rows[i:i+batch_size]

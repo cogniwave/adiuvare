@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
+from crawl_constants import CSV_FIELDS
 
 def crawl_cpf():
     url = "https://cpf.org.pt/diretorio-de-associados/"
@@ -18,11 +19,6 @@ def crawl_cpf():
             return
 
         merged_csv = "generatedFiles/merged_output.csv"
-        all_fields = [
-            "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-            "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-            "Código Postal", "LOGOTIPO", "SOURCE"
-        ]
         rows = []
         for unit in container.find_all('div', class_='unit'):
             name = ""
@@ -56,7 +52,7 @@ def crawl_cpf():
         with open(merged_csv, 'a', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
             if write_header:
-                writer.writerow(all_fields)
+                writer.writerow(CSV_FIELDS)
             for row in rows:
                 writer.writerow(row)
         print(f"Saved {len(rows)} organizations to {merged_csv}")
