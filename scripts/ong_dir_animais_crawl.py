@@ -99,12 +99,12 @@ def extract_detail_data(soup):
         "SOURCE": "ONG.PT"
     }
 
-def main():
+def crawl_pages(base_url, org_base, output_csv, csv_fields, page_range):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     all_data = []
     print("Starting crawling pages...")
-    for page in range(1, 4):
-        url = BASE_URL.format(page)
+    for page in page_range:
+        url = base_url.format(page)
         print(f"Processing page {page}: {url}")
         try:
             resp = requests.get(url, verify=False)
@@ -122,7 +122,7 @@ def main():
             a = h2.find("a", href=True)
             if not a:
                 continue
-            org_url = ORG_BASE + a["href"]
+            org_url = org_base + a["href"]
             print(f"  Fetching organization details: {org_url}")
             try:
                 org_resp = requests.get(org_url, verify=False)
@@ -139,17 +139,19 @@ def main():
             except Exception as e:
                 print(f"    Error processing {org_url}: {e}")
                 continue
-
-    print(f"Saving {len(all_data)} records to {OUTPUT_CSV}...")
-    os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
-    write_header = not os.path.exists(OUTPUT_CSV)
-    with open(OUTPUT_CSV, "a", newline='', encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+    print(f"Saving {len(all_data)} records to {output_csv}...")
+    os.makedirs(os.path.dirname(output_csv), exist_ok=True)
+    write_header = not os.path.exists(output_csv)
+    with open(output_csv, "a", newline='', encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=csv_fields)
         if write_header:
             writer.writeheader()
         for row in all_data:
             writer.writerow(row)
     print("Concluído.")
+
+def main():
+    crawl_pages(BASE_URL, ORG_BASE, OUTPUT_CSV, CSV_FIELDS, range(1, 4))
 
 if __name__ == "__main__":
     main()
