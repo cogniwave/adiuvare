@@ -180,6 +180,9 @@ def save_to_merged_csv(data, filename):
             writer.writerow(row)
     print(f"Data also saved to {filename}")
 
+def clean_nome(name):
+    return name.lstrip(':').strip()
+
 def main():
     main_url = "https://www.cig.gov.pt/registo-ongm-e-ong/diretorio/"
     output_file = "generatedFiles/associacoes_cig_detalhadas.csv"
@@ -198,6 +201,7 @@ def main():
         print(f"Processing association {i}/{len(association_links)}: {link}")
         details = extract_association_details(link)
         if details:
+            details['Nome'] = clean_nome(details.get('Nome', ''))
             all_data.append(details)
         time.sleep(1)  # Interval to avoid overloading the server
     
