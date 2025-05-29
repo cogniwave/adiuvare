@@ -1,5 +1,5 @@
 import csv
-import os
+from os import path
 from crawl_constants import CSV_FIELDS  
 
 input_csv = "filestoParse/ongd-associadas.csv"
@@ -24,7 +24,7 @@ with open(input_csv, newline='', encoding='latin1') as infile:
         ]
         rows.append(data)
 
-write_header = not os.path.exists(merged_csv)
+write_header = not path.exists(merged_csv)
 with open(merged_csv, "a", newline='', encoding='utf-8') as outfile:
     writer = csv.writer(outfile)
     if write_header:

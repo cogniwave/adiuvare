@@ -1,6 +1,6 @@
 import pdfplumber
 import csv
-import os
+from os import path, makedirs
 from crawl_constants import CSV_FIELDS  
 
 # Path to the PDF file
@@ -12,7 +12,7 @@ merged_csv = "generatedFiles/merged_output.csv"
 expected_headers = ["Nome", "Morada", "Código Postal", "e-mail"]
 
 # Ensure output directory exists
-os.makedirs(os.path.dirname(merged_csv), exist_ok=True)
+makedirs(path.dirname(merged_csv), exist_ok=True)
 
 batch_size = 100
 
@@ -54,7 +54,7 @@ with pdfplumber.open(pdf_path) as pdf:
 
 # Write to merged CSV
 if all_rows:
-    write_header = not os.path.exists(merged_csv)
+    write_header = not path.exists(merged_csv)
     with open(merged_csv, "a", newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         if write_header:

@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+from os import path, makedirs
 import urllib3
-import os
 
 def crawl_pages(base_url, org_base, output_csv, csv_fields, page_range, extract_detail_data):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -45,8 +45,8 @@ def crawl_pages(base_url, org_base, output_csv, csv_fields, page_range, extract_
                 print(f"    Error processing {org_url}: {e}")
                 continue
     print(f"Saving {len(all_data)} records to {output_csv}...")
-    os.makedirs(os.path.dirname(output_csv), exist_ok=True)
-    write_header = not os.path.exists(output_csv)
+    makedirs(path.dirname(output_csv), exist_ok=True)
+    write_header = not path.exists(output_csv)
     with open(output_csv, "a", newline='', encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=csv_fields)
         if write_header:

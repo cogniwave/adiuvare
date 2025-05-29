@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-import os
+from os import path, makedirs
 from crawl_constants import CSV_FIELDS  
 
 def crawl_associacoes():
@@ -55,8 +55,8 @@ def crawl_associacoes():
 
     # Write to merged_output.csv
     merged_csv = "generatedFiles/merged_output.csv"
-    write_header = not os.path.exists(merged_csv)
-    os.makedirs(os.path.dirname(merged_csv), exist_ok=True)
+    write_header = not path.exists(merged_csv)
+    makedirs(path.dirname(merged_csv), exist_ok=True)
     with open(merged_csv, 'a', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         if write_header:

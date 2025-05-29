@@ -1,21 +1,20 @@
+from sys import stderr
+from io import StringIO
 import sys
-import os
-import io
-import warnings
+from os import path
+import csv
+from crawl_constants import CSV_FIELDS  
 
 # Suppress "CropBox missing from /Page, defaulting to MediaBox" messages printed to stderr
 class SuppressStderr:
     def __enter__(self):
         self._stderr = sys.stderr
-        sys.stderr = io.StringIO()
+        sys.stderr = StringIO()
     def __exit__(self, exc_type, exc_val, exc_tb):
         sys.stderr = self._stderr
 
 with SuppressStderr():
     import pdfplumber
-
-import csv
-from crawl_constants import CSV_FIELDS  
 
 # Path to the PDF file
 pdf_path = r"filestoParse/IPSS.pdf"
@@ -69,7 +68,7 @@ def map_ipss_row(row):
 
 # Save to merged CSV file
 if all_documents:
-    write_header = not os.path.exists(merged_csv)
+    write_header = not path.exists(merged_csv)
     with open(merged_csv, "a", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile)
         if write_header:
