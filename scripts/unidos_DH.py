@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-import os
+from os import path, makedirs
+from crawl_constants import CSV_FIELDS  
 
 def crawl_associacoes():
     url = "https://www.unidosparaosdireitoshumanos.com.pt/voices-for-human-rights/human-rights-organizations/non-governmental.html"
@@ -54,17 +55,12 @@ def crawl_associacoes():
 
     # Write to merged_output.csv
     merged_csv = "generatedFiles/merged_output.csv"
-    all_fields = [
-        "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-        "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-        "Código Postal", "LOGOTIPO", "SOURCE"
-    ]
-    write_header = not os.path.exists(merged_csv)
-    os.makedirs(os.path.dirname(merged_csv), exist_ok=True)
+    write_header = not path.exists(merged_csv)
+    makedirs(path.dirname(merged_csv), exist_ok=True)
     with open(merged_csv, 'a', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         if write_header:
-            writer.writerow(all_fields)
+            writer.writerow(CSV_FIELDS)  
         for name, site in orgs:
             writer.writerow([
                 name, "", "", site, "", "", "", "", "", "", "", "", "UNIDOS_DH"

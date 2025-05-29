@@ -1,15 +1,9 @@
 import csv
-import os
+from os import path
+from crawl_constants import CSV_FIELDS  
 
 input_csv = "filestoParse/ongd-associadas.csv"
 merged_csv = "generatedFiles/merged_output.csv"
-
-# Unified header without "DENOMINAÇÃO"
-all_fields = [
-    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "LOGOTIPO", "SOURCE"
-]
 
 batch_size = 100
 rows = []
@@ -30,11 +24,11 @@ with open(input_csv, newline='', encoding='latin1') as infile:
         ]
         rows.append(data)
 
-write_header = not os.path.exists(merged_csv)
+write_header = not path.exists(merged_csv)
 with open(merged_csv, "a", newline='', encoding='utf-8') as outfile:
     writer = csv.writer(outfile)
     if write_header:
-        writer.writerow(all_fields)
+        writer.writerow(CSV_FIELDS)  
     for i in range(0, len(rows), batch_size):
         batch = rows[i:i+batch_size]
         writer.writerows(batch)

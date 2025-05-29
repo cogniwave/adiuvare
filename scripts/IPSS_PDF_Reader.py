@@ -1,9 +1,20 @@
-# The warning "CropBox missing from /Page, defaulting to MediaBox" can be safely ignored.
-# The script will run as normal.
-
-import pdfplumber
+from sys import stderr
+from io import StringIO
+import sys
+from os import path
 import csv
-import os
+from crawl_constants import CSV_FIELDS  
+
+# Suppress "CropBox missing from /Page, defaulting to MediaBox" messages printed to stderr
+class SuppressStderr:
+    def __enter__(self):
+        self._stderr = sys.stderr
+        sys.stderr = StringIO()
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stderr = self._stderr
+
+with SuppressStderr():
+    import pdfplumber
 
 # Path to the PDF file
 pdf_path = r"filestoParse/IPSS.pdf"
@@ -14,29 +25,30 @@ headers = ["DENOMINAÇÃO", "MORADA", "CONCELHO", "DISTRITO", "FORMA JURÍDICA",
 batch_size = 100
 
 merged_csv = "generatedFiles/merged_output.csv"
-all_fields = [
-    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "LOGOTIPO", "SOURCE"
-]
+# all_fields = [
+#     "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
+#     "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
+#     "Código Postal", "LOGOTIPO", "SOURCE"
+# ]
 
 # Open the PDF
-with pdfplumber.open(pdf_path) as pdf:
-    all_documents = []
-    for page in pdf.pages:
-        tables = page.extract_tables()
-        page_rows = []
+with SuppressStderr():
+    with pdfplumber.open(pdf_path) as pdf:
+        all_documents = []
+        for page in pdf.pages:
+            tables = page.extract_tables()
+            page_rows = []
 
-        # Combine all rows from all tables on the page
-        for table in tables:
-            for row in table:
-                if len(row) == len(headers):
-                    page_rows.append(row)
+            # Combine all rows from all tables on the page
+            for table in tables:
+                for row in table:
+                    if len(row) == len(headers):
+                        page_rows.append(row)
 
-        # Skip the first row of the page (usually header)
-        for row in page_rows[1:]:
-            document = [cell.strip() if cell else "" for cell in row]
-            all_documents.append(document)
+            # Skip the first row of the page (usually header)
+            for row in page_rows[1:]:
+                document = [cell.strip() if cell else "" for cell in row]
+                all_documents.append(document)
 
 # Map IPSS fields to unified fields
 def map_ipss_row(row):
@@ -56,11 +68,11 @@ def map_ipss_row(row):
 
 # Save to merged CSV file
 if all_documents:
-    write_header = not os.path.exists(merged_csv)
+    write_header = not path.exists(merged_csv)
     with open(merged_csv, "a", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile)
         if write_header:
-            writer.writerow(all_fields)
+            writer.writerow(CSV_FIELDS)  
         mapped_rows = [map_ipss_row(row) for row in all_documents]
         for i in range(0, len(mapped_rows), batch_size):
             batch = mapped_rows[i:i+batch_size]

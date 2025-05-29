@@ -3,26 +3,56 @@ from bs4 import BeautifulSoup
 import csv
 import urllib3
 import os
+from crawl_helper import crawl_pages
+from crawl_constants import CSV_FIELDS
 
-BASE_URL = "https://ong.pt/dir/66-ambito-nacional-1-1"
-ORG_BASE = "https://ong.pt"
-OUTPUT_CSV = "generatedFiles/merged_output.csv"
-
-CSV_FIELDS = [
-    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "LOGOTIPO", "SOURCE"
+ONG_CRAWLERS = [
+    {
+        "name": "animais",
+        "BASE_URL": "https://ong.pt/dir/56-ambito-nacionalsite={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 4),
+    },
+    {
+        "name": "defs",
+        "BASE_URL": "https://ong.pt/dir/242-ambito-nacional-1?site={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 5),
+    },
+    {
+        "name": "direitos_humanos",
+        "BASE_URL": "https://ong.pt/dir/83-ambito-nacional-1?site={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 12),
+    },
+    {
+        "name": "doentes",
+        "BASE_URL": "https://ong.pt/dir/74-ambito-nacional-1?site={}",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 10),
+    },
+    {
+        "name": "idosos",
+        "BASE_URL": "https://ong.pt/dir/66-ambito-nacional-1-1",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 2),
+    },
+    {
+        "name": "familia",
+        "BASE_URL": "https://ong.pt/dir/67-ambito-nacional-1-1",
+        "ORG_BASE": "https://ong.pt",
+        "PAGES": range(1, 2),
+    },
 ]
+
+OUTPUT_CSV = "generatedFiles/merged_output.csv"
 
 def extract_detail_data(soup):
     entry = soup.find("div", class_="SPDetailEntry")
     if not entry:
         return None
-    # Nome
     name_tag = entry.find("h1")
     name = name_tag.get_text(strip=True) if name_tag else ""
-
-    # Objeto da Organização
     obj_div = entry.find("div", class_="field_objeto_da_organizacao")
     objeto = ""
     if obj_div:
@@ -31,8 +61,6 @@ def extract_detail_data(soup):
             objeto = obj_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             objeto = obj_div.get_text(strip=True)
-
-    # NIF
     nif_div = entry.find("div", class_="field_nif")
     nif = ""
     if nif_div:
@@ -41,8 +69,6 @@ def extract_detail_data(soup):
             nif = nif_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             nif = nif_div.get_text(strip=True)
-
-    # Morada
     morada_div = entry.find("div", class_="field_morada")
     morada = ""
     if morada_div:
@@ -51,8 +77,6 @@ def extract_detail_data(soup):
             morada = morada_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             morada = morada_div.get_text(strip=True)
-
-    # Telefone
     tel_div = entry.find("div", class_="field_telefone")
     telefone = ""
     if tel_div:
@@ -61,28 +85,20 @@ def extract_detail_data(soup):
             telefone = tel_div.get_text(strip=True).replace(strong.get_text(strip=True), "").strip(": ").strip()
         else:
             telefone = tel_div.get_text(strip=True)
-
-    # Email
     email = ""
     email_a = entry.find("a", class_="spClassEmail field_email")
     if email_a:
         email = email_a.get("href", "").replace("mailto:", "").strip()
         if not email:
             email = email_a.get_text(strip=True)
-
-    # Site
     site = ""
     site_a = entry.find("a", class_="spClassUrl field_site")
     if site_a and site_a.has_attr("href"):
         site = site_a["href"].strip()
-
-    # Logotipo
     logo = ""
     logo_img = entry.find("img", class_="spClassImage field_logo")
     if logo_img and logo_img.has_attr("src"):
         logo = logo_img["src"].strip()
-
-    # Monta linha para o CSV
     return {
         "NOME ONGD": name,
         "TELEFONE / TELEMÓVEL": telefone,
@@ -99,56 +115,17 @@ def extract_detail_data(soup):
         "SOURCE": "ONG.PT"
     }
 
-def main():
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    all_data = []
-    print("Starting crawling page...")
-    url = BASE_URL
-    print(f"Processing: {url}")
-    try:
-        resp = requests.get(url, verify=False)
-    except Exception as e:
-        print(f"Error accessing {url}: {e}")
-        return
-    if resp.status_code != 200:
-        print(f"Failed to access {url} (status {resp.status_code})")
-        return
-    soup = BeautifulSoup(resp.text, "html.parser")
-    for row in soup.find_all("div", class_="row-fluid"):
-        h2 = row.find("h2", class_="lead page-header")
-        if not h2:
-            continue
-        a = h2.find("a", href=True)
-        if not a:
-            continue
-        org_url = ORG_BASE + a["href"]
-        print(f"  Fetching organization details: {org_url}")
-        try:
-            org_resp = requests.get(org_url, verify=False)
-            if org_resp.status_code != 200:
-                print(f"    Failed to access {org_url} (status {org_resp.status_code})")
-                continue
-            org_soup = BeautifulSoup(org_resp.text, "html.parser")
-            detalhes = extract_detail_data(org_soup)
-            if detalhes and detalhes["NOME ONGD"]:
-                all_data.append(detalhes)
-                print(f"    OK: {detalhes['NOME ONGD']}")
-            else:
-                print(f"    Insufficient data at {org_url}")
-        except Exception as e:
-            print(f"    Error processing {org_url}: {e}")
-            continue
-
-    print(f"Saving {len(all_data)} records to {OUTPUT_CSV}...")
-    os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
-    write_header = not os.path.exists(OUTPUT_CSV)
-    with open(OUTPUT_CSV, "a", newline='', encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
-        if write_header:
-            writer.writeheader()
-        for row in all_data:
-            writer.writerow(row)
-    print("Done.")
+def run_all_ong_crawlers():
+    for crawler in ONG_CRAWLERS:
+        print(f"\n=== Running ONG Crawler: {crawler['name']} ===")
+        crawl_pages(
+            crawler["BASE_URL"],
+            crawler["ORG_BASE"],
+            OUTPUT_CSV,
+            CSV_FIELDS,
+            crawler["PAGES"],
+            extract_detail_data
+        )
 
 if __name__ == "__main__":
-    main()
+    run_all_ong_crawlers()

@@ -1,24 +1,18 @@
 import pdfplumber
 import csv
-import os
+from os import path, makedirs
+from crawl_constants import CSV_FIELDS  
 
 # Path to the PDF file
 pdf_path = r"filestoParse/ONGAs.e.equiparadas.pdf"
 # Output merged CSV path
 merged_csv = "generatedFiles/merged_output.csv"
 
-# All fields for the merged file (without "DENOMINAÇÃO")
-all_fields = [
-    "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-    "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-    "Código Postal", "LOGOTIPO", "SOURCE"
-]
-
 # Expected headers in the PDF (for reference)
 expected_headers = ["Nome", "Morada", "Código Postal", "e-mail"]
 
 # Ensure output directory exists
-os.makedirs(os.path.dirname(merged_csv), exist_ok=True)
+makedirs(path.dirname(merged_csv), exist_ok=True)
 
 batch_size = 100
 
@@ -60,11 +54,11 @@ with pdfplumber.open(pdf_path) as pdf:
 
 # Write to merged CSV
 if all_rows:
-    write_header = not os.path.exists(merged_csv)
+    write_header = not path.exists(merged_csv)
     with open(merged_csv, "a", newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         if write_header:
-            writer.writerow(all_fields)
+            writer.writerow(CSV_FIELDS)  
         for i in range(0, len(all_rows), batch_size):
             batch = all_rows[i:i+batch_size]
             writer.writerows(batch)

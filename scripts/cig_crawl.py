@@ -4,6 +4,7 @@ import csv
 from urllib.parse import urljoin
 import time
 import os
+from crawl_constants import CSV_FIELDS  
 
 def get_association_links(main_url):
     """Get all association links from the main page"""
@@ -146,11 +147,6 @@ def save_to_merged_csv(data, filename):
     """Save data in the standard merged_output.csv format"""
     if not data:
         return
-    all_fields = [
-        "NOME ONGD", "TELEFONE / TELEMÓVEL", "EMAIL", "SITE", "MORADA",
-        "CONCELHO", "DISTRITO", "FORMA JURÍDICA", "ANO REGISTO", "NIPC",
-        "Código Postal", "LOGOTIPO", "SOURCE"
-    ]
     rows = []
     for row in data:
         rows.append([
@@ -173,10 +169,13 @@ def save_to_merged_csv(data, filename):
     with open(filename, 'a', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         if write_header:
-            writer.writerow(all_fields)
+            writer.writerow(CSV_FIELDS)  
         for row in rows:
             writer.writerow(row)
     print(f"Data also saved to {filename}")
+
+def clean_nome(name):
+    return name.lstrip(':').strip()
 
 def main():
     main_url = "https://www.cig.gov.pt/registo-ongm-e-ong/diretorio/"
@@ -196,6 +195,7 @@ def main():
         print(f"Processing association {i}/{len(association_links)}: {link}")
         details = extract_association_details(link)
         if details:
+            details['Nome'] = clean_nome(details.get('Nome', ''))
             all_data.append(details)
         time.sleep(1)  # Interval to avoid overloading the server
     
