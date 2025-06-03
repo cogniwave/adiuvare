@@ -1,14 +1,14 @@
 import type { Report } from "shared/types/report";
 import type { NotifyPost } from "shared/types/post";
 import type { User } from "shared/types/user";
-import { log } from "../utils/logger";
+import logger from "server/utils/logger";
 
 const sendToSlack = async (message: string) => {
   const webhook = process.env.SLACK_WEBHOOK_URL;
 
   if (!webhook) {
     if (process.env.NUXT_ENV === "production") {
-      log("SLACK_WEBHOOK NOT DEFINED");
+      logger.error("SLACK_WEBHOOK NOT DEFINED");
     }
 
     return;
@@ -21,9 +21,9 @@ const sendToSlack = async (message: string) => {
       body: JSON.stringify({ text: message }),
     });
 
-    console.log(`[slack]: ${message}`);
+    logger.debug(`[slack]: ${message}`);
   } catch (err) {
-    log("[slack] couldn't post to slack user", JSON.stringify({ err, message }));
+    logger.error("[slack] couldn't post to slack user", JSON.stringify({ err, message }));
   }
 };
 

@@ -5,17 +5,11 @@ import { useDrizzle } from "server/database";
 import { posts } from "./schemas/posts.schema";
 import { users } from "./schemas/users.schema";
 import { postHistory } from "./schemas/postHistory.schema";
-import { log } from "server/utils/logger";
+import logger from "server/utils/logger";
 import type { InsertPost } from "./schemas/posts.schema";
 
 import { FEED_PAGE_SIZE } from "shared/utils";
-import {
-  PostStateEnum,
-  type PostNeed,
-  type PostFilter,
-  type UpdatePostPayload,
-  type PostBySlug,
-} from "shared/types/post";
+import type { PostNeed, PostFilter, UpdatePostPayload, PostBySlug } from "shared/types/post";
 // import { isPostNeed } from "shared/types/guards";
 
 type Query = SQLWrapper[] | SQL<unknown>[] | undefined;
@@ -64,7 +58,7 @@ const getDetailedFilter = (filter: PostFilter): Query => {
 
   // unexpected filtering
   if (!conditions.length) {
-    log("[posts] unexpected filtering in get posts", JSON.stringify(conditions));
+    logger.error("[posts] unexpected filtering in get posts", JSON.stringify(conditions));
 
     return undefined;
   }
@@ -99,15 +93,11 @@ export const getPostsAndTotal = async (filter?: PostFilter) => {
 
   const [result, total] = await Promise.all([getPosts(query), getTotalPosts(query)]);
 
-  console.log(typeof result[0]!.needs);
-
   return { posts: result, total };
 };
 
 export const getPosts = async (conditions?: Query) => {
-  const query = conditions
-    ? and(eq(posts.state, PostStateEnum.ACTIVE), ...conditions)
-    : eq(posts.state, PostStateEnum.ACTIVE);
+  const query = conditions ? and(eq(posts.state, "active"), ...conditions) : eq(posts.state, "active");
 
   const result = await useDrizzle()
     .select({
@@ -143,10 +133,10 @@ export const getTotalPosts = async (conditions?: Query) => {
         .select({ total: count() })
         .from(posts)
         .innerJoin(users, eq(posts.createdUserId, users.id))
-        .where(and(eq(posts.state, PostStateEnum.ACTIVE), ...conditions));
+        .where(and(eq(posts.state, "active"), ...conditions));
     } else {
       // if filter doesn't exist, we can just query all posts
-      result = await useDrizzle().select({ total: count() }).from(posts).where(eq(posts.state, PostStateEnum.ACTIVE));
+      result = await useDrizzle().select({ total: count() }).from(posts).where(eq(posts.state, "active"));
     }
 
     return result[0]!.total ?? 0;

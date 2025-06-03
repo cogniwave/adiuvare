@@ -34,7 +34,7 @@
   import { ScheduleType, type Post, type ScheduleTime, type SpecificSchedule } from "shared/types/post";
   import { getScheduleDay, getScheduleTimes } from "shared/utils/schedule";
 
-  const { currPost } = usePosts<Post<ScheduleType.SPECIFIC>>(ScheduleType.SPECIFIC);
+  const { currPost } = usePosts<Post<"specific">>("specific");
   const { d, t } = useI18n();
 
   const day = getScheduleDay(currPost.value.schedule);
@@ -47,7 +47,7 @@
   const onUpdate = (payload: SpecificSchedule) => {
     currPost.value = {
       ...currPost.value,
-      schedule: { type: ScheduleType.SPECIFIC, payload },
+      schedule: { type: "specific", payload },
     };
   };
 

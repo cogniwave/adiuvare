@@ -163,7 +163,7 @@
     "account": "Conta"
   },
   "errors": {
-    "joi": {
+    "zod": {
       "required": "{label} é obrigatório",
       "only": "{label} tem que ser um de {valids}",
       "max": "{label} não pode ter mais que {limit} caracteres",

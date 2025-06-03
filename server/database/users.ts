@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { and, asc, count, eq } from "drizzle-orm";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
@@ -5,7 +6,6 @@ import { useDrizzle } from "../database";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
-import { genToken } from "server/utils";
 import { formatFromDb as fromDb } from "./utils";
 
 const formatFromDb = fromDb(["contacts"]);
@@ -37,7 +37,7 @@ export const addUser = async (payload: BaseUser, token: string): Promise<User | 
       password: await hashPassword(payload.password),
       name: payload.name,
       type: payload.type,
-      slug: `${payload.email.split("@")[0]}-${genToken()}`,
+      slug: `${payload.email.split("@")[0]}-${nanoid()}`,
       token,
       verified: true,
     })

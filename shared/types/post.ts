@@ -1,4 +1,6 @@
-import type { UserContact } from "./user";
+import type { z } from "zod/v4";
+import type { createPostSchema } from "shared/schemas/post";
+import type { UserContact } from "shared/types/user";
 
 export type Day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 
@@ -21,26 +23,21 @@ export interface SpecificSchedule {
   times: ScheduleTime[];
 }
 
-export enum ScheduleType {
-  ANYTIME = "anytime",
-  SPECIFIC = "specific",
-  RECURRING = "recurring",
-}
+export const scheduleTypes = ["anytime", "specific", "recurring"] as const;
+
+export type ScheduleType = (typeof scheduleTypes)[number];
 
 interface PostSchedulePayload {
-  [ScheduleType.ANYTIME]: { payload: {} };
-  [ScheduleType.SPECIFIC]: { payload: SpecificSchedule };
-  [ScheduleType.RECURRING]: { payload: RecurringSchedule };
+  anytime: { payload: {} };
+  specific: { payload: SpecificSchedule };
+  recurring: { payload: RecurringSchedule };
 }
 
 export type PostSchedule<T extends ScheduleType = ScheduleType> = PostSchedulePayload[T] & { type: T };
 
-export enum PostNeed {
-  VOLUNTEERS = "volunteers",
-  MONEY = "money",
-  GOODS = "goods",
-  OTHER = "other",
-}
+export const postNeeds = ["volunteers", "money", "goods", "other"] as const;
+
+export type PostNeed = (typeof postNeeds)[number];
 
 export interface EmptyPost<T extends ScheduleType = ScheduleType> {
   schedule: PostSchedule<T>;
@@ -51,15 +48,9 @@ export interface EmptyPost<T extends ScheduleType = ScheduleType> {
   locations: string[];
 }
 
-export enum PostStateEnum {
-  SUSPENDED = "suspended",
-  PENDING = "pending",
-  ACTIVE = "active",
-  INACTIVE = "inactive",
-  REJECTED = "rejected",
-}
+export const postStates = ["suspended", "pending", "active", "inactive", "rejected"] as const;
 
-export type PostState = (typeof PostStateEnum)[keyof typeof PostStateEnum];
+export type PostState = (typeof postStates)[number];
 
 export interface Post<T extends ScheduleType = ScheduleType> extends EmptyPost<T> {
   id: string;
@@ -80,14 +71,8 @@ export interface PostBySlug<T extends ScheduleType = ScheduleType> extends Omit<
   locations: string[];
   createdById?: string;
 }
-export interface CreatePostPayload<T extends ScheduleType = ScheduleType> {
-  description: string;
-  locations: string[];
-  schedule: PostSchedule<T>;
-  needs: PostNeed[];
-  title: string;
-  contacts: UserContact[];
-}
+
+export type CreatePostPayload = z.infer<typeof createPostSchema>;
 
 export interface PostDeletePayload {
   id: string;

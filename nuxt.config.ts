@@ -27,6 +27,11 @@ export default defineNuxtConfig({
   typescript: { typeCheck: true },
   css: ["app/assets/scss/styles.scss"],
 
+  imports: {
+    scan: false,
+    dirs: [],
+  },
+
   // build related configs
   nitro: {
     compressPublicAssets: true,

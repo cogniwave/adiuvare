@@ -2,7 +2,6 @@ import { updateUser } from "server/database/users";
 
 import { translate } from "server/utils/i18n";
 import { uploadFile, FileSizeError, FileTypeError, MAX_FILE_SIZE, ACCEPT_FILE_TYPES } from "shared/services/fileUpload";
-import { log } from "server/utils/logger";
 
 export default defineProtectedRouteHandler(async (event) => {
   const formData = await readFormData(event);
@@ -18,7 +17,7 @@ export default defineProtectedRouteHandler(async (event) => {
     throw createError({
       statusCode: 422,
       data: { file: translate("errors.fileTooBig") },
-      statusMessage: translate("errors.validationError"),
+      statusMessage: "Unprocessable Content",
     });
   }
 
@@ -26,7 +25,7 @@ export default defineProtectedRouteHandler(async (event) => {
     throw createError({
       statusCode: 422,
       data: { file: translate("errors.invalidFileType") },
-      statusMessage: translate("errors.validationError"),
+      statusMessage: "Unprocessable Content",
     });
   }
 
@@ -46,7 +45,7 @@ export default defineProtectedRouteHandler(async (event) => {
       createError({
         statusCode: 422,
         data: { file: translate("errors.fileTooBig") },
-        statusMessage: translate("errors.validationError"),
+        statusMessage: "Unprocessable Content",
       });
     }
 
@@ -54,11 +53,9 @@ export default defineProtectedRouteHandler(async (event) => {
       throw createError({
         statusCode: 422,
         data: { file: translate("errors.invalidFileType") },
-        statusMessage: translate("errors.validationError"),
+        statusMessage: "Unprocessable Content",
       });
     }
-
-    log("[user] couldn't upload photo", JSON.stringify(err));
 
     throw err;
   }

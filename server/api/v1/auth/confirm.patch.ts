@@ -1,31 +1,28 @@
-import type { H3Error } from "h3";
+import { z } from "zod/v4";
 
 import { verifyUser } from "server/database/users";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
+
+import { tokenSchema } from "shared/validators";
 import { translate } from "server/utils/i18n";
 
-import { RequiredEmail, RequiredString } from "shared/validators";
+const schema = z.object({
+  token: tokenSchema,
+  email: z.email().transform(sanitizeInput),
+});
 
 export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<{ email: string; token: string }>(event, {
-    token: RequiredString.min(32)
-      .max(50)
-      .messages({
-        "string.empty": translate("errors.invalidConfirmToken"),
-        "string.max": translate("errors.invalidConfirmToken"),
-        "string.min": translate("errors.invalidConfirmToken"),
-      }),
-
-    email: RequiredEmail,
-  });
+  const body = await getValidatedInput<z.infer<typeof schema>>(event, schema);
 
   // todo: add validation for link expiration
-
-  try {
-    return {
-      success: await verifyUser(sanitizeInput(body.token), sanitizeInput(body.email)),
-    };
-  } catch (error: unknown) {
-    throw createError(error as H3Error);
+  if (await verifyUser(body.token, body.email)) {
+    setResponseStatus(event, 204);
+    return;
   }
+
+  throw createError({
+    statusCode: 422,
+    statusMessage: "Unprocessable Content",
+    data: { token: translate("errors.invalidConfirmToken") },
+  });
 });

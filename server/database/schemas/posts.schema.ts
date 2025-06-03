@@ -3,12 +3,8 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
 import { users } from "./users.schema";
-import { PostNeed, PostStateEnum, type PostSchedule } from "../../../shared/types/post";
+import type { PostState, PostSchedule } from "../../../shared/types/post";
 import type { UserContact } from "../../../shared/types/user";
-
-export const POST_STATES = Object.values(PostStateEnum) as [string, ...string[]];
-
-export const POST_NEEDS = Object.values(PostNeed) as [string, ...string[]];
 
 export const posts = sqliteTable(
   "posts",
@@ -18,7 +14,7 @@ export const posts = sqliteTable(
     description: text("description").notNull(),
     locations: text("locations", { mode: "json" }).notNull().$type<string[]>(),
     schedule: text("schedule", { mode: "json" }).notNull().$type<PostSchedule>(),
-    state: text("state", { enum: POST_STATES }).notNull().default("pending").$type<PostStateEnum>(),
+    state: text("state").notNull().default("pending").$type<PostState>(),
     needs: text("needs").notNull(),
     createdUserId: text("created_user_id")
       .notNull()

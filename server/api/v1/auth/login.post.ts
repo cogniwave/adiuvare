@@ -1,4 +1,5 @@
-import { RequiredEmail, RequiredPassword } from "shared/validators";
+import { z } from "zod/v4";
+import { passwordSchema } from "shared/validators";
 
 import dayjs from "shared/services/dayjs.service";
 import { getUser } from "server/database/users";
@@ -6,13 +7,17 @@ import { getValidatedInput, defineWrappedResponseHandler } from "server/utils/re
 import { users } from "server/database/schemas/users.schema";
 import { translate } from "server/utils/i18n";
 
-import type { LoginPayload, TokenUser } from "shared/types/user";
+import type { TokenUser } from "shared/types/user";
+
+const schema = z.object({
+  email: z.email().transform(sanitizeInput),
+  password: passwordSchema,
+});
+
+type Login = z.infer<typeof schema>;
 
 export default defineWrappedResponseHandler(async (event) => {
-  const { email, password } = await getValidatedInput<LoginPayload>(event, {
-    email: RequiredEmail,
-    password: RequiredPassword,
-  });
+  const { email, password } = await getValidatedInput<Login>(event, schema);
 
   const user = await getUser<TokenUser & { password: string; verified: boolean }>(email, [], {
     password: users.password,
@@ -26,7 +31,7 @@ export default defineWrappedResponseHandler(async (event) => {
   if (!user || !(await verifyPassword(user.password!, password))) {
     throw createError({
       statusCode: 422,
-      statusMessage: "unprocessable content",
+      statusMessage: "Unprocessable Content",
       message: translate("errors.invalidCredentials"),
     });
   }
@@ -34,7 +39,7 @@ export default defineWrappedResponseHandler(async (event) => {
   if (!user.verified) {
     throw createError({
       statusCode: 409,
-      statusMessage: "conflict",
+      statusMessage: "Conflict",
       message: translate("errors.unverifiedUser"),
     });
   }

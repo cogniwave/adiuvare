@@ -1,17 +1,10 @@
-export enum UserTypeEnum {
-  ORGANIZATION = "org",
-  VOLUNTEER = "volunteer",
-}
+import type { z } from "zod/v4";
 
-export type UserType = "org" | "volunteer";
+import type { newUserSchema, updateAccountSchema, updateProfileSchema } from "shared/schemas/user";
 
-export interface BaseUser {
-  name: string;
-  email: string;
-  password: string;
-  type: UserType;
-  newsletter?: boolean;
-}
+export type UserType = "user" | "admin";
+
+export type BaseUser = z.infer<typeof newUserSchema>;
 
 export interface User extends Omit<BaseUser, "password"> {
   id: string;
@@ -68,22 +61,9 @@ export interface LoginResult extends Tokens {
   user: TokenUser;
 }
 
-export interface UpdateProfilePayload {
-  name: string;
-  slug: string;
-  bio?: string;
-  website?: string;
-  address?: string;
-  postalCode?: string;
-  city?: string;
-  district?: string;
-  contacts?: UserContact[];
-}
+export type UpdateProfilePayload = z.infer<typeof updateProfileSchema>;
 
-export interface UpdateAccountPayload {
-  email?: string;
-  password?: string;
-}
+export type UpdateAccountPayload = z.infer<typeof updateAccountSchema>;
 
 export interface UpdatePhotoPayload {
   photo?: string;

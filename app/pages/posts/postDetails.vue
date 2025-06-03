@@ -93,14 +93,14 @@
         {{ t("posts.schedule.detailsTitle") }}
       </div>
 
-      <v-row v-if="currPost.schedule.type === ScheduleType.ANYTIME">
+      <v-row v-if="currPost.schedule.type === "anytime"">
         <v-col align="center">
           <span>{{ t("posts.schedule.anytime") }}</span>
         </v-col>
       </v-row>
 
       <!-- specific -->
-      <v-row v-if="currPost.schedule.type === ScheduleType.SPECIFIC">
+      <v-row v-if="currPost.schedule.type === "specific"">
         <v-col align="center" cols="6">
           <span>{{ formatSpecificDay() }}</span>
         </v-col>
@@ -116,7 +116,7 @@
       </v-row>
 
       <!-- recurring -->
-      <template v-if="currPost.schedule.type === ScheduleType.RECURRING">
+      <template v-if="currPost.schedule.type === "recurring"">
         <v-row>
           <v-col v-for="time in recurringTimes" :key="time.day" align="center">
             {{ time.day }}
@@ -208,7 +208,7 @@
   });
 
   const recurringTimes = computed<MappedRecurringTimes[]>(() => {
-    if (currPost.value.schedule.type !== ScheduleType.RECURRING) {
+    if (currPost.value.schedule.type !== "recurring") {
       return [];
     }
 

@@ -1,12 +1,12 @@
 import { addUser } from "server/database/users";
 import { sendEmail } from "server/services/brevo";
-import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import { subscribeToNewsletter, type NewsletterType } from "server/services/brevo";
-import Joi, { RequiredEmail, RequiredPassword, RequiredString } from "shared/validators";
-import type { BaseUser, User, UserType } from "shared/types/user";
+import type { BaseUser, User } from "shared/types/user";
 import { translate } from "server/utils/i18n";
-import { log } from "server/utils/logger";
+import logger from "server/utils/logger";
+import { newUserSchema } from "shared/schemas/user";
 
 const register = async (payload: BaseUser): Promise<User> => {
   const token = `${genToken(32)}${Date.now()}`;
@@ -16,7 +16,7 @@ const register = async (payload: BaseUser): Promise<User> => {
     throw Error("Something went wrong");
   }
 
-  await sendEmail(
+  sendEmail(
     translate("email.accountConfirm.subject"),
     { email: payload.email, name: payload.name },
     "userActionRequired",
@@ -35,35 +35,22 @@ const register = async (payload: BaseUser): Promise<User> => {
 };
 
 export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<BaseUser>(event, {
-    name: RequiredString.max(255),
-    password: RequiredPassword,
-    email: RequiredEmail,
-    type: RequiredString.valid("org", "volunteer"),
-    newsletter: Joi.boolean().default(false),
-  });
-
-  const email = sanitizeInput(body.email);
+  const body = await getValidatedInput<BaseUser>(event, newUserSchema);
 
   try {
     const user = await register({
-      name: sanitizeInput(body.name),
+      name: body.name,
       password: body.password,
-      type: sanitizeInput<UserType>(body.type),
-      email,
+      email: body.email,
     });
 
     if (body.newsletter) {
       const newsletters: NewsletterType[] = ["newsletter"];
 
-      if (body.type === "org") {
-        newsletters.push("orgNewsletter");
-      }
-
-      await subscribeToNewsletter(email, newsletters);
+      subscribeToNewsletter(body.email, newsletters);
     }
 
-    await notifyNewUser(user);
+    notifyNewUser(user);
 
     return user;
   } catch (err: unknown) {
@@ -78,7 +65,7 @@ export default defineEventHandler(async (event) => {
         });
       }
 
-      log("[user] couldn't create user", JSON.stringify(err.message));
+      logger.error("couldn't create user", JSON.stringify(err.message));
     }
 
     throw createError({

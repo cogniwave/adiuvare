@@ -1,4 +1,4 @@
-import { genToken } from "server/utils";
+import { nanoid } from "nanoid";
 
 export const MAX_FILE_SIZE = 4000000;
 
@@ -29,7 +29,7 @@ export const uploadFile = async (file: File): Promise<FilePaths> => {
   ensureBlob(file, { maxSize: "4MB", types: ["image"] });
 
   // TODO: add picture thumbimification
-  const result = await hubBlob().put(`${genToken(4)}-${Date.now()}.${getExtension(file.type)}?${genToken(4)}`, file, {
+  const result = await hubBlob().put(`${nanoid(4)}-${Date.now()}.${getExtension(file.type)}?${nanoid(4)}`, file, {
     addRandomSuffix: false,
     prefix: "images",
   });

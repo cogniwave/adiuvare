@@ -3,26 +3,16 @@ import type { H3Event, EventHandlerRequest } from "h3";
 import { updateUser } from "server/database/users";
 import { getValidatedInput } from "server/utils/request";
 import { translate } from "server/utils/i18n";
-import { log } from "server/utils/logger";
 
-import { OptionalEmail, OptionalPassword, OptionalString, RequiredContacts, RequiredString } from "shared/validators";
 import type { UpdateProfilePayload, UpdateAccountPayload } from "shared/types/user";
 import { isH3Error } from "shared/types/guards";
+import { updateProfileSchema, updateAccountSchema } from "shared/schemas/user";
 
+// todo: split this into 2 different endpoints, PATCH users/{id}/account & PATCH users/{id}/profile
 type UpdateAction = "account" | "profile";
 
 const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>) => {
-  const body = await getValidatedInput<UpdateProfilePayload>(event, {
-    name: RequiredString,
-    slug: RequiredString,
-    bio: OptionalString,
-    website: OptionalString.max(256),
-    address: OptionalString.max(256),
-    postalCode: OptionalString.max(8),
-    city: OptionalString.max(256),
-    district: OptionalString.max(128),
-    contacts: RequiredContacts,
-  });
+  const body = await getValidatedInput<UpdateProfilePayload>(event, updateProfileSchema);
 
   await updateUser(userId, body);
 
@@ -30,10 +20,7 @@ const updateProfile = async (userId: string, event: H3Event<EventHandlerRequest>
 };
 
 const updateAccount = async (userId: string, event: H3Event<EventHandlerRequest>) => {
-  const body = await getValidatedInput<UpdateAccountPayload>(event, {
-    email: OptionalEmail,
-    password: OptionalPassword,
-  });
+  const body = await getValidatedInput<UpdateAccountPayload>(event, updateAccountSchema);
 
   await updateUser(userId, body);
 
@@ -45,7 +32,7 @@ export default defineProtectedRouteHandler(async (event) => {
 
   if (!["account", "profile"].includes(action)) {
     setResponseStatus(event, 500);
-    sendError(event, createError({ statusCode: 500, statusMessage: translate("errors.unexpected") }));
+    sendError(event, createError({ statusCode: 500, statusMessage: "Internal Server Error" }));
     return;
   }
 
@@ -71,9 +58,5 @@ export default defineProtectedRouteHandler(async (event) => {
         });
       }
     }
-
-    log("[user] couldn't update user", JSON.stringify(err));
-
-    throw err;
   }
 });

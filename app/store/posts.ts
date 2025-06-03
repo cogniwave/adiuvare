@@ -7,7 +7,7 @@ import {
   ScheduleType,
 } from "shared/types/post";
 
-type AnyPost<T extends ScheduleType = ScheduleType.ANYTIME> =
+type AnyPost<T extends ScheduleType = "anytime"> =
   | Post<T>
   | PostStateTogglePayload
   | PostDeletePayload
@@ -15,7 +15,7 @@ type AnyPost<T extends ScheduleType = ScheduleType.ANYTIME> =
   | EmptyPost;
 
 const DEFAULT_POST = {
-  schedule: { type: ScheduleType.ANYTIME },
+  schedule: { type: "anytime" },
   description: "",
   title: "",
   needs: [],
@@ -26,15 +26,15 @@ const DEFAULT_POST = {
 const cloneDefault = () => JSON.parse(JSON.stringify(DEFAULT_POST));
 
 const getTypeDefaultConfig = (type: ScheduleType) => {
-  if (type === ScheduleType.ANYTIME) {
-    return { type: ScheduleType.ANYTIME };
+  if (type === "anytime") {
+    return { type: "anytime" };
   }
 
-  if (type === ScheduleType.SPECIFIC) {
-    return { type: ScheduleType.SPECIFIC, payload: { day: "", times: [] } };
+  if (type === "specific") {
+    return { type: "specific", payload: { day: "", times: [] } };
   }
 
-  return { type: ScheduleType.RECURRING, payload: {} };
+  return { type: "recurring", payload: {} };
 };
 
 export const usePosts = <T = AnyPost>(defaultType?: ScheduleType) => {
@@ -50,9 +50,7 @@ export const usePosts = <T = AnyPost>(defaultType?: ScheduleType) => {
 
   const setDefaultCurrPost = () => {
     currPost.value =
-      defaultType === ScheduleType.ANYTIME
-        ? cloneDefault()
-        : { ...cloneDefault(), schedule: getTypeDefaultConfig(ScheduleType.RECURRING) };
+      defaultType === "anytime" ? cloneDefault() : { ...cloneDefault(), schedule: getTypeDefaultConfig("recurring") };
   };
 
   const setPost = (post: T | null, useDefault: boolean = false) => {

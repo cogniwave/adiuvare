@@ -16,6 +16,3 @@ export const reports = sqliteTable(
   },
   (reports) => [index("report_id_idx").on(reports.id)],
 );
-
-export type InsertReport = typeof reports.$inferInsert;
-export type SelectReport = typeof reports.$inferSelect;

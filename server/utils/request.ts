@@ -1,35 +1,34 @@
-import type { PartialSchemaMap } from "joi";
+import type { z } from "zod/v4";
 import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
-import joi from "shared/validators";
 import { ValidationError, type Errors } from "shared/exceptions";
 import { translate } from "server/utils/i18n";
+import { isH3Error } from "shared/types/guards";
 
-export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap<T>) => {
-  let body;
+export const getValidatedInput = async <T extends Record<string, any>>(
+  event: H3Event<EventHandlerRequest>,
+  schema: z.ZodObject,
+) => {
+  let body: T;
   try {
     body = await readBody(event);
   } catch (error: unknown) {
     throw createError(error as H3Error);
   }
 
-  const { value, error } = joi.object<T>(schema).validate(body, {
-    abortEarly: false,
-    stripUnknown: true,
-    externals: true,
-    convert: true,
-  });
+  const { data, error } = schema.safeParse(body, { reportInput: true });
 
   if (error) {
+    console.log(error.issues);
     const errors: Errors = {};
-    error.details.forEach(({ context, path, message }) => {
-      errors[path[0]!] = translate(message, context || {});
-    });
+    // error.issues.forEach(({ path, message }) => {
+    //   errors[path] = translate(message, context || {});
+    // });
 
     throw new ValidationError(errors);
   }
 
-  return value;
+  return data as T;
 };
 
 export const sanitizeInput = <R = string>(input?: string | null): R => {

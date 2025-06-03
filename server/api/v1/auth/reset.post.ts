@@ -1,11 +1,13 @@
+import { nanoid } from "nanoid";
+import { z } from "zod/v4";
+
 import { getUser, updateUserToken } from "server/database/users";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 import { users } from "server/database/schemas/users.schema";
 import { translate } from "server/utils/i18n";
 
-import { RequiredEmail } from "shared/validators";
-import type { LoginPayload } from "shared/types/user";
+import { emailSchema } from "shared/validators";
 
 interface User {
   email: string;
@@ -14,15 +16,18 @@ interface User {
   id: string;
 }
 
+const schema = z.object({ email: emailSchema });
+
 export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<LoginPayload>(event, { email: RequiredEmail });
+  const body = await getValidatedInput<z.infer<typeof schema>>(event, schema);
+
   const user = await getUser<User>(sanitizeInput(body.email), [], { id: users.id });
 
   if (user) {
-    const token = `${genToken(32)}-${Date.now()}`;
+    const token = `${nanoid(32)}-${Date.now()}`;
 
     if (await updateUserToken(user.id, token)) {
-      await sendEmail(translate("email.reset.subject"), { email: user.email, name: user.name }, "userActionRequired", {
+      sendEmail(translate("email.reset.subject"), { email: user.email, name: user.name }, "userActionRequired", {
         greetings: translate("email.greetings"),
         name: user.name,
         body: translate("email.reset.body"),

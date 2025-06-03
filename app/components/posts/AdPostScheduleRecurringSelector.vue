@@ -161,7 +161,7 @@
     },
   });
 
-  const { currPost } = usePosts<Post>(ScheduleType.SPECIFIC);
+  const { currPost } = usePosts<Post>("specific");
   const { t } = useI18n();
 
   // data
@@ -209,7 +209,7 @@
     currPost.value = {
       ...currPost.value,
       schedule: {
-        type: ScheduleType.RECURRING,
+        type: "recurring",
         payload: Object.fromEntries(
           Object.entries(payload).filter(([_, value]) => value !== null),
         ) as RecurringSchedule,

@@ -18,7 +18,7 @@
             rounded="0"
             size="x-small"
             value="anytime"
-            @update:model-value="scheduleType = ScheduleType.ANYTIME"
+            @update:model-value="scheduleType = "anytime""
           >
             {{ t("form.post.schedule.anytime") }}
           </v-btn>
@@ -33,7 +33,7 @@
             rounded="0"
             size="x-small"
             value="specific"
-            @update:model-value="scheduleType = ScheduleType.SPECIFIC"
+            @update:model-value="scheduleType = "specific""
           >
             {{ t("form.post.schedule.specific") }}
           </v-btn>
@@ -48,7 +48,7 @@
             rounded="0"
             size="x-small"
             value="recurring"
-            @update:model-value="scheduleType = ScheduleType.RECURRING"
+            @update:model-value="scheduleType = "recurring""
           >
             {{ t("form.post.schedule.recurring") }}
           </v-btn>
