@@ -1,11 +1,11 @@
 <template>
   <v-main v-if="!isLoading">
-    <v-row v-if="$vuetify.display.mdAndUp" no-gutters>
-      <v-col cols="2">
+    <v-row v-if="$vuetify.display.mdAndUp" no-gutters class="py-10 h-100">
+      <v-col cols="2" md="3">
         <ad-menu />
       </v-col>
 
-      <v-col offset-lg="1" lg="6" offset-md="2" md="8">
+      <v-col offset-lg="1" lg="6" offset-md="2" md="7">
         <slot />
       </v-col>
     </v-row>

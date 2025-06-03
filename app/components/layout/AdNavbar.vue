@@ -6,7 +6,7 @@
           <v-img src="/assets/images/logo.png" aspect-ratio="1" width="78px" @click="$router.push('/')" />
         </div>
 
-        <v-app-bar-nav-icon variant="text" color="default" @click.stop="menuOpen = !menuOpen" />
+        <v-app-bar-nav-icon v-else variant="text" color="default" @click.stop="menuOpen = !menuOpen" />
 
         <span v-if="ready && loggedIn" class="mr-5"> {{ $t("email.greetings") }} {{ user!.name }} </span>
       </div>
