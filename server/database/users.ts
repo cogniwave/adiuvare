@@ -1,7 +1,7 @@
 import { and, asc, count, eq } from "drizzle-orm";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
-import { useDrizzle } from "../db";
+import { useDrizzle } from "../database";
 import { users } from "./schemas/users.schema";
 import type { SelectUser } from "./schemas/users.schema";
 import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";

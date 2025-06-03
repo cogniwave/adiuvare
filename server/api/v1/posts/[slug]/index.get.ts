@@ -1,4 +1,4 @@
-import { getPostBySlug } from "server/db/posts";
+import { getPostBySlug } from "server/database/posts";
 import { sanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";
 

@@ -1,4 +1,4 @@
-import { useDrizzle } from "../db";
+import { useDrizzle } from "../database";
 import { reports } from "./schemas/reports.schema";
 import type { InsertReport } from "./schemas/reports.schema";
 import { formatFromDb as fromDb, formatToDb as toDb } from "./utils";

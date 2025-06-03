@@ -1,4 +1,4 @@
-import { addUser } from "server/db/users";
+import { addUser } from "server/database/users";
 import { sendEmail } from "server/services/brevo";
 import { sanitizeInput, getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";

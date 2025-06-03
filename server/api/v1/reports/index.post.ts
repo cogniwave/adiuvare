@@ -1,7 +1,7 @@
 import { RequiredObject, RequiredString } from "shared/validators";
 
 import type { Report } from "shared/types/report";
-import { createReport } from "server/db/reports";
+import { createReport } from "server/database/reports";
 import { notifyNewReport } from "server/services/slack";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
 import { log } from "server/utils/logger";

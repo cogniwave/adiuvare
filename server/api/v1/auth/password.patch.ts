@@ -1,4 +1,4 @@
-import { updatePassword } from "server/db/users";
+import { updatePassword } from "server/database/users";
 import { getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 
