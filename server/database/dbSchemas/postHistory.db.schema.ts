@@ -2,8 +2,8 @@ import { sqliteTable, text, index, uniqueIndex, integer } from "drizzle-orm/sqli
 import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
-import { users } from "./users.schema";
-import { posts } from "./posts.schema";
+import { users } from "./users.db.schema";
+import { posts } from "./posts.db.schema";
 import type { PostSchedule, PostState } from "shared/types/post";
 import type { UserContact } from "shared/types/user";
 
@@ -45,6 +45,3 @@ export const postHistoryRelations = relations(postHistory, ({ one }) => ({
     references: [users.id],
   }),
 }));
-
-export type InsertPostHistory = typeof postHistory.$inferInsert;
-export type SelectPostHistory = typeof postHistory.$inferSelect;

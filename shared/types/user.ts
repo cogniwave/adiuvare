@@ -17,7 +17,6 @@ export interface User extends Omit<BaseUser, "password"> {
   district?: string;
   photo?: string;
   photoThumbnail?: string;
-  contacts?: UserContact[];
   nipc?: string;
 }
 
@@ -46,11 +45,6 @@ export interface TokenUser {
 }
 
 export type ContactType = "email" | "phone" | "other";
-
-export interface UserContact {
-  type: ContactType;
-  contact: string;
-}
 
 export interface Tokens {
   accessToken: string;

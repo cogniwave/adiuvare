@@ -4,7 +4,7 @@ import { passwordSchema } from "shared/validators";
 import dayjs from "shared/services/dayjs.service";
 import { getUser } from "server/database/users";
 import { getValidatedInput, defineWrappedResponseHandler } from "server/utils/request";
-import { users } from "server/database/schemas/users.schema";
+import { users } from "~~/server/database/dbSchemas/users.db.schema";
 import { translate } from "server/utils/i18n";
 
 import type { TokenUser } from "shared/types/user";

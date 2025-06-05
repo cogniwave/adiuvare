@@ -1,6 +1,8 @@
 import { z } from "zod/v4";
 
-import { postNeeds, scheduleTypes } from "shared/types/post";
+import { postNeeds, postStates, scheduleTypes } from "shared/types/post";
+import { sanitizeInput } from "server/utils/request";
+import { contactsSchema, datesSchema } from "./common.schema";
 
 const validDays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const;
 
@@ -27,3 +29,23 @@ export const postScheduleSchema = z.object({
 });
 
 export const postNeedsSchema = z.array(z.enum(postNeeds));
+
+export const postSchema = z.object({
+  id: z.string(),
+  title: z.string().max(264).transform(sanitizeInput),
+  description: z.string().transform(sanitizeInput),
+  locations: z.array(z.string()).transform((locations) => locations.map(sanitizeInput)),
+  schedule: postScheduleSchema,
+  needs: postNeedsSchema,
+  contacts: contactsSchema,
+  state: z.enum(postStates),
+  slug: z.string().transform(sanitizeInput),
+  createdUserId: z.string(),
+  ...datesSchema.shape,
+});
+
+export const createPostSchema = postSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});

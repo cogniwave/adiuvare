@@ -1,10 +1,10 @@
-import {
-  type Post,
-  type PostDeletePayload,
-  type PostStateTogglePayload,
-  type PostDisablePayload,
-  type EmptyPost,
+import type {
   ScheduleType,
+  Post,
+  PostDeletePayload,
+  PostStateTogglePayload,
+  PostDisablePayload,
+  EmptyPost,
 } from "shared/types/post";
 
 type AnyPost<T extends ScheduleType = "anytime"> =

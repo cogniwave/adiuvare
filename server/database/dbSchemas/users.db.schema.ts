@@ -2,8 +2,9 @@ import { relations } from "drizzle-orm";
 import { sqliteTable, text, uniqueIndex, integer } from "drizzle-orm/sqlite-core";
 import { createId } from "@paralleldrive/cuid2";
 
-import { posts } from "./posts.schema";
-import type { UserContact, UserType } from "shared/types/user";
+import { posts } from "./posts.db.schema";
+import type { UserType } from "shared/types/user";
+import { addressDbSchema, datesDbSchema, photoDbSchema } from "./utils";
 
 export const users = sqliteTable(
   "users",
@@ -14,20 +15,12 @@ export const users = sqliteTable(
     password: text("password").notNull(),
     type: text("type").notNull().$type<UserType>(),
     slug: text("slug").unique(),
-    createdAt: integer("created_at", { mode: "timestamp" })
-      .notNull()
-      .$defaultFn(() => new Date()),
     verified: integer("verified", { mode: "boolean" }).notNull(),
     token: text("token", { length: 128 }),
-    contacts: text("contacts", { mode: "json" }).$type<UserContact[]>(),
     bio: text("bio"),
-    website: text("website"),
-    address: text("address", { length: 256 }),
-    postalCode: text("postal_code", { length: 8 }),
-    city: text("city", { length: 256 }),
-    district: text("district", { length: 128 }),
-    photo: text("photo"),
-    photoThumbnail: text("photo_thumbnail"),
+    ...addressDbSchema,
+    ...photoDbSchema,
+    ...datesDbSchema,
   },
   (users) => [
     uniqueIndex("user_id_idx").on(users.id),
@@ -39,6 +32,3 @@ export const users = sqliteTable(
 export const usersRelations = relations(users, ({ many }) => ({
   posts: many(posts, { relationName: "post_creator" }),
 }));
-
-export type InsertUser = typeof users.$inferInsert;
-export type SelectUser = typeof users.$inferSelect;

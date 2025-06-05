@@ -1,10 +1,11 @@
-import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
-import { users } from "./users.schema";
-import type { PostState, PostSchedule } from "../../../shared/types/post";
-import type { UserContact } from "../../../shared/types/user";
+import { users } from "./users.db.schema";
+import type { PostState, PostSchedule } from "shared/types/post";
+import type { Contact } from "shared/types/contact";
+import { datesDbSchema } from "./utils";
 
 export const posts = sqliteTable(
   "posts",
@@ -20,10 +21,9 @@ export const posts = sqliteTable(
       .notNull()
       .references(() => users.id),
     slug: text("slug").notNull(),
-    contacts: text("contacts", { mode: "json" }).notNull().$type<UserContact[]>(),
-    createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(new Date()),
+    contacts: text("contacts", { mode: "json" }).notNull().$type<Contact[]>(),
     updatedBy: text("updated_by").references(() => users.id),
-    updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(() => new Date()),
+    ...datesDbSchema,
   },
   (posts) => [
     uniqueIndex("post_id_idx").on(posts.id),
@@ -46,6 +46,3 @@ export const postsRelations = relations(posts, ({ one }) => ({
     relationName: "post_updater",
   }),
 }));
-
-export type InsertPost = typeof posts.$inferInsert;
-export type SelectPost = typeof posts.$inferSelect;

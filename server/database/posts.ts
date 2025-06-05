@@ -2,11 +2,11 @@ import type { SQLWrapper, SQL } from "drizzle-orm";
 import { and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
 
 import { useDrizzle } from "server/database";
-import { posts } from "./schemas/posts.schema";
-import { users } from "./schemas/users.schema";
-import { postHistory } from "./schemas/postHistory.schema";
+import { posts } from "./dbSchemas/posts.schema";
+import { users } from "./dbSchemas/users.db.schema";
+import { postHistory } from "./dbSchemas/postHistory.db.schema";
 import logger from "server/utils/logger";
-import type { InsertPost } from "./schemas/posts.schema";
+import type { InsertPost } from "./dbSchemas/posts.schema";
 
 import { FEED_PAGE_SIZE } from "shared/utils";
 import type { PostNeed, PostFilter, UpdatePostPayload, PostBySlug } from "shared/types/post";

@@ -7,9 +7,10 @@ import type { BaseUser, User } from "shared/types/user";
 import { translate } from "server/utils/i18n";
 import logger from "server/utils/logger";
 import { newUserSchema } from "shared/schemas/user";
+import { nanoid } from "nanoid";
 
 const register = async (payload: BaseUser): Promise<User> => {
-  const token = `${genToken(32)}${Date.now()}`;
+  const token = `${nanoid(32)}${Date.now()}`;
   const newUser = await addUser(payload, token);
 
   if (!newUser) {

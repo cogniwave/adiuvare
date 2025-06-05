@@ -1,9 +1,9 @@
 import { drizzle } from "drizzle-orm/d1";
 
-import { users } from "./schemas/users.schema";
-import { posts } from "./schemas/posts.schema";
-import { postHistory } from "./schemas/postHistory.schema";
-import { reports } from "./schemas/reports.schema";
+import { users } from "./dbSchemas/users.db.schema";
+import { posts } from "./dbSchemas/posts.schema";
+import { postHistory } from "./dbSchemas/postHistory.db.schema";
+import { reports } from "./dbSchemas/reports.db.schema";
 
 const schema = { users, posts, postHistory, reports };
 
