@@ -136,7 +136,8 @@
   import { useNotify } from "app/store/notify";
   import AdOrgListItem from "app/components/organizations/AdOrgListItem.vue";
   import { useOrganizations } from "app/store/organizations";
-  import type { GetOrganizationsResult } from "shared/types/user";
+  import type { GetListResult } from "shared/types/request";
+  import type { Organization } from "shared/types/organization";
 
   useSeoMeta({ title: "pages.orgList" });
   definePageMeta({ path: "/organizations", layout: "full-width" });
@@ -160,7 +161,7 @@
 
   // const page = ref(setupPage());
   // const filter = ref<PostFilter | undefined>(setupQuery());
-  const { status, error } = await useFetch<GetOrganizationsResult>("/api/v1/organizations", {
+  const { status, error } = await useFetch<GetListResult<Organization[]>>("/api/v1/organizations", {
     lazy: true,
     onResponse: ({ response }) => setOrgs(response._data || []),
   });

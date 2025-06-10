@@ -2,11 +2,10 @@ import type { SQLWrapper, SQL } from "drizzle-orm";
 import { and, count, desc, eq, sql, or, arrayOverlaps } from "drizzle-orm";
 
 import { useDrizzle } from "server/database";
-import { posts } from "./dbSchemas/posts.schema";
+import { posts } from "./dbSchemas/posts.db.schema";
 import { users } from "./dbSchemas/users.db.schema";
 import { postHistory } from "./dbSchemas/postHistory.db.schema";
 import logger from "server/utils/logger";
-import type { InsertPost } from "./dbSchemas/posts.schema";
 
 import { FEED_PAGE_SIZE } from "shared/utils";
 import type { PostNeed, PostFilter, UpdatePostPayload, PostBySlug } from "shared/types/post";
@@ -145,8 +144,8 @@ export const getTotalPosts = async (conditions?: Query) => {
   }
 };
 
-export const createPost = async (payload: Omit<InsertPost, "needs"> & { needs: PostNeed[] }) => {
-  const result = await useDrizzle().insert(posts).values(serializePost<InsertPost>(payload)).returning({
+export const createPost = async (payload: Omit<any, "needs"> & { needs: PostNeed[] }) => {
+  const result = await useDrizzle().insert(posts).values(serializePost<any>(payload)).returning({
     id: posts.id,
     title: posts.title,
     state: posts.state,

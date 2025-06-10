@@ -1,27 +1,28 @@
 import { nanoid } from "nanoid";
-import { and, asc, count, eq } from "drizzle-orm";
-import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
+import { and, eq } from "drizzle-orm";
 
 import { useDrizzle } from "../database";
 import { users } from "./dbSchemas/users.db.schema";
-import type { SelectUser } from "./dbSchemas/users.db.schema";
-import type { BaseUser, UpdatePhotoPayload, UpdateProfilePayload, User } from "shared/types/user";
+import type {
+  GetAuthUserResult,
+  UpdateAccountPayload,
+  UpdatePhotoPayload,
+  UpdateProfilePayload,
+  UpdateTokenPayload,
+  User,
+} from "shared/types/user";
 import { formatFromDb as fromDb } from "./utils";
+import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
-const formatFromDb = fromDb(["contacts"]);
+const formatFromDb = fromDb([]);
 
-export const getUser = async <T = SelectUser>(
+const _getUser = async <T>(
   email: string,
   filter: Array<Array<SQLiteColumn | string | number | boolean>> = [],
   fields: Record<string, SQLiteColumn> = {},
 ): Promise<T | undefined> => {
   const result = await useDrizzle()
-    .select({
-      email: users.email,
-      type: users.type,
-      name: users.name,
-      ...fields,
-    })
+    .select({ email: users.email, name: users.name, ...fields })
     .from(users)
     .where(and(eq(users.email, email), ...filter.map(([key, value]) => eq(key as SQLiteColumn, value))))
     .limit(1);
@@ -29,7 +30,16 @@ export const getUser = async <T = SelectUser>(
   return result.length ? formatFromDb<T>(result[0]!) : undefined;
 };
 
-export const addUser = async (payload: BaseUser, token: string): Promise<User | null> => {
+export const getAuthUser = async (email: string) => {
+  return await _getUser<GetAuthUserResult>(email, [], {
+    id: users.id,
+    slug: users.slug,
+    password: users.password,
+    verified: users.verified,
+  });
+};
+
+export const addUser = async (payload: any, token: string): Promise<User> => {
   const result = await useDrizzle()
     .insert(users)
     .values({
@@ -62,52 +72,30 @@ export const verifyUser = async (token: string, email: string): Promise<boolean>
 
 export const updateUser = async (
   userId: string,
-  payload: UpdateProfilePayload | UpdateAccountPayload | UpdatePhotoPayload,
+  payload: UpdateProfilePayload | UpdateAccountPayload | UpdatePhotoPayload | UpdateTokenPayload,
 ) => {
-  const old = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
+  const foo = await useDrizzle()
+    .update(users)
+    .set({ ...payload, updatedAt: new Date() })
+    .where(eq(users.id, userId));
 
-  if (!old?.length) {
-    return null;
-  }
-
-  await useDrizzle().update(users).set(payload).where(eq(users.id, userId));
-
+  console.log("updated result", foo);
   return true;
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string, fields?: (keyof User)[]) => {
   const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      bio: users.bio,
-      slug: users.slug,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
+    .select(
+      !fields?.length
+        ? { id: users.id, name: users.name, email: users.email }
+        : // @ts-expect-error fix this
+          fields.reduce((field, mapped) => (mapped[field] = users[field]), {}),
+    )
     .from(users)
     .where(and(eq(users.id, id), eq(users.verified, true)))
     .limit(1);
 
   return result.length === 1 ? formatFromDb<User>(result[0]) : null;
-};
-
-export const updateUserToken = async (userId: string, token: string) => {
-  const user = await useDrizzle().select({ id: users.id }).from(users).where(eq(users.id, userId)).limit(1);
-
-  if (!user?.length) {
-    return false;
-  }
-
-  await useDrizzle().update(users).set({ token }).where(eq(users.id, userId));
-
-  return true;
 };
 
 export const updatePassword = async (email: string, password: string, token: string) => {
@@ -117,64 +105,4 @@ export const updatePassword = async (email: string, password: string, token: str
     .where(and(eq(users.email, email), eq(users.token, token)));
 
   return true;
-};
-
-// **********
-// org specific stuffs
-export const getOrgs = async () => {
-  const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      slug: users.slug,
-      email: users.email,
-      bio: users.bio,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
-    .from(users)
-    .where(and(eq(users.type, "org"), eq(users.verified, true)))
-    .orderBy(asc(users.name))
-    .limit(50);
-
-  return formatFromDb<User[]>(result) || [];
-};
-
-export const getTotalOrgs = async () => {
-  const result = await useDrizzle().select({ total: count() }).from(users).where(eq(users.type, "org"));
-
-  try {
-    return result[0]!.total ?? 0;
-  } catch (_) {
-    return 0;
-  }
-};
-
-export const getOrgBySlug = async (slug: string) => {
-  const result = await useDrizzle()
-    .select({
-      id: users.id,
-      name: users.name,
-      bio: users.bio,
-      slug: users.slug,
-      photo: users.photo,
-      photoThumbnail: users.photoThumbnail,
-      contacts: users.contacts,
-      website: users.website,
-      address: users.address,
-      postalCode: users.postalCode,
-      city: users.city,
-      district: users.district,
-    })
-    .from(users)
-    .where(and(eq(users.slug, slug), eq(users.verified, true)))
-    .limit(1);
-
-  return result.length === 1 ? formatFromDb<User>(result[0]) : null;
 };

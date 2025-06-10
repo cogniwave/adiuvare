@@ -11,3 +11,5 @@ export const contactTypes = ["email", "phone", "fax", "other"] as const;
 export type ContactType = (typeof contactTypes)[number];
 
 export type Contact = z.infer<typeof contactSchema>;
+
+export type EntityContact = Pick<Contact, "id" | "contact" | "type">;

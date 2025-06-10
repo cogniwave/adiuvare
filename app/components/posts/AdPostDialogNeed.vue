@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
   import type { PostNeed } from "shared/types/post";
+  import { useNeed } from "app/composables/needs";
 
   const props = defineProps({
     need: { type: String as PropType<PostNeed>, required: true },

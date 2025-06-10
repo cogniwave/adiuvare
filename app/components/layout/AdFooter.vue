@@ -59,6 +59,8 @@
 <script lang="ts" setup>
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
+  import { useFormErrors } from "app/composables/formErrors";
+
   const email = ref("");
   const submitting = ref(false);
   const subscribed = ref(false);

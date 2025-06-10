@@ -71,8 +71,8 @@
         v-model:model-value="bio"
         class="my-10"
         prepend-icon="fa-solid fa-quote-left"
-        :placeholder="t(currUser.type === 'org' ? 'form.org.bioPlaceholder' : 'form.user.bioPlaceholder')"
-        :label="t(currUser.type === 'org' ? 'form.org.bio' : 'form.user.bio')"
+        :placeholder="'form.user.bioPlaceholder'"
+        :label="'form.user.bio'"
         @update:model-value="(value) => updateUser('bio', value)"
       />
 
@@ -176,13 +176,15 @@
   import distritos from "public/assets/distritos.json";
   import localidades from "public/assets/localidades.json";
 
-  import { fileSize, fileType } from "app/utils/validators";
+  import { fileSize, fileType, isValidUrl, maxLength, required } from "app/utils/validators";
   import { useUsers } from "app/store/users";
 
   import { useNotify } from "app/store/notify";
   import { normalize } from "app/utils";
-  import type { User, UserContact } from "shared/types/user";
+  import type { EntityContact } from "shared/types/contact";
+  import type { User } from "shared/types/user";
   import type { FilterMatch } from "shared/types/form";
+  import { useFormErrors } from "app/composables/formErrors";
 
   definePageMeta({ path: "/profile", middleware: "protected-server", title: "pages.profile" });
 
@@ -216,7 +218,7 @@
   const bio = ref<string>("");
   const slug = ref<string>("");
   const pic = ref<string>("");
-  const contacts = ref<UserContact[]>([]);
+  const contacts = ref<EntityContact[]>([]);
   const website = ref<string>("");
   const address = ref<string>("");
   const postalCode = ref<string>("");
@@ -240,7 +242,6 @@
         bio: currUser.value.bio,
         name: currUser.value.name,
         contacts: currUser.value.contacts,
-        website: currUser.value.website,
         address: currUser.value.address,
         postalCode: currUser.value.postalCode,
         city: currUser.value.city,
@@ -303,7 +304,7 @@
     }
   };
 
-  const updateUser = (prop: string, val: string | UserContact[]) => {
+  const updateUser = (prop: string, val: string | EntityContact[]) => {
     currUser.value = { ...currUser.value, [prop]: val };
   };
 
@@ -352,7 +353,6 @@
     name.value = user.name;
     slug.value = user.slug;
     bio.value = user.bio || "";
-    website.value = user.website || "";
     address.value = user.address || "";
     postalCode.value = user.postalCode || "";
     city.value = user.city || undefined;

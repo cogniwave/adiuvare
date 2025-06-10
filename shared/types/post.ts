@@ -1,6 +1,6 @@
 import type { z } from "zod/v4";
-import type { createPostSchema } from "shared/schemas/post";
-import type { UserContact } from "shared/types/user";
+import type { createPostSchema, updatePostSchema } from "shared/schemas/post.schema";
+import type { Contact } from "./contact";
 
 export type Day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 
@@ -44,7 +44,7 @@ export interface EmptyPost<T extends ScheduleType = ScheduleType> {
   description: string;
   title: string;
   needs: PostNeed[];
-  contacts: UserContact[];
+  contacts: Contact[];
   locations: string[];
 }
 
@@ -67,7 +67,7 @@ export interface PostBySlug<T extends ScheduleType = ScheduleType> extends Omit<
   description: string;
   title: string;
   needs: PostNeed[];
-  contacts: UserContact[];
+  contacts: Contact[];
   locations: string[];
   createdById?: string;
 }
@@ -85,10 +85,7 @@ export interface PostStateTogglePayload extends PostDeletePayload {
   enable: boolean;
 }
 
-export interface UpdatePostPayload extends CreatePostPayload {
-  state: PostState;
-  // updatedBy: string;
-}
+export type UpdatePostPayload = z.infer<typeof updatePostSchema>;
 
 export interface PostHistory<T extends ScheduleType = ScheduleType> {
   updatedBy: string;

@@ -67,12 +67,7 @@
       </v-select>
 
       <!-- contacts -->
-      <ad-contacts
-        v-if="user"
-        :contacts="user.contacts"
-        :error="errors.contacts"
-        @update="updatePost('contacts', $event)"
-      />
+      <ad-contacts :contacts="org.contacts" :error="errors.contacts" @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
       <ad-post-schedule />
@@ -92,10 +87,10 @@
 
 <script lang="ts" setup>
   import type { VForm } from "vuetify/lib/components/index.mjs";
+  import { debounce } from "vuetify/lib/util/helpers.mjs";
 
   import { required } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
-  import { debounce } from "app/utils";
   import { getCities } from "app/services/geoapify.service";
   import AdPostDialogNeed from "app/components/posts/AdPostDialogNeed.vue";
   import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
@@ -103,10 +98,11 @@
   import AdFormCard from "app/components/common/AdFormCard.vue";
   import { useNotify } from "app/store/notify";
   import { usePosts } from "app/store/posts";
+  import { useAuthContext } from "app/store/authContext";
 
   import type { SelectOption } from "shared/types/form";
   import type { EmptyPost, Post, PostSchedule } from "shared/types/post";
-  import type { UserContact } from "shared/types/user";
+  import type { EntityContact } from "shared/types/contact";
 
   definePageMeta({ path: "/posts/new", middleware: "org-only-server", title: "pages.postCreate" });
 
@@ -114,8 +110,8 @@
   const { t } = useI18n();
   const { errors, handleErrors, clearErrors } = useFormErrors();
   const { currPost, posts, setPost } = usePosts();
+  const { org } = useAuthContext();
   const $router = useRouter();
-  const { user } = useUserSession();
 
   const title = ref<string>("");
   const description = ref<string>("");
@@ -136,7 +132,7 @@
   const submitting = ref<boolean>(false);
 
   onBeforeMount(() => {
-    setPost({ contacts: user.value!.contacts, schedule: { type: "anytime" } } as EmptyPost);
+    setPost({ contacts: org.value!.contacts, schedule: { type: "anytime" } } as EmptyPost);
   });
 
   const fetchLocations = (text: string) => {
@@ -165,7 +161,7 @@
           }
         })
         .finally(() => (fetchingLocations.value = false));
-    });
+    }, 500);
   };
 
   const onRemoveLocation = (location: string) => {
@@ -173,7 +169,7 @@
     updatePost("location", locationInput.value);
   };
 
-  const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
+  const updatePost = (prop: string, val: string | string[] | PostSchedule | EntityContact[]) => {
     currPost.value = { ...currPost.value, [prop]: val };
   };
 

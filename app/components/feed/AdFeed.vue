@@ -184,6 +184,7 @@
   import AdPostDisableConfirmDialog from "app/components/posts/AdPostDisableConfirmDialog.vue";
   import AdPostDeleteConfirmDialog from "app/components/posts/AdPostDeleteConfirmDialog.vue";
   import type { SelectOption } from "shared/types/form";
+  import { useLocations } from "app/composables/locations";
 
   const $route = useRoute();
 

@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
+
 import { contactTypes, entityTypes } from "shared/types/contact";
-import { datesSchema } from "./common.schema";
+import { datesSchema } from "shared/schemas/common.schema";
 
 export const contactSchema = z.object({
   id: z.string(),

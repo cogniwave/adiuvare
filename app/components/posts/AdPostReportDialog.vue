@@ -55,7 +55,7 @@
   import { useReport } from "app/store/report";
   import { useNotify } from "app/store/notify";
 
-  import { required } from "app/utils/validators";
+  import { isValidEmail, required } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
 
   const { errors, handleErrors, clearErrors } = useFormErrors();

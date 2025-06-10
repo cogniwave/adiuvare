@@ -34,7 +34,7 @@ export const notifyNewReport = async (report: Report) => {
       reason: ${report.reason}
       post: 
         - id: ${report.post.id}
-        - created by: ${report.post.createdBy}
+        - created by: ${report.post.createdUserId}
         - title: ${report.post.title}
         - description: ${report.post.description}
     `,

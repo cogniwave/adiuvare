@@ -1,15 +1,12 @@
 import { z } from "zod/v4";
 
 import { verifyUser } from "server/database/users";
-import { getValidatedInput, sanitizeInput } from "server/utils/request";
+import { getValidatedInput } from "server/utils/request";
 
-import { tokenSchema } from "shared/validators";
 import { translate } from "server/utils/i18n";
+import { tokenSchema, emailSchema } from "shared/schemas/common.schema";
 
-const schema = z.object({
-  token: tokenSchema,
-  email: z.email().transform(sanitizeInput),
-});
+const schema = z.object({ token: tokenSchema, email: emailSchema });
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<z.infer<typeof schema>>(event, schema);

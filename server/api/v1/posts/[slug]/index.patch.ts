@@ -2,7 +2,7 @@ import { updatePost } from "server/database/posts";
 import { getValidatedInput, sanitizeInput } from "server/utils/request";
 
 import type { UpdatePostPayload } from "shared/types/post";
-import { updatePostSchema } from "shared/schemas/post";
+import { updatePostSchema } from "shared/schemas/post.schema";
 
 export default defineProtectedRouteHandler(async (event) => {
   const body = await getValidatedInput<UpdatePostPayload>(event, updatePostSchema);

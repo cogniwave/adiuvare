@@ -20,12 +20,7 @@ const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
   information: Number(process.env.INFORMATION_TEMPLATE_ID),
 };
 
-export const sendEmail = async (
-  subject: string,
-  to: Receiver,
-  template: Template,
-  data?: Record<string, string>,
-) => {
+export const sendEmail = async (subject: string, to: Receiver, template: Template, data?: Record<string, string>) => {
   const mailer = new SendSmtpEmail();
 
   mailer.subject = subject;
@@ -38,7 +33,7 @@ export const sendEmail = async (
   };
 
   const api = new TransactionalEmailsApi();
-  api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
+  api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
 
   try {
     return await api.sendTransacEmail(mailer);
@@ -48,21 +43,21 @@ export const sendEmail = async (
   }
 };
 
-export type NewsletterType = "newsletter" | "orgNewsletter";
+// export type NewsletterType = "newsletter" | "orgNewsletter";
 
-const NEWSLETTER_TO_ID: Record<NewsletterType, number> = {
-  newsletter: Number(process.env.NEWSLETTER_ID),
-  orgNewsletter: Number(process.env.ORG_NEWSLETTER_ID),
-};
+// const NEWSLETTER_TO_ID: Record<NewsletterType, number> = {
+//   newsletter: Number(process.env.NEWSLETTER_ID),
+//   orgNewsletter: Number(process.env.ORG_NEWSLETTER_ID),
+// };
 
-export const subscribeToNewsletter = async (email: string, lists: NewsletterType[]) => {
+export const subscribeToNewsletter = async (email: string) => {
   const contact = new CreateContact();
   const api = new ContactsApi();
 
   contact.email = email;
-  contact.listIds = lists.map((l) => NEWSLETTER_TO_ID[l]);
+  contact.listIds = [Number(process.env.NEWSLETTER_ID)];
 
-  api.setApiKey(ContactsApiApiKeys.apiKey, process.env.BREVO_API_KEY as string);
+  api.setApiKey(ContactsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
 
   try {
     await api.createContact(contact);

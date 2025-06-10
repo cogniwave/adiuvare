@@ -1,3 +1,6 @@
+import { sql } from "drizzle-orm";
+import { contacts } from "./dbSchemas/contacts.db.schema";
+
 // sqlite doesn't support json format, anything that's json is actually stored as string
 // for some reason drizzle doesn't really convert it properly to and from json, so we
 // need to manually do it
@@ -43,3 +46,7 @@ export const formatFromDb =
       }, {}),
     };
   };
+
+export const contactsGrouping = () => {
+  return sql`'[' || GROUP_CONCAT('{"contact":' || ${contacts.contact} || ',"type":"' || ${contacts.type} || '"}', ',') || ']'`;
+};

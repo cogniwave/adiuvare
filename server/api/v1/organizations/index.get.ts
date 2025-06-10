@@ -1,4 +1,4 @@
-import { getOrgs, getTotalOrgs } from "server/database/users";
+import { getOrgs, getTotalOrgs } from "server/database/organizations";
 
 export default defineEventHandler(async () => {
   const [organizations, total] = await Promise.all([getOrgs(), getTotalOrgs()]);
@@ -11,7 +11,7 @@ export default defineEventHandler(async () => {
         photoThumbnail: org.photoThumbnail,
         name: desanitizeInput(org.name),
         slug: desanitizeInput(org.slug),
-        bio: desanitizeInput(org.bio),
+        about: desanitizeInput(org.about),
         // todo: these should only be fetched when checking org details
         // no need to send over data that is not used
         website: desanitizeInput(org.website),

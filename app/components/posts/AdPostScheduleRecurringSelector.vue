@@ -133,13 +133,7 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    type Day,
-    type RecurringSchedule,
-    type ScheduleTime,
-    type RecurringScheduleTimeGroup,
-    ScheduleType,
-  } from "shared/types/post";
+  import type { Day, RecurringSchedule, ScheduleTime, RecurringScheduleTimeGroup, Post } from "shared/types/post";
   import { usePosts } from "app/store/posts";
   import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
   import { getNewGroupTimes, toHumanDay } from "app/utils/scheduling";

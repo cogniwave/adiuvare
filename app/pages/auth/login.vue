@@ -74,6 +74,7 @@
   import { useNotify } from "app/store/notify";
   import { required, isValidEmail, isValidPassword } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
+  import { usePassword } from "app/composables/password";
 
   definePageMeta({
     middleware: "unauthed-server",

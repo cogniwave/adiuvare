@@ -78,6 +78,7 @@
 
   import dayjs from "shared/services/dayjs.service";
   import type { User } from "shared/types/user";
+  import { usePassword } from "app/composables/password";
 
   let email: string = "";
   let token: string = "";

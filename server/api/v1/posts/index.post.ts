@@ -4,7 +4,7 @@ import { createPost } from "server/database/posts";
 import { notifyNewPost } from "server/services/slack";
 
 import type { CreatePostPayload } from "shared/types/post";
-import { createPostSchema } from "shared/schemas/post";
+import { createPostSchema } from "shared/schemas/post.schema";
 
 export default defineProtectedRouteHandler(async (event) => {
   const body = await getValidatedInput<CreatePostPayload>(event, createPostSchema);
@@ -22,5 +22,5 @@ export default defineProtectedRouteHandler(async (event) => {
 
   notifyNewPost({ id: result.id, createdBy: event.context.user.id, title: event.context.user.id });
 
-  return { ...result, createdBy: event.context.user.slug, logo: event.context.user.logo };
+  return { ...result, createdBy: event.context.user.id };
 });

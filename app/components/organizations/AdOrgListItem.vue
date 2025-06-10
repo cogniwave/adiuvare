@@ -14,10 +14,10 @@
     </template>
 
     <v-card-text class="text-regular">
-      <template v-if="org.bio">
+      <template v-if="org.about">
         {{ visibleText }}
 
-        <small v-if="org.bio.length > 180 && !showFullText" class="inline" @click.stop.prevent="showAllText">
+        <small v-if="org.about.length > 180 && !showFullText" class="inline" @click.stop.prevent="showAllText">
           {{ $t("org.showAllBio") }}
         </small>
       </template>
@@ -28,23 +28,24 @@
 </template>
 
 <script lang="ts" setup>
-  import type { User } from "shared/types/user";
+  import { shortenText } from "app/utils";
+  import type { Organization } from "shared/types/organization";
 
   const $props = defineProps({
-    org: { type: Object as PropType<User>, required: true },
+    org: { type: Object as PropType<Organization>, required: true },
   });
 
   const visibleText = ref("");
   const showFullText = ref(false);
 
   onBeforeMount(() => {
-    if ($props.org.bio) {
-      visibleText.value = shortenText($props.org.bio, 180);
+    if ($props.org.about) {
+      visibleText.value = shortenText($props.org.about, 180);
     }
   });
 
   const showAllText = () => {
-    visibleText.value = $props.org.bio as string;
+    visibleText.value = $props.org.about as string;
     showFullText.value = true;
   };
 </script>

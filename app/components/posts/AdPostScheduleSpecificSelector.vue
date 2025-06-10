@@ -31,7 +31,7 @@
   import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
   import { getNewGroupTimes } from "app/utils/scheduling";
   import { usePosts } from "app/store/posts";
-  import { ScheduleType, type Post, type ScheduleTime, type SpecificSchedule } from "shared/types/post";
+  import type { Post, ScheduleTime, SpecificSchedule } from "shared/types/post";
   import { getScheduleDay, getScheduleTimes } from "shared/utils/schedule";
 
   const { currPost } = usePosts<Post<"specific">>("specific");

@@ -2,7 +2,8 @@ import { z } from "zod/v4";
 
 import { postNeeds, postStates, scheduleTypes } from "shared/types/post";
 import { sanitizeInput } from "server/utils/request";
-import { contactsSchema, datesSchema } from "./common.schema";
+import { datesSchema } from "./common.schema";
+import { contactSchema } from "./contacts.schema";
 
 const validDays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const;
 
@@ -37,7 +38,7 @@ export const postSchema = z.object({
   locations: z.array(z.string()).transform((locations) => locations.map(sanitizeInput)),
   schedule: postScheduleSchema,
   needs: postNeedsSchema,
-  contacts: contactsSchema,
+  contacts: contactSchema,
   state: z.enum(postStates),
   slug: z.string().transform(sanitizeInput),
   createdUserId: z.string(),
@@ -48,4 +49,14 @@ export const createPostSchema = postSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+});
+
+export const updatePostSchema = postSchema.pick({
+  title: true,
+  description: true,
+  state: true,
+  needs: true,
+  locations: true,
+  schedule: true,
+  contacts: true,
 });

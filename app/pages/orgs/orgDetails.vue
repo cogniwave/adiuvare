@@ -72,10 +72,10 @@
       <v-col>
         <h3>{{ currOrg.name }}</h3>
 
-        <small>typo{{ currOrg.type }}</small>
+        <small>{{ currOrg.category }}</small>
 
-        <p v-if="currOrg.bio" class="mt-3">
-          {{ currOrg.bio }}
+        <p v-if="currOrg.about" class="mt-3">
+          {{ currOrg.about }}
         </p>
 
         <p v-else class="mt-3 font-italic">{{ t("orgs.noBio") }}</p>
@@ -136,7 +136,7 @@
     line-height: initial;
   }
 
-  .bio {
+  .about {
     white-space: pre-wrap;
   }
 </style>

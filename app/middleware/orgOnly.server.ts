@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware(() => {
     return navigateTo("/login");
   }
 
-  if (user.value.type !== "org") {
-    return navigateTo("/");
-  }
+  // if (user.value.type !== "org") {
+  //   return navigateTo("/");
+  // }
 });

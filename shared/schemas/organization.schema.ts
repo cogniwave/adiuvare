@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
-import { addressSchema, contactsSchema, datesSchema, photosSchema } from "./common.schema";
+import { addressSchema, datesSchema, photosSchema } from "./common.schema";
+import { contactSchema } from "./contacts.schema";
 import { organizationCategories } from "../types/organization";
 
 export const organizationSchema = z.object({
@@ -10,7 +11,7 @@ export const organizationSchema = z.object({
   about: z.string().transform(sanitizeInput),
   verified: z.boolean().default(false),
   token: z.string().max(128).optional(),
-  contacts: contactsSchema,
+  contacts: z.array(contactSchema),
   website: z.url().optional(),
   nipc: z.int().min(100000000).max(999999999).optional(),
   autoAcceptSameDomainUsers: z.boolean().optional().default(true),

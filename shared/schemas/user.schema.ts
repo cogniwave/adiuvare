@@ -1,5 +1,7 @@
 import { z } from "zod/v4";
-import { addressSchema, contactsSchema, datesSchema, passwordSchema, photosSchema } from "./common.schema";
+
+import { addressSchema, datesSchema, passwordSchema, photosSchema } from "./common.schema";
+import { contactSchema } from "./contacts.schema";
 
 export const userSchema = z.object({
   id: z.string(),
@@ -10,7 +12,7 @@ export const userSchema = z.object({
   slug: z.string().transform(sanitizeInput),
   verified: z.boolean(),
   token: z.string().max(128).optional().transform(sanitizeInput),
-  contacts: contactsSchema,
+  contacts: z.array(contactSchema),
   bio: z.string().optional().transform(sanitizeInput),
   ...photosSchema.shape,
   ...addressSchema.shape,
@@ -18,3 +20,21 @@ export const userSchema = z.object({
 });
 
 export const createUserSchema = userSchema.pick({ name: true, email: true, password: true });
+
+export const loginSchema = userSchema.pick({ email: true, password: true });
+
+export const updateProfileSchema = userSchema.pick({
+  name: true,
+  slug: true,
+  bio: true,
+  address: true,
+  city: true,
+  district: true,
+  postalCode: true,
+  contacts: true,
+});
+
+export const updateAccountSchema = userSchema.pick({
+  email: true,
+  password: true,
+});

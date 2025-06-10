@@ -159,7 +159,6 @@
   import AdFormCard from "app/components/common/AdFormCard.vue";
   import { required, maxLength } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
-  import { debounce } from "app/utils";
   import { getCities } from "app/services/geoapify.service";
   import AdPostDialogNeed from "app/components/posts/AdPostDialogNeed.vue";
   import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
@@ -167,7 +166,8 @@
   import { usePosts } from "app/store/posts";
   import type { Post, PostSchedule, PostState } from "shared/types/post";
   import type { SelectOption } from "shared/types/form";
-  import type { UserContact } from "shared/types/user";
+  import { debounce } from "vuetify/lib/util/helpers.mjs";
+  import type { EntityContact } from "~~/shared/types/contact";
 
   definePageMeta({ path: "/posts/:slug/edit", middleware: "protected-server", title: "pages.postEdit" });
 
@@ -244,7 +244,7 @@
           }
         })
         .finally(() => (fetchingLocations.value = false));
-    });
+    }, 500);
   };
 
   const onRemoveLocation = (location: string) => {
@@ -252,7 +252,7 @@
     updatePost("location", locationInput.value);
   };
 
-  const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
+  const updatePost = (prop: string, val: string | string[] | PostSchedule | EntityContact[]) => {
     currPost.value = { ...currPost.value, [prop]: val };
   };
 

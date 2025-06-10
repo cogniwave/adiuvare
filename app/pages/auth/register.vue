@@ -64,13 +64,6 @@
         </template>
       </v-text-field>
 
-      <v-input hide-details prepend-icon="fa-solid fa-users">
-        <v-radio-group v-model:model-value="type" inline hide-details class="mt-6" :label="t('form.userType.title')">
-          <v-radio :label="t('form.userType.org')" value="org" />
-          <v-radio :label="t('form.userType.volunteer')" value="volunteer" />
-        </v-radio-group>
-      </v-input>
-
       <v-checkbox v-model:model-value="privacyPolicy" class="mt-10 mb-2" hide-details="auto" :rules="[required(t)]">
         <template #label>
           <i18n-t scope="global" keypath="form.privacyPolicy" tag="label" for="form.privacyPolicyLink">
@@ -133,8 +126,9 @@
   import { required, isValidEmail, isValidPassword, match } from "app/utils/validators";
   import { useNotify } from "app/store/notify";
   import { useFormErrors } from "app/composables/formErrors";
+  import { usePassword } from "app/composables/password";
 
-  import type { User, UserType } from "shared/types/user";
+  import type { User } from "shared/types/user";
 
   definePageMeta({
     middleware: "unauthed-server",
@@ -153,7 +147,6 @@
   const name = ref<string>("");
   const privacyPolicy = ref<string>("");
   const eula = ref<string>("");
-  const type = ref<UserType>("org");
   const newsletter = ref<boolean>(false);
   const userCreated = ref<boolean>(false);
 
@@ -179,12 +172,11 @@
         email: email.value,
         password: password.value,
         name: name.value,
-        type: type.value,
         newsletter: newsletter.value,
       },
     })
       .then(() => {
-        notifySuccess(t("form.user.createdSuccesffuly"));
+        notifySuccess(t("form.user.createdSuccessfully"));
         userCreated.value = true;
       })
       .catch(handleErrors)

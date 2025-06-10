@@ -60,29 +60,25 @@
 </template>
 
 <script setup lang="ts">
-  import type { ContactType, UserContact } from "shared/types/user";
+  import { nanoid } from "nanoid";
 
-  interface Contact extends UserContact {
-    id: number;
-  }
+  import type { ContactType, EntityContact } from "shared/types/contact";
+  import { isValidEmail, isValidPhone, required } from "app/utils/validators";
 
   const $emit = defineEmits<{
-    (e: "update", payload: UserContact[]): void;
+    (e: "update", payload: EntityContact[]): void;
   }>();
 
   const $props = defineProps({
-    contacts: { type: Array as PropType<UserContact[]>, default: () => [] },
+    contacts: { type: Array as PropType<EntityContact[]>, default: () => [] },
     error: { type: String, default: "" },
   });
 
   const { t } = useI18n();
+
   const errors = ref<Record<string, string>>({});
-  const proxyContacts = ref<Contact[]>(
-    $props.contacts.map((c, i) => ({
-      ...c,
-      id: i,
-    })),
-  );
+  const proxyContacts = ref<EntityContact[]>($props.contacts);
+  const contactEdits = ref<Record<string, EntityContact>>({});
 
   const options = [
     { title: t("form.contacts.phone"), value: "phone" },
@@ -90,9 +86,7 @@
     { title: t("form.contacts.other"), value: "other" },
   ];
 
-  const contactEdits = ref<Record<number, Contact>>({});
-
-  const onUpdateType = (type: ContactType, contact: string, id: number) => {
+  const onUpdateType = (type: ContactType, contact: string, id: string) => {
     contactEdits.value[id] = { id, type, contact };
 
     proxyContacts.value = proxyContacts.value.map((c) => {
@@ -100,15 +94,15 @@
     });
   };
 
-  const onUpdateValue = (type: ContactType, contact: string, id: number) => {
+  const onUpdateValue = (type: ContactType, contact: string, id: string) => {
     contactEdits.value[id] = { id, type, contact };
   };
 
-  const contactExists = (id: number) => (val: string) => {
+  const contactExists = (id: string) => (val: string) => {
     return !proxyContacts.value.some((c) => c.id !== id && c.contact === val) || t("errors.contactExists");
   };
 
-  const onRemove = (id: number) => {
+  const onRemove = (id: string) => {
     proxyContacts.value = proxyContacts.value.filter((c) => c.id !== id);
     // in this case needs to be dynamic because it's the generated id
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -116,7 +110,7 @@
   };
 
   const onAdd = () => {
-    proxyContacts.value.push({ contact: "", type: "phone", id: proxyContacts.value.length });
+    proxyContacts.value.push({ contact: "", type: "phone", id: nanoid() });
   };
 
   const persistUpdate = () => {
@@ -124,10 +118,7 @@
       return contactEdits.value[c.id] ? contactEdits.value[c.id]! : c;
     });
 
-    $emit(
-      "update",
-      proxyContacts.value.map((c) => ({ contact: c.contact, type: c.type })),
-    );
+    $emit("update", proxyContacts.value);
   };
 
   watch(

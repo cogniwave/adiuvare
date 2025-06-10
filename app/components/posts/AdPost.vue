@@ -130,6 +130,7 @@
   import AdLocation from "app/components/common/AdLocation.vue";
   import AdContactsList from "app/components/contacts/AdContactsList.vue";
   import type { Post, PostDeletePayload, PostStateTogglePayload } from "shared/types/post";
+  import { shortenText } from "app/utils";
 
   const MAX_DESC = 1300;
 

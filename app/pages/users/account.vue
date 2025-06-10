@@ -69,7 +69,10 @@
   import AdFormCard from "app/components/common/AdFormCard.vue";
   import { useUsers } from "app/store/users";
   import { useNotify } from "app/store/notify";
-  import type { TokenUser, Tokens } from "shared/types/user";
+  import type { TokenUser } from "shared/types/user";
+  import { useFormErrors } from "app/composables/formErrors";
+  import { usePassword } from "app/composables/password";
+  import { isValidEmail, isValidPassword, match, required } from "app/utils/validators";
 
   definePageMeta({ path: "/account", middleware: "protected-server", title: "pages.account" });
 
@@ -110,8 +113,7 @@
     }
 
     try {
-      await $fetch<Tokens | { success: boolean }>(`/api/v1/users/${(user.value as TokenUser).id}`, {
-        query: { action: "account" },
+      await $fetch(`/api/v1/users/${user.value!.id}/account`, {
         body: {
           ...(emailChanged && { email: email.value }),
           ...(password.value && { password: password.value }),

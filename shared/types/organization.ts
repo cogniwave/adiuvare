@@ -1,3 +1,6 @@
+import type { z } from "zod/v4";
+import type { organizationSchema } from "../schemas/organization.schema.ts";
+
 export const organizationCategories = [
   "unknown",
   "ipss",
@@ -13,3 +16,5 @@ export const organizationCategories = [
 ] as const;
 
 export type OrganizationCategory = (typeof organizationCategories)[number];
+
+export type Organization = z.infer<typeof organizationSchema>;

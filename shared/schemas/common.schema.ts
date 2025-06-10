@@ -1,13 +1,10 @@
 import { z } from "zod/v4";
 
 import { translate } from "server/utils/i18n";
-import { createContactSchema } from "./contacts.schema";
 
 const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,255}$/;
 
 export const passwordSchema = z.string().regex(PASSWORD_REGEX).transform(sanitizeInput);
-
-export const contactsSchema = z.array(createContactSchema).optional();
 
 export const tokenSchema = z
   .string(translate("errors.invalidConfirmToken"))

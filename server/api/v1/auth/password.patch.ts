@@ -5,14 +5,10 @@ import { getValidatedInput } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 
 import { translate } from "server/utils/i18n";
-import { emailSchema, passwordSchema, tokenSchema } from "shared/validators";
+import { emailSchema, passwordSchema, tokenSchema } from "shared/schemas/common.schema";
 import dayjs from "shared/services/dayjs.service";
 
-const schema = z.object({
-  token: tokenSchema,
-  email: emailSchema,
-  password: passwordSchema,
-});
+const schema = z.object({ token: tokenSchema, email: emailSchema, password: passwordSchema });
 
 type PasswordUpdatePayload = z.infer<typeof schema>;
 

@@ -44,6 +44,8 @@
   import { useUsers } from "app/store/users";
   import type { User } from "shared/types/user";
 
+  definePageMeta({ path: "/users/:slug", title: "pages.userDetails" });
+
   const { currUser, setUser } = useUsers();
 
   const $route = useRoute();
@@ -51,13 +53,8 @@
 
   const { status, error } = await useFetch<User>(`/api/users/${$route.params.slug}`, {
     lazy: true,
-
-    onResponse({ response }) {
-      setUser(response._data);
-    },
+    onResponse: ({ response }) => setUser(response._data),
   });
-
-  definePageMeta({ path: "/users/:slug", title: "pages.userDetails" });
 
   const canEdit = ref(false);
 

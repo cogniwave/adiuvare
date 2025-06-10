@@ -18,11 +18,10 @@ export default defineProtectedRouteHandler(async (event) => {
     name: desanitizeInput(user.name),
     slug: desanitizeInput(user.slug),
     bio: desanitizeInput(user.bio),
-    website: desanitizeInput(user.website),
     address: desanitizeInput(user.address),
     postalCode: desanitizeInput(user.postalCode),
     city: desanitizeInput(user.city),
     district: desanitizeInput(user.district),
-    contacts: user.contacts ? user.contacts.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) })) : [],
+    // contacts: user.contacts ? user.contacts.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) })) : [],
   };
 });

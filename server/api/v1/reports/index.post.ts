@@ -2,7 +2,7 @@ import type { Report } from "shared/types/report";
 import { createReport } from "server/database/reports";
 import { notifyNewReport } from "server/services/slack";
 import { getValidatedInput } from "server/utils/request";
-import { reportSchema } from "shared/schemas/report";
+import { reportSchema } from "shared/schemas/report.schema";
 
 export default defineEventHandler(async (event) => {
   const body = await getValidatedInput<Report>(event, reportSchema);

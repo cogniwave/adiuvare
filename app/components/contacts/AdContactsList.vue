@@ -61,10 +61,10 @@
 
 <script setup lang="ts">
   import { useNotify } from "app/store/notify";
-  import type { UserContact } from "shared/types/user";
+  import type { EntityContact } from "shared/types/contact";
 
   defineProps({
-    contacts: { type: Array as PropType<UserContact[]>, required: true },
+    contacts: { type: Array as PropType<EntityContact[]>, required: true },
   });
 
   const { notifyInfo } = useNotify();
@@ -75,7 +75,7 @@
       navigator.clipboard.writeText(contact);
       notifyInfo(t("copied"));
     } else {
-      alert("Brower does not support clipboard");
+      alert("Browser does not support clipboard");
     }
   };
 </script>
