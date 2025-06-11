@@ -5,14 +5,14 @@ import { addUser } from "server/database/users";
 import { sendEmail, subscribeToNewsletter } from "server/services/brevo";
 import { getValidatedInput } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
-import type { User } from "shared/types/user";
+import type { CreateUserPayload, TokenUser } from "shared/types/user";
 import { translate } from "server/utils/i18n";
 import logger from "server/utils/logger";
 import { createUserSchema } from "shared/schemas/user.schema";
 
 const schema = z.object({ newsletter: z.boolean().default(false), ...createUserSchema.shape });
 
-const register = async (payload: z.infer<typeof createUserSchema>): Promise<{ user: User; token: string }> => {
+const register = async (payload: CreateUserPayload): Promise<{ user: TokenUser; token: string }> => {
   const token = `${nanoid(32)}${Date.now()}`;
 
   try {

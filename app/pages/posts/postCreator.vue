@@ -67,7 +67,7 @@
       </v-select>
 
       <!-- contacts -->
-      <ad-contacts :contacts="org.contacts" :error="errors.contacts" @update="updatePost('contacts', $event)" />
+      <ad-contacts :contacts="org!.contacts" :error="errors.contacts" @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
       <ad-post-schedule />

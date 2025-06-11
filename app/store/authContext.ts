@@ -1,7 +1,8 @@
 import type { Organization } from "shared/types/organization";
 
 export const useAuthContext = () => {
-  const org = useState<Organization>("auth:orgs", () => ({}) as Organization);
+  const org = useState<Organization | null>("auth:orgs", () => null);
+  const canCreatePost = computed<boolean>(() => !!org.value);
 
-  return { org };
+  return { org, canCreatePost };
 };

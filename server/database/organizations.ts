@@ -29,7 +29,7 @@ export const getOrgs = async () => {
     .orderBy(asc(organizations.name))
     .limit(50);
 
-  return formatFromDb<Organization[]>(result) || [];
+  return result.map(formatFromDb<Organization[]>) || [];
 };
 
 export const getTotalOrgs = async () => {

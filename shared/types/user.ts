@@ -1,10 +1,17 @@
 import type { z } from "zod/v4";
 
-import type { updateAccountSchema, updateProfileSchema, userSchema } from "shared/schemas/user.schema";
+import type {
+  createUserSchema,
+  updateAccountSchema,
+  updateProfileSchema,
+  userSchema,
+} from "shared/schemas/user.schema";
 
 export type UserType = "user" | "admin";
 
 export type User = z.infer<typeof userSchema>;
+
+export type CreateUserPayload = z.infer<typeof createUserSchema>;
 
 export type TokenUser = Pick<User, "id" | "name" | "email" | "slug">;
 

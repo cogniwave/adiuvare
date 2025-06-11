@@ -271,6 +271,9 @@ export default defineNuxtConfig({
           flat: true,
           rounded: "lg",
         },
+        VCheckbox: {
+          falseIcon: "fa-solid fa-square",
+        },
       },
     },
   },

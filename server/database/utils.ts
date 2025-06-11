@@ -39,7 +39,7 @@ export const formatFromDb =
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...fieldsToDeserialize.reduce<Record<string, any>>((result, field) => {
         if (payload[field]) {
-          result[field] = JSON.parse(payload[field]);
+          result[field] = desanitizeInput(JSON.parse(payload[field]));
         }
 
         return result;

@@ -1,6 +1,6 @@
 import type { Report } from "shared/types/report";
 import type { NotifyPost } from "shared/types/post";
-import type { User } from "shared/types/user";
+import type { TokenUser } from "shared/types/user";
 import logger from "server/utils/logger";
 
 const sendToSlack = async (message: string) => {
@@ -41,7 +41,7 @@ export const notifyNewReport = async (report: Report) => {
   );
 };
 
-export const notifyNewUser = async (user: User) => {
+export const notifyNewUser = async (user: TokenUser) => {
   return await sendToSlack(
     `:standing_person: New user created 
       - id: ${user.id}

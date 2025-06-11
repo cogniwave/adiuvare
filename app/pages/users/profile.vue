@@ -71,23 +71,9 @@
         v-model:model-value="bio"
         class="my-10"
         prepend-icon="fa-solid fa-quote-left"
-        :placeholder="'form.user.bioPlaceholder'"
-        :label="'form.user.bio'"
+        :placeholder="t('form.user.bioPlaceholder')"
+        :label="t('form.user.bio')"
         @update:model-value="(value) => updateUser('bio', value)"
-      />
-
-      <!-- website -->
-      <v-text-field
-        v-model:model-value="website"
-        prepend-icon="fa-solid fa-globe"
-        class="mb-8"
-        persistent-counter
-        counter="256"
-        :placeholder="t('form.user.websitePlaceholder')"
-        :label="t('form.user.website')"
-        :rules="[maxLength($t, 256), isValidUrl($t)]"
-        :error-messages="errors.website"
-        @update:model-value="(value) => updateUser('website', value)"
       />
 
       <!-- morada -->
@@ -176,7 +162,7 @@
   import distritos from "public/assets/distritos.json";
   import localidades from "public/assets/localidades.json";
 
-  import { fileSize, fileType, isValidUrl, maxLength, required } from "app/utils/validators";
+  import { fileSize, fileType, maxLength, required } from "app/utils/validators";
   import { useUsers } from "app/store/users";
 
   import { useNotify } from "app/store/notify";
@@ -219,7 +205,6 @@
   const slug = ref<string>("");
   const pic = ref<string>("");
   const contacts = ref<EntityContact[]>([]);
-  const website = ref<string>("");
   const address = ref<string>("");
   const postalCode = ref<string>("");
   const city = ref<string>();

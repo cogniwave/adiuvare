@@ -1,5 +1,5 @@
 <template>
-  <template v-if="loggedIn">
+  <template v-if="canCreatePost">
     <v-list-item :title="$t('posts.submit')" to="/posts/new" prepend-icon="fa-passport" />
 
     <v-divider class="my-1" />
@@ -53,10 +53,12 @@
 
 <script setup lang="ts">
   import { useNotify } from "app/store/notify";
+  import { useAuthContext } from "app/store/authContext";
 
   const { clear, loggedIn } = useUserSession();
   const { notifySuccess } = useNotify();
   const { t } = useI18n();
+  const { canCreatePost } = useAuthContext();
 
   const logout = () => {
     clear();

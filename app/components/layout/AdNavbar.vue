@@ -3,7 +3,13 @@
     <template #title>
       <div class="d-flex align-center justify-space-between">
         <div v-if="$vuetify.display.mdAndUp">
-          <v-img src="/assets/images/logo.png" aspect-ratio="1" width="78px" @click="$router.push('/')" />
+          <nuxt-img
+            src="/assets/images/logo.png"
+            aspect-ratio="1"
+            width="78px"
+            class="cursor-pointer mt-2"
+            @click="navigateTo('/')"
+          />
         </div>
 
         <v-app-bar-nav-icon v-else variant="text" color="default" @click.stop="menuOpen = !menuOpen" />
@@ -19,7 +25,6 @@
 
   // import { useNotificationsStore } from "app/stores/notifications.store";
 
-  const $router = useRouter();
   const { loggedIn, user, ready } = useUserSession();
   const { menuOpen } = useMenu();
 

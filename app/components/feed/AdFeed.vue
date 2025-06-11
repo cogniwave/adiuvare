@@ -391,6 +391,7 @@
   .no-posts {
     color: rgba(var(--v-theme-subtext));
     font-weight: 500;
+    padding: 0 12px;
 
     a {
       font-weight: bold;

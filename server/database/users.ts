@@ -4,7 +4,9 @@ import { and, eq } from "drizzle-orm";
 import { useDrizzle } from "../database";
 import { users } from "./dbSchemas/users.db.schema";
 import type {
+  CreateUserPayload,
   GetAuthUserResult,
+  TokenUser,
   UpdateAccountPayload,
   UpdatePhotoPayload,
   UpdateProfilePayload,
@@ -39,17 +41,17 @@ export const getAuthUser = async (email: string) => {
   });
 };
 
-export const addUser = async (payload: any, token: string): Promise<User> => {
+export const addUser = async (payload: CreateUserPayload, token: string): Promise<TokenUser> => {
   const result = await useDrizzle()
     .insert(users)
     .values({
       email: payload.email,
       password: await hashPassword(payload.password),
       name: payload.name,
-      type: payload.type,
+      type: "user",
       slug: `${payload.email.split("@")[0]}-${nanoid()}`,
       token,
-      verified: true,
+      verified: process.env.NUXT_ENV === "development",
     })
     .returning({
       id: users.id,

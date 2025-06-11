@@ -166,21 +166,24 @@
 
     submitting.value = true;
 
-    await $fetch<User>("/api/v1/auth/register", {
-      method: "post",
-      body: {
-        email: email.value,
-        password: password.value,
-        name: name.value,
-        newsletter: newsletter.value,
-      },
-    })
-      .then(() => {
-        notifySuccess(t("form.user.createdSuccessfully"));
-        userCreated.value = true;
-      })
-      .catch(handleErrors)
-      .finally(() => (submitting.value = false));
+    try {
+      await $fetch<User>("/api/v1/users", {
+        method: "post",
+        body: {
+          email: email.value,
+          password: password.value,
+          name: name.value,
+          newsletter: newsletter.value,
+        },
+      });
+
+      notifySuccess(t("form.user.createdSuccessfully"));
+      userCreated.value = true;
+    } catch (err) {
+      handleErrors(err);
+    } finally {
+      submitting.value = false;
+    }
   };
 </script>
 

@@ -32,7 +32,7 @@ export default defineWrappedResponseHandler(async (event) => {
     email: user.email,
     slug: user.slug,
   };
-  await setUserSession(event, authedUser);
+  await setUserSession(event, { user: authedUser });
   setResponseStatus(event, 201);
   return authedUser;
 });

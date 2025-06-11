@@ -11,7 +11,7 @@
 
           <v-divider class="mt-4" />
 
-          <v-card-actions class="px-5 d-flex align-center justify-end">
+          <v-card-actions class="px-0 d-flex align-center justify-end">
             <slot name="actions" />
           </v-card-actions>
         </v-form>
