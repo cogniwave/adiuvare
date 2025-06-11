@@ -297,7 +297,7 @@ export default defineNuxtConfig({
   },
 
   sentry: {
-    autoInjectServerSentry: "experimental_dynamic-import",
+    autoInjectServerSentry: "top-level-import",
     sourceMapsUploadOptions: {
       org: "cogniwave",
       project: "adiuvare",
