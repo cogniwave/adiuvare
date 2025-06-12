@@ -3,7 +3,6 @@ namespace NodeJS {
     APP_BASE_URL: string;
     NUXT_ENV: "development" | "production";
     NUXT_SESSION_PASSWORD: string;
-    SENTRY_AUTH_TOKEN: string;
     BREVO_CONVO_ID: string;
     BREVO_API_KEY: string;
     NEWSLETTER_ID: string;

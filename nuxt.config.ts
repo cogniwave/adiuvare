@@ -109,7 +109,6 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module",
     "@nuxthub/core",
     "@nuxt/eslint",
-    "@sentry/nuxt/module",
     "@nuxtjs/google-fonts",
     "@nuxt/image",
     "dayjs-nuxt",
@@ -131,7 +130,11 @@ export default defineNuxtConfig({
     blob: true,
     database: true,
     bindings: {
-      compatibilityFlags: ["nodejs_compat_v2"],
+      compatibilityFlags: ["nodejs_compat"],
+      compatibilityDate: "2025-02-21",
+      observability: {
+        logs: true,
+      },
     },
   },
 
@@ -293,14 +296,6 @@ export default defineNuxtConfig({
           windowWidthLessThan: { width: 767 },
         },
       ],
-    },
-  },
-
-  sentry: {
-    autoInjectServerSentry: "top-level-import",
-    sourceMapsUploadOptions: {
-      org: "cogniwave",
-      project: "adiuvare",
     },
   },
 });
