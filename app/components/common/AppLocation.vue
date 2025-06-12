@@ -1,5 +1,5 @@
 <template>
-  <ad-location-chip v-for="location in visibleLocations" :key="location" :location="location" />
+  <app-location-chip v-for="location in visibleLocations" :key="location" :location="location" />
 
   <v-menu v-if="leftoverLocations.length" open-on-hover>
     <template #activator="{ props }">
@@ -10,14 +10,14 @@
 
     <v-list density="compact" class="pt-1 pb-2">
       <v-list-item v-for="location in leftoverLocations" :key="location" class="pl-2 pr-2">
-        <ad-location-chip :location="location" />
+        <app-location-chip :location="location" />
       </v-list-item>
     </v-list>
   </v-menu>
 </template>
 
 <script lang="ts" setup>
-  import AdLocationChip from "app/components/common/AdLocationChip.vue";
+  import AppLocationChip from "app/components/common/AppLocationChip.vue";
 
   import type { PropType } from "vue";
 

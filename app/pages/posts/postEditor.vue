@@ -4,7 +4,7 @@
     <v-skeleton-loader type="list-item@3" class="rounded-xl mt-5" />
   </template>
 
-  <ad-form-card v-else-if="post" ref="form" :title="t('posts.newPostTitle')" @submit="submit">
+  <app-form-card v-else-if="post" ref="form" :title="t('posts.newPostTitle')" @submit="submit">
     <template #form>
       <!-- title -->
       <v-text-field
@@ -129,15 +129,15 @@
         @update:model-value="updatePost('needs', $event)"
       >
         <template #chip="{ item }">
-          <ad-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
+          <app-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
         </template>
       </v-select>
 
       <!-- contacts -->
-      <ad-contacts :contacts="post.contacts" :error="errors.contacts" @update="updatePost('contacts', $event)" />
+      <app-contacts :contacts="post.contacts" :error="errors.contacts" @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
-      <ad-post-schedule />
+      <app-post-schedule />
     </template>
 
     <template #actions>
@@ -149,19 +149,19 @@
         {{ t("posts.update") }}
       </v-btn>
     </template>
-  </ad-form-card>
+  </app-form-card>
 </template>
 
 <script lang="ts" setup>
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
-  import AdContacts from "app/components/contacts/AdContacts.vue";
-  import AdFormCard from "app/components/common/AdFormCard.vue";
+  import AppContacts from "app/components/contacts/AppContacts.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import { required, maxLength } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
   import { getCities } from "app/services/geoapify.service";
-  import AdPostDialogNeed from "app/components/posts/AdPostDialogNeed.vue";
-  import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
+  import AppPostDialogNeed from "app/components/posts/AppPostDialogNeed.vue";
+  import AppPostSchedule from "app/components/posts/AppPostSchedule.vue";
   import { useNotify } from "app/store/notify";
   import { usePosts } from "app/store/posts";
   import type { Post, PostSchedule, PostState } from "shared/types/post";

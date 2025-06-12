@@ -5,7 +5,7 @@
     class="rounded-xl"
   />
 
-  <ad-form-card v-else ref="form" :title="t('form.user.editDetails')" @submit="submit">
+  <app-form-card v-else ref="form" :title="t('form.user.editDetails')" @submit="submit">
     <template #form>
       <v-input :error="!errors.file" :error-messages="errors.file" class="mb-8">
         <v-hover v-slot="{ isHovering, props }">
@@ -19,7 +19,7 @@
               @change="onFileChange"
             />
 
-            <ad-img
+            <app-img
               height="128px"
               width="128px"
               :alt="t('form.user.picAlt')"
@@ -134,7 +134,7 @@
       />
 
       <!-- contacts -->
-      <ad-contacts :contacts="contacts" :error="errors.contacts" @update="updateUser('contacts', $event)" />
+      <app-contacts :contacts="contacts" :error="errors.contacts" @update="updateUser('contacts', $event)" />
     </template>
 
     <template #actions>
@@ -149,16 +149,16 @@
         {{ t("form.user.update") }}
       </v-btn>
     </template>
-  </ad-form-card>
+  </app-form-card>
 </template>
 
 <script lang="ts" setup>
   import { vMaska } from "maska/vue";
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
-  import AdImg from "app/components/common/AdImg.vue";
-  import AdContacts from "app/components/contacts/AdContacts.vue";
-  import AdFormCard from "app/components/common/AdFormCard.vue";
+  import AppImg from "app/components/common/AppImg.vue";
+  import AppContacts from "app/components/contacts/AppContacts.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import distritos from "public/assets/distritos.json";
   import localidades from "public/assets/localidades.json";
 

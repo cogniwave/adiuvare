@@ -1,9 +1,9 @@
 <template>
-  <ad-feed />
+  <app-feed />
 </template>
 
 <script setup lang="ts">
-  import AdFeed from "app/components/feed/AdFeed.vue";
+  import AppFeed from "app/components/feed/AppFeed.vue";
 
   definePageMeta({ path: "/" });
 </script>

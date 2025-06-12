@@ -124,7 +124,7 @@
     <template #default="{ item }">
       <span>{{ toHumanDay(item.day) }}</span>
 
-      <ad-post-schedule-recurring-time
+      <app-post-schedule-recurring-time
         :model-value="item.times"
         @update:model-value="onTimesUpdate(item.day, $event)"
       />
@@ -135,7 +135,7 @@
 <script setup lang="ts">
   import type { Day, RecurringSchedule, ScheduleTime, RecurringScheduleTimeGroup, Post } from "shared/types/post";
   import { usePosts } from "app/store/posts";
-  import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
+  import AppPostScheduleRecurringTime from "./AppPostScheduleRecurringTime.vue";
   import { getNewGroupTimes, toHumanDay } from "app/utils/scheduling";
 
   // setup

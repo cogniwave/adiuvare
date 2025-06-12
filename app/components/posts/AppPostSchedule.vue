@@ -58,18 +58,18 @@
   </v-input>
 
   <div v-if="scheduleType === 'recurring'" class="text-center">
-    <ad-post-schedule-recurring-selector />
+    <app-post-schedule-recurring-selector />
   </div>
 
   <div v-else-if="scheduleType === 'specific'" class="text-center">
-    <ad-post-schedule-specific-selector />
+    <app-post-schedule-specific-selector />
   </div>
 </template>
 
 <script setup lang="ts">
   import { usePosts } from "app/store/posts";
-  import AdPostScheduleRecurringSelector from "./AdPostScheduleRecurringSelector.vue";
-  import AdPostScheduleSpecificSelector from "./AdPostScheduleSpecificSelector.vue";
+  import AppPostScheduleRecurringSelector from "./AppPostScheduleRecurringSelector.vue";
+  import AppPostScheduleSpecificSelector from "./AppPostScheduleSpecificSelector.vue";
   import type { Post, ScheduleType } from "shared/types/post";
 
   const { currPost, updateScheduleType } = usePosts<Post>();

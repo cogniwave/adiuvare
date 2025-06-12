@@ -1,11 +1,11 @@
 <template>
   <v-list class="py-0" bg-color="background">
-    <ad-menu-content />
+    <app-menu-content />
   </v-list>
 </template>
 
 <script setup lang="ts">
-  import AdMenuContent from "app/components/layout/AdMenuContent.vue";
+  import AppMenuContent from "app/components/layout/AppMenuContent.vue";
 </script>
 
 <style lang="scss" scoped>

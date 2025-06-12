@@ -1,30 +1,30 @@
 <template>
   <v-app>
-    <ad-loading v-if="isLoading" />
+    <app-loading v-if="isLoading" />
 
-    <ad-navbar />
+    <app-navbar />
 
-    <ad-mobile-menu v-if="smAndDown" />
+    <app-mobile-menu v-if="smAndDown" />
 
     <!-- todo: add when there's messages and stuffs -->
-    <!-- <ad-notifications /> -->
+    <!-- <app-notifications /> -->
 
-    <ad-snackbar />
+    <app-snackbar />
 
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
 
-    <ad-footer />
+    <app-footer />
   </v-app>
 </template>
 
 <script lang="ts" setup>
-  import AdLoading from "app/components/common/AdLoading.vue";
-  import AdNavbar from "app/components/layout/AdNavbar.vue";
-  import AdMobileMenu from "app/components/layout/AdMobileMenu.vue";
-  import AdSnackbar from "app/components/common/AdSnackbar.vue";
-  import AdFooter from "app/components/layout/AdFooter.vue";
+  import AppLoading from "app/components/common/AppLoading.vue";
+  import AppNavbar from "app/components/layout/AppNavbar.vue";
+  import AppMobileMenu from "app/components/layout/AppMobileMenu.vue";
+  import AppSnackbar from "app/components/common/AppSnackbar.vue";
+  import AppFooter from "app/components/layout/AppFooter.vue";
 
   const { t } = useI18n();
   const { smAndDown } = useDisplay();

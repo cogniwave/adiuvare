@@ -2,7 +2,7 @@
   <div class="w-100 item-group">
     <template v-for="(time, idx) in times" :key="time.id">
       <div class="picker-group mb-3">
-        <ad-time-picker
+        <app-time-picker
           :model-value="time.start"
           :error="time.error"
           @update:model-value="onChange($event, 'start', time)"
@@ -10,7 +10,7 @@
 
         <span> - </span>
 
-        <ad-time-picker
+        <app-time-picker
           :model-value="time.end"
           :error="time.error"
           @update:model-value="onChange($event, 'end', time)"
@@ -70,7 +70,7 @@
 <script setup lang="ts">
   import type { ScheduleTime } from "shared/types/post";
 
-  import AdTimePicker from "./AdTimePicker.vue";
+  import AppTimePicker from "./AppTimePicker.vue";
   import { getNewGroupTimes } from "app/utils/scheduling";
 
   const $props = defineProps({

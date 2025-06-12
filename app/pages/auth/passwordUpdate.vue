@@ -1,5 +1,5 @@
 <template>
-  <ad-form-card
+  <app-form-card
     ref="form"
     :loading="loading"
     :title="t('reset.updateTitle')"
@@ -68,13 +68,13 @@
         </nuxt-link>
       </i18n-t>
     </template>
-  </ad-form-card>
+  </app-form-card>
 </template>
 
 <script setup lang="ts">
   import { required, isValidPassword, match } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
-  import AdFormCard from "app/components/common/AdFormCard.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
 
   import dayjs from "shared/services/dayjs.service";
   import type { User } from "shared/types/user";
@@ -99,7 +99,7 @@
   const invalidLink = ref(false);
   const expiredLink = ref(false);
 
-  const form = ref<InstanceType<typeof AdFormCard>>();
+  const form = ref<InstanceType<typeof AppFormCard>>();
   const submitting = ref<boolean>(false);
 
   onBeforeMount(() => {

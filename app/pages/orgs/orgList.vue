@@ -127,14 +127,14 @@
     </v-expand-transition> -->
 
     <section>
-      <ad-org-list-item v-for="org in orgs" :key="org.slug" :org="org" />
+      <app-org-list-item v-for="org in orgs" :key="org.slug" :org="org" />
     </section>
   </template>
 </template>
 
 <script lang="ts" setup>
   import { useNotify } from "app/store/notify";
-  import AdOrgListItem from "app/components/organizations/AdOrgListItem.vue";
+  import AppOrgListItem from "app/components/organizations/AppOrgListItem.vue";
   import { useOrganizations } from "app/store/organizations";
   import type { GetListResult } from "shared/types/request";
   import type { Organization } from "shared/types/organization";

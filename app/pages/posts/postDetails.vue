@@ -75,7 +75,7 @@
         </v-col>
 
         <v-col cols="12" md="6" order="1" :align="mdAndDown ? 'start' : 'end'" :class="{ 'mb-2': mdAndDown }">
-          <ad-post-need v-for="need in currPost.needs" :key="need" :need="need" size="small" variant="flat" />
+          <app-post-need v-for="need in currPost.needs" :key="need" :need="need" size="small" variant="flat" />
         </v-col>
       </v-row>
 
@@ -86,7 +86,7 @@
       <!-- contacts -->
       {{ t("posts.contacts.detailsTitle") }}
 
-      <ad-contacts-list v-if="currPost.contacts?.length" :contacts="currPost.contacts" bg-color="transparent" />
+      <app-contacts-list v-if="currPost.contacts?.length" :contacts="currPost.contacts" bg-color="transparent" />
 
       <!-- anytime time -->
       <div class="my-3">

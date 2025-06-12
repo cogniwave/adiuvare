@@ -1,5 +1,5 @@
 <template>
-  <ad-form-card ref="form" :title="t('login.title')" @submit="submit">
+  <app-form-card ref="form" :title="t('login.title')" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"
@@ -66,11 +66,11 @@
         </nuxt-link>
       </div>
     </template>
-  </ad-form-card>
+  </app-form-card>
 </template>
 
 <script setup lang="ts">
-  import AdFormCard from "app/components/common/AdFormCard.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import { useNotify } from "app/store/notify";
   import { required, isValidEmail, isValidPassword } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
@@ -92,7 +92,7 @@
   const { mdAndUp } = useDisplay();
 
   const email = ref<string>("");
-  const form = ref<InstanceType<typeof AdFormCard>>();
+  const form = ref<InstanceType<typeof AppFormCard>>();
   const submitting = ref<boolean>(false);
 
   onMounted(() => {

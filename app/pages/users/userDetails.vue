@@ -34,13 +34,13 @@
     </div>
 
     <div v-if="currUser.contacts" class="bg-white rounded pa-5 mt-3">
-      <ad-contacts-list :contacts="currUser.contacts" />
+      <app-contacts-list :contacts="currUser.contacts" />
     </div>
   </template>
 </template>
 
 <script lang="ts" setup>
-  import AdContactsList from "app/components/contacts/AdContactsList.vue";
+  import AppContactsList from "app/components/contacts/AppContactsList.vue";
   import { useUsers } from "app/store/users";
   import type { User } from "shared/types/user";
 

@@ -122,7 +122,7 @@
       <v-col>
         <v-virtual-scroll v-if="data.total" item-height="264" :items="data.posts">
           <template #default="{ item }">
-            <ad-post
+            <app-post
               :key="item.id"
               :post="item"
               :user="user?.slug || ''"
@@ -166,11 +166,11 @@
     </nuxt-link>
   </i18n-t>
 
-  <ad-post-report-dialog v-if="reportDialogRendered" />
+  <app-post-report-dialog v-if="reportDialogRendered" />
 
-  <ad-post-disable-confirm-dialog v-if="disableDialogRendered" />
+  <app-post-disable-confirm-dialog v-if="disableDialogRendered" />
 
-  <ad-post-delete-confirm-dialog v-if="deleteDialogRendered" @delete="onDelete" />
+  <app-post-delete-confirm-dialog v-if="deleteDialogRendered" @delete="onDelete" />
 </template>
 
 <script setup lang="ts">
@@ -179,10 +179,10 @@
   import { useReport } from "app/store/report";
   import { FEED_PAGE_SIZE } from "shared/utils";
   import type { Post, PostDeletePayload, PostStateTogglePayload, PostFilter } from "shared/types/post";
-  import AdPost from "app/components/posts/AdPost.vue";
-  import AdPostReportDialog from "app/components/posts/AdPostReportDialog.vue";
-  import AdPostDisableConfirmDialog from "app/components/posts/AdPostDisableConfirmDialog.vue";
-  import AdPostDeleteConfirmDialog from "app/components/posts/AdPostDeleteConfirmDialog.vue";
+  import AppPost from "app/components/posts/AppPost.vue";
+  import AppPostReportDialog from "app/components/posts/AppPostReportDialog.vue";
+  import AppPostDisableConfirmDialog from "app/components/posts/AppPostDisableConfirmDialog.vue";
+  import AppPostDeleteConfirmDialog from "app/components/posts/AppPostDeleteConfirmDialog.vue";
   import type { SelectOption } from "shared/types/form";
   import { useLocations } from "app/composables/locations";
 

@@ -1,7 +1,7 @@
 <template>
   <v-skeleton-loader v-if="loading" type="article" class="rounded-xl" />
 
-  <ad-form-card v-else ref="form" :title="t('form.user.accountTitle')" @submit="submit">
+  <app-form-card v-else ref="form" :title="t('form.user.accountTitle')" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"
@@ -60,13 +60,13 @@
         {{ t("form.user.accountSubmit") }}
       </v-btn>
     </template>
-  </ad-form-card>
+  </app-form-card>
 </template>
 
 <script lang="ts" setup>
   import type { VForm } from "vuetify/lib/components/index.mjs";
 
-  import AdFormCard from "app/components/common/AdFormCard.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import { useUsers } from "app/store/users";
   import { useNotify } from "app/store/notify";
   import type { TokenUser } from "shared/types/user";

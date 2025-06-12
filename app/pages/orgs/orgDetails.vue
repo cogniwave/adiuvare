@@ -34,12 +34,12 @@
 
     <v-row>
       <v-col cols="2">
-        <ad-avatar :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail" />
+        <app-avatar :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail" />
 
         <div v-if="currOrg.contacts?.length">
           <h6>{{ t("orgs.contact") }}</h6>
 
-          <ad-contacts-list :contacts="currOrg.contacts" bg-color="transparent" />
+          <app-contacts-list :contacts="currOrg.contacts" bg-color="transparent" />
         </div>
 
         <div v-if="currOrg.address">
@@ -48,7 +48,7 @@
           <span>
             {{ currOrg.address }}
 
-            <ad-external-link :href="`https://www.google.com/maps/place/${currOrg.address.replace(' ', '+')}`" />
+            <app-external-link :href="`https://www.google.com/maps/place/${currOrg.address.replace(' ', '+')}`" />
           </span>
         </div>
 
@@ -58,7 +58,7 @@
           <span>
             {{ currOrg.website }}
 
-            <ad-external-link :href="currOrg.website" />
+            <app-external-link :href="currOrg.website" />
           </span>
         </div>
 
@@ -86,9 +86,9 @@
 
 <script lang="ts" setup>
   import { useOrganizations } from "app/store/organizations";
-  import AdAvatar from "app/components/common/AdAvatar.vue";
-  import AdExternalLink from "app/components/common/AdExternalLink.vue";
-  import AdContactsList from "app/components/contacts/AdContactsList.vue";
+  import AppAvatar from "app/components/common/AppAvatar.vue";
+  import AppExternalLink from "app/components/common/AppExternalLink.vue";
+  import AppContactsList from "app/components/contacts/AppContactsList.vue";
 
   import type { User } from "shared/types/user";
 

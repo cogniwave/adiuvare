@@ -21,14 +21,14 @@
   </suspense>
 
   <div v-if="date" class="time-group mt-2">
-    <ad-post-schedule-recurring-time :model-value="times" @update:model-value="onTimesUpdate" />
+    <app-post-schedule-recurring-time :model-value="times" @update:model-value="onTimesUpdate" />
   </div>
 </template>
 
 <script setup lang="ts">
   import dayjs, { type Dayjs } from "shared/services/dayjs.service";
   import { required, validDate, futureDate } from "app/utils/validators";
-  import AdPostScheduleRecurringTime from "./AdPostScheduleRecurringTime.vue";
+  import AppPostScheduleRecurringTime from "./AppPostScheduleRecurringTime.vue";
   import { getNewGroupTimes } from "app/utils/scheduling";
   import { usePosts } from "app/store/posts";
   import type { Post, ScheduleTime, SpecificSchedule } from "shared/types/post";

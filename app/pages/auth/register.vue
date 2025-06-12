@@ -1,5 +1,5 @@
 <template>
-  <ad-form-card ref="form" :title="t('register.title')" :show-form="!userCreated" @submit="submit">
+  <app-form-card ref="form" :title="t('register.title')" :show-form="!userCreated" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="name"
@@ -118,11 +118,11 @@
     <template #content>
       <p class="mb-3">{{ t("register.successMessage") }}</p>
     </template>
-  </ad-form-card>
+  </app-form-card>
 </template>
 
 <script setup lang="ts">
-  import AdFormCard from "app/components/common/AdFormCard.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import { required, isValidEmail, isValidPassword, match } from "app/utils/validators";
   import { useNotify } from "app/store/notify";
   import { useFormErrors } from "app/composables/formErrors";
@@ -150,7 +150,7 @@
   const newsletter = ref<boolean>(false);
   const userCreated = ref<boolean>(false);
 
-  const form = ref<InstanceType<typeof AdFormCard>>();
+  const form = ref<InstanceType<typeof AppFormCard>>();
   const submitting = ref<boolean>(false);
 
   const submit = async () => {

@@ -1,5 +1,5 @@
 <template>
-  <ad-confirm-dialog
+  <app-confirm-dialog
     :model-value="deleteDialogVisible"
     :title="t('posts.confirm.deleteTitle')"
     :confirm-text="t('posts.confirm.deleteConfirm')"
@@ -11,7 +11,7 @@
     <i18n-t scope="global" keypath="posts.confirm.deleteDescription" tag="span">
       <b class="font-italic">{{ currPost.title }}</b>
     </i18n-t>
-  </ad-confirm-dialog>
+  </app-confirm-dialog>
 </template>
 
 <script setup lang="ts">

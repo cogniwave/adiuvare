@@ -26,7 +26,7 @@
               </h3>
 
               <div class="d-flex flex-column">
-                <ad-post-need v-for="need in post.needs" :key="need" :need="need" />
+                <app-post-need v-for="need in post.needs" :key="need" :need="need" />
               </div>
             </section>
 
@@ -44,7 +44,7 @@
       <v-divider />
 
       <v-card-actions>
-        <ad-location :locations="$props.post.locations" />
+        <app-location :locations="$props.post.locations" />
 
         <v-spacer />
 
@@ -114,7 +114,7 @@
                   />
                 </template>
 
-                <ad-contacts-list :contacts="post.contacts" />
+                <app-contacts-list :contacts="post.contacts" />
               </v-menu>
             </template>
           </v-list>
@@ -126,9 +126,9 @@
 
 <script setup lang="ts">
   import { usePosts } from "app/store/posts";
-  import AdPostNeed from "app/components/posts/AdPostNeed.vue";
-  import AdLocation from "app/components/common/AdLocation.vue";
-  import AdContactsList from "app/components/contacts/AdContactsList.vue";
+  import AppPostNeed from "app/components/posts/AppPostNeed.vue";
+  import AppLocation from "app/components/common/AppLocation.vue";
+  import AppContactsList from "app/components/contacts/AppContactsList.vue";
   import type { Post, PostDeletePayload, PostStateTogglePayload } from "shared/types/post";
   import { shortenText } from "app/utils";
 
