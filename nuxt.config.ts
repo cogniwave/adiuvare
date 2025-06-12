@@ -130,7 +130,7 @@ export default defineNuxtConfig({
     blob: true,
     database: true,
     bindings: {
-      compatibilityFlags: ["nodejs_compat"],
+      compatibilityFlags: ["nodejs_compat_v2"],
       compatibilityDate: "2025-02-21",
       // observability: {
       //   logs: true,
