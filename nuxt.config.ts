@@ -13,7 +13,7 @@ const alias = {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // base configs
-  compatibilityDate: "2025-02-21",
+  compatibilityDate: "2025-03-01",
   future: { compatibilityVersion: 4 },
 
   devtools: { enabled: process.env.NODE_ENV === "development" },
@@ -130,11 +130,10 @@ export default defineNuxtConfig({
     blob: true,
     database: true,
     bindings: {
-      compatibilityFlags: ["nodejs_compat_v2"],
-      compatibilityDate: "2025-02-21",
-      // observability: {
-      //   logs: true,
-      // },
+      compatibilityFlags: ["nodejs_compat"],
+      observability: {
+        logs: true,
+      },
     },
   },
 
