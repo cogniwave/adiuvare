@@ -93,7 +93,6 @@
   import type { User } from "shared/types/user";
 
   const { currOrg, setOrg } = useOrganizations();
-  const $router = useRouter();
   const $route = useRoute();
   const { t } = useI18n();
 

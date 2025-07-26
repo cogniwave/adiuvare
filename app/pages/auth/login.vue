@@ -37,15 +37,17 @@
     <template #actions>
       <!-- desktop -->
       <template v-if="mdAndUp">
-        <nuxt-link to="register" class="text-secondary">
-          {{ t("register.link") }}
-        </nuxt-link>
+        <div class="d-flex" :class="{ 'flex-column w-100': md }">
+          <nuxt-link to="register" class="text-secondary">
+            {{ t("register.link") }}
+          </nuxt-link>
 
-        <small class="text-secondary mt-1">|</small>
+          <small v-if="!md" class="text-secondary mt-1">|</small>
 
-        <nuxt-link to="reset-password" class="text-secondary mr-auto">
-          {{ t("reset.link") }}
-        </nuxt-link>
+          <nuxt-link to="reset-password" class="text-secondary mr-auto">
+            {{ t("reset.link") }}
+          </nuxt-link>
+        </div>
 
         <v-btn type="submit" variant="flat" :loading="submitting">
           {{ t("login.title") }}
@@ -86,10 +88,9 @@
   const { errors, handleErrors, clearErrors } = useFormErrors();
   const { notifyInfo, notifyWarning } = useNotify();
   const $route = useRoute();
-  const $router = useRouter();
   const { fetch } = useUserSession();
   const { switchVisibility, password, passwordFieldType, visibilityIcon } = usePassword();
-  const { mdAndUp } = useDisplay();
+  const { mdAndUp, md } = useDisplay();
 
   const email = ref<string>("");
   const form = ref<InstanceType<typeof AppFormCard>>();
@@ -99,14 +100,14 @@
     if ($route.query?.requireAuth) {
       notifyWarning(t("login.actionRequiresAuth"));
 
-      $router.replace({
+      navigateTo({
         path: "/login",
         query: { ...$route.query, requireAuth: undefined },
       });
     } else if ($route.query?.passwordReset) {
       notifyInfo(t("login.passwordReset"));
 
-      $router.replace({
+      navigateTo({
         path: "/login",
         query: { ...$route.query, passwordReset: undefined },
       });
@@ -132,8 +133,9 @@
         body: { email: email.value, password: password.value },
       });
       // fetches user info
-      fetch();
-      navigateTo({ path: "/" });
+      fetch().then(() => {
+        navigateTo({ path: "" });
+      });
     } catch (exc: unknown) {
       handleErrors(exc);
       submitting.value = false;

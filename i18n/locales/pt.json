@@ -45,6 +45,8 @@
     "password": "Palavra-passe",
     "passwordDuplicateKey": "Palavras-passe",
     "passwordRepeat": "Repita a palavra-passe",
+    "belongToOrg": "Faço parte de uma organização",
+    "chooseOrg": "A que organização pertence ?",
     "post": {
       "title": "Título",
       "titlePlaceholder": "E.g.: Precisa-se voluntário",
@@ -348,6 +350,7 @@
   },
   "$vuetify": {
     "loading": "A carregar...",
-    "open": "Abrir"
+    "open": "Abrir",
+    "noText": "Nenhum resultado encontrado"
   }
 }

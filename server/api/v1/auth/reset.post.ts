@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { z } from "zod/v4";
 
 import { getUserById, updateUser } from "server/database/users";
-import { getValidatedInput } from "server/utils/request";
+import { validateEvent } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 import { translate } from "server/utils/i18n";
 
@@ -10,8 +10,8 @@ import { emailSchema } from "shared/schemas/common.schema";
 
 const schema = z.object({ email: emailSchema });
 
-export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<z.infer<typeof schema>>(event, schema);
+export default defineWrappedResponseHandler(async (event) => {
+  const body = await validateEvent<z.infer<typeof schema>>(event, schema);
 
   const user = await getUserById(body.email);
 

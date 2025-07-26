@@ -194,7 +194,6 @@
   const { openDialog: _openReportDialog } = useReport();
   const { t } = useI18n();
   const { filterLocations, filteringLocations, locations, noDataText } = useLocations();
-  const $router = useRouter();
 
   const search = ref<string | undefined>();
   const reportDialogRendered = ref(false);
@@ -298,7 +297,7 @@
 
     page.value = 1;
 
-    $router.push({ path: "/", query: { page: 1, ...filter.value } });
+    navigateTo({ path: "", query: { page: 1, ...filter.value } });
     refresh();
   };
 
@@ -320,7 +319,7 @@
     location.value = undefined;
     need.value = undefined;
 
-    $router.push({ path: "/", query: {} });
+    navigateTo({ path: "", query: {} });
   };
 
   function setupPage() {
@@ -375,7 +374,7 @@
   }
 
   watch(page, (pg) => {
-    $router.push({ path: "/", query: { ...($router.currentRoute.value.query || {}), page: pg } });
+    navigateTo({ path: "", query: { ...($route.query || {}), page: pg } });
   });
 </script>
 

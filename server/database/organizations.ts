@@ -1,12 +1,24 @@
-import { and, asc, count, eq } from "drizzle-orm";
+import { and, asc, count, eq, or } from "drizzle-orm";
 
 import { useDrizzle } from ".";
 import { organizations } from "./dbSchemas/organizations.db.schema";
-import { contactsGrouping, formatFromDb as fromDb } from "./utils";
+import { contactsGrouping, formatFromDb as fromDb, fuzzySearch } from "./utils";
 import type { Organization } from "shared/types/organization";
 import { contacts } from "./dbSchemas/contacts.db.schema";
 
 const formatFromDb = fromDb(["contacts"]);
+
+export const searchOrgs = async (name: string, page: number) => {
+  const result = await useDrizzle()
+    .select({ id: organizations.id, name: organizations.name })
+    .from(organizations)
+    .where(or(fuzzySearch(organizations.name, name), fuzzySearch(organizations.normalized_name, name)))
+    .orderBy(asc(organizations.name))
+    .limit(10)
+    .offset(page * 10);
+
+  return result.map(formatFromDb<Organization[]>) || [];
+};
 
 export const getOrgs = async () => {
   const result = await useDrizzle()

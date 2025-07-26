@@ -25,7 +25,7 @@ const mapIfNeed = (filter: string) => {
   return filter;
 };
 
-export default defineEventHandler(async (event) => {
+export default defineWrappedResponseHandler(async (event) => {
   const qs = getQuery<{ filter: string } | undefined>(event);
 
   let filter: PostFilter | undefined;

@@ -18,3 +18,8 @@ export const organizationCategories = [
 export type OrganizationCategory = (typeof organizationCategories)[number];
 
 export type Organization = z.infer<typeof organizationSchema>;
+
+export interface OrganizationSearchResult {
+  id: string;
+  name: string;
+}

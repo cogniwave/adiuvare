@@ -9,6 +9,6 @@ export default defineNuxtRouteMiddleware(() => {
   }
 
   if (!canCreatePost.value) {
-    return navigateTo("/");
+    return navigateTo("");
   }
 });

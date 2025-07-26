@@ -176,7 +176,6 @@
   const { errors, handleErrors, clearErrors } = useFormErrors();
   const { currPost, posts, setPost } = usePosts<Post>();
   const $route = useRoute();
-  const $router = useRouter();
 
   const _slug = $route.params.slug as string;
 
@@ -285,7 +284,7 @@
         posts.value = posts.value.map((p) => (p.id === currPost.value.id ? currPost.value : p));
       }
 
-      $router.push(`/posts/${_slug}`);
+      navigateTo(`/posts/${_slug}`);
       notifySuccess(t("posts.updated"));
     } catch (errs: unknown) {
       handleErrors(errs);
@@ -299,7 +298,7 @@
     updatePost("slug", slug.value);
   };
 
-  const goBack = () => $router.push(`/posts/${_slug}/`);
+  const goBack = () => navigateTo(`/posts/${_slug}/`);
 
   watch(
     () => error.value,

@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     if (user.value.slug !== to.params.slug) {
-      return navigateTo("/");
+      return navigateTo("");
     }
   };
 

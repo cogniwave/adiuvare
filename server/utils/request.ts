@@ -1,25 +1,33 @@
-import type { z } from "zod/v4";
+import { z } from "zod/v4";
 import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
 import { ValidationError, type Errors } from "shared/exceptions";
 import { translate } from "server/utils/i18n";
 import { isH3Error } from "shared/types/guards";
 
-export const getValidatedInput = async <T extends Record<string, any>>(
+export const validateEvent = async <T extends Record<string, any>>(
   event: H3Event<EventHandlerRequest>,
   schema: z.ZodObject,
 ) => {
-  let body: T;
-  try {
-    body = await readBody(event);
-  } catch (error: unknown) {
-    throw createError(error as H3Error);
+  let body = {};
+
+  if (["POST", "PATCH"].includes(event.method)) {
+    try {
+      body = await readBody(event);
+    } catch (error: unknown) {
+      throw createError(error as H3Error);
+    }
   }
 
-  const { data, error } = schema.safeParse(body, { reportInput: true });
+  const query: Record<string, string> = {};
+  Object.entries(getQuery(event)).forEach(([key, val]) => {
+    // @ts-expect-error todo: fix
+    query[key] = val;
+  });
 
+  const { data, error } = schema.safeParse({ ...body, ...getRouterParams(event), ...query }, { reportInput: true });
   if (error) {
-    console.log(error.issues);
+    console.log(error.issues, z.treeifyError(error));
     const errors: Errors = {};
     // error.issues.forEach(({ path, message }) => {
     //   errors[path] = translate(message, context || {});

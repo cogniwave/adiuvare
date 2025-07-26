@@ -11,9 +11,7 @@
 
     <app-snackbar />
 
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <NuxtLayout />
 
     <app-footer />
   </v-app>

@@ -1,5 +1,6 @@
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { contacts } from "./dbSchemas/contacts.db.schema";
+import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
 // sqlite doesn't support json format, anything that's json is actually stored as string
 // for some reason drizzle doesn't really convert it properly to and from json, so we
@@ -49,4 +50,10 @@ export const formatFromDb =
 
 export const contactsGrouping = () => {
   return sql`'[' || GROUP_CONCAT('{"contact":' || ${contacts.contact} || ',"type":"' || ${contacts.type} || '"}', ',') || ']'`;
+};
+
+export const fuzzySearch = (field: SQLiteColumn, value: string) => {
+  const fuzzy = `%${value}%`;
+
+  return eq(field, sql`lower(${field}) like ${fuzzy}`);
 };

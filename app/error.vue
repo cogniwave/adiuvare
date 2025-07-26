@@ -19,7 +19,7 @@
         </template>
       </div>
 
-      <v-btn color="primary" flat class="d-flex mx-auto" @click="$router.push('/')">
+      <v-btn color="primary" flat class="d-flex mx-auto" @click="navigateTo('')">
         {{ $t("errorPage.backButton") }}
       </v-btn>
     </NuxtLayout>
@@ -32,8 +32,6 @@
   defineProps({
     error: { type: Object as PropType<RequestError>, required: true },
   });
-
-  const $router = useRouter();
 
   const isDev = ref(import.meta.dev);
 </script>

@@ -64,9 +64,39 @@
         </template>
       </v-text-field>
 
-      <v-checkbox v-model:model-value="privacyPolicy" class="mt-10 mb-2" hide-details="auto" :rules="[required(t)]">
+      <v-checkbox
+        v-model:model-value="belongToOrg"
+        :label="t('form.belongToOrg')"
+        class="mt-6 form-checkbox"
+        hide-details
+      />
+
+      <v-autocomplete
+        v-if="belongToOrg"
+        v-model:model-value="org"
+        prepend-icon="fa-building"
+        class="mt-6 mx-5"
+        hide-details
+        no-filter
+        :label="t('form.chooseOrg')"
+        :auto-select-first="false"
+        :items="orgs"
+        :loading="searchingOrgs"
+        :rules="[required(t)]"
+        @update:search="searchOrgs"
+      />
+
+      <v-divider class="mt-4" />
+
+      <v-checkbox
+        v-model:model-value="privacyPolicy"
+        class="mt-4 mb-2"
+        hide-details
+        :rules="[required(t)]"
+        validate-on="input"
+      >
         <template #label>
-          <i18n-t scope="global" keypath="form.privacyPolicy" tag="label" for="form.privacyPolicyLink">
+          <i18n-t scope="global" keypath="form.privacyPolicy" tag="v-label" for="form.privacyPolicyLink">
             <a
               href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/pp-UDhf9fo8lpJMQUwNJeGnKkCpRyPGOe.pdf"
               target="_blank"
@@ -77,9 +107,9 @@
         </template>
       </v-checkbox>
 
-      <v-checkbox v-model:model-value="eula" class="mb-2" hide-details="auto" :rules="[required(t)]">
+      <v-checkbox v-model:model-value="eula" class="mb-2" hide-details :rules="[required(t)]" validate-on="input">
         <template #label>
-          <i18n-t scope="global" keypath="form.eula" tag="label">
+          <i18n-t scope="global" keypath="form.eula" tag="v-label">
             <a
               href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/eula-0aoyOz5t1i4QBJVcoh2BtkjWI7j73r.pdf"
               target="_blank"
@@ -90,7 +120,7 @@
         </template>
       </v-checkbox>
 
-      <v-checkbox v-model:model-value="newsletter" hide-details="auto" :label="t('form.subscribeNewsletter')" />
+      <v-checkbox v-model:model-value="newsletter" hide-details :label="t('form.subscribeNewsletter')" />
     </template>
 
     <template #actions>
@@ -129,6 +159,7 @@
   import { usePassword } from "app/composables/password";
 
   import type { User } from "shared/types/user";
+  import type { OrganizationSearchResult } from "shared/types/organization";
 
   definePageMeta({
     middleware: "unauthed-server",
@@ -142,16 +173,20 @@
   const { xs } = useDisplay();
   const { notifySuccess } = useNotify();
 
-  const email = ref<string>("");
-  const email2 = ref<string>("");
-  const name = ref<string>("");
-  const privacyPolicy = ref<string>("");
-  const eula = ref<string>("");
-  const newsletter = ref<boolean>(false);
-  const userCreated = ref<boolean>(false);
+  const email = ref("");
+  const email2 = ref("");
+  const name = ref("");
+  const privacyPolicy = ref("");
+  const eula = ref("");
+  const newsletter = ref(false);
+  const userCreated = ref(false);
+  const belongToOrg = ref(false);
+  const org = ref("");
+  const orgs = ref<OrganizationSearchResult[]>();
+  const searchingOrgs = ref(false);
 
   const form = ref<InstanceType<typeof AppFormCard>>();
-  const submitting = ref<boolean>(false);
+  const submitting = ref(false);
 
   const submit = async () => {
     clearErrors();
@@ -174,6 +209,7 @@
           password: password.value,
           name: name.value,
           newsletter: newsletter.value,
+          ...(belongToOrg.value && { orgId: org.value }),
         },
       });
 
@@ -185,10 +221,33 @@
       submitting.value = false;
     }
   };
+
+  const searchOrgs = async (term: string) => {
+    if (term?.length < 3) {
+      return;
+    }
+
+    searchingOrgs.value = true;
+    try {
+      orgs.value = await $fetch<OrganizationSearchResult[]>("/api/v1/organizations", {
+        query: { origin: "registration", name: term },
+      });
+    } catch (err) {
+      handleErrors(err);
+    }
+
+    searchingOrgs.value = false;
+  };
 </script>
 
 <style scoped lang="scss">
   :deep(.v-checkbox) {
+    --v-selection-control-size: 16px;
+
+    .v-label {
+      margin-left: var(--v-selection-control-size);
+    }
+
     .v-selection-control {
       min-height: 0 !important;
     }

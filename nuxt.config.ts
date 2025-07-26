@@ -19,7 +19,6 @@ export default defineNuxtConfig({
   future: { compatibilityVersion: 4 },
 
   devtools: { enabled: process.env.NODE_ENV === "development" },
-  debug: process.env.NODE_ENV === "development",
 
   ssr: true,
   sourcemap: { server: "hidden", client: "hidden" },
@@ -115,7 +114,7 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@nuxt/image",
     "dayjs-nuxt",
-    "nuxt-security",
+    // "nuxt-security",
     "nuxt-lazyload-files",
   ],
 
@@ -233,12 +232,15 @@ export default defineNuxtConfig({
         global: {
           density: "comfortable",
         },
+        VList: {
+          background: "background",
+        },
         VListItem: {
           activeColor: "accent",
         },
         VCard: {
           background: "background",
-          rounded: "xl",
+          rounded: "lg",
         },
         VIcon: {
           size: "x-small",
@@ -248,7 +250,7 @@ export default defineNuxtConfig({
           hideDetails: "auto",
           validateOn: "blur",
           variant: "underlined",
-          rounded: "lx",
+          rounded: "lg",
           flat: true,
         },
         VTextarea: {

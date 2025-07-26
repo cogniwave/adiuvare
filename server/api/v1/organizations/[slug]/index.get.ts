@@ -1,7 +1,7 @@
 import { getOrgBySlug } from "server/database/organizations";
 import { sanitizeInput } from "server/utils/request";
 
-export default defineEventHandler(async (event) => {
+export default defineWrappedResponseHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
   const slug = sanitizeInput(getRouterParam(event, "slug"));
   const org = await getOrgBySlug(slug);

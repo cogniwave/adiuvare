@@ -1,12 +1,18 @@
 <template>
   <section class="d-flex align-center justify-center h-100 w-100">
-    <v-card class="w-75">
+    <v-card class="w-75" rounded="lg">
       <v-card-title tag="h2" class="bg-background">
         {{ title }}
       </v-card-title>
 
       <v-card-item v-if="!loading">
-        <v-form v-if="showForm" ref="form" class="px-5 pt-4 mx-auto" validate-on="submit lazy" @submit.prevent="submit">
+        <v-form
+          v-if="showForm"
+          ref="form"
+          class="px-10 pt-4 mx-auto"
+          validate-on="submit lazy"
+          @submit.prevent="submit"
+        >
           <slot name="form" />
 
           <v-divider class="mt-4" />

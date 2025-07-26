@@ -1,14 +1,14 @@
 import type { z } from "zod/v4";
 
 import { getAuthUser } from "server/database/users";
-import { getValidatedInput, defineWrappedResponseHandler } from "server/utils/request";
+import { validateEvent, defineWrappedResponseHandler } from "server/utils/request";
 import { translate } from "server/utils/i18n";
 
 import type { TokenUser } from "shared/types/user";
 import { loginSchema } from "shared/schemas/user.schema";
 
 export default defineWrappedResponseHandler(async (event) => {
-  const { email, password } = await getValidatedInput<z.infer<typeof loginSchema>>(event, loginSchema);
+  const { email, password } = await validateEvent<z.infer<typeof loginSchema>>(event, loginSchema);
 
   const user = await getAuthUser(email);
 

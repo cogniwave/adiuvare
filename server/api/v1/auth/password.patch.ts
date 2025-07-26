@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import { updatePassword } from "server/database/users";
-import { getValidatedInput } from "server/utils/request";
+import { validateEvent } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 
 import { translate } from "server/utils/i18n";
@@ -12,8 +12,8 @@ const schema = z.object({ token: tokenSchema, email: emailSchema, password: pass
 
 type PasswordUpdatePayload = z.infer<typeof schema>;
 
-export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<PasswordUpdatePayload>(event, schema);
+export default defineWrappedResponseHandler(async (event) => {
+  const body = await validateEvent<PasswordUpdatePayload>(event, schema);
 
   if (dayjs(body.token.split("-")[1]).isAfter(dayjs().add(12, "hours"))) {
     throw createError({

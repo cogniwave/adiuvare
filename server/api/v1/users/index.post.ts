@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 
 import { addUser } from "server/database/users";
 import { sendEmail, subscribeToNewsletter } from "server/services/brevo";
-import { getValidatedInput } from "server/utils/request";
+import { validateEvent } from "server/utils/request";
 import { notifyNewUser } from "server/services/slack";
 import type { CreateUserPayload, TokenUser } from "shared/types/user";
 import { translate } from "server/utils/i18n";
@@ -35,7 +35,7 @@ const register = async (payload: CreateUserPayload): Promise<{ user: TokenUser; 
 };
 
 export default defineWrappedResponseHandler(async (event) => {
-  const body = await getValidatedInput<z.infer<typeof schema>>(event, schema);
+  const body = await validateEvent<z.infer<typeof schema>>(event, schema);
 
   const { token, user } = await register({ name: body.name, password: body.password, email: body.email });
 

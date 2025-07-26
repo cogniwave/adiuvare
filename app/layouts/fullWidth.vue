@@ -7,7 +7,7 @@
 
       <!-- <v-col lg="9" offset-md="2" md="8" offset-sm="1" sm="10" offset="0" cols="12"> -->
       <v-col class="ml-5" cols="9" md="8">
-        <slot />
+        <NuxtPage />
       </v-col>
     </v-row>
   </v-main>

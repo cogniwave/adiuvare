@@ -145,6 +145,10 @@
 
       <v-spacer />
 
+      <v-btn variant="text" color="secondary" :disabled="submitting">
+        {{ t("form.cancel") }}
+      </v-btn>
+
       <v-btn type="submit" variant="flat" color="primary" :loading="submitting">
         {{ t("form.user.update") }}
       </v-btn>
@@ -176,7 +180,6 @@
 
   const { user: auth, clear } = useUserSession();
   const { t } = useI18n();
-  const $router = useRouter();
   const { users, currUser, setUser } = useUsers();
   const { notifyError, notifySuccess } = useNotify();
   const { errors, handleErrors, clearErrors } = useFormErrors();
@@ -360,12 +363,14 @@
       }
 
       if (err.statusCode === 404) {
-        $router.push("/not-found");
+        navigateTo("/not-found");
       } else if (err.statusCode === 401) {
-        clear().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
+        clear().then(() => {
+          navigateTo({ path: "/login", query: { requireAuth: "true" } });
+        });
       } else {
         notifyError(t("errors.fetchUser"));
-        $router.push("/");
+        navigateTo("");
       }
     },
     { immediate: true },

@@ -162,6 +162,7 @@
   // const page = ref(setupPage());
   // const filter = ref<PostFilter | undefined>(setupQuery());
   const { status, error } = await useFetch<GetListResult<Organization[]>>("/api/v1/organizations", {
+    query: { origin: "orgs" },
     lazy: true,
     onResponse: ({ response }) => setOrgs(response._data || []),
   });

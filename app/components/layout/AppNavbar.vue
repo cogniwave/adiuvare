@@ -8,7 +8,7 @@
             aspect-ratio="1"
             width="78px"
             class="cursor-pointer mt-2"
-            @click="navigateTo('/')"
+            @click="navigateTo('')"
           />
         </div>
 

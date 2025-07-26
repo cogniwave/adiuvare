@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { sanitizeInput, validateEvent } from "server/utils/request";
 import { createPost } from "server/database/posts";
 import { notifyNewPost } from "server/services/slack";
 
@@ -7,7 +7,7 @@ import type { CreatePostPayload } from "shared/types/post";
 import { createPostSchema } from "shared/schemas/post.schema";
 
 export default defineProtectedRouteHandler(async (event) => {
-  const body = await getValidatedInput<CreatePostPayload>(event, createPostSchema);
+  const body = await validateEvent<CreatePostPayload>(event, createPostSchema);
 
   const result = await createPost({
     title: sanitizeInput(body.title),

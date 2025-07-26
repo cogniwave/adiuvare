@@ -4,7 +4,6 @@ import { isFetchError } from "shared/types/guards";
 export function useFormErrors() {
   const { t } = useI18n();
   const { notifyError, notifyWarning } = useNotify();
-  const $router = useRouter();
   const { clear } = useUserSession();
 
   const errors = ref<Record<string, string>>({});
@@ -16,7 +15,9 @@ export function useFormErrors() {
     }
 
     if (err.statusCode === 401) {
-      clear().then(() => $router.push({ path: "/login", query: { requireAuth: "true" } }));
+      clear().then(() => {
+        navigateTo({ path: "/login", query: { requireAuth: "true" } });
+      });
       return;
     }
 

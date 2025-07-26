@@ -9,7 +9,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .v-list-item {
+  :deep(.v-list-item) {
     transition: 200ms;
     margin-top: 4px;
     color: rgb(var(--v-theme-text));

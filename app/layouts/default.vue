@@ -6,12 +6,12 @@
       </v-col>
 
       <v-col offset-lg="1" lg="6" md="8">
-        <slot />
+        <NuxtPage />
       </v-col>
     </v-row>
 
     <v-container v-else fluid>
-      <slot />
+      <NuxtPage />
     </v-container>
   </v-main>
 </template>

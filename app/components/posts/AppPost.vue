@@ -144,7 +144,6 @@
     user: { type: String, required: true },
   });
 
-  const $router = useRouter();
   const { setPost } = usePosts();
 
   const desc = ref($props.post.description);
@@ -168,7 +167,7 @@
 
   const openPost = () => {
     setPost($props.post);
-    $router.push(`posts/${$props.post.slug}/edit`);
+    navigateTo(`posts/${$props.post.slug}/edit`);
   };
 </script>
 

@@ -1,4 +1,4 @@
-import { sqliteTable, text, uniqueIndex, integer, int } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, uniqueIndex, integer, int, index } from "drizzle-orm/sqlite-core";
 import { createId } from "@paralleldrive/cuid2";
 
 import type { OrganizationCategory } from "shared/types/organization";
@@ -9,6 +9,7 @@ export const organizations = sqliteTable(
   {
     id: text("id").primaryKey().unique().notNull().$defaultFn(createId),
     name: text("name").notNull(),
+    normalized_name: text("name").notNull(),
     category: text("category").default("unknown").$type<OrganizationCategory>(),
     slug: text("slug").unique(),
     createdAt: integer("created_at", { mode: "timestamp" })
@@ -26,5 +27,7 @@ export const organizations = sqliteTable(
   (organizations) => [
     uniqueIndex("org_slug_idx").on(organizations.slug),
     uniqueIndex("org_nipc_idx").on(organizations.nipc),
+    index("org_name").on(organizations.name),
+    index("org_normalized_name").on(organizations.normalized_name),
   ],
 );

@@ -62,7 +62,7 @@
 
   const logout = () => {
     clear();
-    navigateTo("/");
+    navigateTo("");
     notifySuccess(t("logoutSuccess"));
   };
 </script>
