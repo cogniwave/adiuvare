@@ -2,7 +2,7 @@ import pino from "pino";
 
 const logger = pino({
   level: process.env.LOG_LEVEL || "warn",
-  ...(process.env.NUXT_ENV === "development" && {
+  ...(process.env.NODE_ENV === "development" && {
     transport: {
       target: "pino-pretty",
       options: {

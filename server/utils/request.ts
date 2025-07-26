@@ -72,7 +72,7 @@ export const desanitizeInput = (input?: string | null) => {
 const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, error: unknown) => {
   createApp();
 
-  if (process.env.NUXT_ENV === "development") {
+  if (process.env.NODE_ENV === "development") {
     console.error(error);
   }
 

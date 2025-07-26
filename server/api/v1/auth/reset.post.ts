@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
         body2: translate("email.reset.body2"),
         buttonText: translate("email.reset.buttonText"),
         alternativeLinkText: translate("email.alternativeLinkText"),
-        link: `${process.env.APP_BASE_URL}/profile/password?token=${token}&email=${user.email}`,
+        link: `${process.env.BASE_URL}/profile/password?token=${token}&email=${user.email}`,
       });
     }
   }

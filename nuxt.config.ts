@@ -10,6 +10,8 @@ const alias = {
   public: fileURLToPath(new URL("./public", import.meta.url)),
 };
 
+const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // base configs
@@ -41,7 +43,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       brevoConversationId: process.env.BREVO_CONVO_ID,
-      baseUrl: process.env.BASE_URL || "http://localhost:3000",
+      baseAssetUrl: process.env.BASE_ASSET_URL,
+      baseUrl,
     },
   },
 
@@ -93,7 +96,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern-compiler",
+          // api: "modern-compiler",
           // additionalData: '@use "@/assets/scss/variables.scss";',
         },
       },
@@ -131,8 +134,7 @@ export default defineNuxtConfig({
     database: true,
     workers: true,
     bindings: {
-      compatibilityDate: "2025-03-01",
-      compatibilityFlags: ["nodejs_compat"],
+      compatibilityFlags: ["nodejs_compat_v2"],
       observability: { logs: true },
     },
   },
@@ -142,14 +144,12 @@ export default defineNuxtConfig({
     langDir: "./locales",
     defaultLocale: "pt-PT",
 
-    bundle: { optimizeTranslationDirective: false },
-
     locales: [
       { code: "pt-PT", iso: "pt-PT", file: "pt.json", name: "Português" },
       { code: "en-GB", iso: "en-GB", file: "en.json", name: "English" },
     ],
 
-    baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    baseUrl,
   },
 
   googleFonts: {
@@ -159,7 +159,12 @@ export default defineNuxtConfig({
   image: {
     quality: 100,
     loading: "lazy",
-    domains: [process.env.BASE_URL!],
+    domains: ["*"],
+    provider: "custom",
+
+    providers: {
+      custom: { provider: "app/providers/custom-provider.ts" },
+    },
   },
 
   vuetify: {

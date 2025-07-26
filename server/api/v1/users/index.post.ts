@@ -52,7 +52,7 @@ export default defineWrappedResponseHandler(async (event) => {
           body2: translate("email.accountConfirm.body2"),
           buttonText: translate("email.accountConfirm.buttonText"),
           alternativeLinkText: translate("email.alternativeLinkText"),
-          link: `${process.env.APP_BASE_URL}/confirmation?token=${token}&email=${user.email}`,
+          link: `${process.env.BASE_URL}/confirmation?token=${token}&email=${user.email}`,
         },
       ),
     () => notifyNewUser(user),

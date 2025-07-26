@@ -1,12 +1,4 @@
-import {
-  SendSmtpEmail,
-  TransactionalEmailsApi,
-  TransactionalEmailsApiApiKeys,
-  ContactsApi,
-  CreateContact,
-  ContactsApiApiKeys,
-  type HttpError,
-} from "@getbrevo/brevo";
+import { translate } from "server/utils/i18n";
 
 type Template = "userActionRequired" | "information";
 
@@ -21,24 +13,49 @@ const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
 };
 
 export const sendEmail = async (subject: string, to: Receiver, template: Template, data?: Record<string, string>) => {
-  const mailer = new SendSmtpEmail();
-
-  mailer.subject = subject;
-  mailer.to = [to];
-  mailer.templateId = TEMPLATE_NAME_TO_ID[template];
-  mailer.params = data;
-  mailer.sender = {
-    name: "Adiuvare",
-    email: "noreply@adiuvare.pt",
+  const payload = {
+    sender: {
+      name: "Adiuvare",
+      email: "noreply@adiuvare.pt",
+    },
+    to: [
+      {
+        email: to.email,
+        name: to.name || "",
+      },
+    ],
+    subject: translate(subject),
+    textContent: translate("emails.body.text"),
+    templateId: TEMPLATE_NAME_TO_ID[template],
+    params: {
+      ...data,
+      footer: {
+        privacyLink: translate("emails.footer.privacyLink"),
+        cancelSub: translate("emails.footer.cancelSub"),
+      },
+    },
   };
 
-  const api = new TransactionalEmailsApi();
-  api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
-
   try {
-    return await api.sendTransacEmail(mailer);
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "api-key": process.env.BREVO_TOKEN as string,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.json();
+      console.error(errorBody);
+      throw new Error(response.statusText);
+    }
+    const a = await response.json();
+    return a;
   } catch (error) {
-    console.log((error as HttpError).body);
+    console.error(error);
     throw error;
   }
 };
@@ -50,22 +67,23 @@ export const sendEmail = async (subject: string, to: Receiver, template: Templat
 //   orgNewsletter: Number(process.env.ORG_NEWSLETTER_ID),
 // };
 
-export const subscribeToNewsletter = async (email: string) => {
-  const contact = new CreateContact();
-  const api = new ContactsApi();
+export const subscribeToNewsletter = async (_email: string) => {
+  return;
+  // const contact = new CreateContact();
+  // const api = new ContactsApi();
 
-  contact.email = email;
-  contact.listIds = [Number(process.env.NEWSLETTER_ID)];
+  // contact.email = email;
+  // contact.listIds = [Number(process.env.NEWSLETTER_ID)];
 
-  api.setApiKey(ContactsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
+  // api.setApiKey(ContactsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
 
-  try {
-    await api.createContact(contact);
-  } catch (error) {
-    if ((error as HttpError).body.code === "duplicate_parameter") {
-      return;
-    }
+  // try {
+  //   await api.createContact(contact);
+  // } catch (error) {
+  //   if ((error as HttpError).body.code === "duplicate_parameter") {
+  //     return;
+  //   }
 
-    throw error;
-  }
+  //   throw error;
+  // }
 };

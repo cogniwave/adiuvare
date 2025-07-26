@@ -1,7 +1,8 @@
 namespace NodeJS {
   interface ProcessEnv {
-    APP_BASE_URL: string;
-    NUXT_ENV: "development" | "production";
+    BASE_URL: string;
+    BASE_ASSET_URL: string;
+    NODE_ENV: "development" | "preview" | "production";
     NUXT_SESSION_PASSWORD: string;
     BREVO_CONVO_ID: string;
     BREVO_API_KEY: string;
