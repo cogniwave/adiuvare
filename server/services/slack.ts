@@ -4,13 +4,10 @@ import type { TokenUser } from "shared/types/user";
 import logger from "server/utils/logger";
 
 const sendToSlack = async (message: string) => {
-  const webhook = process.env.SLACK_WEBHOOK_URL;
+  const webhook = import.meta.env.SLACK_WEBHOOK_URL;
 
   if (!webhook) {
-    if (process.env.NODE_ENV === "production") {
-      logger.error("SLACK_WEBHOOK NOT DEFINED");
-    }
-
+    logger.error("SLACK_WEBHOOK NOT DEFINED");
     return;
   }
 

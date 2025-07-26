@@ -51,7 +51,7 @@ export const addUser = async (payload: CreateUserPayload, token: string): Promis
       type: "user",
       slug: `${payload.email.split("@")[0]}-${nanoid()}`,
       token,
-      verified: process.env.NODE_ENV === "development",
+      verified: import.meta.env.NODE_ENV === "development",
     })
     .returning({
       id: users.id,

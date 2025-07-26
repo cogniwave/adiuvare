@@ -8,8 +8,8 @@ interface Receiver {
 }
 
 const TEMPLATE_NAME_TO_ID: Record<Template, number> = {
-  userActionRequired: Number(process.env.USER_ACTION_REQUIRED_TEMPLATE_ID),
-  information: Number(process.env.INFORMATION_TEMPLATE_ID),
+  userActionRequired: Number(import.meta.env.USER_ACTION_REQUIRED_TEMPLATE_ID),
+  information: Number(import.meta.env.INFORMATION_TEMPLATE_ID),
 };
 
 export const sendEmail = async (subject: string, to: Receiver, template: Template, data?: Record<string, string>) => {
@@ -42,7 +42,7 @@ export const sendEmail = async (subject: string, to: Receiver, template: Templat
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "api-key": process.env.BREVO_TOKEN as string,
+        "api-key": import.meta.env.BREVO_TOKEN as string,
       },
       body: JSON.stringify(payload),
     });
@@ -63,8 +63,8 @@ export const sendEmail = async (subject: string, to: Receiver, template: Templat
 // export type NewsletterType = "newsletter" | "orgNewsletter";
 
 // const NEWSLETTER_TO_ID: Record<NewsletterType, number> = {
-//   newsletter: Number(process.env.NEWSLETTER_ID),
-//   orgNewsletter: Number(process.env.ORG_NEWSLETTER_ID),
+//   newsletter: Number(import.meta.env.NEWSLETTER_ID),
+//   orgNewsletter: Number(import.meta.env.ORG_NEWSLETTER_ID),
 // };
 
 export const subscribeToNewsletter = async (_email: string) => {
@@ -73,9 +73,9 @@ export const subscribeToNewsletter = async (_email: string) => {
   // const api = new ContactsApi();
 
   // contact.email = email;
-  // contact.listIds = [Number(process.env.NEWSLETTER_ID)];
+  // contact.listIds = [Number(import.meta.env.NEWSLETTER_ID)];
 
-  // api.setApiKey(ContactsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
+  // api.setApiKey(ContactsApiApiKeys.apiKey, import.meta.env.BREVO_API_KEY!);
 
   // try {
   //   await api.createContact(contact);

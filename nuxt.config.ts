@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   future: { compatibilityVersion: 4 },
 
   devtools: { enabled: process.env.NODE_ENV === "development" },
-  // debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === "development",
 
   ssr: true,
   sourcemap: { server: "hidden", client: "hidden" },
@@ -134,7 +134,7 @@ export default defineNuxtConfig({
     database: true,
     workers: true,
     bindings: {
-      compatibilityFlags: ["nodejs_compat_v2"],
+      compatibilityFlags: ["nodejs_compat"],
       observability: { logs: true },
     },
   },
