@@ -127,7 +127,11 @@
     </v-expand-transition> -->
 
     <section>
-      <app-org-list-item v-for="org in orgs" :key="org.slug" :org="org" />
+      <v-row>
+        <v-col v-for="org in orgs" :key="org.slug" md="5" offset-md="1" lg="4" sm="12">
+          <app-org-list-item :org="org" />
+        </v-col>
+      </v-row>
     </section>
   </template>
 </template>
@@ -164,7 +168,8 @@
   const { status, error } = await useFetch<GetListResult<Organization[]>>("/api/v1/organizations", {
     query: { origin: "orgs" },
     lazy: true,
-    onResponse: ({ response }) => setOrgs(response._data || []),
+    responseType: "json",
+    onResponse: ({ response }) => setOrgs(response._data),
   });
 
   const loading = computed(() => status.value === "pending");

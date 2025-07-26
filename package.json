@@ -43,6 +43,7 @@
     "@nuxtjs/i18n": "^10.0.3",
     "@types/eslint": "^9",
     "@typescript-eslint/parser": "^8.38.0",
+    "csv-parse": "^6.1.0",
     "dayjs-nuxt": "2.1.11",
     "drizzle-kit": "^0.31.4",
     "eslint": "~9.32.0",

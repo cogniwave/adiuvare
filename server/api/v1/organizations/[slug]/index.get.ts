@@ -22,6 +22,6 @@ export default defineWrappedResponseHandler(async (event) => {
     postalCode: desanitizeInput(org.postalCode),
     city: desanitizeInput(org.city),
     district: desanitizeInput(org.district),
-    contacts: org.contacts ? org.contacts.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) })) : [],
+    contacts: org.contacts?.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) })) || [],
   };
 });

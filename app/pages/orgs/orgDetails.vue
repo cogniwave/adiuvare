@@ -33,16 +33,16 @@
     </div>
 
     <v-row>
-      <v-col cols="2">
-        <app-avatar :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail" />
+      <v-col md="4" cols="3">
+        <app-avatar :alt="t('posts.logoAlt')" :src="currOrg.photo" :lazy-src="currOrg.photoThumbnail" size="128" />
 
-        <div v-if="currOrg.contacts?.length">
+        <div v-if="currOrg.contacts?.length" class="mt-5">
           <h6>{{ t("orgs.contact") }}</h6>
 
-          <app-contacts-list :contacts="currOrg.contacts" bg-color="transparent" />
+          <app-contacts-list :contacts="currOrg.contacts" />
         </div>
 
-        <div v-if="currOrg.address">
+        <div v-if="currOrg.address" class="mt-5">
           <h6>{{ t("orgs.morada") }}</h6>
 
           <span>
@@ -52,7 +52,7 @@
           </span>
         </div>
 
-        <div v-if="currOrg.website">
+        <div v-if="currOrg.website" class="mt-5">
           <h6>{{ t("orgs.website") }}</h6>
 
           <span>
@@ -62,7 +62,7 @@
           </span>
         </div>
 
-        <div v-if="currOrg.nipc">
+        <div v-if="currOrg.nipc" class="mt-5">
           <h6>{{ t("orgs.nipc") }}</h6>
 
           <span>{{ currOrg.nipc }}</span>

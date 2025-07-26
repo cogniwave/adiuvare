@@ -5,12 +5,14 @@
     :prepend-icon="!org.photo ? 'fa-solid fa-shop-slash' : undefined"
     :prepend-avatar="org.photo"
     :title="org.name"
-    subtitle="<org type>"
+    :subtitle="$t(`orgs.category.${org.category}`)"
   >
     <template #title>
-      <v-card-title class="text-heading font-weight-bold">
-        {{ org.name }}
-      </v-card-title>
+      <v-tooltip :text="org.name" location="top center">
+        <template #activator="{ props }">
+          <span v-bind="props">{{ org.name }}</span>
+        </template>
+      </v-tooltip>
     </template>
 
     <v-card-text class="text-regular">
@@ -22,13 +24,18 @@
         </small>
       </template>
 
-      <span v-else class="font-italic"> {{ $t("org.noBio") }}</span>
+      <span v-else class="font-italic"> {{ $t("orgs.noBio") }}</span>
     </v-card-text>
+
+    <v-card-actions v-if="org.city || org.district">
+      <app-location-chip :location="org.city || org.district" />
+    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts" setup>
   import { shortenText } from "app/utils";
+  import AppLocationChip from "app/components/common/AppLocationChip.vue";
   import type { Organization } from "shared/types/organization";
 
   const $props = defineProps({
@@ -52,6 +59,12 @@
 
 <style lang="scss" scoped>
   .v-card {
-    max-width: 300px;
+    overflow-wrap: initial;
+
+    :deep(.v-card-item__prepend) {
+      i {
+        font-size: 32px;
+      }
+    }
   }
 </style>

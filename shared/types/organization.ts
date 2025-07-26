@@ -1,5 +1,6 @@
 import type { z } from "zod/v4";
 import type { organizationSchema } from "../schemas/organization.schema.ts";
+import type { EntityContact } from "./contact.js";
 
 export const organizationCategories = [
   "unknown",
@@ -18,6 +19,25 @@ export const organizationCategories = [
 export type OrganizationCategory = (typeof organizationCategories)[number];
 
 export type Organization = z.infer<typeof organizationSchema>;
+
+export interface OrganizationDetails
+  extends Pick<
+    Organization,
+    | "id"
+    | "name"
+    | "about"
+    | "slug"
+    | "photo"
+    | "photoThumbnail"
+    | "website"
+    | "address"
+    | "postalCode"
+    | "city"
+    | "district"
+    | "nipc"
+  > {
+  contacts: EntityContact[];
+}
 
 export interface OrganizationSearchResult {
   id: string;

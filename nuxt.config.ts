@@ -114,7 +114,7 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@nuxt/image",
     "dayjs-nuxt",
-    // "nuxt-security",
+    "nuxt-security",
     "nuxt-lazyload-files",
   ],
 

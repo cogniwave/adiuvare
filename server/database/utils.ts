@@ -31,26 +31,23 @@ export const formatFromDb =
   (fieldsToDeserialize?: string[]) =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   <T = any>(payload: any): T => {
-    if (!fieldsToDeserialize?.length) {
-      return payload;
-    }
+    console.log(payload);
+    return !fieldsToDeserialize?.length
+      ? payload
+      : {
+          ...payload,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ...fieldsToDeserialize.reduce<Record<string, any>>((result, field) => {
+            if (payload[field]) {
+              result[field] = desanitizeInput(
+                typeof payload[field] === "object" ? payload[field] : JSON.parse(payload[field]),
+              );
+            }
 
-    return {
-      ...payload,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...fieldsToDeserialize.reduce<Record<string, any>>((result, field) => {
-        if (payload[field]) {
-          result[field] = desanitizeInput(JSON.parse(payload[field]));
-        }
-
-        return result;
-      }, {}),
-    };
+            return result;
+          }, {}),
+        };
   };
-
-export const contactsGrouping = () => {
-  return sql`'[' || GROUP_CONCAT('{"contact":' || ${contacts.contact} || ',"type":"' || ${contacts.type} || '"}', ',') || ']'`;
-};
 
 export const fuzzySearch = (field: SQLiteColumn, value: string) => {
   const fuzzy = `%${value}%`;

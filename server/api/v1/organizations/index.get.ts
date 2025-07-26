@@ -10,13 +10,12 @@ const schema = z.object({
 });
 
 export default defineWrappedResponseHandler(async (event) => {
-  const { name, page, source } = await validateEvent(event, schema);
+  const { name, source, page, sortBy, sortOrder } = await validateEvent(event, schema);
 
   if (source === "registration") {
     return name ? await searchOrgs(name, page!) : [];
   }
 
-  const [organizations, total] = await Promise.all([getOrgs(), getTotalOrgs()]);
-
-  return { organizations, total };
+  const [data, total] = await Promise.all([getOrgs(page, sortBy, sortOrder), getTotalOrgs()]);
+  return { data, total };
 });

@@ -285,7 +285,20 @@
     "nipc": "NIPC",
     "noBio": "Esta organização ainda não especificou a sua missão",
     "members": "Membros",
-    "posts": "Publicações"
+    "posts": "Publicações",
+    "category": {
+      "unknown": "Desconhecida",
+      "ipss": "IPSS (Instituição Particular de Solidariedade Social)",
+      "ongd": "ONGD (Organização Não-Governamental para o Desenvolvimento)",
+      "onga": "ONGA (Organização Não-Governamental de Ambiente)",
+      "onga_equiparada": "ONGA Equiparada",
+      "ongm": "ONGM (Organização não-Governamental de mulheres)",
+      "assoc_def_direitos_humanos": "Associação de Defesa de Direitos Humanos",
+      "assoc_def_animais": "Associação de Defesa de Animais",
+      "cooperativa": "Cooperativa",
+      "fundacoes": "Fundação",
+      "other": "Outras"
+    }
   },
   "org": {
     "learnMore": "Ver mais",

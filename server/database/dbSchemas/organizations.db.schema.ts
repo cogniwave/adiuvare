@@ -9,7 +9,7 @@ export const organizations = sqliteTable(
   {
     id: text("id").primaryKey().unique().notNull().$defaultFn(createId),
     name: text("name").notNull(),
-    normalized_name: text("name").notNull(),
+    normalizedName: text("normalized_name").notNull(),
     category: text("category").default("unknown").$type<OrganizationCategory>(),
     slug: text("slug").unique(),
     createdAt: integer("created_at", { mode: "timestamp" })
@@ -28,6 +28,6 @@ export const organizations = sqliteTable(
     uniqueIndex("org_slug_idx").on(organizations.slug),
     uniqueIndex("org_nipc_idx").on(organizations.nipc),
     index("org_name").on(organizations.name),
-    index("org_normalized_name").on(organizations.normalized_name),
+    index("org_normalized_name").on(organizations.normalizedName),
   ],
 );

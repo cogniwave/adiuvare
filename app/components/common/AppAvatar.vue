@@ -2,11 +2,11 @@
   <v-avatar :size="size">
     <v-img v-if="src" :src="src" :alt="$t('posts.logoAlt')" :lazy-src="lazySrc">
       <template #error>
-        <v-icon>fa-shop-slash</v-icon>
+        <v-icon size="x-large">fa-shop-slash</v-icon>
       </template>
     </v-img>
 
-    <v-icon v-else>fa-shop-slash</v-icon>
+    <v-icon v-else size="x-large">fa-shop-slash</v-icon>
   </v-avatar>
 </template>
 
