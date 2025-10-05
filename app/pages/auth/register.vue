@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card ref="form" :title="t('register.title')" :show-form="!userCreated" @submit="submit">
+  <app-form-card ref="form" :title="t('register.title')" :show-form="!userCreated" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="name"
@@ -64,16 +64,39 @@
         </template>
       </v-text-field>
 
-      <v-input hide-details prepend-icon="fa-solid fa-users">
-        <v-radio-group v-model:model-value="type" inline hide-details class="mt-6" :label="t('form.userType.title')">
-          <v-radio :label="t('form.userType.org')" value="org" />
-          <v-radio :label="t('form.userType.volunteer')" value="volunteer" />
-        </v-radio-group>
-      </v-input>
+      <v-checkbox
+        v-model:model-value="belongToOrg"
+        :label="t('form.belongToOrg')"
+        class="mt-6 form-checkbox"
+        hide-details
+      />
 
-      <v-checkbox v-model:model-value="privacyPolicy" class="mt-10 mb-2" hide-details="auto" :rules="[required(t)]">
+      <v-autocomplete
+        v-if="belongToOrg"
+        v-model:model-value="org"
+        prepend-icon="fa-building"
+        class="mt-6 mx-5"
+        hide-details
+        no-filter
+        :label="t('form.chooseOrg')"
+        :auto-select-first="false"
+        :items="orgs"
+        :loading="searchingOrgs"
+        :rules="[required(t)]"
+        @update:search="searchOrgs"
+      />
+
+      <v-divider class="mt-4" />
+
+      <v-checkbox
+        v-model:model-value="privacyPolicy"
+        class="mt-4 mb-2"
+        hide-details
+        :rules="[required(t)]"
+        validate-on="input"
+      >
         <template #label>
-          <i18n-t scope="global" keypath="form.privacyPolicy" tag="label" for="form.privacyPolicyLink">
+          <i18n-t scope="global" keypath="form.privacyPolicy" tag="v-label" for="form.privacyPolicyLink">
             <a
               href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/pp-UDhf9fo8lpJMQUwNJeGnKkCpRyPGOe.pdf"
               target="_blank"
@@ -84,9 +107,9 @@
         </template>
       </v-checkbox>
 
-      <v-checkbox v-model:model-value="eula" class="mb-2" hide-details="auto" :rules="[required(t)]">
+      <v-checkbox v-model:model-value="eula" class="mb-2" hide-details :rules="[required(t)]" validate-on="input">
         <template #label>
-          <i18n-t scope="global" keypath="form.eula" tag="label">
+          <i18n-t scope="global" keypath="form.eula" tag="v-label">
             <a
               href="https://kehibvrmkdygejnd.public.blob.vercel-storage.com/eula-0aoyOz5t1i4QBJVcoh2BtkjWI7j73r.pdf"
               target="_blank"
@@ -97,26 +120,26 @@
         </template>
       </v-checkbox>
 
-      <v-checkbox v-model:model-value="newsletter" hide-details="auto" :label="t('form.subscribeNewsletter')" />
+      <v-checkbox v-model:model-value="newsletter" hide-details :label="t('form.subscribeNewsletter')" />
     </template>
 
     <template #actions>
       <template v-if="!xs">
-        <nuxt-link to="login" class="text-blue-grey mr-auto">
+        <nuxt-link to="login" class="text-secondary mr-auto">
           {{ t("login.title") }}
         </nuxt-link>
 
-        <v-btn type="submit" color="primary" :loading="submitting">
+        <v-btn type="submit" variant="flat" :loading="submitting">
           {{ t("register.register") }}
         </v-btn>
       </template>
 
       <div v-else class="d-flex flex-column align-center w-100">
-        <v-btn type="submit" color="primary" :loading="submitting">
+        <v-btn type="submit" variant="flat" :loading="submitting">
           {{ t("register.register") }}
         </v-btn>
 
-        <nuxt-link to="login" class="text-blue-grey mt-4">
+        <nuxt-link to="login" class="text-secondary mt-4">
           {{ t("login.title") }}
         </nuxt-link>
       </div>
@@ -125,19 +148,20 @@
     <template #content>
       <p class="mb-3">{{ t("register.successMessage") }}</p>
     </template>
-  </ad-auth-form-card>
+  </app-form-card>
 </template>
 
 <script setup lang="ts">
-  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import { required, isValidEmail, isValidPassword, match } from "app/utils/validators";
   import { useNotify } from "app/store/notify";
   import { useFormErrors } from "app/composables/formErrors";
+  import { usePassword } from "app/composables/password";
 
-  import type { User, UserType } from "shared/types/user";
+  import type { User } from "shared/types/user";
+  import type { OrganizationSearchResult } from "shared/types/organization";
 
   definePageMeta({
-    layout: "auth",
     middleware: "unauthed-server",
     path: "/register",
     title: "pages.register",
@@ -149,17 +173,20 @@
   const { xs } = useDisplay();
   const { notifySuccess } = useNotify();
 
-  const email = ref<string>("");
-  const email2 = ref<string>("");
-  const name = ref<string>("");
-  const privacyPolicy = ref<string>("");
-  const eula = ref<string>("");
-  const type = ref<UserType>("org");
-  const newsletter = ref<boolean>(false);
-  const userCreated = ref<boolean>(false);
+  const email = ref("");
+  const email2 = ref("");
+  const name = ref("");
+  const privacyPolicy = ref("");
+  const eula = ref("");
+  const newsletter = ref(false);
+  const userCreated = ref(false);
+  const belongToOrg = ref(false);
+  const org = ref("");
+  const orgs = ref<OrganizationSearchResult[]>();
+  const searchingOrgs = ref(false);
 
-  const form = ref<InstanceType<typeof AdAuthFormCard>>();
-  const submitting = ref<boolean>(false);
+  const form = ref<InstanceType<typeof AppFormCard>>();
+  const submitting = ref(false);
 
   const submit = async () => {
     clearErrors();
@@ -174,27 +201,53 @@
 
     submitting.value = true;
 
-    await $fetch<User>("/api/v1/auth/register", {
-      method: "post",
-      body: {
-        email: email.value,
-        password: password.value,
-        name: name.value,
-        type: type.value,
-        newsletter: newsletter.value,
-      },
-    })
-      .then(() => {
-        notifySuccess(t("form.user.createdSuccesffuly"));
-        userCreated.value = true;
-      })
-      .catch(handleErrors)
-      .finally(() => (submitting.value = false));
+    try {
+      await $fetch<User>("/api/v1/users", {
+        method: "post",
+        body: {
+          email: email.value,
+          password: password.value,
+          name: name.value,
+          newsletter: newsletter.value,
+          ...(belongToOrg.value && { orgId: org.value }),
+        },
+      });
+
+      notifySuccess(t("form.user.createdSuccessfully"));
+      userCreated.value = true;
+    } catch (err) {
+      handleErrors(err);
+    } finally {
+      submitting.value = false;
+    }
+  };
+
+  const searchOrgs = async (term: string) => {
+    if (term?.length < 3) {
+      return;
+    }
+
+    searchingOrgs.value = true;
+    try {
+      orgs.value = await $fetch<OrganizationSearchResult[]>("/api/v1/organizations", {
+        query: { origin: "registration", name: term },
+      });
+    } catch (err) {
+      handleErrors(err);
+    }
+
+    searchingOrgs.value = false;
   };
 </script>
 
 <style scoped lang="scss">
   :deep(.v-checkbox) {
+    --v-selection-control-size: 16px;
+
+    .v-label {
+      margin-left: var(--v-selection-control-size);
+    }
+
     .v-selection-control {
       min-height: 0 !important;
     }

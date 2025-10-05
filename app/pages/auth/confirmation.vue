@@ -1,5 +1,5 @@
 <template>
-  <ad-auth-form-card ref="form" :show-form="false" :title="t('register.confirmation.title')">
+  <app-form-card ref="form" :show-form="false" :title="t('register.confirmation.title')">
     <template #content>
       <template v-if="!loading">
         <p v-if="invalidLink">{{ t("register.confirmation.invalidLink") }}</p>
@@ -23,13 +23,12 @@
 
       <p v-else>{{ t("register.confirmation.loading") }}</p>
     </template>
-  </ad-auth-form-card>
+  </app-form-card>
 </template>
 
 <script setup lang="ts">
   definePageMeta({
     middleware: "unauthed-server",
-    layout: "auth",
     title: "pages.accountConfirm",
     path: "/confirmation",
   });

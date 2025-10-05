@@ -3,6 +3,7 @@ export interface SelectOption {
   value: string;
 }
 
+// todo: wrong, should be dynamic
 export type HumanDay =
   | "Segunda-feira"
   | "Terça-feira"

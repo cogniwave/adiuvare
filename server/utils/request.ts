@@ -1,35 +1,42 @@
-import type { PartialSchemaMap } from "joi";
+import { z } from "zod/v4";
 import type { H3Error, EventHandler, EventHandlerRequest, H3Event } from "h3";
 
-import Joi from "~~/shared/validators";
 import { ValidationError, type Errors } from "shared/exceptions";
+import { translate } from "server/utils/i18n";
+import { isH3Error } from "shared/types/guards";
 
-export const getValidatedInput = async <T>(event: H3Event<EventHandlerRequest>, schema: PartialSchemaMap) => {
-  let body;
-  try {
-    body = await readBody(event);
-  } catch (error: unknown) {
-    throw createError(error as H3Error);
+export const validateEvent = async <T extends Record<string, any>>(
+  event: H3Event<EventHandlerRequest>,
+  schema: z.ZodObject,
+) => {
+  let body = {};
+
+  if (["POST", "PATCH"].includes(event.method)) {
+    try {
+      body = await readBody(event);
+    } catch (error: unknown) {
+      throw createError(error as H3Error);
+    }
   }
 
-  const { value, error } = Joi.object<T>(schema).validate(body, {
-    abortEarly: false,
-    stripUnknown: true,
-    externals: true,
+  const query: Record<string, string> = {};
+  Object.entries(getQuery(event)).forEach(([key, val]) => {
+    // @ts-expect-error todo: fix
+    query[key] = val;
   });
 
+  const { data, error } = schema.safeParse({ ...body, ...getRouterParams(event), ...query }, { reportInput: true });
   if (error) {
-    const t = await useTranslation(event);
-
+    console.log(error.issues, z.treeifyError(error));
     const errors: Errors = {};
-    error.details.forEach(({ context, path, message }) => {
-      errors[path[0]!] = t(message, context || {});
-    });
+    // error.issues.forEach(({ path, message }) => {
+    //   errors[path] = translate(message, context || {});
+    // });
 
     throw new ValidationError(errors);
   }
 
-  return value;
+  return data as T;
 };
 
 export const sanitizeInput = <R = string>(input?: string | null): R => {
@@ -73,9 +80,7 @@ export const desanitizeInput = (input?: string | null) => {
 const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, error: unknown) => {
   createApp();
 
-  const t = await useTranslation(event);
-
-  if (process.env.NUXT_ENV === "development") {
+  if (import.meta.env.NODE_ENV === "development") {
     console.error(error);
   }
 
@@ -84,18 +89,18 @@ const errorHandling = async <T extends EventHandlerRequest>(event: H3Event<T>, e
     throw createError({
       status: 422,
       statusMessage: "Unprocessable content",
-      cause: t("errors.validationError"),
+      cause: translate("errors.validationError"),
       data: error.toError(),
     });
   }
 
   if (isH3Error(error)) {
     if (error.statusCode === 401) {
-      throw createError({ ...error, status: 401, cause: t("errors.authRequired") });
+      throw createError({ ...error, status: 401, cause: translate("errors.authRequired") });
     }
 
     if (error.statusCode === 403) {
-      throw createError({ ...error, status: 403, cause: t("errors.noPermissions") });
+      throw createError({ ...error, status: 403, cause: translate("errors.noPermissions") });
     }
 
     throw error;

@@ -1,37 +1,27 @@
-import { getOrgBySlug } from "server/db/users";
+import { getOrgBySlug } from "server/database/organizations";
 import { sanitizeInput } from "server/utils/request";
-import { log } from "server/utils/logger";
 
-export default defineEventHandler(async (event) => {
+export default defineWrappedResponseHandler(async (event) => {
   // never really undefined because this handler is only triggered if it exists
   const slug = sanitizeInput(getRouterParam(event, "slug"));
+  const org = await getOrgBySlug(slug);
 
-  try {
-    const user = await getOrgBySlug(slug);
-
-    if (user) {
-      return {
-        id: user.id,
-        photo: user.photo,
-        photoThumbnail: user.photoThumbnail,
-        name: desanitizeInput(user.name),
-        slug: desanitizeInput(user.slug),
-        bio: desanitizeInput(user.bio),
-        website: desanitizeInput(user.website),
-        address: desanitizeInput(user.address),
-        postalCode: desanitizeInput(user.postalCode),
-        city: desanitizeInput(user.city),
-        district: desanitizeInput(user.district),
-        contacts: user.contacts
-          ? user.contacts.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) }))
-          : [],
-      };
-    }
-
-    setResponseStatus(event, 404);
-  } catch (err) {
-    log("[organization] couldn't get organization", JSON.stringify(err));
-
-    throw err;
+  if (!org) {
+    return setResponseStatus(event, 404);
   }
+
+  return {
+    id: org.id,
+    photo: org.photo,
+    photoThumbnail: org.photoThumbnail,
+    name: desanitizeInput(org.name),
+    slug: desanitizeInput(org.slug),
+    about: desanitizeInput(org.about),
+    website: desanitizeInput(org.website),
+    address: desanitizeInput(org.address),
+    postalCode: desanitizeInput(org.postalCode),
+    city: desanitizeInput(org.city),
+    district: desanitizeInput(org.district),
+    contacts: org.contacts?.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) })) || [],
+  };
 });

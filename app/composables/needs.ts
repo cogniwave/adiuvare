@@ -7,39 +7,35 @@ interface ConfigItem {
   description: string;
 }
 
-type Config = Record<PostNeed, ConfigItem>;
+const NEED_MAPPING: Record<PostNeed, ConfigItem> = {
+  money: {
+    icon: "fa-coins",
+    color: "success",
+    label: "posts.needs.money",
+    description: "posts.needs.moneyDescription",
+  },
+  goods: {
+    icon: "fa-boxes-stacked",
+    color: "primary",
+    label: "posts.needs.goods",
+    description: "posts.needs.goodsDescription",
+  },
+  volunteers: {
+    icon: "fa-people-arrows",
+    color: "accent",
+    label: "posts.needs.volunteers",
+    description: "posts.needs.volunteersDescription",
+  },
+  other: {
+    icon: "fa-circle-question",
+    color: "text",
+    label: "posts.needs.other",
+    description: "posts.needs.otherDescription",
+  },
+};
 
 export const useNeed = () => {
-  const getNeedDetails = (need: PostNeed): ConfigItem => {
-    const NEED_MAPPING: Config = {
-      money: {
-        icon: "fa-solid fa-coins",
-        color: "green",
-        label: "posts.needs.money",
-        description: "posts.needs.moneyDescription",
-      },
-      goods: {
-        icon: "fa-solid fa-boxes-stacked",
-        color: "blue",
-        label: "posts.needs.goods",
-        description: "posts.needs.goodsDescription",
-      },
-      volunteers: {
-        icon: "fa-solid fa-people-arrows",
-        color: "purple",
-        label: "posts.needs.volunteers",
-        description: "posts.needs.volunteersDescription",
-      },
-      other: {
-        icon: "fa-solid fa-circle-question",
-        color: "orange",
-        label: "posts.needs.other",
-        description: "posts.needs.otherDescription",
-      },
-    };
-
-    return NEED_MAPPING[need]!;
-  };
+  const getNeedDetails = (need: PostNeed) => NEED_MAPPING[need]!;
 
   return { getNeedDetails };
 };

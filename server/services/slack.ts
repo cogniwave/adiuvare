@@ -1,16 +1,13 @@
 import type { Report } from "shared/types/report";
 import type { NotifyPost } from "shared/types/post";
-import type { User } from "shared/types/user";
-import { log } from "../utils/logger";
+import type { TokenUser } from "shared/types/user";
+import logger from "server/utils/logger";
 
 const sendToSlack = async (message: string) => {
-  const webhook = process.env.SLACK_WEBHOOK_URL;
+  const webhook = import.meta.env.SLACK_WEBHOOK_URL;
 
   if (!webhook) {
-    if (process.env.NUXT_ENV === "production") {
-      log("SLACK_WEBHOOK NOT DEFINED");
-    }
-
+    logger.error("SLACK_WEBHOOK NOT DEFINED");
     return;
   }
 
@@ -21,9 +18,9 @@ const sendToSlack = async (message: string) => {
       body: JSON.stringify({ text: message }),
     });
 
-    console.log(`[slack]: ${message}`);
+    logger.debug(`[slack]: ${message}`);
   } catch (err) {
-    log("[slack] couldn't post to slack user", JSON.stringify({ err, message }));
+    logger.error("[slack] couldn't post to slack user", JSON.stringify({ err, message }));
   }
 };
 
@@ -34,20 +31,19 @@ export const notifyNewReport = async (report: Report) => {
       reason: ${report.reason}
       post: 
         - id: ${report.post.id}
-        - created by: ${report.post.createdBy}
+        - created by: ${report.post.createdUserId}
         - title: ${report.post.title}
         - description: ${report.post.description}
     `,
   );
 };
 
-export const notifyNewUser = async (user: User) => {
+export const notifyNewUser = async (user: TokenUser) => {
   return await sendToSlack(
     `:standing_person: New user created 
       - id: ${user.id}
       - name: ${user.name}
       - email: ${user.email}
-      - type: ${user.type}
     `,
   );
 };

@@ -1,13 +1,3 @@
-export const debounce = (func: (...args: unknown[]) => void, timeout = 300) => {
-  let timer: NodeJS.Timeout | null = null;
-
-  if (timer) {
-    clearTimeout(timer);
-  }
-
-  timer = setTimeout(func, timeout);
-};
-
 export const shortenText = (text: string, size: number) => {
   const result = text.trim();
 

@@ -4,27 +4,32 @@ import globals from "globals";
 import vueParser from "vue-eslint-parser";
 import vue from "eslint-plugin-vue";
 import typescriptParser from "@typescript-eslint/parser";
+// Turns off all rules that are unnecessary or might conflict with Prettier.
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 
-export default withNuxt([
-  {
-    ignores: ["./.nuxt/*", "./.output/*", "./.data/*"],
+export default withNuxt(
+  [
+    {
+      ignores: ["./.nuxt/*", "./.output/*", "./.data/*"],
 
-    languageOptions: {
-      // Use vue-eslint-parser to parse `.vue` files
-      parser: vueParser,
-      parserOptions: {
-        parser: typescriptParser, // Use TypeScript parser for the <script> block
-        ecmaVersion: 2020, // You can change this to a higher version if needed
-        sourceType: "module", // Support ECMAScript modules,
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+      languageOptions: {
+        // Use vue-eslint-parser to parse `.vue` files
+        parser: vueParser,
+        parserOptions: {
+          parser: typescriptParser, // Use TypeScript parser for the <script> block
+          ecmaVersion: 2020, // You can change this to a higher version if needed
+          sourceType: "module", // Support ECMAScript modules,
+          projectService: true,
+          tsconfigRootDir: import.meta.dirname,
+        },
+        globals: { ...globals.node, NodeJS: true },
       },
-      globals: { ...globals.node, NodeJS: true },
-    },
 
-    plugins: { vue },
-  },
-]).overrideRules({
+      plugins: { vue },
+    },
+  ],
+  eslintConfigPrettier,
+).overrideRules({
   quotes: ["warn", "double", { avoidEscape: true }],
   "prefer-promise-reject-errors": "off",
   // "no-debugger": "warn",
@@ -39,6 +44,7 @@ export default withNuxt([
   "vue/no-multiple-template-root": "off",
   "vue/html-self-closing": "off",
 
+  "@typescript-eslint/no-empty-object-type": "off",
   "@typescript-eslint/no-unsafe-call": "warn",
   "@typescript-eslint/no-unsafe-member-access": "warn",
   "@typescript-eslint/no-unsafe-argument": "warn",

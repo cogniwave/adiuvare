@@ -1,14 +1,6 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-import type { UserSession as OgUserSession } from "nuxt-auth-utils";
-
-import type { TokenUser } from "./user";
-import type { Dayjs } from "../services/dayjs.service";
+import type { TokenUser } from "shared/types/user";
 
 declare module "#auth-utils" {
-  interface UserSession extends OgUserSession {
-    loggedInAt: Dayjs;
-  }
-
   interface User extends TokenUser {}
 
   interface SecureSessionData {}

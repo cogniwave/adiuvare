@@ -1,0 +1,146 @@
+# todo: adicionar manualmente as infos para csv
+
+nome: 
+email: 
+Telefone: 
+Morada:
+Site: 
+
+nome: Amnistia Internacional Portugal
+email: aiportugal@amnistia.pt
+Telefone: +351 213 861 652
+Morada: Rua dos Remolares, 7, 2º, com o código postal 1200-370
+Site: https://www.amnistia.pt/
+
+nome: ORBIS - Cooperação e Desenvolvimento
+email: info@orbis.org
+Telefone: +351 912 923 815
+morada: Av. Dr. Lourenço Peixinho 146, 1º andar, loja 303, 3800-159, Aveiro.
+site: https://www.orbis.org.pt/
+
+nome: Akto – Associação para a Promoção dos Direitos Humanos e Democracia
+email: geral@akto.org
+Telefone: +351 910 061 663
+Morada: Rua Aires de Campos, nº 6, 3000-014 Coimbra
+Site: https://www.akto.org/pt/
+
+
+nome: ILGA Portugal
+email: ilga@ilga-portugal.pt
+Telefone: 218 873 918
+Morada: Rua dos Fanqueiros Nº38 3ºEsq 1100-231 Lisboa
+Site: https://ilga-portugal.pt/
+
+nome: Conselho Português para os Refugiados
+email: geral@cpr.pt
+Telefone: 351 21 831 43 72
+Morada:	Quinta do Pombeiro, Casa Senhorial Norte Azinhaga do Pombeiro, s/n 1900-793 Lisboa, Portugal
+Site: https://cpr.pt/
+
+nome: P&D Factor – Associação para a Cooperação sobre População e Desenvolvimento
+email: info@popdesenvolvimento.org
+Telefone: 
+Morada: RUA MARQUÊS DA FRONTEIRA, 4C 5ºESQ
+Site: https://popdesenvolvimento.org/
+
+nome: Associação Portuguesa de Mulheres Juristas
+email: apmjsede@apmj.pt
+Telefone: 211 994 816
+Morada: Rua Manuel Marques, nº 21-P Lisboa
+Site: https://apmj.pt/
+
+nome: Chão de Oliva – Centro de Difusão Cultural
+email: geral@chaodeoliva.com
+Telefone: +351 21 923 37 19
+Morada: Rua Veiga da Cunha, 20, 2710-627 Sintra
+Site: https://chaodeoliva.com/
+
+nome: ACTUAR – Associação para a Cooperação e o Desenvolvimento
+email: geral@actuar-acd.org
+Telefone: +351 961 585 638
+Morada: INOPOL – Escola Agrária de Coimbra Quinta Agrícola, Bencanta. 3045-601 Coimbra, Portugal
+Site: https://actuar-acd.org/
+
+nome: QUERCUS – Associação Nacional de Conservação da Natureza
+email: quercus@quercus.pt
+Telefone: +351 217 788 474
+Morada: Centro Associativo do Calhau Bairro do Calhau Parque Florestal de Monsanto 1500-045 LISBOA
+Site: https://quercus.pt/
+
+nome: 4Change, Cooperativa Cultural e de Solidariedade Social Crl
+email: info@4change.org
+Telefone: 
+Morada: R. de Oeiras do Piauí Brasil 11A, 2780-285 Oeiras
+Site: https://4change.org/
+
+nome: Fenacerci  – Federação Nacional de Cooperativas de Solidariedade Social
+email: fenacerci@fenacerci.pt
+Telefone: +351 21 711 25 80 
+Morada:Rua Augusto Macedo 2 A 1600-794 Lisboa |Portugal
+Site: www.fenacerci.pt
+
+nome: Associação Cova do Mar
+email: info@covadomar.pt
+Telefone: 
+Morada:
+Site: https://www.covadomar.pt/
+
+nome: CRESAÇOR - Cooperativa Regional de Economia Solidária CRL
+email: cresacor@cresacor.pt
+Telefone: +351 296 281 554
+Morada: Rua D. Maria José Borges, 137 9500-466 Fajã de Baixo, Ponta Delgada Açores
+Site: https://www.cresacor.pt/
+
+nome: Almada Mundo Associação Internacional de Educação, Formação e Inovação
+email: almadamundo.amai@gmail.com
+Telefone: 920 179 300
+Morada: Praça Capitães de Abril, nº 2 A e B Cova da Piedade, 2805- 111, Almada
+Site: https://almadamundo.pt/
+
+nome: Kairós - Cooperativa de Incubação de Iniciativas de Economia Solidária
+email: comunicar.incluir@kairos-acores.pt
+Telefone: 296 209 800
+Morada: Rua José Manuel Bernardo Cabral, nº 10 9500-450 Ponta Delgada
+Site: https://www.kairos-acores.pt/kairos.php
+
+nome: Coolabora
+email: coolabora@gmail.com
+Telefone: +351 275 335 427
+Morada: Rua Comendador Marcelino, 53, R/C 6200-136 Covilhã
+Site: https://coolabora.pt/
+
+nome: ARRISCA - Associação Regional de Reabilitação e Integração Sociocultural dos Açores
+email: arrisca.pdl@gmail.com
+Telefone: +351 296 281 658
+Morada: Rua de Lisboa, 60 9500-216 Santa Clara - Ponta Delgada São Miguel - Açores
+Site: https://arrisca.pt/
+
+nome: APF Açores
+email: apfacores@gmail.com
+Telefone: 926 783 778
+Morada: Rua d'Água n.º 29, Ponta Delgada, Portugal
+Site: https://www.facebook.com/apfacores
+
+nome: Rede Inducar
+email: info@inducar.pt.
+Telefone: +351 916 312 550.
+Morada: Rua Alexandre Herculano, 158 4420- 437.
+Site: https://inducar.pt/
+
+nome: Omnis Factum Associação
+email: omnisfactum@gmail.com
+Telefone: 93 275 77 11
+Morada: Alm. Cândido dos Reis 44, 2870-234 Montijo
+Site: https://omnisfactum.com/
+
+nome: Academia Cidadã
+email: info@academiacidada.org
+Telefone: 
+Morada:
+Site: https://academiacidada.org/
+
+nome: GAT - Grupo de Ativistas em Tratamentos
+Email: geral@gatportugal.org
+Telefone: +351 210 967 826
+Morada: Avenida Paris, 4 - 1º direito, 1000-228 Lisboa, Portugal
+Site: https://www.gatportugal.org/

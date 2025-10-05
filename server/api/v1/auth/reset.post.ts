@@ -1,37 +1,32 @@
-import { getUser, updateUserToken } from "server/db/users";
-import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { nanoid } from "nanoid";
+import { z } from "zod/v4";
+
+import { getUserById, updateUser } from "server/database/users";
+import { validateEvent } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
-import { users } from "server/db/schemas/users.schema";
+import { translate } from "server/utils/i18n";
 
-import { RequiredEmail } from "~~/shared/validators";
-import type { LoginPayload } from "shared/types/user";
+import { emailSchema } from "shared/schemas/common.schema";
 
-interface User {
-  email: string;
-  name: string;
-  type: string;
-  id: string;
-}
+const schema = z.object({ email: emailSchema });
 
-export default defineEventHandler(async (event) => {
-  const body = await getValidatedInput<LoginPayload>(event, { email: RequiredEmail });
+export default defineWrappedResponseHandler(async (event) => {
+  const body = await validateEvent<z.infer<typeof schema>>(event, schema);
 
-  const user = await getUser<User>(sanitizeInput(body.email), [], { id: users.id });
+  const user = await getUserById(body.email);
 
   if (user) {
-    const t = await useTranslation(event);
+    const token = `${nanoid(32)}-${Date.now()}`;
 
-    const token = `${genToken(32)}-${Date.now()}`;
-
-    if (await updateUserToken(user.id, token)) {
-      await sendEmail(t("email.reset.subject"), { email: user.email, name: user.name }, "userActionRequired", {
-        greetings: t("email.greetings"),
+    if (await updateUser(user.id, { token })) {
+      sendEmail(translate("email.reset.subject"), { email: user.email, name: user.name }, "userActionRequired", {
+        greetings: translate("email.greetings"),
         name: user.name,
-        body: t("email.reset.body"),
-        body2: t("email.reset.body2"),
-        buttonText: t("email.reset.buttonText"),
-        alternativeLinkText: t("email.alternativeLinkText"),
-        link: `${process.env.APP_BASE_URL}/profile/password?token=${token}&email=${user.email}`,
+        body: translate("email.reset.body"),
+        body2: translate("email.reset.body2"),
+        buttonText: translate("email.reset.buttonText"),
+        alternativeLinkText: translate("email.alternativeLinkText"),
+        link: `${useRuntimeConfig().public.baseUrl}/profile/password?token=${token}&email=${user.email}`,
       });
     }
   }

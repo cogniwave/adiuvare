@@ -1,36 +1,21 @@
-import { getOrgs, getTotalOrgs } from "server/db/users";
-import { log } from "server/utils/logger";
+import { z } from "zod/v4";
+import { getOrgs, getTotalOrgs, searchOrgs } from "server/database/organizations";
+import { paginationSchema } from "server/schemas/common.schema";
+import { validateEvent } from "~~/server/utils/request";
 
-export default defineEventHandler(async () => {
-  try {
-    const [organizations, total] = await Promise.all([getOrgs(), getTotalOrgs()]);
+const schema = z.object({
+  origin: z.enum(["registration", "orgs"]),
+  name: z.string().optional(),
+  ...paginationSchema.shape,
+});
 
-    return {
-      organizations: organizations.map((org) => {
-        return {
-          id: org.id,
-          photo: org.photo,
-          photoThumbnail: org.photoThumbnail,
-          name: desanitizeInput(org.name),
-          slug: desanitizeInput(org.slug),
-          bio: desanitizeInput(org.bio),
-          // todo: these should only be fetched when checking org details
-          // no need to send over data that is not used
-          website: desanitizeInput(org.website),
-          address: desanitizeInput(org.address),
-          postalCode: desanitizeInput(org.postalCode),
-          city: desanitizeInput(org.city),
-          district: desanitizeInput(org.district),
-          contacts: org.contacts
-            ? org.contacts.map((c) => ({ type: c.type, contact: desanitizeInput(c.contact) }))
-            : [],
-        };
-      }),
-      total,
-    };
-  } catch (err) {
-    log("[organizations]: failed to get organizations", JSON.stringify(err));
+export default defineWrappedResponseHandler(async (event) => {
+  const { name, source, page, sortBy, sortOrder } = await validateEvent(event, schema);
 
-    throw err;
+  if (source === "registration") {
+    return name ? await searchOrgs(name, page!) : [];
   }
+
+  const [data, total] = await Promise.all([getOrgs(page, sortBy, sortOrder), getTotalOrgs()]);
+  return { data, total };
 });

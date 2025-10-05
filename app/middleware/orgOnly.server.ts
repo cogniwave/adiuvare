@@ -1,11 +1,14 @@
+import { useAuthContext } from "app/store/authContext";
+
 export default defineNuxtRouteMiddleware(() => {
   const { user } = useUserSession();
+  const { canCreatePost } = useAuthContext();
 
   if (!user.value) {
     return navigateTo("/login");
   }
 
-  if (user.value.type !== "org") {
-    return navigateTo("/");
+  if (!canCreatePost.value) {
+    return navigateTo("");
   }
 });

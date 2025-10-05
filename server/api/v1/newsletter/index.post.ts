@@ -1,26 +1,16 @@
-import { sanitizeInput, getValidatedInput } from "server/utils/request";
+import { z } from "zod/v4";
+import { validateEvent } from "server/utils/request";
 import { subscribeToNewsletter } from "server/services/brevo";
 
-import { RequiredEmail } from "~~/shared/validators";
-import type { NewsletterSubscribePayload } from "shared/types/newsletter";
-import { log } from "server/utils/logger";
+import { emailSchema } from "shared/schemas/common.schema";
 
-export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
+const schema = z.object({ email: emailSchema });
 
-  const body = await getValidatedInput<NewsletterSubscribePayload>(event, { email: RequiredEmail });
+export default defineWrappedResponseHandler(async (event) => {
+  const body = await validateEvent<z.infer<typeof schema>>(event, schema);
 
   // validate and add token to event
-  try {
-    await subscribeToNewsletter(sanitizeInput(body.email), ["newsletter"]);
+  subscribeToNewsletter(body.email);
 
-    return { success: true };
-  } catch (err) {
-    log("couldn't subscribe to newsletter", JSON.stringify(err));
-
-    throw createError({
-      statusCode: 500,
-      statusMessage: t("errors.unexpected"),
-    });
-  }
+  return { success: true };
 });

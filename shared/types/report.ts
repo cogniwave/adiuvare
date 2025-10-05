@@ -1,7 +1,5 @@
-import type { Post } from "./post";
+import type { z } from "zod/v4";
 
-export interface Report {
-  post: Post;
-  user: string;
-  reason: string;
-}
+import type { reportSchema } from "shared/schemas/report.schema";
+
+export type Report = z.infer<typeof reportSchema>;

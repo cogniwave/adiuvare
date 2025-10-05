@@ -1,61 +1,52 @@
-import { getPostsAndTotal } from "server/db/posts";
-import { log } from "server/utils/logger";
+import { getPostsAndTotal } from "server/database/posts";
+import { translate } from "server/utils/i18n";
 
-import type { TranslationFunction } from "shared/types";
-import { PostNeedEnum, type PostFilter } from "shared/types/post";
+import type { PostFilter } from "shared/types/post";
 
 // because free search with i18n, we need some magics to
 // convert users input into the value thats saved in the db
-const mapIfNeed = (filter: string, t: TranslationFunction) => {
-  if (t("posts.needs.money").toLowerCase().includes(filter)) {
-    return PostNeedEnum.MONEY.toString();
+const mapIfNeed = (filter: string) => {
+  if (translate("posts.needs.money").toLowerCase().includes(filter)) {
+    return "money";
   }
 
-  if (t("posts.needs.goods").toLowerCase().includes(filter)) {
-    return PostNeedEnum.GOODS.toString();
+  if (translate("posts.needs.goods").toLowerCase().includes(filter)) {
+    return "goods";
   }
 
-  if (t("posts.needs.volunteers").toLowerCase().includes(filter)) {
-    return PostNeedEnum.VOLUNTEERS.toString();
+  if (translate("posts.needs.volunteers").toLowerCase().includes(filter)) {
+    return "volunteers";
   }
 
-  if (t("posts.needs.other").toLowerCase().includes(filter)) {
-    return PostNeedEnum.OTHER.toString();
+  if (translate("posts.needs.other").toLowerCase().includes(filter)) {
+    return "other";
   }
 
   return filter;
 };
 
-export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
+export default defineWrappedResponseHandler(async (event) => {
+  const qs = getQuery<{ filter: string } | undefined>(event);
 
-  try {
-    const qs = getQuery<{ filter: string } | undefined>(event);
+  let filter: PostFilter | undefined;
 
-    let filter: PostFilter | undefined;
-
-    if (qs?.filter) {
-      try {
-        filter = JSON.parse(qs.filter);
-      } catch (_) {
-        //
-      }
-
-      if (filter) {
-        if (filter.query) {
-          filter.query = mapIfNeed(filter.query, t);
-        }
-
-        if (filter.needs) {
-          filter.needs = filter.needs.map<string>((n) => mapIfNeed(n, t));
-        }
-      }
+  if (qs?.filter) {
+    try {
+      filter = JSON.parse(qs.filter);
+    } catch (_) {
+      //
     }
 
-    return await getPostsAndTotal(filter);
-  } catch (err) {
-    log("[posts]: failed to get posts", JSON.stringify(err));
+    if (filter) {
+      if (filter.query) {
+        filter.query = mapIfNeed(filter.query);
+      }
 
-    throw err;
+      if (filter.needs) {
+        filter.needs = filter.needs.map<string>((n) => mapIfNeed(n));
+      }
+    }
   }
+
+  return await getPostsAndTotal(filter);
 });

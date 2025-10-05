@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1743513687346,
+      "tag": "0000_silky_big_bertha",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1743674138224,
+      "tag": "0001_lean_warbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1749592480176,
+      "tag": "0002_familiar_iron_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1753545552585,
+      "tag": "0003_aromatic_mentallo",
+      "breakpoints": true
+    }
+  ]
+}

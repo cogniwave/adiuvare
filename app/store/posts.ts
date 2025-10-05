@@ -1,13 +1,13 @@
-import {
-  type Post,
-  type PostDeletePayload,
-  type PostStateTogglePayload,
-  type PostDisablePayload,
-  type EmptyPost,
+import type {
   ScheduleType,
+  Post,
+  PostDeletePayload,
+  PostStateTogglePayload,
+  PostDisablePayload,
+  EmptyPost,
 } from "shared/types/post";
 
-type AnyPost<T extends ScheduleType = ScheduleType.ANYTIME> =
+type AnyPost<T extends ScheduleType = "anytime"> =
   | Post<T>
   | PostStateTogglePayload
   | PostDeletePayload
@@ -15,7 +15,7 @@ type AnyPost<T extends ScheduleType = ScheduleType.ANYTIME> =
   | EmptyPost;
 
 const DEFAULT_POST = {
-  schedule: { type: ScheduleType.ANYTIME },
+  schedule: { type: "anytime" },
   description: "",
   title: "",
   needs: [],
@@ -25,33 +25,32 @@ const DEFAULT_POST = {
 
 const cloneDefault = () => JSON.parse(JSON.stringify(DEFAULT_POST));
 
+const getTypeDefaultConfig = (type: ScheduleType) => {
+  if (type === "anytime") {
+    return { type: "anytime" };
+  }
+
+  if (type === "specific") {
+    return { type: "specific", payload: { day: "", times: [] } };
+  }
+
+  return { type: "recurring", payload: {} };
+};
+
 export const usePosts = <T = AnyPost>(defaultType?: ScheduleType) => {
   const posts = useState<Post[]>("posts:posts", () => []);
   const currPost = useState<T>("posts:current", () => ({}) as T);
   const disableDialogVisible = useState<boolean>("posts:dialogVisible", () => true);
   const deleteDialogVisible = useState<boolean>("posts:dialogVisible", () => true);
 
+  const updateScheduleType = (newType: ScheduleType) => {
+    // @ts-expect-error todo: fix this
+    (currPost.value as Post).schedule = getTypeDefaultConfig(newType);
+  };
+
   const setDefaultCurrPost = () => {
-    if (defaultType === ScheduleType.RECURRING) {
-      currPost.value = {
-        ...cloneDefault(),
-        schedule: { type: ScheduleType.RECURRING },
-      };
-      return;
-    }
-
-    if (defaultType === ScheduleType.SPECIFIC) {
-      currPost.value = {
-        ...cloneDefault(),
-        schedule: {
-          type: ScheduleType.RECURRING,
-          payload: { day: "", times: [] },
-        },
-      };
-      return;
-    }
-
-    currPost.value = cloneDefault();
+    currPost.value =
+      defaultType === "anytime" ? cloneDefault() : { ...cloneDefault(), schedule: getTypeDefaultConfig("recurring") };
   };
 
   const setPost = (post: T | null, useDefault: boolean = false) => {
@@ -73,5 +72,6 @@ export const usePosts = <T = AnyPost>(defaultType?: ScheduleType) => {
     deleteDialogVisible,
     setPost,
     setDefaultCurrPost,
+    updateScheduleType,
   };
 };

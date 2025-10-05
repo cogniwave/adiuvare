@@ -1,10 +1,13 @@
 <template>
-  <ad-auth-form-card ref="form" :title="t('login.title')" @submit="submit">
+  <app-form-card ref="form" :title="t('login.title')" @submit="submit">
     <template #form>
       <v-text-field
         v-model:model-value="email"
         type="email"
-        prepend-icon="fa-solid fa-at"
+        prepend-icon="fa-at"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
         :label="t('form.email')"
         :rules="[required(t), isValidEmail(t)]"
         :error-messages="errors.email"
@@ -12,7 +15,7 @@
 
       <v-text-field
         v-model:model-value="password"
-        prepend-icon="fa-solid fa-lock"
+        prepend-icon="fa-lock"
         class="mt-8"
         autocorrect="off"
         autocapitalize="off"
@@ -24,7 +27,9 @@
         :error-messages="errors.password"
       >
         <template #append-inner>
-          <v-icon class="cursor-pointer" @click="switchVisibility"> fa-solid fa-{{ visibilityIcon }} </v-icon>
+          <v-icon class="cursor-pointer" @click="switchVisibility">
+            {{ visibilityIcon === "eye" ? "fa-eye" : "fa-eye-slash" }}
+          </v-icon>
         </template>
       </v-text-field>
     </template>
@@ -32,47 +37,48 @@
     <template #actions>
       <!-- desktop -->
       <template v-if="mdAndUp">
-        <nuxt-link to="register" class="text-blue-grey">
-          {{ t("register.link") }}
-        </nuxt-link>
+        <div class="d-flex" :class="{ 'flex-column w-100': md }">
+          <nuxt-link to="register" class="text-secondary">
+            {{ t("register.link") }}
+          </nuxt-link>
 
-        <span class="text-blue-grey mx-2">| </span>
+          <small v-if="!md" class="text-secondary mt-1">|</small>
 
-        <nuxt-link to="reset-password" class="text-blue-grey mr-auto">
-          {{ t("reset.link") }}
-        </nuxt-link>
+          <nuxt-link to="reset-password" class="text-secondary mr-auto">
+            {{ t("reset.link") }}
+          </nuxt-link>
+        </div>
 
-        <v-btn type="submit" color="primary" :loading="submitting">
+        <v-btn type="submit" variant="flat" :loading="submitting">
           {{ t("login.title") }}
         </v-btn>
       </template>
 
       <div v-else class="d-flex flex-column align-center w-100">
-        <v-btn type="submit" color="primary" class="mb-5" :loading="submitting">
+        <v-btn type="submit" variant="flat" class="mb-5" :loading="submitting">
           {{ t("login.title") }}
         </v-btn>
 
-        <nuxt-link to="register" class="text-blue-grey mb-3">
+        <nuxt-link to="register" class="text-secondary mb-3">
           {{ t("register.link") }}
         </nuxt-link>
 
-        <nuxt-link to="reset-password" class="text-blue-grey">
+        <nuxt-link to="reset-password" class="text-secondary">
           {{ t("reset.link") }}
         </nuxt-link>
       </div>
     </template>
-  </ad-auth-form-card>
+  </app-form-card>
 </template>
 
 <script setup lang="ts">
-  import AdAuthFormCard from "app/components/common/AdAuthFormCard.vue";
-
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import { useNotify } from "app/store/notify";
   import { required, isValidEmail, isValidPassword } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
+  import { usePassword } from "app/composables/password";
 
   definePageMeta({
-    layout: "auth",
     middleware: "unauthed-server",
     title: "pages.login",
     path: "/login",
@@ -82,27 +88,26 @@
   const { errors, handleErrors, clearErrors } = useFormErrors();
   const { notifyInfo, notifyWarning } = useNotify();
   const $route = useRoute();
-  const $router = useRouter();
   const { fetch } = useUserSession();
   const { switchVisibility, password, passwordFieldType, visibilityIcon } = usePassword();
-  const { mdAndUp } = useDisplay();
+  const { mdAndUp, md } = useDisplay();
 
   const email = ref<string>("");
-  const form = ref<InstanceType<typeof AdAuthFormCard>>();
+  const form = ref<InstanceType<typeof AppFormCard>>();
   const submitting = ref<boolean>(false);
 
   onMounted(() => {
     if ($route.query?.requireAuth) {
       notifyWarning(t("login.actionRequiresAuth"));
 
-      $router.replace({
+      navigateTo({
         path: "/login",
         query: { ...$route.query, requireAuth: undefined },
       });
     } else if ($route.query?.passwordReset) {
       notifyInfo(t("login.passwordReset"));
 
-      $router.replace({
+      navigateTo({
         path: "/login",
         query: { ...$route.query, passwordReset: undefined },
       });
@@ -128,8 +133,9 @@
         body: { email: email.value, password: password.value },
       });
       // fetches user info
-      fetch();
-      navigateTo({ path: "/" });
+      fetch().then(() => {
+        navigateTo({ path: "" });
+      });
     } catch (exc: unknown) {
       handleErrors(exc);
       submitting.value = false;

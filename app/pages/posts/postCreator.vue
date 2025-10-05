@@ -1,8 +1,6 @@
 <template>
-  <h2 class="text-h5 mb-5">{{ t("posts.newPostTitle") }}</h2>
-
-  <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
-    <div class="bg-white rounded px-10 py-5">
+  <app-form-card ref="form" :title="t('posts.newPostTitle')" @submit="submit">
+    <template #form>
       <!-- title -->
       <v-text-field
         v-model:model-value="title"
@@ -26,9 +24,7 @@
         :error-messages="errors.description"
         @update:model-value="(value) => updatePost('description', value)"
       />
-    </div>
 
-    <div class="bg-white rounded px-10 py-5 my-5">
       <!-- locations -->
       <!-- TODO: improve ux on this -->
       <v-autocomplete
@@ -36,6 +32,7 @@
         multiple
         prepend-icon="fa-solid fa-location-dot"
         chips
+        class="mt-10"
         closable-chips
         :label="t('form.post.location')"
         :placeholder="t('form.post.locationPlaceholder')"
@@ -65,51 +62,47 @@
         @update:model-value="updatePost('needs', $event)"
       >
         <template #chip="{ item }">
-          <ad-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
+          <app-post-dialog-need :key="item.value" :need="item.value" @click:remove="removeNeed(item.value)" />
         </template>
       </v-select>
-    </div>
 
-    <div class="bg-white rounded px-10 py-5">
       <!-- contacts -->
-      <ad-contacts
-        v-if="user"
-        :contacts="user.contacts"
-        :error="errors.contacts"
-        @update="updatePost('contacts', $event)"
-      />
+      <app-contacts :contacts="org!.contacts" :error="errors.contacts" @update="updatePost('contacts', $event)" />
 
       <!-- horarios -->
-      <ad-post-schedule />
-    </div>
-  </v-form>
+      <app-post-schedule />
+    </template>
 
-  <div class="py-5 d-flex align-center justify-end">
-    <v-btn :disable="submitting" class="mr-2" @click="$router.go(-1)">
-      {{ t("posts.cancel") }}
-    </v-btn>
+    <template #actions>
+      <v-btn :disable="submitting" variant="text" color="secondary" class="mr-2" @click="$router.go(-1)">
+        {{ t("posts.cancel") }}
+      </v-btn>
 
-    <v-btn type="submit" color="primary" :loading="submitting" @click="submit">
-      {{ t("posts.submit") }}
-    </v-btn>
-  </div>
+      <v-btn type="submit" variant="flat" color="primary" :loading="submitting">
+        {{ t("posts.submit") }}
+      </v-btn>
+    </template>
+  </app-form-card>
 </template>
 
 <script lang="ts" setup>
   import type { VForm } from "vuetify/lib/components/index.mjs";
+  import { debounce } from "vuetify/lib/util/helpers.mjs";
 
   import { required } from "app/utils/validators";
   import { useFormErrors } from "app/composables/formErrors";
-  import { debounce } from "app/utils";
   import { getCities } from "app/services/geoapify.service";
-  import AdPostDialogNeed from "app/components/posts/AdPostDialogNeed.vue";
-  import AdPostSchedule from "app/components/posts/AdPostSchedule.vue";
+  import AppPostDialogNeed from "app/components/posts/AppPostDialogNeed.vue";
+  import AppPostSchedule from "app/components/posts/AppPostSchedule.vue";
+  import AppContacts from "app/components/contacts/AppContacts.vue";
+  import AppFormCard from "app/components/common/AppFormCard.vue";
   import { useNotify } from "app/store/notify";
   import { usePosts } from "app/store/posts";
+  import { useAuthContext } from "app/store/authContext";
 
   import type { SelectOption } from "shared/types/form";
   import type { EmptyPost, Post, PostSchedule } from "shared/types/post";
-  import type { UserContact } from "shared/types/user";
+  import type { EntityContact } from "shared/types/contact";
 
   definePageMeta({ path: "/posts/new", middleware: "org-only-server", title: "pages.postCreate" });
 
@@ -117,8 +110,8 @@
   const { t } = useI18n();
   const { errors, handleErrors, clearErrors } = useFormErrors();
   const { currPost, posts, setPost } = usePosts();
+  const { org } = useAuthContext();
   const $router = useRouter();
-  const { user } = useUserSession();
 
   const title = ref<string>("");
   const description = ref<string>("");
@@ -139,7 +132,7 @@
   const submitting = ref<boolean>(false);
 
   onBeforeMount(() => {
-    setPost({ contacts: user.value!.contacts, schedule: { type: "anytime" } } as EmptyPost);
+    setPost({ contacts: org.value!.contacts, schedule: { type: "anytime" } } as EmptyPost);
   });
 
   const fetchLocations = (text: string) => {
@@ -168,7 +161,7 @@
           }
         })
         .finally(() => (fetchingLocations.value = false));
-    });
+    }, 500);
   };
 
   const onRemoveLocation = (location: string) => {
@@ -176,7 +169,7 @@
     updatePost("location", locationInput.value);
   };
 
-  const updatePost = (prop: string, val: string | string[] | PostSchedule | UserContact[]) => {
+  const updatePost = (prop: string, val: string | string[] | PostSchedule | EntityContact[]) => {
     currPost.value = { ...currPost.value, [prop]: val };
   };
 
@@ -206,7 +199,7 @@
       }
 
       currPost.value = {} as Post;
-      $router.push("/");
+      // $router.push("/");
       notifySuccess(t("posts.created"));
     } catch (errs: unknown) {
       handleErrors(errs);

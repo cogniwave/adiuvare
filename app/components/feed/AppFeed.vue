@@ -1,0 +1,406 @@
+<template>
+  <template v-if="loading">
+    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
+    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
+    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
+    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
+    <v-skeleton-loader type="avatar, article" class="rounded-xl mt-5" />
+  </template>
+
+  <!-- render posts -->
+  <template v-else-if="data && (data.total || !!filter)">
+    <v-row class="mb-2">
+      <v-col cols="12" sm="4" align-self="end">
+        <h4>{{ t("feed.recentPosts") }}</h4>
+      </v-col>
+
+      <v-col align-self="end" class="d-flex">
+        <form class="pr-2 w-100" @keypress.enter.prevent="onSearch()">
+          <v-text-field
+            v-model:model-value="search"
+            class="search-field"
+            variant="solo"
+            color="accent"
+            append-inner-icon="fa-magnifying-glass"
+            rounded="lx"
+            density="compact"
+            hide-details
+            persistent-clear
+            :clearable="!!filter"
+            :placeholder="t('filter.placeholder')"
+            @click:clear="resetSearch()"
+            @click:append-inner.stop.prevent="onSearch()"
+          />
+        </form>
+
+        <v-btn icon flat variant="text" @click="toggleExpandedFilter">
+          <v-icon color="accent" size="small">fa-filter</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-expand-transition v-if="detailedSearchRendered">
+      <div v-show="expandedFilterVisible" class="mb-4">
+        <form class="mt-5 mb-3 w-100" @keypress.enter.prevent="onSearch(true)" @submit.prevent="onSearch(true)">
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model:model-value="title"
+                prepend-icon="fa-heading"
+                density="compact"
+                flat
+                hide-details
+                persistent-clear
+                label="Pesquisar por titulo"
+              />
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-textarea
+                v-model:model-value="description"
+                rows="1"
+                prepend-icon="fa-quote-left"
+                rounded="lx"
+                density="compact"
+                hide-details
+                persistent-clear
+                label="Pesquisar na descrição"
+              />
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-select
+                v-model:model-value="need"
+                hide-hint
+                multiple
+                prepend-icon="fa-parachute-box"
+                :label="t('form.post.category')"
+                :items="needs"
+              />
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-autocomplete
+                v-model:model-value="location"
+                rounded="lx"
+                density="compact"
+                prepend-icon="fa-map-location"
+                chips
+                class="detailed-filter"
+                hide-details
+                multiple
+                label="Pesquisar por localidade"
+                no-filter
+                closable-chips
+                :auto-select-first="false"
+                :no-data-text="noDataText"
+                :items="locations"
+                :loading="filteringLocations"
+                @update:search="filterLocations"
+              />
+            </v-col>
+          </v-row>
+
+          <div class="pt-5 d-flex align-center justify-end">
+            <v-btn class="btn-reset" type="button" :loading="loading" @click="resetSearch">
+              {{ t("feed.emptySearchReset") }}
+            </v-btn>
+
+            <v-btn class="filter-actions" type="submit" :loading="loading">
+              {{ t("feed.filter") }}
+            </v-btn>
+          </div>
+        </form>
+
+        <v-divider />
+      </div>
+    </v-expand-transition>
+
+    <v-row no-gutters>
+      <v-col>
+        <v-virtual-scroll v-if="data.total" item-height="264" :items="data.posts">
+          <template #default="{ item }">
+            <app-post
+              :key="item.id"
+              :post="item"
+              :user="user?.slug || ''"
+              @click:state="openDisableDialog"
+              @click:delete="openDeleteDialog"
+              @click:report="openReportDialog"
+            />
+          </template>
+        </v-virtual-scroll>
+
+        <i18n-t
+          v-else
+          scope="global"
+          keypath="feed.emptySearch"
+          tag="span"
+          for="feed.emptySearchReset"
+          class="no-posts"
+        >
+          <v-btn variant="text" color="primary" size="x-small" @click="resetSearch">
+            {{ t("feed.emptySearchReset") }}
+          </v-btn>
+        </i18n-t>
+      </v-col>
+    </v-row>
+
+    <!-- there aren't enough posts to show pagination -->
+    <v-pagination
+      v-if="data.total > FEED_PAGE_SIZE"
+      v-model="page"
+      total-visible="5"
+      color="primary"
+      rounded
+      :length="data.total / FEED_PAGE_SIZE"
+    />
+  </template>
+
+  <!-- no posts exist -->
+  <i18n-t v-else scope="global" keypath="feed.noPosts" tag="p" for="feed.noPostsButton" class="no-posts">
+    <nuxt-link to="/posts/new">
+      {{ t("feed.noPostsButton") }}
+    </nuxt-link>
+  </i18n-t>
+
+  <app-post-report-dialog v-if="reportDialogRendered" />
+
+  <app-post-disable-confirm-dialog v-if="disableDialogRendered" />
+
+  <app-post-delete-confirm-dialog v-if="deleteDialogRendered" @delete="onDelete" />
+</template>
+
+<script setup lang="ts">
+  import { useNotify } from "app/store/notify";
+  import { usePosts } from "app/store/posts";
+  import { useReport } from "app/store/report";
+  import { FEED_PAGE_SIZE } from "shared/utils";
+  import type { Post, PostDeletePayload, PostStateTogglePayload, PostFilter } from "shared/types/post";
+  import AppPost from "app/components/posts/AppPost.vue";
+  import AppPostReportDialog from "app/components/posts/AppPostReportDialog.vue";
+  import AppPostDisableConfirmDialog from "app/components/posts/AppPostDisableConfirmDialog.vue";
+  import AppPostDeleteConfirmDialog from "app/components/posts/AppPostDeleteConfirmDialog.vue";
+  import type { SelectOption } from "shared/types/form";
+  import { useLocations } from "app/composables/locations";
+
+  const $route = useRoute();
+
+  const { notifyError } = useNotify();
+  const { user } = useUserSession();
+  const { currPost, disableDialogVisible, deleteDialogVisible, posts } = usePosts();
+  const { openDialog: _openReportDialog } = useReport();
+  const { t } = useI18n();
+  const { filterLocations, filteringLocations, locations, noDataText } = useLocations();
+
+  const search = ref<string | undefined>();
+  const reportDialogRendered = ref(false);
+  const expandedFilterVisible = ref(false);
+  const detailedSearchRendered = ref(false);
+
+  const title = ref<string | undefined>();
+  const description = ref<string | undefined>();
+  const location = ref<string[] | undefined>();
+  const need = ref<string[] | undefined>();
+
+  const deleteDialogRendered = ref(false);
+  const disableDialogRendered = ref(false);
+
+  const page = ref(setupPage());
+  const filter = ref<PostFilter | undefined>(setupQuery());
+
+  const { data, status, refresh } = useFetch<{ posts: Post[]; total: number }>("/api/v1/posts", {
+    query: { filter: filter.value, page: page.value },
+    lazy: true,
+    onResponse({ response }) {
+      posts.value = response._data?.posts || [];
+    },
+    onResponseError() {
+      data.value = { posts: [], total: 0 };
+      posts.value = [];
+
+      notifyError(t("errors.fetchFeed"));
+    },
+  });
+
+  const loading = computed(() => status.value === "pending");
+
+  const needs: SelectOption[] = [
+    { title: t("posts.needs.money"), value: "money" },
+    { title: t("posts.needs.volunteers"), value: "volunteers" },
+    { title: t("posts.needs.goods"), value: "goods" },
+    { title: t("posts.needs.other"), value: "other" },
+  ];
+
+  const openDisableDialog = (post: PostStateTogglePayload) => {
+    currPost.value = post;
+    if (!disableDialogRendered.value) {
+      disableDialogRendered.value = true;
+    } else {
+      disableDialogVisible.value = true;
+    }
+  };
+
+  const openDeleteDialog = (post: PostDeletePayload) => {
+    currPost.value = post;
+    if (!deleteDialogRendered.value) {
+      deleteDialogRendered.value = true;
+    } else {
+      deleteDialogVisible.value = true;
+    }
+  };
+
+  const openReportDialog = (post: PostDeletePayload) => {
+    if (!reportDialogRendered.value) {
+      reportDialogRendered.value = true;
+    }
+
+    _openReportDialog(post);
+  };
+
+  const onDelete = async (id: string) => {
+    try {
+      await $fetch<Post>(`/api/v1/posts/${id}`, { method: "delete" });
+      refresh();
+    } catch (err: unknown) {
+      notifyError(err as string);
+    } finally {
+      disableDialogVisible.value = false;
+    }
+  };
+
+  const onSearch = (detailed = false) => {
+    if (detailed) {
+      if (!title.value && !description.value && !location.value?.length && !need.value?.length) {
+        return;
+      }
+
+      filter.value = {
+        title: title.value,
+        description: description.value,
+        locations: location.value?.length ? location.value : undefined,
+        needs: need.value?.length ? need.value : undefined,
+      };
+    } else {
+      if (!search.value) {
+        return;
+      }
+
+      if (search.value === filter.value) {
+        return;
+      }
+
+      filter.value = { query: search.value };
+    }
+
+    page.value = 1;
+
+    navigateTo({ path: "", query: { page: 1, ...filter.value } });
+    refresh();
+  };
+
+  const toggleExpandedFilter = () => {
+    if (!detailedSearchRendered.value) {
+      detailedSearchRendered.value = true;
+      nextTick(() => (expandedFilterVisible.value = true));
+    } else {
+      expandedFilterVisible.value = !expandedFilterVisible.value;
+    }
+  };
+
+  const resetSearch = () => {
+    page.value = 1;
+    filter.value = undefined;
+    search.value = undefined;
+    title.value = undefined;
+    description.value = undefined;
+    location.value = undefined;
+    need.value = undefined;
+
+    navigateTo({ path: "", query: {} });
+  };
+
+  function setupPage() {
+    const page = $route.query?.page;
+
+    if (!page) {
+      return 1;
+    }
+
+    const p = Number(page);
+
+    return !isNaN(p) && p > 1 ? p : 1;
+  }
+
+  function setupQuery() {
+    const query = $route.query;
+
+    if (!query) {
+      return undefined;
+    }
+
+    const f: PostFilter = {};
+
+    if (!query.query) {
+      if (query.title) {
+        title.value = query.title as string;
+        f.title = title.value;
+      }
+
+      if (query.description) {
+        description.value = query.description as string;
+        f.description = description.value;
+      }
+
+      if (query.needs) {
+        need.value = query.needs as string[];
+        f.needs = need.value;
+      }
+
+      if (query.locations) {
+        location.value = query.locations as string[];
+        f.locations = location.value;
+      }
+    } else {
+      search.value = query.query as string;
+      f.query = search.value;
+    }
+
+    if (Object.keys(f).length) {
+      filter.value = f;
+    }
+  }
+
+  watch(page, (pg) => {
+    navigateTo({ path: "", query: { ...($route.query || {}), page: pg } });
+  });
+</script>
+
+<style scoped lang="scss">
+  h4 {
+    color: rgba(var(--v-theme-subtext));
+  }
+
+  .search-field :deep(.v-field__append-inner .v-icon) {
+    color: rgba(var(--v-theme-accent));
+  }
+
+  .no-posts {
+    color: rgba(var(--v-theme-subtext));
+    font-weight: 500;
+    padding: 0 12px;
+
+    a {
+      font-weight: bold;
+
+      &:active,
+      &:focus,
+      &:visited,
+      &:hover {
+        color: rgba(var(--v-theme-primary));
+      }
+    }
+  }
+</style>

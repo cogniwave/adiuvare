@@ -1,38 +1,33 @@
-import { updatePassword } from "server/db/users";
-import { getValidatedInput } from "server/utils/request";
+import { z } from "zod/v4";
+
+import { updatePassword } from "server/database/users";
+import { validateEvent } from "server/utils/request";
 import { sendEmail } from "server/services/brevo";
 
-import { RequiredEmail, RequiredPassword, RequiredString } from "~~/shared/validators";
+import { translate } from "server/utils/i18n";
+import { emailSchema, passwordSchema, tokenSchema } from "shared/schemas/common.schema";
 import dayjs from "shared/services/dayjs.service";
 
-interface PasswordUpdatePayload {
-  email: string;
-  password: string;
-  token: string;
-}
+const schema = z.object({ token: tokenSchema, email: emailSchema, password: passwordSchema });
 
-export default defineEventHandler(async (event) => {
-  const t = await useTranslation(event);
+type PasswordUpdatePayload = z.infer<typeof schema>;
 
-  const body = await getValidatedInput<PasswordUpdatePayload>(event, {
-    password: RequiredPassword,
-    email: RequiredEmail,
-    token: RequiredString.messages({ "strings.empty": t("errors.empty") }),
-  });
+export default defineWrappedResponseHandler(async (event) => {
+  const body = await validateEvent<PasswordUpdatePayload>(event, schema);
 
   if (dayjs(body.token.split("-")[1]).isAfter(dayjs().add(12, "hours"))) {
     throw createError({
-      data: [t("errors.expiredResetLink")],
+      data: [translate("errors.expiredResetLink")],
       message: "Invalid link",
-      statusCode: 400,
+      statusCode: 422,
     });
   }
 
-  await updatePassword(sanitizeInput(body.email), sanitizeInput(body.password), sanitizeInput(body.token));
+  await updatePassword(body.email, body.password, body.token);
 
-  await sendEmail(t("email.resetSuccess.subject"), { email: body.email }, "information", {
-    greetings: t("email.greetings"),
-    body: t("email.resetSuccess.body"),
+  sendEmail(translate("email.resetSuccess.subject"), { email: body.email }, "information", {
+    greetings: translate("email.greetings"),
+    body: translate("email.resetSuccess.body"),
   });
 
   setResponseStatus(event, 200);

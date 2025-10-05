@@ -1,42 +1,28 @@
-import { RequiredEmail, RequiredPassword } from "~~/shared/validators";
+import type { z } from "zod/v4";
 
-import dayjs from "shared/services/dayjs.service";
-import { getUser } from "server/db/users";
-import { getValidatedInput, defineWrappedResponseHandler } from "server/utils/request";
-import { users } from "server/db/schemas/users.schema";
+import { getAuthUser } from "server/database/users";
+import { validateEvent, defineWrappedResponseHandler } from "server/utils/request";
+import { translate } from "server/utils/i18n";
 
-import type { LoginPayload, TokenUser } from "shared/types/user";
+import type { TokenUser } from "shared/types/user";
+import { loginSchema } from "shared/schemas/user.schema";
 
 export default defineWrappedResponseHandler(async (event) => {
-  const t = await useTranslation(event);
+  const { email, password } = await validateEvent<z.infer<typeof loginSchema>>(event, loginSchema);
 
-  const { email, password } = await getValidatedInput<LoginPayload>(event, {
-    email: RequiredEmail,
-    password: RequiredPassword,
-  });
-
-  const user = await getUser<TokenUser & { password: string; verified: boolean }>(email, [], {
-    password: users.password,
-    slug: users.slug,
-    contacts: users.contacts,
-    id: users.id,
-    logo: users.photo,
-    verified: users.verified,
-  });
+  const user = await getAuthUser(email);
 
   if (!user || !(await verifyPassword(user.password!, password))) {
     throw createError({
       statusCode: 422,
-      statusMessage: "unprocessable content",
-      message: t("errors.invalidCredentials"),
+      message: translate("errors.invalidCredentials"),
     });
   }
 
   if (!user.verified) {
     throw createError({
       statusCode: 409,
-      statusMessage: "conflict",
-      message: t("errors.unverifiedUser"),
+      message: translate("errors.unverifiedUser"),
     });
   }
 
@@ -45,11 +31,8 @@ export default defineWrappedResponseHandler(async (event) => {
     name: user.name,
     email: user.email,
     slug: user.slug,
-    type: user.type,
-    logo: user.logo,
-    contacts: user.contacts || [],
   };
-  await setUserSession(event, { user: authedUser, loggedInAt: dayjs() });
+  await setUserSession(event, { user: authedUser });
   setResponseStatus(event, 201);
   return authedUser;
 });

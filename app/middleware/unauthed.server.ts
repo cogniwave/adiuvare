@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware(async () => {
 
   if (ready.value) {
     if (loggedIn.value) {
-      return navigateTo("/");
+      return navigateTo("");
     }
 
     return;
@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async () => {
   return new Promise((resolve) => {
     watch(
       () => ready.value,
-      () => loggedIn.value && resolve(navigateTo("/")),
+      () => loggedIn.value && resolve(navigateTo("")),
     );
   });
 });
